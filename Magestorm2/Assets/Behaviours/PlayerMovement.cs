@@ -1,72 +1,172 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
     
-    public CharacterController controller;
-    private Vector3 playerVelocity;
-    private bool groundedPlayer;
-    private float playerSpeed = 2.0f;
-    private float jumpHeight = 1.0f;
-    private float gravityValue = -9.81f;
-    private Ray _downCast;
+    private CharacterController _controller;
+    private float _jumpSpeed = 6.0f;
+    private float gravityValue = 9.81f;
+
+    private float _lateralSpeed = 0.0f;
+    private float _maxLateralSpeed = 4.0f;
+    private float _lateralAcceleration = 6.0f;
+    
+    private float _forwardSpeed = 0.0f;
+    private float _maxForwardSpeed = 2.0f;
+    private float _forwardAcceleration = 6.0f;
+
+    private float _verticalSpeed = 0.0f;
+    private float _maxVerticalSpeed = 30.0f;
+    private float _verticalAcceleration = 0.0f;
+
+    private float _distanceTravelled = 0.0f;
+    private Vector3 _priorPosition;
+
+    private bool _positionChanged = false;
+
+   // private float _maxVerticalSpeed = 
+    private bool _midJump = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-       
-    }
-    private bool isGrounded()
-    {
-        RaycastHit hitInfo;
-        controller.Raycast(new Ray(transform.position, new Vector3(0, -1, 0)), out hitInfo, 5.0f);
-        if (hitInfo.collider != null)
-        {
-            Debug.Log(hitInfo.collider.gameObject.name);
-            return true;
-        }
-        return false;
-    }
-    private void MoveAlongAxis(string axisString, Vector3 direction)
-    {
-        float axis = Input.GetAxis(axisString);
-        if (axis < 0.0f)
-        {
-            direction *= -1;
-        }
-        if (axis != 0.0f)
-        {
-            controller.Move(direction * Time.deltaTime * playerSpeed);
-        }
+        _priorPosition = transform.position;
+        _controller = GetComponent<CharacterController>();
+        ComponentRegister.PlayerTransform = transform;
+        ComponentRegister.PlayerMovement = this;
+        ComponentRegister.PlayerController = _controller;
     }
     void Update()
     {
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
+        bool grounded = isGrounded();
+        if (_priorPosition != transform.position)
         {
-            playerVelocity.y = 0f;
+            _distanceTravelled += Vector3.Distance(transform.position, _priorPosition);
+            _priorPosition = transform.position;
+            _positionChanged = true;
         }
-        MoveAlongAxis("Vertical", transform.forward);
-        MoveAlongAxis("Horizontal", transform.right);
-            
-
-        /*
-        if (move != Vector3.zero)
+        else
         {
-            gameObject.transform.forward = move;
+            _positionChanged = false;
         }
-        */
-
-        // Makes the player jump
-        /*
-        if (Input.GetButtonDown("Jump") && isGrounded())
+        if (grounded)
         {
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
+            _verticalAcceleration = 0.0f;
+            _verticalSpeed = 0.0f;
         }
+        float speedModifier = SpeedModifier;
+        MoveAlongAxis(ref _lateralSpeed, _maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, _lateralAcceleration, speedModifier);
+        float forwardAcceleration = _forwardAcceleration;
+        float maxForwardSpeed = _maxForwardSpeed;
+        if (InputControls.Run)
+        {
+            forwardAcceleration *= 3;
+            maxForwardSpeed *= 3;
+        }
+        MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, speedModifier);
+        if (InputControls.Jump && grounded)
+        {
+            _verticalSpeed = _verticalSpeed + _jumpSpeed;
+            _controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+            _midJump = true;
+        }
+        else
+        {
+            if (!grounded)
+            {
+                Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
+                _controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+            }
+            if (grounded)
+            {
+                _midJump = false;
+            }
+        }
+    }
 
-        playerVelocity.y += gravityValue * Time.deltaTime;
+    private bool isGrounded()
+    {
+        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask(), 2.0f);
+    }
+    private void Accelerate(ref float speed, float maxSpeed, float directionFactor, float acceleration)
+    {
+        speed += Time.deltaTime * directionFactor * acceleration;
+        if(speed > maxSpeed)
+        {
+            speed = maxSpeed;
+        }
+        if(speed < -maxSpeed)
+        {
+            speed = -maxSpeed;
+        }
+    }
+   
+    private void MoveAlongAxis(ref float speed, float maxSpeed, Vector3 directionVector, InputControl negative, InputControl positive, float acceleration, float speedModifier)
+    {
+        float directionFactor = 0.0f;
+        if (_midJump)
+        {
+            directionFactor = 0; // maintain the previous speed.
+        }
+        else if ((!InputControls.IsPressed(negative) && !InputControls.IsPressed(positive)) ||
+            InputControls.IsPressed(negative) && InputControls.IsPressed(positive))
+        {
+            directionFactor = speed > 0.0f ? -1.0f : 1.0f;
+        }
+        else if (InputControls.IsPressed(negative) || InputControls.IsPressed(positive))
+        {
+            directionFactor = InputControls.IsPressed(negative) ? -1.0f : 1.0f;
+        }
+        Accelerate(ref speed, maxSpeed, directionFactor, acceleration);
+        _controller.Move(directionVector * speed * Time.deltaTime * speedModifier);
+    }
+
+    private bool MovingOnMultipleAxes
+    {
+        get{
+            if ((InputControls.Forward || InputControls.Backward) && (InputControls.StrafeLeft || InputControls.StrafeRight))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    
+    private float SpeedModifier
+    {
+        get
+        {
+            float toReturn = 1.0f;
+            if (MovingOnMultipleAxes)
+            {
+                toReturn = toReturn * 0.7071f;
+            }
+            // haste, slow, etc.
+            return toReturn;
+        }
+    }
         
-        controller.Move(playerVelocity * Time.deltaTime);
-        */
+    public float DistanceTravelled
+    {
+        get
+        {
+            return _distanceTravelled;
+        }
+    }
+    public bool PositionChanged
+    {
+        get
+        {
+            return _positionChanged;
+        }
+        set
+        {
+            _positionChanged = value;
+        }
     }
 }

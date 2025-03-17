@@ -4,16 +4,21 @@ public class MouseLook : MonoBehaviour
 {
 
     public float mouseSensitivity = 300f; //You can change the number any numbers you want, but always put f after.
-    public Transform myTransform;
     float xRotation = 0f;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        ComponentRegister.MainCamera = GetComponent<Camera>();
     }
 
     void Update()
     {
+        if(ComponentRegister.PlayerMovement.PositionChanged)
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, 1.0f + Mathf.Sin(ComponentRegister.PlayerMovement.DistanceTravelled) * 0.1f, transform.localPosition.z);
+        }
+
         if (Input.GetKey(KeyCode.Escape))
         {
             Cursor.visible = true;
@@ -27,8 +32,7 @@ public class MouseLook : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        myTransform.Rotate(Vector3.up * mouseX);
-        //myTransform.TransformDirection(Vector3.up * mouseX);
+        ComponentRegister.PlayerTransform.Rotate(Vector3.up * mouseX);
     }
 
 }
