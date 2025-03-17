@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-
+    public Camera mainCamera;
     public float mouseSensitivity = 300f; //You can change the number any numbers you want, but always put f after.
     float xRotation = 0f;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        ComponentRegister.MainCamera = GetComponent<Camera>();
+        ComponentRegister.MainCamera = mainCamera;
     }
 
     void Update()

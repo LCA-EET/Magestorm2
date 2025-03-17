@@ -5,30 +5,29 @@ using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
-    
     private CharacterController _controller;
+
     private float _jumpSpeed = 6.0f;
     private float gravityValue = 9.81f;
-
     private float _lateralSpeed = 0.0f;
     private float _maxLateralSpeed = 4.0f;
     private float _lateralAcceleration = 6.0f;
-    
     private float _forwardSpeed = 0.0f;
     private float _maxForwardSpeed = 2.0f;
     private float _forwardAcceleration = 6.0f;
-
     private float _verticalSpeed = 0.0f;
     private float _maxVerticalSpeed = 30.0f;
     private float _verticalAcceleration = 0.0f;
-
     private float _distanceTravelled = 0.0f;
-    private Vector3 _priorPosition;
+    private float _distanceTravelledSinceLastStep = 0.0f;
 
     private bool _positionChanged = false;
-
-   // private float _maxVerticalSpeed = 
     private bool _midJump = false;
+
+    private Vector3 _priorPosition;
+    private RaycastHit _hitInfo;
+    
+   // private float _maxVerticalSpeed = 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -37,15 +36,20 @@ public class PlayerMovement : MonoBehaviour
         ComponentRegister.PlayerTransform = transform;
         ComponentRegister.PlayerMovement = this;
         ComponentRegister.PlayerController = _controller;
+       
     }
     void Update()
     {
-        bool grounded = isGrounded();
+        bool grounded = isGrounded(out _hitInfo);
         if (_priorPosition != transform.position)
         {
             _distanceTravelled += Vector3.Distance(transform.position, _priorPosition);
             _priorPosition = transform.position;
             _positionChanged = true;
+            if (grounded)
+            {
+                PlayStepSound();
+            }
         }
         else
         {
@@ -85,10 +89,30 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-
+    private void PlayStepSound()
+    {
+        if(_distanceTravelled - _distanceTravelledSinceLastStep > 2.0f)
+        {
+            _distanceTravelledSinceLastStep = _distanceTravelled;
+            Debug.Log("Standing On: " + _hitInfo.collider.gameObject.name);
+            Surface standingOn = _hitInfo.collider.gameObject.GetComponent<Surface>();
+            if (standingOn != null && InputControls.Run)
+            {
+                ComponentRegister.Player.PlayAudioClip(standingOn.FootstepClip);
+            }
+            else
+            {
+                Debug.Log("Null Surface");
+            }
+        }
+    }
     private bool isGrounded()
     {
-        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask(), 2.0f);
+        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 2.0f);
+    }
+    private bool isGrounded(out RaycastHit hitInfo)
+    {
+        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 2.0f, out hitInfo);
     }
     private void Accelerate(ref float speed, float maxSpeed, float directionFactor, float acceleration)
     {

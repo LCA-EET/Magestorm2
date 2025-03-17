@@ -8,8 +8,10 @@ public static class LayerManager
         _surfaceLayer = LayerMask.GetMask(new string[] { "Surface" });
     }
 
-    public static int SurfaceMask()
+    public static int SurfaceMask
     {
-        return _surfaceLayer;
+        get{
+            return _surfaceLayer;
+        }
     }
 }

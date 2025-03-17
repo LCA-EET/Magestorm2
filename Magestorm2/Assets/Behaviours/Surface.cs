@@ -13,12 +13,12 @@ public class Surface : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        
+
     }
 
     private void OnTriggerEnter(Collider other)

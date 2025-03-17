@@ -3,9 +3,12 @@ using UnityEngine;
 public static class ComponentRegister
 {
     private static Transform _playerTransform;
+    private static Player _player;
     private static PlayerMovement _playerMovement;
     private static CharacterController _playerController;
     private static Camera _mainCamera;
+    private static AudioSource _playerAudioSource;
+    private static HUD _hud;
     public static Transform PlayerTransform
     {
         get
@@ -50,6 +53,40 @@ public static class ComponentRegister
         set
         {
             _mainCamera = value;
+        }
+    }
+    
+    public static AudioSource PlayerAudioSource
+    {
+        get
+        {
+            return _playerAudioSource;
+        }
+        set
+        {
+            _playerAudioSource = value;
+        }
+    }
+    public static Player Player
+    {
+        get
+        {
+            return _player;
+        }
+        set
+        {
+            _player = value;
+        }
+    }
+    public static HUD HUD
+    {
+        get
+        {
+            return _hud;
+        }
+        set
+        {
+            _hud = value;
         }
     }
 }
