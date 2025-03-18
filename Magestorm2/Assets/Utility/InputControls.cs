@@ -16,7 +16,10 @@ public enum InputControl
     HUDToggle = 11,
     ChatMode = 12,
     CancelChat = 13,
-    SendMessage = 14
+    SendMessage = 14,
+    NextTrack = 15,
+    PreviousTrack = 16,
+    ToggleMusic = 17
 }
 public static class InputControls
 {
@@ -42,6 +45,9 @@ public static class InputControls
             _controls.Add(InputControl.ChatMode, KeyCode.Quote);
             _controls.Add(InputControl.CancelChat, KeyCode.Escape);
             _controls.Add(InputControl.SendMessage, KeyCode.Return);
+            _controls.Add(InputControl.PreviousTrack, KeyCode.Minus);
+            _controls.Add(InputControl.NextTrack, KeyCode.Plus);
+            _controls.Add(InputControl.ToggleMusic, KeyCode.M);
             _init = true;
         }
     }
@@ -134,6 +140,27 @@ public static class InputControls
         get
         {
             return Input.GetKeyDown(_controls[InputControl.CancelChat]) && Game.ChatMode;
+        }
+    }
+    public static bool ToggleMusic
+    {
+        get
+        {
+            return Input.GetKeyDown(_controls[InputControl.ToggleMusic]) && !Game.ChatMode;
+        }
+    }
+    public static bool PreviousTrack
+    {
+        get
+        {
+            return Input.GetKeyDown(_controls[InputControl.PreviousTrack]) && !Game.ChatMode;
+        }
+    }
+    public static bool NextTrack
+    {
+        get
+        {
+            return Input.GetKeyDown(_controls[InputControl.NextTrack]) && !Game.ChatMode;
         }
     }
     public static bool IsPressed(InputControl key)
