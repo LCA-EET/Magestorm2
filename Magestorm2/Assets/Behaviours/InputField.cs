@@ -25,6 +25,7 @@ public class InputField : MonoBehaviour
         }
         if (InputControls.SendMessage)
         {
+            ComponentRegister.Notifier.DisplayNotification(_tmpTextMessage.text);
             CancelChat();
         }    
         if (InputControls.CancelChat)

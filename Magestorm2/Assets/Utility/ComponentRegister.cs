@@ -9,6 +9,31 @@ public static class ComponentRegister
     private static Camera _mainCamera;
     private static AudioSource _playerAudioSource;
     private static HUD _hud;
+    private static MatchTimer _matchTimer;
+    private static Notifier _notifier;
+    
+    public static Notifier Notifier
+    {
+        get
+        {
+            return _notifier;
+        }
+        set
+        {
+            _notifier = value;
+        }
+    }
+    public static MatchTimer MatchTimer
+    {
+        get
+        {
+            return _matchTimer;
+        }
+        set
+        {
+            _matchTimer = value;
+        }
+    }
     public static Transform PlayerTransform
     {
         get
