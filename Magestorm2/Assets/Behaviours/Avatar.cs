@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
-public class Avatar : MonoBehaviour
+public class Avatar : MonoBehaviour, IComparable<Avatar>
 {
     private string _name;
-    private string _level;
+    private byte _level;
     private string _playerClass;
     private Team _team;
     private bool _isAlive;
@@ -21,7 +22,7 @@ public class Avatar : MonoBehaviour
         
     }
 
-    public void SetAttributes(byte id, string name, string level, string playerClass, Team team)
+    public void SetAttributes(byte id, string name, byte level, string playerClass, Team team)
     {
         _name = name;
         _level = level;
@@ -42,5 +43,40 @@ public class Avatar : MonoBehaviour
     public byte PlayerID
     {
         get { return _playerID; }
+    }
+    public Team PlayerTeam
+    {
+        get { return _team; }
+        set { _team = value; }
+    }
+    public string Name
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+    public byte Level
+    {
+        get { return _level; }
+        set { _level = value; }
+    }
+    public string PlayerClass
+    {
+        get { return _playerClass; }
+        set { _playerClass = value; }
+    }
+    public int CompareTo(Avatar other)
+    {
+        if(_team < other.PlayerTeam)
+        {
+            return -1;
+        }
+        else if (_team > other.PlayerTeam)
+        {
+            return 1;             
+        }
+        else
+        {
+            return _name.CompareTo(other.Name);
+        }
     }
 }
