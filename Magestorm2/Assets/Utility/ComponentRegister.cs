@@ -11,7 +11,21 @@ public static class ComponentRegister
     private static HUD _hud;
     private static MatchTimer _matchTimer;
     private static Notifier _notifier;
+    private static AvatarList _avatarList;
+    private static EffectsList _effectsList;
     
+    public static AvatarList AvatarList
+    {
+        get{ return _avatarList; }
+        set{ _avatarList = value; } 
+    }
+
+    public static EffectsList EffectsList
+    {
+        get { return _effectsList; }
+        set{ _effectsList = value; }
+    }
+
     public static Notifier Notifier
     {
         get

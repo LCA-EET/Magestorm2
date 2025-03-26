@@ -9,6 +9,7 @@ public class AvatarList : MonoBehaviour
     void Start()
     {
         _elapsed = 0.0f;
+        ComponentRegister.AvatarList = this;
     }
 
     // Update is called once per frame
