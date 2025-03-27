@@ -13,7 +13,12 @@ public static class ComponentRegister
     private static Notifier _notifier;
     private static AvatarList _avatarList;
     private static EffectsList _effectsList;
-    
+    private static ShrinePanel _shrinePanel;
+    public static ShrinePanel ShrinePanel
+    {
+        get { return _shrinePanel; }
+        set { _shrinePanel = value; }
+    }
     public static AvatarList AvatarList
     {
         get{ return _avatarList; }
