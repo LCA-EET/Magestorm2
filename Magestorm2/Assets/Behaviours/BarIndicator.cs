@@ -6,9 +6,13 @@ public class BarIndicator : MonoBehaviour
     public Image FillImage;
     private Slider _slider;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         _slider = GetComponent<Slider>();
+    }
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -18,7 +22,6 @@ public class BarIndicator : MonoBehaviour
     }
     public void SetFillColor(Color color)
     {
-        Debug.Log("COLOR SET");
         FillImage.color = color;
     }
     public void SetFill(float fill)

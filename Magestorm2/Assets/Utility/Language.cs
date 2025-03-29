@@ -35,14 +35,22 @@ public static class Language
             _selectedLanguage = value;
         }
     }
-    public static string BuildString(string baseString, string param)
+    public static string BuildString(int stringReference, object param)
+    {
+        return BuildString(GetBaseString(stringReference), param);
+    }
+    public static string BuildString(int stringReference, object param, object param2)
+    {
+        return BuildString(GetBaseString(stringReference), param, param2);
+    }
+    public static string BuildString(string baseString, object param)
     {
         _builder.AppendFormat(baseString, param);
         string toReturn = _builder.ToString();
         _builder.Clear();
         return toReturn;
     }
-    public static string BuildString(string baseString, string param1, string param2)
+    public static string BuildString(string baseString, object param1, object param2)
     {
         _builder.AppendFormat(baseString, param1, param2);
         string toReturn = _builder.ToString();

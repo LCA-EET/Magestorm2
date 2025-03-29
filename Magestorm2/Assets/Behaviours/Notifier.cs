@@ -7,9 +7,12 @@ public class Notifier : MonoBehaviour
     private TMP_Text _notifierText;
     private float _secondsRemaining;
     private Color _color;
-    void Start()
+    void Awake()
     {
         _notifierText = GetComponentInChildren<TMP_Text>();
+    }
+    void Start()
+    {
         _color = Color.white;
         ComponentRegister.Notifier = this;
     }

@@ -43,7 +43,7 @@ public class MatchTimer : MonoBehaviour
             {
                 secondsRemainingString = secondsRemaining.ToString();
             }
-            _timeText.SetText("Time Remaining: " + minutesLeftString + ":" + secondsRemainingString);
+            _timeText.text = Language.BuildString(2, minutesLeftString, secondsRemainingString);
         }
         
     }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 220287958246455764}
   - component: {fileID: 129984037076069035}
   m_Layer: 5
-  m_Name: ShrineFill
+  m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -190,7 +190,7 @@ GameObject:
   - component: {fileID: 1061462709725417925}
   - component: {fileID: 124268189774760597}
   m_Layer: 5
-  m_Name: ShrineBorder
+  m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

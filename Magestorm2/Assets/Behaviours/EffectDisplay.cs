@@ -6,9 +6,12 @@ public class EffectDisplay : MonoBehaviour
     private Image _image;
     private bool _isShown;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
         _image = GetComponentInChildren<Image>();
+    }
+    void Start()
+    {
         Show(false, 0);
     }
 

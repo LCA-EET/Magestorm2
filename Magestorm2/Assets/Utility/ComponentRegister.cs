@@ -14,6 +14,12 @@ public static class ComponentRegister
     private static AvatarList _avatarList;
     private static EffectsList _effectsList;
     private static ShrinePanel _shrinePanel;
+    private static PlayerStatusPanel _playerStatusPanel;
+    public static PlayerStatusPanel PlayerStatusPanel
+    {
+        get { return _playerStatusPanel; }
+        set { _playerStatusPanel = value; }
+    }
     public static ShrinePanel ShrinePanel
     {
         get { return _shrinePanel; }
