@@ -8,9 +8,8 @@ public class PlayerStatusPanel : MonoBehaviour
     public BarIndicator[] PlayerIndicators;
     public TMP_Text PlayerName;
     public TMP_Text LCT;
-    public TMP_Text Kills;
-    public TMP_Text Deaths;
-    public TMP_Text Rez;
+    public Counter Kills;
+    public Counter Deaths;
     private Dictionary<PlayerIndicator, BarIndicator> _indicators;
     private Dictionary<PlayerIndicator, Color> _indicatorColors;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -64,5 +63,13 @@ public class PlayerStatusPanel : MonoBehaviour
             baseString = string.Format(baseString, level, SharedFunctions.PlayerClassToString(playerClass), Teams.GetTeamName(team));
         }
         LCT.text = baseString;
+    }
+    public void SetKillCounter(byte killCount)
+    {
+        Kills.SetCount(killCount);
+    }
+    public void SetDeathCounter(byte deathCount)
+    {
+        Deaths.SetCount(deathCount);   
     }
 }
