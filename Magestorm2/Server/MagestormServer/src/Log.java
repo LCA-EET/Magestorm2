@@ -22,6 +22,7 @@ public class Log extends Thread{
         _errorQueue = new ConcurrentLinkedQueue<>();
     }
     public void run(){
+        Main.LogMessage("Log started.");
         while(Main.Running){
             try{
                 Thread.sleep(1000);
