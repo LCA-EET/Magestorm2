@@ -11,12 +11,7 @@ public class Main {
         ServerParams.LoadParams();
         _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath);
         new Thread(_serverLog).start();
-        if(Database.TestDBConnection()){
-            Main.LogMessage("DB Connection Test Successful.");
-        }
-        else{
-            Main.LogMessage("DB Connection Test Failed.");
-        }
+        Database.TestDBConnection();
         GameServer gameServer = new GameServer();
         gameServer.start();
     }
@@ -25,8 +20,5 @@ public class Main {
     }
     public static void LogError(String toLog){
         _serverLog.LogError(toLog);
-    }
-    private static void LoadParams(){
-
     }
 }

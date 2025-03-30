@@ -23,6 +23,7 @@ public class Log extends Thread{
     }
     public void run(){
         Main.LogMessage("Log started.");
+        Main.LogError("Log started.");
         while(Main.Running){
             try{
                 Thread.sleep(1000);

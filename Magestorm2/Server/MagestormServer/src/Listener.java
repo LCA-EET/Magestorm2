@@ -22,6 +22,7 @@ public class Listener extends Thread{
     }
     @Override
     public void run() {
+        Main.LogMessage("Listening on port " + _localPort);
         while (_listening) {
             DatagramPacket receivedPacket = new DatagramPacket(_received, _received.length);
             try {

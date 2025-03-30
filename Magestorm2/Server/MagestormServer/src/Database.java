@@ -12,14 +12,17 @@ public class Database {
         _password = pass;
     }
     public static boolean TestDBConnection(){
+        Main.LogMessage("Testing DB Connection.");
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(_conn, _userName, _password);
             conn.close();
+            Main.LogMessage("DB Connection Test Successful.");
             return true;
         } catch (Exception e) {
             Main.LogError(e.getMessage());
         }
+        Main.LogMessage("DB Connection Test Failed.");
         return false;
     }
 }
