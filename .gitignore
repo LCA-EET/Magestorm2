@@ -363,3 +363,4 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+Magestorm2/Server/MagestormServer/serverparams.txt
