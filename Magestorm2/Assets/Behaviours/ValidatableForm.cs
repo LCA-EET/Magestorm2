@@ -38,7 +38,7 @@ public class ValidatableForm : MonoBehaviour
             }
             if (!passValidation)
             {
-                ComponentRegister.UIPrefabManager.InstantiateMessageBox("Correct the indicated entries, then try again.", gameObject, transform.parent);
+                ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(19), gameObject, transform.parent);
             }
         }
         if (buttonType == ButtonType.Cancel)
