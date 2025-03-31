@@ -16,7 +16,7 @@ public class TextField : ValidateableObject
     public Image InvalidEntryImage;
     private string _priorText;
     private Regex _regex;
-    void Awake()
+    protected virtual void Awake()
     {
         Language.Init();
         MarkInvalid(false);
@@ -25,7 +25,7 @@ public class TextField : ValidateableObject
         
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected virtual void Start()
     {
         if(RegexExpression.Length > 0)
         {
@@ -34,7 +34,7 @@ public class TextField : ValidateableObject
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if(_priorText != TextInput.text)
         {
@@ -48,7 +48,11 @@ public class TextField : ValidateableObject
     }
     public override bool Validate()
     {
-        string input = TextInput.text.Trim();
+        string input = TextInput.text;
+        if (input.Contains(" "))
+        {
+            return false;
+        }
         if (RegexExpression.Length > 0)
         {
             if (!_regex.Match(input).Success)

@@ -15,6 +15,13 @@ public static class ComponentRegister
     private static EffectsList _effectsList;
     private static ShrinePanel _shrinePanel;
     private static PlayerStatusPanel _playerStatusPanel;
+    private static UIPrefabManager _uiprefabManager;
+
+    public static UIPrefabManager UIPrefabManager
+    {
+        get { return _uiprefabManager; }
+        set { _uiprefabManager = value; }
+    }
     public static PlayerStatusPanel PlayerStatusPanel
     {
         get { return _playerStatusPanel; }

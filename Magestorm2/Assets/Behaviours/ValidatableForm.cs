@@ -4,7 +4,6 @@ public class ValidatableForm : MonoBehaviour
 {
     public ValidateableObject[] EntriesToValidate;
     public FormButton[] FormButtons;
-
     private void Awake()
     {
         foreach (FormButton button in FormButtons)
@@ -28,14 +27,19 @@ public class ValidatableForm : MonoBehaviour
     {
         if (buttonType == ButtonType.Submit)
         {
+            bool passValidation = true;
             foreach (ValidateableObject toValidate in EntriesToValidate)
             {
                 if (!toValidate.Validate())
                 {
                     toValidate.MarkInvalid(true);
+                    passValidation = false;
                 }
             }
-            Debug.Log("Submit");
+            if (!passValidation)
+            {
+                ComponentRegister.UIPrefabManager.InstantiateMessageBox("Correct the indicated entries, then try again.", gameObject, transform.parent);
+            }
         }
         if (buttonType == ButtonType.Cancel)
         {

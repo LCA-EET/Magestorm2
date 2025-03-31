@@ -19,6 +19,9 @@ public class GameServer extends Thread implements PacketProcessor{
                     break;
                 case OpCode.Chat:
                     break;
+                case OpCode.CreateAccount:
+
+                    break;
             }
         }
     }
