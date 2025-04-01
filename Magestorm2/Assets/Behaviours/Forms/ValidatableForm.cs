@@ -4,17 +4,11 @@ public class ValidatableForm : MonoBehaviour
 {
     public ValidateableObject[] EntriesToValidate;
     public FormButton[] FormButtons;
-    private void Awake()
-    {
-        foreach (FormButton button in FormButtons)
-        {
-            button.SetForm(this);
-        }
-    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        AssociateFormToButtons();
     }
 
     // Update is called once per frame
@@ -22,8 +16,14 @@ public class ValidatableForm : MonoBehaviour
     {
         
     }
-
-    public void ButtonPressed(ButtonType buttonType)
+    protected void AssociateFormToButtons()
+    {
+        foreach (FormButton button in FormButtons)
+        {
+            button.SetForm(this);
+        }
+    }
+    public virtual void ButtonPressed(ButtonType buttonType)
     {
         if (buttonType == ButtonType.Submit)
         {

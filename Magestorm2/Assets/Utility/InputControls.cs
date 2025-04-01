@@ -55,117 +55,117 @@ public static class InputControls
     {
         get
         {
-            return (Input.GetKey(_controls[InputControl.Run]) && !Backward) && !Game.ChatMode;
+            return (Input.GetKey(_controls[InputControl.Run]) && !Backward) && !Match.ChatMode;
         }
     }
     public static bool Jump
     {
         get
         {
-            return Input.GetKey(_controls[InputControl.Jump]) && !Game.ChatMode;
+            return Input.GetKey(_controls[InputControl.Jump]) && !Match.ChatMode;
         }
     }
     public static bool ShootPrimary
     {
         get
         {
-            return Input.GetKey(_controls[InputControl.ShootPrimary]) && !Game.ChatMode;
+            return Input.GetKey(_controls[InputControl.ShootPrimary]) && !Match.ChatMode;
         }
     }
     public static bool Forward
     {
         get
         {
-            return Input.GetKey(_controls[InputControl.Forward]) && !Game.ChatMode;
+            return Input.GetKey(_controls[InputControl.Forward]) && !Match.ChatMode;
         }
     }
     public static bool Backward
     {
         get
         {
-            return Input.GetKey(_controls[InputControl.Backward]) && !Game.ChatMode;
+            return Input.GetKey(_controls[InputControl.Backward]) && !Match.ChatMode;
         }
     }
     public static bool StrafeLeft
     {
         get
         {
-            return Input.GetKey(_controls[InputControl.StrafeLeft]) && !Game.ChatMode;
+            return Input.GetKey(_controls[InputControl.StrafeLeft]) && !Match.ChatMode;
         }
     }
     public static bool StrafeRight
     {
         get
         {
-            return Input.GetKey(_controls[InputControl.StrafeRight]) && !Game.ChatMode;
+            return Input.GetKey(_controls[InputControl.StrafeRight]) && !Match.ChatMode;
         }
     }
     public static bool Ascend
     {
         get
         {
-            return Input.GetKey(_controls[InputControl.Ascend]) && !Game.ChatMode;
+            return Input.GetKey(_controls[InputControl.Ascend]) && !Match.ChatMode;
         }
     }
     public static bool Descend
     {
         get
         {
-            return Input.GetKey(_controls[InputControl.Descend]) && !Game.ChatMode;
+            return Input.GetKey(_controls[InputControl.Descend]) && !Match.ChatMode;
         }
     }
     public static bool HUD
     {
         get
         {
-            return Input.GetKeyDown(_controls[InputControl.HUDToggle]) && !Game.ChatMode;
+            return Input.GetKeyDown(_controls[InputControl.HUDToggle]) && !Match.ChatMode;
         }
     }
     public static bool SendMessage
     {
         get
         {
-            return Input.GetKeyDown(_controls[InputControl.SendMessage]) && Game.ChatMode;
+            return Input.GetKeyDown(_controls[InputControl.SendMessage]) && Match.ChatMode;
         }
     }
     public static bool ChatMode
     {
         get
         {
-            return Input.GetKeyDown(_controls[InputControl.ChatMode]) && !Game.ChatMode;
+            return Input.GetKeyDown(_controls[InputControl.ChatMode]) && !Match.ChatMode;
         }
     }
     public static bool CancelChat
     {
         get
         {
-            return Input.GetKeyDown(_controls[InputControl.CancelChat]) && Game.ChatMode;
+            return Input.GetKeyDown(_controls[InputControl.CancelChat]) && Match.ChatMode;
         }
     }
     public static bool ToggleMusic
     {
         get
         {
-            return Input.GetKeyDown(_controls[InputControl.ToggleMusic]) && !Game.ChatMode;
+            return Input.GetKeyDown(_controls[InputControl.ToggleMusic]) && !Match.ChatMode;
         }
     }
     public static bool PreviousTrack
     {
         get
         {
-            return Input.GetKeyDown(_controls[InputControl.PreviousTrack]) && !Game.ChatMode;
+            return Input.GetKeyDown(_controls[InputControl.PreviousTrack]) && !Match.ChatMode;
         }
     }
     public static bool NextTrack
     {
         get
         {
-            return Input.GetKeyDown(_controls[InputControl.NextTrack]) && !Game.ChatMode;
+            return Input.GetKeyDown(_controls[InputControl.NextTrack]) && !Match.ChatMode;
         }
     }
     public static bool IsPressed(InputControl key)
     {
-        return Input.GetKey(_controls[key]) && !Game.ChatMode;
+        return Input.GetKey(_controls[key]) && !Match.ChatMode;
     }
     public static bool IsPressed_IgnoreChatMode(InputControl key)
     {

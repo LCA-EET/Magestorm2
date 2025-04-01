@@ -3,7 +3,12 @@ using System.Text;
 using UnityEngine;
 using System.IO;
 using UnityEditor;
-
+using System;
+public enum Languages : byte
+{
+    English = 0,
+    Russian = 1
+}
 public static class Language
 {
     private static bool _init = false;
@@ -13,14 +18,15 @@ public static class Language
    
     private static Dictionary<int, Dictionary<int, string>> _languageStrings;
     private static Dictionary<int, string> _languageIndices;
-
+    private static List<LanguageUpdater> _languageUpdaters;
     public static void Init()
     {
         if (!_init)
         {
+            _languageUpdaters = new List<LanguageUpdater>();
             IngestLanguageFiles();
             _builder = new StringBuilder();
-            SelectedLanguage = 0;
+            SelectedLanguage = (byte)Languages.English;
             _init = true;
         }
     }
@@ -33,6 +39,21 @@ public static class Language
         set
         {
             _selectedLanguage = value;
+        }
+    }
+    public static void SetLanguage(Languages language)
+    {
+        _selectedLanguage = (byte)language;
+        foreach (LanguageUpdater updater in _languageUpdaters)
+        {
+            try
+            {
+                updater.UpdateLanguage();
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
     }
     public static string BuildString(int stringReference, object param)
@@ -88,4 +109,9 @@ public static class Language
             _languageStrings.Add(i, indexedStrings);
         }
     }
+    public static void RegisterLanguageUpdater(LanguageUpdater languageUpdater)
+    {
+        _languageUpdaters.Add(languageUpdater);
+    }
+
 }

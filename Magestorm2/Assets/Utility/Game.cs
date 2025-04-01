@@ -1,49 +1,22 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
+using System.Threading;
+using System.Net;
 public static class Game
 {
-    public static bool ChatMode;
-    private static Dictionary<byte, Avatar> _matchPlayers;
+    public static bool Running;
+
     public static void Init()
     {
-        ChatMode = false;
-        _matchPlayers = new Dictionary<byte, Avatar>();
+        Running = true;
+        Language.Init();
+        LayerManager.Init();
+        InputControls.Init();
+        Teams.Init();
+        IPAddress ip = IPAddress.Parse("192.168.1.93");
+        new UDPListener(6000, new IPEndPoint(ip, 6000));
     }
 
-    public static void AddAvatar(Avatar avatar)
-    {
-        _matchPlayers.Add(avatar.PlayerID, avatar);
-    }
-    public static void RemoveAvatar(byte ID)
-    {
-        _matchPlayers.Remove(ID);
-    }
-    public static Dictionary<byte, Avatar> GetMatchPlayers()
-    {
-        return _matchPlayers;
-    }
-    public static List<Avatar> GetPlayersOfTeam(Team team)
-    {
-        List<Avatar> list = new List<Avatar>();
-        foreach (Avatar avatar in _matchPlayers.Values)
-        {
-            if(avatar.PlayerTeam == team)
-            {
-                list.Add(avatar);
-            }
-        }
-        return list;
-    }
-    public static List<Avatar> GetSortedPlayers()
-    {
-        List<Avatar> toReturn = new List<Avatar>();
-        for(byte b = 0; b < 4; b++)
-        {
-            toReturn.AddRange(GetPlayersOfTeam((Team)b));
-        }
-        toReturn.Sort();
-        return toReturn;
-    }
+   
 }

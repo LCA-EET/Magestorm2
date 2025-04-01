@@ -1,14 +1,12 @@
 using TMPro;
 using UnityEngine;
 
-public class Counter : MonoBehaviour
+public class Counter : LanguageUpdater
 {
-    private TMP_Text _tmText;
-    public int StringReference;
+    private byte _lastCount = 0;
     void Awake()
     {
-        _tmText = GetComponent<TMP_Text>();
-        Language.Init();
+        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,9 +19,15 @@ public class Counter : MonoBehaviour
     {
         
     }
-    
+    public override void UpdateLanguage()
+    {
+        SetCount(_lastCount);
+    }
     public void SetCount(byte count)
     {
-        _tmText.text = Language.BuildString(StringReference, 0);
+        _lastCount = count;
+        TextFields[0].text = Language.BuildString(StringReferences[0], count);
     }
+
+
 }

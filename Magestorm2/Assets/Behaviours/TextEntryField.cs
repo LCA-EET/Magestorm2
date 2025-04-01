@@ -11,18 +11,12 @@ public class TextField : ValidateableObject
     public byte MaxLength;
     public byte MinLength;
     public string RegexExpression;
-    public int HeaderStringReference;
-    public int PlaceholderStringReference;
     public Image InvalidEntryImage;
     private string _priorText;
     private Regex _regex;
     protected virtual void Awake()
     {
-        Language.Init();
         MarkInvalid(false);
-        PlaceholderField.text = Language.GetBaseString(PlaceholderStringReference);
-        Header.text = Language.GetBaseString(HeaderStringReference);
-        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()

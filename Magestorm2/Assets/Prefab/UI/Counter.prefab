@@ -149,4 +149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa574362ec2718747bf44f4aa009254e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StringReference: 0
+  TextFields:
+  - {fileID: 7265413002012053164}
+  StringReferences: 00000000

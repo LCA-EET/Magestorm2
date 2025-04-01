@@ -20,7 +20,7 @@ public class AvatarList : MonoBehaviour
         {
             _elapsed = 0.0f;
             int index;
-            List<Avatar> toDisplay = Game.GetSortedPlayers();
+            List<Avatar> toDisplay = Match.GetSortedPlayers();
             for (index = 0; index < toDisplay.Count; index++)
             {
                 if(index < 20)

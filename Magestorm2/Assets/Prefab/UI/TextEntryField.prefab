@@ -355,6 +355,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4396828659250135313}
   - component: {fileID: 1642347294863216574}
+  - component: {fileID: 3366039408167537820}
   m_Layer: 5
   m_Name: TextEntryField
   m_TagString: Untagged
@@ -402,9 +403,23 @@ MonoBehaviour:
   MaxLength: 24
   MinLength: 4
   RegexExpression: 
-  HeaderStringReference: 0
-  PlaceholderStringReference: 15
   InvalidEntryImage: {fileID: 1614676022845937225}
+--- !u!114 &3366039408167537820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2304074668684741220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e1f60de09878e49b7640dfa0b9d2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TextFields:
+  - {fileID: 5550058313945676438}
+  - {fileID: 7692703330405532327}
+  StringReferences: 0000000000000000
 --- !u!1 &3394497910548868659
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +529,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 77.29999}
+  m_AnchoredPosition: {x: 0, y: 75.1}
   m_SizeDelta: {x: 365.6, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6194499904283657137
@@ -575,9 +590,9 @@ MonoBehaviour:
   m_fontSize: 24
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 24
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -610,7 +625,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 153.95514, y: 0, z: 153.1972, w: 7.675873}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

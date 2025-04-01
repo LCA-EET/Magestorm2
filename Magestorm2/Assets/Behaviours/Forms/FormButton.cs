@@ -1,9 +1,16 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public enum ButtonType : byte
 {
     Submit = 0,
-    Cancel = 1
+    Cancel = 1,
+    LogIn = 2,
+    CreateAccount = 3,
+    English = 4,
+    Russian = 5,
+    Spanish = 6,
+    Chinese = 7
 }
 public class FormButton : MonoBehaviour
 {

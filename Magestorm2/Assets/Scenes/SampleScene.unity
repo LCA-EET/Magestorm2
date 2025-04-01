@@ -4756,6 +4756,10 @@ PrefabInstance:
       propertyPath: StringReference
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 3208291294575233039, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
+      propertyPath: 'StringReferences.Array.data[0]'
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7265413002012053164, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
       propertyPath: m_text
       value: 'Deaths:'
@@ -7639,6 +7643,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3208291294575233039, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
       propertyPath: StringReference
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3208291294575233039, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
+      propertyPath: 'StringReferences.Array.data[0]'
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7265413002012053164, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
