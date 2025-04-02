@@ -1,6 +1,8 @@
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.Base64;
 import java.util.Random;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -20,14 +22,14 @@ public class Database {
     public static boolean UpdateServerInfo(){
         String portNumber = "6000";
 
-        String sql = "UPDATE serverinfo SET portnumber=?, encryptionkey=? WHERE id=0";
+        String sql = "UPDATE serverinfo SET portnumber=?, encryptionkey=?, iv=? WHERE id=0";
         Connection conn = DBConnection();
         try{
-            String encryptedPort = Cryptographer.encrypt(portNumber.getBytes(UTF_8), _psk);
-            String encryptedKey = Cryptographer.encrypt(Cryptographer.RandomString(16).getBytes(UTF_8), _psk);
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, encryptedPort);
-            ps.setString(2, encryptedKey);
+            ps.setInt(1, 6000);
+            Base64.getEncoder().encodeToString((Cryptographer.Key()));
+            ps.setString(2, Base64.getEncoder().encodeToString((Cryptographer.Key())));
+            ps.setString(3, Base64.getEncoder().encodeToString((Cryptographer.IV())));
             ps.addBatch();
             ps.executeBatch();
             conn.close();

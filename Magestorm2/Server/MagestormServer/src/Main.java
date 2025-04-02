@@ -9,6 +9,7 @@ public class Main {
     public static boolean Running = true;
 
     public static void main(String args[]) throws FileNotFoundException {
+        Cryptographer.GenerateKeyAndIV();
         ServerParams.LoadParams();
         _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath);
         new Thread(_serverLog).start();
