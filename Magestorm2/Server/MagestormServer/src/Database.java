@@ -1,21 +1,48 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.util.Random;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Database {
     private static String _userName;
     private static String _password;
     private static String _conn;
+    private static String _psk;
 
-    public static void Init(String conn, String user, String pass){
+    public static void Init(String conn, String user, String pass, String psk){
         _conn = conn;
         _userName = user;
         _password = pass;
+        _psk = psk;
+    }
+    public static boolean UpdateServerInfo(){
+        String portNumber = "6000";
+
+        String sql = "UPDATE serverinfo SET portnumber=?, encryptionkey=? WHERE id=0";
+        Connection conn = DBConnection();
+        try{
+            String encryptedPort = Cryptographer.encrypt(portNumber.getBytes(UTF_8), _psk);
+            String encryptedKey = Cryptographer.encrypt(Cryptographer.RandomString(16).getBytes(UTF_8), _psk);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, encryptedPort);
+            ps.setString(2, encryptedKey);
+            ps.addBatch();
+            ps.executeBatch();
+            conn.close();
+            Main.LogMessage("Updated database with port and key information.");
+            return true;
+        }
+        catch(Exception ex){
+            Main.LogError("Failed to update database with port and key information: " + ex.getMessage());
+        }
+        return false;
     }
     public static boolean TestDBConnection(){
         Main.LogMessage("Testing DB Connection.");
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(_conn, _userName, _password);
+            Connection conn = DBConnection();
             conn.close();
             Main.LogMessage("DB Connection Test Successful.");
             return true;
@@ -25,4 +52,15 @@ public class Database {
         Main.LogMessage("DB Connection Test Failed.");
         return false;
     }
+    private static Connection DBConnection(){
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(_conn, _userName, _password);
+        }
+        catch(Exception e){
+
+        }
+        return null;
+    }
+
 }

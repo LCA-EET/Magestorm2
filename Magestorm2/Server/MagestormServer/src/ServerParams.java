@@ -19,7 +19,8 @@ public class ServerParams {
         try {
             paramScanner = new Scanner(paramFile);
             ListeningPort = Integer.parseInt(paramScanner.nextLine());
-            Database.Init(paramScanner.nextLine(), paramScanner.nextLine(), paramScanner.nextLine());
+            Database.Init(paramScanner.nextLine(), paramScanner.nextLine(),
+                    paramScanner.nextLine(), paramScanner.nextLine());
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

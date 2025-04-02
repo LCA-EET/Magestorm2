@@ -4,7 +4,7 @@ public class ValidatableForm : MonoBehaviour
 {
     public ValidateableObject[] EntriesToValidate;
     public FormButton[] FormButtons;
-
+     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -23,6 +23,10 @@ public class ValidatableForm : MonoBehaviour
             button.SetForm(this);
         }
     }
+    protected virtual void PassedValidation()
+    {
+
+    }
     public virtual void ButtonPressed(ButtonType buttonType)
     {
         if (buttonType == ButtonType.Submit)
@@ -39,6 +43,10 @@ public class ValidatableForm : MonoBehaviour
             if (!passValidation)
             {
                 ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(19), gameObject, transform.parent);
+            }
+            else
+            {
+
             }
         }
         if (buttonType == ButtonType.Cancel)

@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -11,9 +12,12 @@ public class Main {
         ServerParams.LoadParams();
         _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath);
         new Thread(_serverLog).start();
-        Database.TestDBConnection();
-        GameServer gameServer = new GameServer();
-        gameServer.start();
+        if(Database.TestDBConnection()){
+            Database.UpdateServerInfo();
+            GameServer gameServer = new GameServer();
+            gameServer.start();
+        }
+
     }
     public static void LogMessage(String toLog){
         _serverLog.LogMessage(toLog);

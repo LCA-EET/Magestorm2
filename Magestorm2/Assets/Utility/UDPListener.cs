@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-public class UDPListener
+public class UDPListener 
 {
     private ConcurrentQueue<byte[]> _receivedPackets = new ConcurrentQueue<byte[]>();
     private IPEndPoint _server;    
