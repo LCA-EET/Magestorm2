@@ -5,7 +5,6 @@ public class GameServer extends Thread implements PacketProcessor{
 
     @Override
     public void run(){
-        Cryptographer.GenerateKeyAndIV();
         _serverListener = new Listener(ServerParams.ListeningPort, this);
         new Thread(_serverListener).start();
     }

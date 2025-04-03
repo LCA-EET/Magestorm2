@@ -28,8 +28,12 @@ public class Database {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, 6000);
             Base64.getEncoder().encodeToString((Cryptographer.Key()));
-            ps.setString(2, Base64.getEncoder().encodeToString((Cryptographer.Key())));
-            ps.setString(3, Base64.getEncoder().encodeToString((Cryptographer.IV())));
+            String key64 = Base64.getEncoder().encodeToString((Cryptographer.Key()));
+            String iv64 = Base64.getEncoder().encodeToString((Cryptographer.IV()));
+            Main.LogMessage("key64: " + key64);
+            Main.LogMessage("iv64: " + iv64);
+            ps.setString(2, key64);
+            ps.setString(3, iv64);
             ps.addBatch();
             ps.executeBatch();
             conn.close();

@@ -20,6 +20,15 @@ public class Cryptographer {
     private static byte[] _iv;
     private static ByteBuffer _keyBuffer;
     private static ByteBuffer _ivBuffer;
+
+    public static int ComputeChecksum(byte[] data){
+        int toReturn = 0;
+        for(int i = 0; i < data.length; i++){
+            //Main.LogMessage(i + ": " + data[i]);
+            toReturn += data[i];
+        }
+        return toReturn;
+    }
     public static byte[] Key(){
         return _key;
     }
@@ -35,25 +44,26 @@ public class Cryptographer {
     public static void GenerateKeyAndIV(){
         try{
             SecureRandom random = SecureRandom.getInstanceStrong();
-            _iv = new byte[IV_LENGTH_BYTE];
-            random.nextBytes(_iv);
-            _ivBuffer = ByteBuffer.wrap(_iv);
+            _iv = generateRandomBytes(random, 12);
+            //_key = generateRandomBytes(random, 16);
+            _key = getAESKey(128).getEncoded();
 
-            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-            keyGen.init(128, random);
-            _key = keyGen.generateKey().getEncoded();
+            _ivBuffer = ByteBuffer.wrap(_iv);
             _keyBuffer = ByteBuffer.wrap(_key);
+
+            Main.LogMessage("Key checksum: " + ComputeChecksum(_key) + ", key length: " + _key.length);
+            Main.LogMessage("IV checksum: " + ComputeChecksum(_iv) + ", IV length: " + _iv.length);
         }
         catch(Exception ex){
-
+            Main.LogError("Failed to generate key and IV: " + ex.getMessage());
         }
 
     }
 
-    public static byte[] getIV(int numBytes) {
-        byte[] nonce = new byte[numBytes];
-        new SecureRandom().nextBytes(nonce);
-        return nonce;
+    public static byte[] generateRandomBytes(SecureRandom random, int numBytes) {
+        byte[] data = new byte[numBytes];
+        random.nextBytes(data);
+        return data;
     }
 
     // AES secret key
@@ -63,16 +73,5 @@ public class Cryptographer {
         return keyGen.generateKey();
     }
 
-    public static String RandomString(int length) {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = length;
-        Random random = new Random();
 
-        return  random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(targetStringLength)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
-    }
 }
