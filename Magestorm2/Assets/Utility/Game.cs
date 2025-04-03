@@ -54,7 +54,7 @@ public static class Game
                 {
                     NoCache = true
                 };
-                Task<string> t = client.GetStringAsync("https://www.fosiemods.net/ms2.php");
+                Task<string> t = client.GetStringAsync("https://www.fosiemods.net/ms2.php?appid=ms2");
                 string returned = t.Result;
                 string[] returnedArray = returned.Split("<br>");
                 _portNumber = int.Parse(returnedArray[0]);
