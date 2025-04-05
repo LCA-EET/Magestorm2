@@ -16,19 +16,7 @@ public static class ComponentRegister
     private static ShrinePanel _shrinePanel;
     private static PlayerStatusPanel _playerStatusPanel;
     private static UIPrefabManager _uiprefabManager;
-    private static UDPListener _udpListener;
-    private static UDPSender _udpSender;
 
-    public static UDPSender UDPSender
-    {
-        get { return _udpSender; }
-        set { _udpSender = value; }
-    }
-    public static UDPListener UDPListener
-    {
-        get { return _udpListener; }
-        set { _udpListener = value; }
-    }
     public static UIPrefabManager UIPrefabManager
     {
         get { return _uiprefabManager; }

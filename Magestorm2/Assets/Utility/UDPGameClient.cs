@@ -1,0 +1,59 @@
+using UnityEngine;
+using System.Collections.Concurrent;
+using System.Net;
+using System.Threading;
+using System;
+using System.Net.Sockets;
+using System.Collections.Generic;
+public class UDPGameClient
+{
+    private ConcurrentQueue<byte[]> _received;
+    private IPEndPoint _remote;
+    private UdpClient _client;
+    private bool _listening;
+    public UDPGameClient(IPEndPoint remote)
+    {
+        _listening = false;
+        _received = new ConcurrentQueue<byte[]>();
+        _client = new UdpClient();
+        _remote = remote;
+    }
+    public void Listen()
+    {
+        _listening = true;
+        new Thread(ListenerThread).Start();
+    }
+    private void ListenerThread()
+    {
+        while (_listening)
+        {
+            try
+            {
+                byte[] received = _client.Receive(ref _remote);
+                _received.Enqueue(received);
+            }
+            catch(Exception ex) { }
+        }
+    }
+    public void StopListening()
+    {
+        _listening = false;
+    }
+    public void Send(byte[] toSend)
+    {
+        _client.Send(toSend, toSend.Length, _remote);
+    }
+    public List<byte[]> PacketsReceived()
+    {
+        List<byte[]> toReturn = new List<byte[]>();
+        while (!_received.IsEmpty)
+        {
+            byte[] receivedBytes;
+            if (_received.TryDequeue(out receivedBytes))
+            {
+                toReturn.Add(receivedBytes);
+            }
+        }
+        return toReturn;
+    }
+}

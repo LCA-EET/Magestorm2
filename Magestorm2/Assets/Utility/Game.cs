@@ -11,21 +11,13 @@ using System.Text;
 public static class Game
 {
     public static bool Running;
-    private static int _portNumber;
-    private static byte[] _key;
-    private static byte[] _iv;
 
     public static void Init()
     {
-        Running = true;
-        Debug.Log("IsLittleEndian:  " +  BitConverter.IsLittleEndian);
-        FetchServerInfo();
         Language.Init();
         LayerManager.Init();
         InputControls.Init();
         Teams.Init();
-        IPAddress ip = IPAddress.Parse("192.168.1.93");
-        new UDPListener(6000, new IPEndPoint(ip, 6000));
     }
     private static int ComputeChecksum(byte[] data)
     {
@@ -44,7 +36,7 @@ public static class Game
         }
         return toReturn;
     }
-    private static bool FetchServerInfo()
+    public static UDPGameClient FetchServerInfo()
     {
         using (HttpClient client = new HttpClient())
         {
@@ -57,22 +49,24 @@ public static class Game
                 Task<string> t = client.GetStringAsync("https://www.fosiemods.net/ms2.php?appid=ms2");
                 string returned = t.Result;
                 string[] returnedArray = returned.Split("<br>");
-                _portNumber = int.Parse(returnedArray[0]);
+                int portNumber = int.Parse(returnedArray[0]);
                 string key64 = returnedArray[1];
                 string iv64 = returnedArray[2];
                 Debug.Log("key64: " + key64);
                 Debug.Log("iv64: " + iv64);
-                _key = Convert.FromBase64String(key64);
-                _iv = Convert.FromBase64String(iv64);
-                Debug.Log("Key checksum: " + ComputeChecksum(_key) + ", Key Length: " + _key.Length);
-                Debug.Log("IV checksum: " + ComputeChecksum(_iv) + ", IV Length: " + _iv.Length);
-                return true;
+                byte[] key = Convert.FromBase64String(key64);
+                byte[] iv = Convert.FromBase64String(iv64);
+                Debug.Log("Key checksum: " + ComputeChecksum(key) + ", Key Length: " + key.Length);
+                Debug.Log("IV checksum: " + ComputeChecksum(iv) + ", IV Length: " + iv.Length);
+                UDPBuilder.Init("fosiemods.net");
+                Cryptography.InitGCM(key);
+                return UDPBuilder.CreateClient(portNumber);
             }
             catch (Exception e)
             {
-
+                Debug.LogException(e);
             }
         }
-        return false;
+        return null;
     }
 }

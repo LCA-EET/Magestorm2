@@ -16,10 +16,9 @@ public class Cryptographer {
     private static final int SALT_LENGTH_BYTE = 16;
     private static final Charset UTF_8 = StandardCharsets.UTF_8;
 
+    private static long _iv;
     private static byte[] _key;
-    private static byte[] _iv;
     private static ByteBuffer _keyBuffer;
-    private static ByteBuffer _ivBuffer;
 
     public static int ComputeChecksum(byte[] data){
         int toReturn = 0;
@@ -32,27 +31,18 @@ public class Cryptographer {
     public static byte[] Key(){
         return _key;
     }
-    public static byte[] IV(){
-        return _iv;
-    }
     public static ByteBuffer KeyBuffer(){
         return _keyBuffer;
-    }
-    public static ByteBuffer IVBuffer(){
-        return _ivBuffer;
     }
     public static void GenerateKeyAndIV(){
         try{
             SecureRandom random = SecureRandom.getInstanceStrong();
-            _iv = generateRandomBytes(random, 12);
-            //_key = generateRandomBytes(random, 16);
+            _iv = random.nextLong();
             _key = getAESKey(128).getEncoded();
 
-            _ivBuffer = ByteBuffer.wrap(_iv);
             _keyBuffer = ByteBuffer.wrap(_key);
 
             Main.LogMessage("Key checksum: " + ComputeChecksum(_key) + ", key length: " + _key.length);
-            Main.LogMessage("IV checksum: " + ComputeChecksum(_iv) + ", IV length: " + _iv.length);
         }
         catch(Exception ex){
             Main.LogError("Failed to generate key and IV: " + ex.getMessage());

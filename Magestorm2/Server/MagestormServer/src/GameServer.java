@@ -12,6 +12,10 @@ public class GameServer extends Thread implements PacketProcessor{
     @Override
     public void ProcessPacket(DatagramPacket received) {
         byte[] bytesReceived = received.getData();
+        for(int i = 0; i < bytesReceived.length; i++){
+            System.out.println(bytesReceived[i]);
+            Main.LogMessage(String.valueOf(bytesReceived[i]));
+        }
         if(bytesReceived.length > 0){
             byte opCode = bytesReceived[0];
             switch (opCode){
