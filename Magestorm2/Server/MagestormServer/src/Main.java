@@ -15,8 +15,7 @@ public class Main {
         Cryptographer.GenerateKeyAndIV();
         if(Database.TestDBConnection()){
             Database.UpdateServerInfo();
-            GameServer gameServer = new GameServer();
-            gameServer.start();
+            GameServer.init();
         }
 
     }

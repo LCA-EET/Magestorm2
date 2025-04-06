@@ -1,18 +1,21 @@
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class LoginForm : ValidatableForm
+public class UILoginForm : ValidatableForm
 {
-    private UDPGameClient _udp;
+    private int _udpPort;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         AssociateFormToButtons();
-        _udp = Game.FetchServerInfo();
-        if(_udp != null)
+        _udpPort = Game.FetchServerInfo();
+        if(_udpPort > 0)
         {
-            _udp.Listen();
-            Debug.Log("Listening!");
+            ComponentRegister.UIPrefabManager.InstantiateUIPacketProcessor(_udpPort);
+            if (UDPBuilder.StartListening(_udpPort))
+            {
+                Debug.Log("Listening!");
+            }
         }
         else
         {
@@ -28,7 +31,6 @@ public class LoginForm : ValidatableForm
     public override void ButtonPressed(ButtonType buttonType)
     {
         byte[] testData = new byte[] { 4, 8, 16 };
-        Cryptography.EncryptAndSend(testData, _udp);
         Debug.Log(buttonType);
         switch (buttonType)
         {

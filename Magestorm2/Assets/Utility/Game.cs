@@ -36,7 +36,7 @@ public static class Game
         }
         return toReturn;
     }
-    public static UDPGameClient FetchServerInfo()
+    public static int FetchServerInfo()
     {
         using (HttpClient client = new HttpClient())
         {
@@ -51,15 +51,11 @@ public static class Game
                 string[] returnedArray = returned.Split("<br>");
                 int portNumber = int.Parse(returnedArray[0]);
                 string key64 = returnedArray[1];
-                string iv64 = returnedArray[2];
                 Debug.Log("key64: " + key64);
-                Debug.Log("iv64: " + iv64);
                 byte[] key = Convert.FromBase64String(key64);
-                byte[] iv = Convert.FromBase64String(iv64);
                 Debug.Log("Key checksum: " + ComputeChecksum(key) + ", Key Length: " + key.Length);
-                Debug.Log("IV checksum: " + ComputeChecksum(iv) + ", IV Length: " + iv.Length);
                 UDPBuilder.Init("fosiemods.net");
-                Cryptography.InitGCM(key);
+                Cryptography.Init(key);
                 return UDPBuilder.CreateClient(portNumber);
             }
             catch (Exception e)
@@ -67,6 +63,6 @@ public static class Game
                 Debug.LogException(e);
             }
         }
-        return null;
+        return -1;
     }
 }

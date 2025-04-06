@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ValidatableForm : MonoBehaviour
+public class ValidatableForm : InstantiatableForm
 {
     public ValidateableObject[] EntriesToValidate;
     public FormButton[] FormButtons;
@@ -46,12 +46,12 @@ public class ValidatableForm : MonoBehaviour
             }
             else
             {
-
+                PassedValidation();
             }
         }
         if (buttonType == ButtonType.Cancel)
         {
-            Debug.Log("Cancel");
+            CloseForm();
         }
     }
 }

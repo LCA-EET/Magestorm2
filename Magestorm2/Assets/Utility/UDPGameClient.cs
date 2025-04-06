@@ -30,7 +30,7 @@ public class UDPGameClient
             try
             {
                 byte[] received = _client.Receive(ref _remote);
-                _received.Enqueue(received);
+                _received.Enqueue(Cryptography.DecryptReceived(received));
             }
             catch(Exception ex) { }
         }
@@ -42,6 +42,13 @@ public class UDPGameClient
     public void Send(byte[] toSend)
     {
         _client.Send(toSend, toSend.Length, _remote);
+    }
+    public bool HasPacketsPending
+    {
+        get
+        {
+            return _received.Count > 0;
+        }
     }
     public List<byte[]> PacketsReceived()
     {

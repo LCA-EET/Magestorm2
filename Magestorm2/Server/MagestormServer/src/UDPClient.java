@@ -1,18 +1,16 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-public class Listener extends Thread{
+public class UDPClient extends Thread{
     private DatagramSocket _udpSocket;
     private boolean _listening;
-    private byte[] _received;
-    private final PacketProcessor _processor;
     private final int _localPort;
+    private PacketProcessor _processor;
 
-    public Listener(int localPort, PacketProcessor processor){
+    public UDPClient(int localPort, PacketProcessor processor){
         _listening = true;
-        _processor = processor;
         _localPort = localPort;
-        _received = new byte[256];
+        _processor = processor;
         try{
             _udpSocket = new DatagramSocket(localPort);
         }
@@ -23,8 +21,9 @@ public class Listener extends Thread{
     @Override
     public void run() {
         Main.LogMessage("Listening on port " + _localPort);
+        byte[] receivedBuffer = new byte[256];
         while (_listening) {
-            DatagramPacket receivedPacket = new DatagramPacket(_received, _received.length);
+            DatagramPacket receivedPacket = new DatagramPacket(receivedBuffer, receivedBuffer.length);
             try {
                 _udpSocket.receive((receivedPacket));
                 _processor.ProcessPacket(receivedPacket);
@@ -33,6 +32,8 @@ public class Listener extends Thread{
             }
         }
     }
+
+
     public void StopListening(){
         _listening = false;
     }
