@@ -21,9 +21,6 @@ public class UIPacketProcessor implements PacketProcessor
         switch (opCode){
             case OpCode_Receive.LogIn:
                 String[] creds = LogInDetails(decrypted);
-                for(int i = 0; i < creds.length; i++){
-                    Main.LogMessage(creds[i]);
-                }
                 break;
             case OpCode_Receive.CreateAccount:
                 break;

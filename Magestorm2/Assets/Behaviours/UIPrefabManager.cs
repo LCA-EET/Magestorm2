@@ -41,10 +41,10 @@ public class UIPrefabManager : MonoBehaviour
         instantiated.SetInstantiator(instantiator, new object[] { message });
         SpawnPrefab(instantiated.gameObject, instantiator, parentTransform, false);
     }
-    public void InstantiateCreateAccountForm(GameObject instantiator, Transform parentTransform)
+    public void InstantiateCreateAccountForm(GameObject instantiator, Transform parentTransform, int port)
     {
         UICreateAccountForm instantiated = Instantiate(PrefabCreateAccount).GetComponent<UICreateAccountForm>();
-        instantiated.SetInstantiator(instantiator);
+        instantiated.SetInstantiator(instantiator, new object[] {port});
         SpawnPrefab(instantiated.gameObject, instantiator, parentTransform, false);
     }
     public void InstantiateUIPacketProcessor(int port)

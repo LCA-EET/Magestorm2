@@ -30,7 +30,25 @@ public static class Packets
     {
         return new ArraySegment<byte>(received, 17, DeterminePayloadLength(received)).ToArray();
     }
+    public static byte[] CreateAccountPacket(string username, string hashedPassword, string email)
+    {
+        byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(username);
+        byte[] hashedBytes = Convert.FromBase64String(hashedPassword);
+        byte[] emailBytes = UTF8Encoding.UTF8.GetBytes(email);
 
+        byte[] unencryptedPayload = new byte[usernameBytes.Length + hashedBytes.Length + emailBytes.Length + 4];
+
+        unencryptedPayload[0] = OpCode_Send.CreateAccount;
+        unencryptedPayload[1] = (byte)usernameBytes.Length;
+        unencryptedPayload[2] = (byte)hashedBytes.Length;
+        unencryptedPayload[3] = (byte)emailBytes.Length;
+
+        usernameBytes.CopyTo(unencryptedPayload, 4);
+        hashedBytes.CopyTo(unencryptedPayload, 4 + usernameBytes.Length);
+        emailBytes.CopyTo(unencryptedPayload, 4 + usernameBytes.Length + hashedBytes.Length);
+
+        return unencryptedPayload;
+    }
     public static byte[] LogInPacket(string username, string hashedPassword)
     {
         byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(username);
@@ -42,6 +60,7 @@ public static class Packets
         unencryptedPayload[2] = (byte)hashedBytes.Length;
         usernameBytes.CopyTo(unencryptedPayload, 3);
         hashedBytes.CopyTo(unencryptedPayload, 3 + usernameBytes.Length);
+
         return unencryptedPayload;
     }
 }
