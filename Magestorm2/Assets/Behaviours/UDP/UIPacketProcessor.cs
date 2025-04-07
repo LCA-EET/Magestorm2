@@ -39,6 +39,6 @@ public class UIPacketProcessor : MonoBehaviour
     public void Init(int port)
     {
         _listeningPort = port;
-        _udp = UDPBuilder.GetListener(port);
+        _udp = UDPBuilder.GetClient(port);
     }
 }

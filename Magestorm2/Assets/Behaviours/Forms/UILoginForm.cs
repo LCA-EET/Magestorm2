@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class UILoginForm : ValidatableForm
 {
     private int _udpPort;
+   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,12 +30,28 @@ public class UILoginForm : ValidatableForm
     {
         
     }
+    protected override void PassedValidation()
+    {
+        Debug.Log("Passed validation.");
+        string username = ((TextField)EntriesToValidate[0]).GetValue().ToString();
+        string hashedPassword = Cryptography.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString());
+        Cryptography.EncryptAndSend(Packets.LogInPacket(username, hashedPassword), UDPBuilder.GetClient(_udpPort)); 
+    }
     public override void ButtonPressed(ButtonType buttonType)
     {
-        byte[] testData = new byte[] { 4, 8, 16 };
         Debug.Log(buttonType);
         switch (buttonType)
         {
+            case ButtonType.LogIn:
+                if (ValidateForm())
+                {
+                    PassedValidation();
+                }
+                else
+                {
+                    Debug.Log("invalid entries");
+                }
+                break;
             case ButtonType.CreateAccount:
                 ComponentRegister.UIPrefabManager.InstantiateCreateAccountForm(gameObject, transform.parent);
                 break;

@@ -34,7 +34,7 @@ public static class UDPBuilder
         }
         return false;
     }
-    public static UDPGameClient GetListener(int port)
+    public static UDPGameClient GetClient(int port)
     {
         return _clients[port];
     }

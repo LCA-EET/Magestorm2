@@ -1,10 +1,11 @@
 using UnityEngine;
 using System;
+using System.Text;
 
-public enum OpCode_Send : byte
+public static class OpCode_Send
 {
-    LogIn = 1,
-    CreateAccount = 2
+    public const byte LogIn = 1;
+    public const byte CreateAccount = 2;
 }
 public enum OpCode_Receive : byte
 {
@@ -28,5 +29,19 @@ public static class Packets
     public static byte[] EncryptedPayload(byte[] received)
     {
         return new ArraySegment<byte>(received, 17, DeterminePayloadLength(received)).ToArray();
+    }
+
+    public static byte[] LogInPacket(string username, string hashedPassword)
+    {
+        byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(username);
+        byte[] hashedBytes = Convert.FromBase64String(hashedPassword);
+
+        byte[] unencryptedPayload = new byte[usernameBytes.Length + hashedBytes.Length + 3];
+        unencryptedPayload[0] = OpCode_Send.LogIn;
+        unencryptedPayload[1] = (byte)usernameBytes.Length;
+        unencryptedPayload[2] = (byte)hashedBytes.Length;
+        usernameBytes.CopyTo(unencryptedPayload, 3);
+        hashedBytes.CopyTo(unencryptedPayload, 3 + usernameBytes.Length);
+        return unencryptedPayload;
     }
 }

@@ -21,4 +21,8 @@ public class ValidateableObject : MonoBehaviour
     {
         return true;
     }
+    public virtual object GetValue()
+    {
+        return null;
+    }
 }

@@ -1,4 +1,7 @@
+import java.beans.Encoder;
 import java.net.DatagramPacket;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class UIPacketProcessor implements PacketProcessor
 {
@@ -12,10 +15,31 @@ public class UIPacketProcessor implements PacketProcessor
     @Override
     public void ProcessPacket(DatagramPacket received) {
         byte[] receivedBytes = received.getData();
-        Main.LogMessage("Received packet of length " + receivedBytes.length);
         byte[] decrypted = Cryptographer.Decrypt(receivedBytes);
-        for(int i = 0; i < decrypted.length; i++){
-            System.out.println(decrypted[i]);
+        byte opCode = decrypted[0];
+        Main.LogMessage("OpCode: " + opCode);
+        switch (opCode){
+            case OpCode_Receive.LogIn:
+                String[] creds = LogInDetails(decrypted);
+                for(int i = 0; i < creds.length; i++){
+                    Main.LogMessage(creds[i]);
+                }
+                break;
+            case OpCode_Receive.CreateAccount:
+                break;
         }
+    }
+
+    public String[] LogInDetails(byte[] decrypted){
+        byte userNameLength = decrypted[1];
+        byte pwHashLength = decrypted[2];
+        byte[] userNameBytes = new byte[userNameLength];
+        byte[] pwHashBytes = new byte[pwHashLength];
+        System.arraycopy(decrypted, 3,userNameBytes, 0, userNameLength);
+        System.arraycopy(decrypted, 3 + userNameLength,pwHashBytes,0, pwHashLength);
+        String[] toReturn = new String[2];
+        toReturn[0] = new String(userNameBytes, StandardCharsets.UTF_8);
+        toReturn[1] = Base64.getEncoder().encodeToString(pwHashBytes);
+        return toReturn;
     }
 }

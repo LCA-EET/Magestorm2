@@ -27,24 +27,28 @@ public class ValidatableForm : InstantiatableForm
     {
 
     }
+    protected virtual bool ValidateForm()
+    {
+        bool passValidation = true;
+        foreach (ValidateableObject toValidate in EntriesToValidate)
+        {
+            if (!toValidate.Validate())
+            {
+                toValidate.MarkInvalid(true);
+                passValidation = false;
+            }
+        }
+        if (!passValidation)
+        {
+            ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(19), gameObject, transform.parent);
+        }
+        return passValidation;
+    }
     public virtual void ButtonPressed(ButtonType buttonType)
     {
         if (buttonType == ButtonType.Submit)
         {
-            bool passValidation = true;
-            foreach (ValidateableObject toValidate in EntriesToValidate)
-            {
-                if (!toValidate.Validate())
-                {
-                    toValidate.MarkInvalid(true);
-                    passValidation = false;
-                }
-            }
-            if (!passValidation)
-            {
-                ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(19), gameObject, transform.parent);
-            }
-            else
+            if (ValidateForm())
             {
                 PassedValidation();
             }

@@ -60,4 +60,8 @@ public class TextField : ValidateableObject
     {
         return (input.Length >= MinLength) && (input.Length <= MaxLength);
     }
+    public override object GetValue()
+    {
+        return TextInput.text;
+    }
 }

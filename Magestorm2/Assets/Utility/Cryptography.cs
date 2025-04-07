@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using UnityEditorInternal;
 using UnityEngine;
 
 public static class Cryptography
@@ -13,6 +14,7 @@ public static class Cryptography
     private static long _iv;
     private static byte[] _paddedIV;
     private static AesCryptoServiceProvider _aesEncryptor, _aesDecryptor;
+    private static SHA256 _sha256;
     public static void Init(byte[] key)
     {
         _key = key;
@@ -20,6 +22,7 @@ public static class Cryptography
         _iv = RandomNumberGenerator.GetInt32(Int32.MaxValue);
         _ivSize = 16;
         _paddedIV = new byte[16];
+        _sha256 = SHA256.Create();
         InitAES(ref _aesEncryptor);
         InitAES(ref _aesDecryptor);
     }
@@ -72,5 +75,12 @@ public static class Cryptography
         BitConverter.GetBytes(nonce).CopyTo(_paddedIV, 8);
         return _paddedIV;
     }
+    public static string SHA256Hash(string toHash)
+    {
+        byte[] utf8 = Encoding.UTF8.GetBytes(toHash);
+        byte[] hashed = _sha256.ComputeHash(utf8);
+        return Convert.ToBase64String(hashed);
+    }
+
 
 }
