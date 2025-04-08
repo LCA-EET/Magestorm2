@@ -24,6 +24,7 @@ public class TextField : ValidateableObject
         if(RegexExpression.Length > 0)
         {
             _regex = new Regex(RegexExpression, RegexOptions.IgnoreCase);
+           
         }
     }
 

@@ -8,6 +8,7 @@ public class UIPacketProcessor : MonoBehaviour
 {
     private int _listeningPort;
     private UDPGameClient _udp;
+    private bool _checking;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,27 +18,41 @@ public class UIPacketProcessor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_udp.HasPacketsPending)
+        if(_listeningPort > 0)
         {
-            List<byte[]> toProcess = _udp.PacketsReceived();
-            foreach (byte[] decryptedPayload in toProcess)
+            if (!_checking)
             {
-                OpCode_Receive opCode = (OpCode_Receive)decryptedPayload[0];
-                switch (opCode)
+                _checking = true;
+                Debug.Log("Checking for new packets.");
+            }
+            if (_udp.HasPacketsPending)
+            {
+                Debug.Log("Packets pending!");
+                List<byte[]> toProcess = _udp.PacketsReceived();
+                foreach (byte[] decryptedPayload in toProcess)
                 {
-                    case OpCode_Receive.AccountCreationFailed:
-
-                        break;
-                    case OpCode_Receive.AccountCreated:
-
-                        break;
+                    OpCode_Receive opCode = (OpCode_Receive)decryptedPayload[0];
+                    Debug.Log("OpCode Received: " + opCode);
+                    switch (opCode)
+                    {
+                        case OpCode_Receive.AccountCreationFailed:
+                            Game.MessageBox(Language.GetBaseString(26), ComponentRegister.UILoginForm.gameObject);
+                            break;
+                        case OpCode_Receive.AccountCreated:
+                            Game.MessageBox(Language.GetBaseString(24), ComponentRegister.UILoginForm.gameObject);
+                            break;
+                        case OpCode_Receive.AccountAlreadyExists:
+                            Game.MessageBox(Language.GetBaseString(25), ComponentRegister.UILoginForm.gameObject);
+                            break;
+                    }
                 }
             }
         }
     }
-
+    
     public void Init(int port)
     {
+        Debug.Log("Initialized UI packet listener on port: " + port);
         _listeningPort = port;
         _udp = UDPBuilder.GetClient(port);
     }

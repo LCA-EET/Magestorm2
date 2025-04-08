@@ -12,6 +12,10 @@ public static class Game
 {
     public static bool Running;
 
+    public static void MessageBox(string message, GameObject obj)
+    {
+        ComponentRegister.UIPrefabManager.InstantiateMessageBox(message, obj, obj.transform.parent);
+    }
     public static void Init()
     {
         Language.Init();

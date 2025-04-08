@@ -2,6 +2,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -64,5 +65,48 @@ public class Database {
         }
         return null;
     }
-
+    public static int AccountRecordCount(String username, String email){
+        int toReturn = -1;
+        String sql = "SELECT COUNT(*) AS recordCount FROM accounts WHERE (accountname=?) OR (email=?)";
+        try{
+            Connection conn = DBConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username );
+            ps.setString(2, email );
+            //ps.addBatch();
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                toReturn = rs.getInt("recordCount");
+            }
+            else{
+                toReturn = 0;
+            }
+            conn.close();
+            Main.LogMessage("Record Count " + toReturn);
+        }
+        catch(Exception e){
+            Main.LogError("Database.AccountRecordCount: " + e.getMessage());
+        }
+        return toReturn;
+    }
+    public static boolean CreateAccount(String username, String hash, String email){
+        Main.LogMessage("Creating account: " + username + ", " + hash + ", " + email);
+        String sql = "INSERT INTO accounts(accountname, hash, email, activated) VALUES(?,?,?,?)";
+        try{
+            Connection conn = DBConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username );
+            ps.setString(2, hash );
+            ps.setString(3, email );
+            ps.setByte(4, (byte)0);
+            ps.addBatch();
+            ps.execute();
+            conn.close();
+            return true;
+        }
+        catch(Exception e){
+            Main.LogError("DB Account Creation Failure: " + e.getMessage());
+        }
+        return false;
+    }
 }

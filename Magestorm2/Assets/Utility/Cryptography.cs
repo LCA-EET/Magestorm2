@@ -58,6 +58,7 @@ public static class Cryptography
     }
     public static byte[] DecryptReceived(byte[] received)
     {
+        Debug.Log("Decrypting received packet.");
         byte[] iv = Packets.IVBytes(received);
         byte[] encryptedPayload = Packets.EncryptedPayload(received);
 

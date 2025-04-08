@@ -15,24 +15,33 @@ public class UDPGameClient
     {
         _listening = false;
         _received = new ConcurrentQueue<byte[]>();
-        _client = new UdpClient();
+        _client = new UdpClient(remote.Port);
         _remote = remote;
     }
     public void Listen()
     {
         _listening = true;
+        Debug.Log("Starting UDP Listener thread, port " + _remote.Port);
         new Thread(ListenerThread).Start();
     }
     private void ListenerThread()
     {
+        bool wasReceived = false;
         while (_listening)
         {
             try
             {
+                wasReceived = false;
                 byte[] received = _client.Receive(ref _remote);
+                wasReceived = true;
                 _received.Enqueue(Cryptography.DecryptReceived(received));
             }
-            catch(Exception ex) { }
+            catch(Exception ex) {
+                if (wasReceived)
+                {
+                    Debug.LogException(ex);
+                }  
+            }
         }
     }
     public void StopListening()

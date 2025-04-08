@@ -12,7 +12,8 @@ public enum OpCode_Receive : byte
     LogInSucceeded = 1,
     LogInFailed = 2,
     AccountCreated = 3,
-    AccountCreationFailed = 4
+    AccountCreationFailed = 4,
+    AccountAlreadyExists = 5
 }
 public static class Packets
 {
@@ -23,6 +24,7 @@ public static class Packets
 
     public static byte[] IVBytes(byte[] received)
     {
+        Debug.Log("RECEIVED_LENGTH: " + received.Length);
         return new ArraySegment<byte>(received, 0, 16).ToArray();
     }
 

@@ -16,7 +16,12 @@ public static class ComponentRegister
     private static ShrinePanel _shrinePanel;
     private static PlayerStatusPanel _playerStatusPanel;
     private static UIPrefabManager _uiprefabManager;
-
+    private static UILoginForm _loginForm;
+    public static UILoginForm UILoginForm
+    {
+        get { return _loginForm; }
+        set { _loginForm = value; }
+    }
     public static UIPrefabManager UIPrefabManager
     {
         get { return _uiprefabManager; }

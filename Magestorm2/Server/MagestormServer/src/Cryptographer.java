@@ -14,12 +14,12 @@ import java.util.*;
 public class Cryptographer {
     private static final String _algorithmPlusPadding = "AES/CBC/PKCS5Padding";
     private static final String _algorithm = "AES";
-
+    private static final ByteBuffer _longBuffer = ByteBuffer.allocate(Long.BYTES);
     private static byte[] _key;
-    private static ByteBuffer _keyBuffer;
     private static SecretKeySpec _keySpec;
     private static SecretKey _secretKey;
     private static Cipher _decryptionCipher, _encryptionCipher;
+    private static long _iv;
 
     public static int ComputeChecksum(byte[] data){
         int toReturn = 0;
@@ -32,19 +32,40 @@ public class Cryptographer {
     public static byte[] Key(){
         return _key;
     }
-    public static ByteBuffer KeyBuffer(){
-        return _keyBuffer;
-    }
     public static void GenerateKeyAndIV(){
         try{
             SecureRandom random = SecureRandom.getInstanceStrong();
+            _iv = random.nextLong();
             _key = getAESKey(128).getEncoded();
-            _keyBuffer = ByteBuffer.wrap(_key);
             Main.LogMessage("Key checksum: " + ComputeChecksum(_key) + ", key length: " + _key.length);
         }
         catch(Exception ex){
             Main.LogError("Failed to generate key and IV: " + ex.getMessage());
         }
+    }
+    private static byte[] LongToBytes(long toConvert){
+        _longBuffer.putLong(toConvert);
+        byte[] longBytes = _longBuffer.array();
+        byte[] toReturn = new byte[16];
+        System.arraycopy(longBytes,0, toReturn, 0, longBytes.length);
+        return toReturn;
+    }
+    public static byte[] Encrypt(byte[] payload){
+        byte[] toReturn = new byte[0];
+        _iv++;
+        byte[] ivBytes = LongToBytes(_iv);
+        IvParameterSpec iv = new IvParameterSpec(ivBytes);
+        try{
+            _encryptionCipher.init(Cipher.ENCRYPT_MODE, _secretKey, iv);
+            byte[] encryptedPayload = _encryptionCipher.doFinal(payload);
+            toReturn = new byte[17 + encryptedPayload.length];
+            System.arraycopy(ivBytes,0, toReturn,0, ivBytes.length);
+            toReturn[16] = (byte)encryptedPayload.length;
+            System.arraycopy(encryptedPayload, 0, toReturn, 17, encryptedPayload.length);
+        } catch (Exception e) {
+            Main.LogError(e.getMessage());
+        }
+        return toReturn;
     }
 
     public static byte[] Decrypt(byte[] received){
@@ -54,13 +75,9 @@ public class Cryptographer {
         if(payloadLength < 0){
             payloadLength += 256;
         }
-        //Main.LogMessage("Base64 Key: " + Base64.getEncoder().encodeToString(_key));
-        //Main.LogMessage("Payload length: " + payloadLength);
         byte[] payload = new byte[payloadLength];
         System.arraycopy(received,0,ivBytes,0,ivBytes.length);
         System.arraycopy(received,17, payload, 0, payload.length);
-        //Main.LogMessage("Encrypted Payload: " + Base64.getEncoder().encodeToString(payload));
-        //Main.LogMessage("IV64 Key: " + Base64.getEncoder().encodeToString(ivBytes));
         try {
             IvParameterSpec iv = new IvParameterSpec(ivBytes);
             _decryptionCipher.init(Cipher.DECRYPT_MODE, _secretKey, iv);

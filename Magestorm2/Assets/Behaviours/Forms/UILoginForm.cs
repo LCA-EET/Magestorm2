@@ -5,7 +5,11 @@ using UnityEngine;
 public class UILoginForm : ValidatableForm
 {
     private int _udpPort;
-   
+
+    private void Awake()
+    {
+        ComponentRegister.UILoginForm = this;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

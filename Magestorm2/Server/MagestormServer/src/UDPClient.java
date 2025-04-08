@@ -32,9 +32,16 @@ public class UDPClient extends Thread{
             }
         }
     }
-
-
-    public void StopListening(){
+    public void StopListening()
+    {
         _listening = false;
+    }
+    public void Send(byte[] encryptedPayload, RemoteClient rc){
+        DatagramPacket toSend = new DatagramPacket(encryptedPayload, encryptedPayload.length, rc.IPAddress(), rc.ReceivingPort());
+        try{
+            _udpSocket.send(toSend);
+        }catch(Exception e){
+            Main.LogError(e.getMessage());
+        }
     }
 }

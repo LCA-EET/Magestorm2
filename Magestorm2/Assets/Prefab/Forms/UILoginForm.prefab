@@ -1092,6 +1092,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8345110096728175971}
   - component: {fileID: 398855412978369588}
+  - component: {fileID: 345136524336116390}
   m_Layer: 0
   m_Name: UILoginForm
   m_TagString: Untagged
@@ -1133,6 +1134,27 @@ MonoBehaviour:
   FormButtons:
   - {fileID: 2543711527560612537}
   - {fileID: 1259466525360735129}
+--- !u!114 &345136524336116390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9190357501265961709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4731c58010be9a44aa67c0c9908f8981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectableControls:
+  - {fileID: 852910936125943759}
+  - {fileID: 3242245499370848335}
+  - {fileID: 3799963888091641970}
+  - {fileID: 471678445576646994}
+  - {fileID: 3247961784662282873}
+  - {fileID: 663633056726494552}
+  - {fileID: 1123200728282101511}
+  - {fileID: 8139074274053417849}
 --- !u!1001 &290468073842919780
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1238,6 +1260,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
+--- !u!114 &3242245499370848335 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2952450636666636587, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
+  m_PrefabInstance: {fileID: 290468073842919780}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4052123081887709898 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4340339011712988078, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
@@ -1370,6 +1403,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83373d7b915789e4fb7a9e958b4ec6e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3799963888091641970 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2641362455259433424, guid: 9c3c0423f07ad7243bab9292fac37466, type: 3}
+  m_PrefabInstance: {fileID: 1158601776992711074}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8377568008439014593 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7230308864844256611, guid: 9c3c0423f07ad7243bab9292fac37466, type: 3}
@@ -1488,6 +1532,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3c0423f07ad7243bab9292fac37466, type: 3}
+--- !u!114 &471678445576646994 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2641362455259433424, guid: 9c3c0423f07ad7243bab9292fac37466, type: 3}
+  m_PrefabInstance: {fileID: 2460016686427224194}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1259466525360735129 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3700052363128109851, guid: 9c3c0423f07ad7243bab9292fac37466, type: 3}
@@ -1617,6 +1672,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+--- !u!114 &852910936125943759 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2952450636666636587, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+  m_PrefabInstance: {fileID: 2535266882860164836}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2174041882939467765 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4396828659250135313, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
