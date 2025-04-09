@@ -36,20 +36,29 @@ public class UIPacketProcessor : MonoBehaviour
                     switch (opCode)
                     {
                         case OpCode_Receive.AccountCreationFailed:
-                            Game.MessageBox(Language.GetBaseString(26), ComponentRegister.UILoginForm.gameObject);
+                            MessageBox(26);
                             break;
                         case OpCode_Receive.AccountCreated:
-                            Game.MessageBox(Language.GetBaseString(24), ComponentRegister.UILoginForm.gameObject);
+                            MessageBox(24);
                             break;
                         case OpCode_Receive.AccountAlreadyExists:
-                            Game.MessageBox(Language.GetBaseString(25), ComponentRegister.UILoginForm.gameObject);
+                            MessageBox(25);
+                            break;
+                        case OpCode_Receive.LogInFailed:
+                            MessageBox(27);
+                            break;
+                        case OpCode_Receive.LogInSucceeded:
+                            MessageBox(28);
                             break;
                     }
                 }
             }
         }
     }
-    
+    private void MessageBox(int stringReference)
+    {
+        Game.MessageBox(Language.GetBaseString(stringReference), ComponentRegister.UILoginForm.gameObject);
+    }
     public void Init(int port)
     {
         Debug.Log("Initialized UI packet listener on port: " + port);

@@ -44,7 +44,7 @@ public class Cryptographer {
         }
     }
     private static byte[] LongToBytes(long toConvert){
-        _longBuffer.putLong(toConvert);
+        _longBuffer.putLong(0, toConvert);
         byte[] longBytes = _longBuffer.array();
         byte[] toReturn = new byte[16];
         System.arraycopy(longBytes,0, toReturn, 0, longBytes.length);

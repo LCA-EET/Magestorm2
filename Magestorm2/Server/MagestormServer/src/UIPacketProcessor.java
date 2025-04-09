@@ -7,25 +7,27 @@ import java.util.ArrayList;
 public class UIPacketProcessor implements PacketProcessor
 {
     private UDPClient _udpClient;
-    private int _uiPort = 6000;
-
+    private int _serverPort = 6000;
     public UIPacketProcessor(){
-        _udpClient = new UDPClient(_uiPort, this);
+        _udpClient = new UDPClient(_serverPort, this);
+        //_udpSender = new UDPClient(_clientPort, null);
         new Thread(_udpClient).start();
     }
 
     @Override
     public void ProcessPacket(DatagramPacket received) {
-        RemoteClient rc = new RemoteClient(received, _uiPort);
+        RemoteClient rc = new RemoteClient(received, _serverPort);
         byte[] receivedBytes = received.getData();
         byte[] decrypted = Cryptographer.Decrypt(receivedBytes);
         byte opCode = decrypted[0];
         Main.LogMessage("OpCode: " + opCode);
         switch (opCode){
             case OpCode_Receive.LogIn:
+                HandleLogInPacket(decrypted, rc);
                 break;
             case OpCode_Receive.CreateAccount:
                 HandleCreateAccountPacket(decrypted, rc);
+                break;
         }
     }
 
@@ -37,6 +39,16 @@ public class UIPacketProcessor implements PacketProcessor
         toReturn[0] = new String(userNameBytes, StandardCharsets.UTF_8);
         toReturn[1] = Base64.getEncoder().encodeToString(pwHashBytes);
         return toReturn;
+    }
+
+    private void HandleLogInPacket(byte[] decrypted, RemoteClient rc){
+        String[] creds = LogInDetails(decrypted);
+        String username = creds[0];
+        String hashed = creds[1];
+        boolean validCreds = Database.ValidateCredentials(username, hashed);
+        Main.LogMessage("Valid credentials for user " + username + "? " + validCreds);
+        byte[] toSend = validCreds?Packets.LoginSucceededPacket():Packets.LoginFailedPacket();
+        _udpClient.Send(toSend, rc);
     }
 
     public String[] CreateAccountDetails(byte[] decrypted){
@@ -61,14 +73,9 @@ public class UIPacketProcessor implements PacketProcessor
         }
         else{
             Main.LogMessage("Account " + username + " does not already exist.");
-            if(Database.CreateAccount(username, creds[1], email)){
-                _udpClient.Send(Packets.AccountCreatedPacket(), rc);
-                Main.LogMessage("Database account creation succeeded.");
-            }
-            else{
-                Main.LogMessage("Database account creation failed.");
-                _udpClient.Send(Packets.AccountCreationFailedPacket(), rc);
-            }
+            boolean accountCreated = Database.CreateAccount(username, creds[1], email);
+            byte[] toSend = accountCreated?Packets.AccountCreatedPacket():Packets.AccountCreationFailedPacket();
+            _udpClient.Send(toSend, rc);
         }
     }
 }

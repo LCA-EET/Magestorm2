@@ -2,9 +2,20 @@ import java.util.ArrayList;
 
 public class Packets {
 
-    private static final byte[] AccountExistsPacket_Bytes = new byte[]{OpCode_Send.AccountAlreadyExists};
+
     private static final byte[] AccountCreated_Bytes = new byte[]{OpCode_Send.AccountCreated};
     private static final byte[] AccountCreationFailed_Bytes = new byte[]{OpCode_Send.AccountCreationFailed};
+    private static final byte[] AccountExistsPacket_Bytes = new byte[]{OpCode_Send.AccountAlreadyExists};
+    private static final byte[] LoginFailedPacket_Bytes = new byte[]{OpCode_Send.LogInFailed};
+    private static final byte[] LoginSucceededPacket_Bytes = new byte[]{OpCode_Send.LogInSucceeded};
+
+    public static byte[] LoginFailedPacket(){
+        return Cryptographer.Encrypt(LoginFailedPacket_Bytes);
+    }
+
+    public static byte[] LoginSucceededPacket(){
+        return Cryptographer.Encrypt(LoginSucceededPacket_Bytes);
+    }
 
     public static byte[] AccountExistsPacket(){
         return Cryptographer.Encrypt(AccountExistsPacket_Bytes);

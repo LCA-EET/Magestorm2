@@ -33,7 +33,7 @@ public class UDPGameClient
             {
                 wasReceived = false;
                 byte[] received = _client.Receive(ref _remote);
-                wasReceived = true;
+                wasReceived = true; 
                 _received.Enqueue(Cryptography.DecryptReceived(received));
             }
             catch(Exception ex) {

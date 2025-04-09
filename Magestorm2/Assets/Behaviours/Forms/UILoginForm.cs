@@ -18,10 +18,7 @@ public class UILoginForm : ValidatableForm
         if(_udpPort > 0)
         {
             ComponentRegister.UIPrefabManager.InstantiateUIPacketProcessor(_udpPort);
-            if (UDPBuilder.StartListening(_udpPort))
-            {
-                Debug.Log("Listening!");
-            }
+            UDPBuilder.StartListening(_udpPort);
         }
         else
         {
@@ -36,14 +33,14 @@ public class UILoginForm : ValidatableForm
     }
     protected override void PassedValidation()
     {
-        Debug.Log("Passed validation.");
+        //Debug.Log("Passed validation.");
         string username = ((TextField)EntriesToValidate[0]).GetValue().ToString();
         string hashedPassword = Cryptography.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString());
         Cryptography.EncryptAndSend(Packets.LogInPacket(username, hashedPassword), UDPBuilder.GetClient(_udpPort)); 
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
-        Debug.Log(buttonType);
+        //Debug.Log(buttonType);
         switch (buttonType)
         {
             case ButtonType.LogIn:
@@ -53,7 +50,7 @@ public class UILoginForm : ValidatableForm
                 }
                 else
                 {
-                    Debug.Log("invalid entries");
+                    //Debug.Log("invalid entries");
                 }
                 break;
             case ButtonType.CreateAccount:

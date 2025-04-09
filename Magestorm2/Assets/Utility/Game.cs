@@ -57,7 +57,7 @@ public static class Game
                 string key64 = returnedArray[1];
                 Debug.Log("key64: " + key64);
                 byte[] key = Convert.FromBase64String(key64);
-                Debug.Log("Key checksum: " + ComputeChecksum(key) + ", Key Length: " + key.Length);
+                //Debug.Log("Key checksum: " + ComputeChecksum(key) + ", Key Length: " + key.Length);
                 UDPBuilder.Init("fosiemods.net");
                 Cryptography.Init(key);
                 return UDPBuilder.CreateClient(portNumber);

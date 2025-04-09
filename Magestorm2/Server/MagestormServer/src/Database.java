@@ -23,8 +23,7 @@ public class Database {
         String portNumber = "6000";
 
         String sql = "UPDATE serverinfo SET portnumber=?, encryptionkey=? WHERE id=0";
-        Connection conn = DBConnection();
-        try{
+        try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, 6000);
             Base64.getEncoder().encodeToString((Cryptographer.Key()));
@@ -44,9 +43,7 @@ public class Database {
     }
     public static boolean TestDBConnection(){
         Main.LogMessage("Testing DB Connection.");
-        try {
-            Connection conn = DBConnection();
-            conn.close();
+        try(Connection conn = DBConnection()) {
             Main.LogMessage("DB Connection Test Successful.");
             return true;
         } catch (Exception e) {
@@ -68,8 +65,7 @@ public class Database {
     public static int AccountRecordCount(String username, String email){
         int toReturn = -1;
         String sql = "SELECT COUNT(*) AS recordCount FROM accounts WHERE (accountname=?) OR (email=?)";
-        try{
-            Connection conn = DBConnection();
+        try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username );
             ps.setString(2, email );
@@ -92,8 +88,7 @@ public class Database {
     public static boolean CreateAccount(String username, String hash, String email){
         Main.LogMessage("Creating account: " + username + ", " + hash + ", " + email);
         String sql = "INSERT INTO accounts(accountname, hash, email, activated) VALUES(?,?,?,?)";
-        try{
-            Connection conn = DBConnection();
+        try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username );
             ps.setString(2, hash );
@@ -101,11 +96,29 @@ public class Database {
             ps.setByte(4, (byte)0);
             ps.addBatch();
             ps.execute();
-            conn.close();
             return true;
         }
         catch(Exception e){
             Main.LogError("DB Account Creation Failure: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean ValidateCredentials(String username, String hash){
+        String sql = "SELECT hash FROM accounts WHERE accountname=?";
+        try (Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                String dbHash = rs.getString("hash");
+                if(dbHash.equals(hash)){
+                    return true;
+                }
+            }
+        }
+        catch(Exception e){
+            Main.LogError("Credential validation failure: " + e.getMessage());
         }
         return false;
     }
