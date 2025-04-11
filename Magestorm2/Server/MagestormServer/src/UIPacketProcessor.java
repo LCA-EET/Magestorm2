@@ -8,6 +8,7 @@ public class UIPacketProcessor implements PacketProcessor
 {
     private UDPClient _udpClient;
     private int _serverPort = 6000;
+
     public UIPacketProcessor(){
         _udpClient = new UDPClient(_serverPort, this);
         //_udpSender = new UDPClient(_clientPort, null);
@@ -73,9 +74,12 @@ public class UIPacketProcessor implements PacketProcessor
         }
         else{
             Main.LogMessage("Account " + username + " does not already exist.");
-            boolean accountCreated = Database.CreateAccount(username, creds[1], email);
+            long token = Cryptographer.RandomToken();
+            boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
             byte[] toSend = accountCreated?Packets.AccountCreatedPacket():Packets.AccountCreationFailedPacket();
             _udpClient.Send(toSend, rc);
+            String activationMessage = "Hello<br><br>Click the following link to activate your Magus account:<br><a href='https://www.fosiemods.net/ms2.php?appid=ms2&func=activate&activationtoken=" + token + "'>Activation Link</a>";
+            Main.Mailer.SendMail(email, "Magus Account Activation Link", activationMessage, "Magus Activation");
         }
     }
 }

@@ -85,15 +85,18 @@ public class Database {
         }
         return toReturn;
     }
-    public static boolean CreateAccount(String username, String hash, String email){
+    public static boolean CreateAccount(String username, String hash, String email, long token){
         Main.LogMessage("Creating account: " + username + ", " + hash + ", " + email);
-        String sql = "INSERT INTO accounts(accountname, hash, email, activated) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO accounts(accountname, hash, email, accountstatus, activationtoken) VALUES(?,?,?,?,?)";
+
+        Main.LogMessage("Activation token: " + token);
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username );
             ps.setString(2, hash );
             ps.setString(3, email );
             ps.setByte(4, (byte)0);
+            ps.setLong(5, token);
             ps.addBatch();
             ps.execute();
             return true;

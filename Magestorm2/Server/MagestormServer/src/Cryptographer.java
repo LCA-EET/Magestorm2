@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.*;
+import java.security.MessageDigest;
 
 public class Cryptographer {
     private static final String _algorithmPlusPadding = "AES/CBC/PKCS5Padding";
@@ -67,6 +68,15 @@ public class Cryptographer {
         }
         return toReturn;
     }
+    public static String MD5(String input){
+        String toReturn = "";
+        try{
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            return Base64.getEncoder().encodeToString(md5.digest(input.getBytes(StandardCharsets.UTF_8)));
+        }
+        catch(Exception e){}
+        return toReturn;
+    }
 
     public static byte[] Decrypt(byte[] received){
         byte[] ivBytes = new byte[16];
@@ -113,5 +123,8 @@ public class Cryptographer {
         return _secretKey;
     }
 
-
+    public static long RandomToken(){
+        SecureRandom rand = new SecureRandom();
+        return rand.nextLong();
+    }
 }
