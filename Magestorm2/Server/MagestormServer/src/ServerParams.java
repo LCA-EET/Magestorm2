@@ -8,23 +8,26 @@ public class ServerParams {
     public static String ExecutionDirectory;
     public static String LogFilePath;
     public static String ErrorFilePath;
+    public static String EmailCredsPath;
     public static int ListeningPort;
 
-    public static void LoadParams(){
+    public static void LoadParams(String paramFilePath){
         ExecutionDirectory = System.getProperty("user.dir");
         LogFilePath = ExecutionDirectory + "/log.txt";
         ErrorFilePath = ExecutionDirectory + "/error.txt";
-        File paramFile = new File(ExecutionDirectory + "/serverparams.txt");
+        Main.InitLog(LogFilePath, ErrorFilePath);
+        System.out.println("Loading parameters from " + paramFilePath);
+        File paramFile = new File(paramFilePath);
         Scanner paramScanner = null;
         try {
             paramScanner = new Scanner(paramFile);
             ListeningPort = Integer.parseInt(paramScanner.nextLine());
             Database.Init(paramScanner.nextLine(), paramScanner.nextLine(),
                     paramScanner.nextLine(), paramScanner.nextLine());
-
+            EmailCredsPath = paramScanner.nextLine();
+            ProfanityChecker.Init(paramScanner.nextLine());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

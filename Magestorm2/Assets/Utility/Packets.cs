@@ -13,7 +13,8 @@ public enum OpCode_Receive : byte
     LogInFailed = 2,
     AccountCreated = 3,
     AccountCreationFailed = 4,
-    AccountAlreadyExists = 5
+    AccountAlreadyExists = 5,
+    ProhibitedLanguage = 6
 }
 public static class Packets
 {

@@ -8,6 +8,7 @@ public class Packets {
     private static final byte[] AccountExistsPacket_Bytes = new byte[]{OpCode_Send.AccountAlreadyExists};
     private static final byte[] LoginFailedPacket_Bytes = new byte[]{OpCode_Send.LogInFailed};
     private static final byte[] LoginSucceededPacket_Bytes = new byte[]{OpCode_Send.LogInSucceeded};
+    private static final byte[] ProhibitedLanguagePacket_Bytes = new byte[]{OpCode_Send.ProhibitedLanguage};
 
     public static byte[] LoginFailedPacket(){
         return Cryptographer.Encrypt(LoginFailedPacket_Bytes);
@@ -27,6 +28,10 @@ public class Packets {
 
     public static byte[] AccountCreationFailedPacket(){
         return Cryptographer.Encrypt(AccountCreationFailed_Bytes);
+    }
+
+    public static byte[] ProhibitedLanguagePacket(){
+        return Cryptographer.Encrypt(ProhibitedLanguagePacket_Bytes);
     }
 
     public static ArrayList<byte[]> ExtractBytes(byte[] decrypted, int firstIndex){

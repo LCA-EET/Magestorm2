@@ -50,6 +50,9 @@ public class UIPacketProcessor : MonoBehaviour
                         case OpCode_Receive.LogInSucceeded:
                             MessageBox(28);
                             break;
+                        case OpCode_Receive.ProhibitedLanguage:
+                            MessageBox(29);
+                            break;
                     }
                 }
             }

@@ -49,16 +49,12 @@ public static class Cryptography
         }
         byte[] toSend = new byte[encryptedPayload.Length + 1 + _ivSize];
         ivBytes.CopyTo(toSend, 0);
-        Debug.Log("IV64: " + Convert.ToBase64String(ivBytes));
         toSend[_ivSize] = (byte)encryptedPayload.Length;
         encryptedPayload.CopyTo(toSend, _ivSize + 1);
-        Debug.Log("Encrypted Payload: " + Convert.ToBase64String(encryptedPayload));
-        Debug.Log("Packet length: " + toSend.Length);
         udp.Send(toSend);
     }
     public static byte[] DecryptReceived(byte[] received)
     {
-        Debug.Log("Decrypting received packet.");
         byte[] iv = Packets.IVBytes(received);
         byte[] encryptedPayload = Packets.EncryptedPayload(received);
 

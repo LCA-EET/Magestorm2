@@ -66,20 +66,26 @@ public class UIPacketProcessor implements PacketProcessor
     private void HandleCreateAccountPacket(byte[] decrypted, RemoteClient rc){
         String[] creds = CreateAccountDetails(decrypted);
         String username = creds[0];
-        String email = creds[2];
-        Main.LogMessage("Account creation requested: " + username + ", " + email);
-        if(Database.AccountRecordCount(username, email) > 0){
-            _udpClient.Send(Packets.AccountExistsPacket(), rc);
-            Main.LogMessage("Account " + username + " already exists .");
+        if(!ProfanityChecker.ContainsProhibitedLanguage(username)){
+            String email = creds[2];
+            Main.LogMessage("Account creation requested: " + username + ", " + email);
+            if(Database.AccountRecordCount(username, email) > 0){
+                _udpClient.Send(Packets.AccountExistsPacket(), rc);
+                Main.LogMessage("Account " + username + " already exists .");
+            }
+            else{
+                Main.LogMessage("Account " + username + " does not already exist.");
+                long token = Cryptographer.RandomToken();
+                boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
+                byte[] toSend = accountCreated?Packets.AccountCreatedPacket():Packets.AccountCreationFailedPacket();
+                _udpClient.Send(toSend, rc);
+                String activationMessage = "Hello<br><br>Click the following link to activate your Magus account:<br><a href='https://www.fosiemods.net/ms2.php?appid=ms2&func=activate&activationtoken=" + token + "'>Activation Link</a>";
+                Main.Mailer.SendMail(email, "Magus Account Activation Link", activationMessage, "Magus Activation");
+            }
         }
         else{
-            Main.LogMessage("Account " + username + " does not already exist.");
-            long token = Cryptographer.RandomToken();
-            boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
-            byte[] toSend = accountCreated?Packets.AccountCreatedPacket():Packets.AccountCreationFailedPacket();
-            _udpClient.Send(toSend, rc);
-            String activationMessage = "Hello<br><br>Click the following link to activate your Magus account:<br><a href='https://www.fosiemods.net/ms2.php?appid=ms2&func=activate&activationtoken=" + token + "'>Activation Link</a>";
-            Main.Mailer.SendMail(email, "Magus Account Activation Link", activationMessage, "Magus Activation");
+            _udpClient.Send(Packets.ProhibitedLanguagePacket(), rc);
         }
+
     }
 }
