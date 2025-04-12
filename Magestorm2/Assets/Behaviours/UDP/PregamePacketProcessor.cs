@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
-public class UIPacketProcessor : MonoBehaviour
+public class PregamePacketProcessor : MonoBehaviour
 {
     private int _listeningPort;
     private UDPGameClient _udp;
@@ -52,6 +52,15 @@ public class UIPacketProcessor : MonoBehaviour
                             break;
                         case OpCode_Receive.ProhibitedLanguage:
                             MessageBox(29);
+                            break;
+                        case OpCode_Receive.AlreadyLoggedIn:
+                            MessageBox(30);
+                            break;
+                        case OpCode_Receive.RemovedFromServer:
+                            MessageBox(31);
+                            _udp.StopListening();
+                            Debug.Log("Exiting application.");
+                            Application.Quit();
                             break;
                     }
                 }

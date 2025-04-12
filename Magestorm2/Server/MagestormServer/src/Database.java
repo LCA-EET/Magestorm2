@@ -107,8 +107,11 @@ public class Database {
         return false;
     }
 
-    public static boolean ValidateCredentials(String username, String hash){
-        String sql = "SELECT hash FROM accounts WHERE accountname=?";
+    public static Object[] ValidateCredentials(String username, String hash){
+        Object[] toReturn = new Object[2];
+        boolean validated = false;
+        String sql = "SELECT id, hash FROM accounts WHERE accountname=?";
+        int accountid = -1;
         try (Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
@@ -116,13 +119,16 @@ public class Database {
             if(rs.next()){
                 String dbHash = rs.getString("hash");
                 if(dbHash.equals(hash)){
-                    return true;
+                    validated = true;
+                    accountid = rs.getInt("id");
                 }
             }
         }
         catch(Exception e){
             Main.LogError("Credential validation failure: " + e.getMessage());
         }
-        return false;
+        toReturn[0] = validated;
+        toReturn[1] = accountid;
+        return toReturn;
     }
 }

@@ -1,18 +1,21 @@
-import java.beans.Encoder;
 import java.net.DatagramPacket;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class UIPacketProcessor implements PacketProcessor
+public class PregamePacketProcessor implements PacketProcessor
 {
     private UDPClient _udpClient;
-    private int _serverPort = 6000;
+    private PacketSender _sender;
+    private int _serverPort;
+    private ConcurrentLinkedQueue<OutgoingPacket> _outgoingPackets;
 
-    public UIPacketProcessor(){
+    public PregamePacketProcessor(){
+        _serverPort = ServerParams.ListeningPort;
+        _outgoingPackets = new ConcurrentLinkedQueue<>();
         _udpClient = new UDPClient(_serverPort, this);
-        //_udpSender = new UDPClient(_clientPort, null);
-        new Thread(_udpClient).start();
+        _sender = new PacketSender(_udpClient, this);
     }
 
     @Override
@@ -46,10 +49,29 @@ public class UIPacketProcessor implements PacketProcessor
         String[] creds = LogInDetails(decrypted);
         String username = creds[0];
         String hashed = creds[1];
-        boolean validCreds = Database.ValidateCredentials(username, hashed);
-        Main.LogMessage("Valid credentials for user " + username + "? " + validCreds);
-        byte[] toSend = validCreds?Packets.LoginSucceededPacket():Packets.LoginFailedPacket();
-        _udpClient.Send(toSend, rc);
+        Object[] validationResult = Database.ValidateCredentials(username, hashed);
+        boolean validCreds = (boolean)validationResult[0];
+        int accountID = (int)validationResult[1];
+        byte[] toSend;
+        if(validCreds){
+            if(GameServer.IsLoggedIn(accountID)){
+                toSend = Packets.AlreadyLoggedInPacket();
+                RemoteClient alreadyExisting = GameServer.RemoveClient(accountID);
+                if(alreadyExisting != null){
+                    EnqueueForSend(Packets.RemovedFromServerPacket(RemovalReason.AlreadyLoggedIn),
+                            alreadyExisting);
+                }
+            }
+            else {
+                toSend = Packets.LoginSucceededPacket();
+                rc.SetNameAndID(username, accountID);
+                GameServer.ClientLoggedIn(rc);
+            }
+        }
+        else{
+            toSend = Packets.LoginFailedPacket();
+        }
+        EnqueueForSend(toSend,rc);
     }
 
     public String[] CreateAccountDetails(byte[] decrypted){
@@ -70,7 +92,7 @@ public class UIPacketProcessor implements PacketProcessor
             String email = creds[2];
             Main.LogMessage("Account creation requested: " + username + ", " + email);
             if(Database.AccountRecordCount(username, email) > 0){
-                _udpClient.Send(Packets.AccountExistsPacket(), rc);
+                EnqueueForSend(Packets.AccountExistsPacket(), rc);
                 Main.LogMessage("Account " + username + " already exists .");
             }
             else{
@@ -78,14 +100,31 @@ public class UIPacketProcessor implements PacketProcessor
                 long token = Cryptographer.RandomToken();
                 boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
                 byte[] toSend = accountCreated?Packets.AccountCreatedPacket():Packets.AccountCreationFailedPacket();
-                _udpClient.Send(toSend, rc);
+                EnqueueForSend(toSend, rc);
                 String activationMessage = "Hello<br><br>Click the following link to activate your Magus account:<br><a href='https://www.fosiemods.net/ms2.php?appid=ms2&func=activate&activationtoken=" + token + "'>Activation Link</a>";
                 Main.Mailer.SendMail(email, "Magus Account Activation Link", activationMessage, "Magus Activation");
             }
         }
         else{
-            _udpClient.Send(Packets.ProhibitedLanguagePacket(), rc);
+            EnqueueForSend(Packets.ProhibitedLanguagePacket(), rc);
         }
 
+    }
+    private void EnqueueForSend(byte[] data, RemoteClient rc){
+        _outgoingPackets.add(new OutgoingPacket(data, rc));
+    }
+
+    @Override
+    public ArrayList<OutgoingPacket> OutgoingPackets() {
+        ArrayList<OutgoingPacket> toReturn = new ArrayList<>();
+        while(!_outgoingPackets.isEmpty()){
+            toReturn.add(_outgoingPackets.remove());
+        }
+        return toReturn;
+    }
+
+    @Override
+    public boolean HasOutgoingPackets(){
+        return !_outgoingPackets.isEmpty();
     }
 }

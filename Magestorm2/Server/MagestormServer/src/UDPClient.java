@@ -14,6 +14,7 @@ public class UDPClient extends Thread{
         _processor = processor;
         try{
             _udpSocket = new DatagramSocket(_localPort);
+            new Thread(this).start();
         }
         catch(Exception e){
             Main.LogError("Could not open datagram socket: " + e.getMessage());

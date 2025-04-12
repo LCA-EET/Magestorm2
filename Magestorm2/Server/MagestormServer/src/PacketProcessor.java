@@ -1,5 +1,8 @@
 import java.net.DatagramPacket;
+import java.util.ArrayList;
 
 public interface PacketProcessor {
-    public void ProcessPacket(DatagramPacket received);
+    void ProcessPacket(DatagramPacket received);
+    ArrayList<OutgoingPacket> OutgoingPackets();
+    boolean HasOutgoingPackets();
 }

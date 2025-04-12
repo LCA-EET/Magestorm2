@@ -49,7 +49,7 @@ public class UIPrefabManager : MonoBehaviour
     }
     public void InstantiateUIPacketProcessor(int port)
     {
-        UIPacketProcessor packetProcessor = Instantiate(PrefabUIPacketProcessor).GetComponent<UIPacketProcessor>();
+        PregamePacketProcessor packetProcessor = Instantiate(PrefabUIPacketProcessor).GetComponent<PregamePacketProcessor>();
         packetProcessor.Init(port);
         SpawnPrefab(packetProcessor.gameObject, gameObject, gameObject.transform.parent, true);
     }
