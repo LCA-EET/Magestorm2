@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
@@ -9,10 +10,13 @@ public class UILoginForm : ValidatableForm
     private void Awake()
     {
         ComponentRegister.UILoginForm = this;
+        ComponentRegister.UIParent = gameObject.transform.parent;
+        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        ComponentRegister.UIPrefabManager.AddToStack(gameObject);
         AssociateFormToButtons();
         _udpPort = Game.FetchServerInfo();
         if(_udpPort > 0)
@@ -54,7 +58,7 @@ public class UILoginForm : ValidatableForm
                 }
                 break;
             case ButtonType.CreateAccount:
-                ComponentRegister.UIPrefabManager.InstantiateCreateAccountForm(gameObject, transform.parent, _udpPort);
+                ComponentRegister.UIPrefabManager.InstantiateCreateAccountForm(gameObject, _udpPort);
                 break;
         }
     }

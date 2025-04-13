@@ -1,8 +1,10 @@
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -69,7 +71,6 @@ public class Database {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username );
             ps.setString(2, email );
-            //ps.addBatch();
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 toReturn = rs.getInt("recordCount");
@@ -97,7 +98,6 @@ public class Database {
             ps.setString(3, email );
             ps.setByte(4, (byte)0);
             ps.setLong(5, token);
-            ps.addBatch();
             ps.execute();
             return true;
         }
@@ -105,6 +105,86 @@ public class Database {
             Main.LogError("DB Account Creation Failure: " + e.getMessage());
         }
         return false;
+    }
+    public static boolean SeeIfCharacterExists(String charname){
+         boolean characterExists = true;
+         String sql = "SELECT COUNT(*) as recordCount FROM characters WHERE charname=? AND charstatus=1";
+         try(Connection conn = DBConnection()){
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ps.setString(1, charname);
+             ResultSet rs = ps.executeQuery();
+             if(rs.next()){
+                 int count = rs.getInt("recordCount");
+                 if(count == 0){
+                     characterExists = false;
+                 }
+             }
+         }
+         catch(Exception e){
+             Main.LogError("Character name check failure: " + e.getMessage());
+         }
+         return characterExists;
+    }
+
+    public static int AddCharacter(int accountID, String charname, byte classCode){
+        int charID = -1;
+        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus) VALUES (?,?,?,?)";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, accountID);
+            ps.setString(2, charname);
+            ps.setByte(3, classCode);
+            ps.setByte(4, CharacterStatus.Activated);
+            ps.execute();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                charID = rs.getInt(1);
+            }
+        }
+        catch(Exception e){
+            Main.LogError("Credential validation failure: " + e.getMessage());
+        }
+        return charID;
+    }
+
+    public static byte[] GetCharactersForAccount(int accountID){
+        byte[] toReturn = new byte[0];
+        String sql = "SELECT id, charname, charclass FROM characters WHERE accountid = ? AND charstatus = ?";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.setByte(2, CharacterStatus.Activated);
+            ResultSet rs = ps.executeQuery();
+            byte totalLength = 0;
+
+            ArrayList<byte[]> bytesReturned = new ArrayList<>();
+            while (rs.next()) {
+                int characterID = rs.getInt("id");
+                String characterName = rs.getString("charname");
+                byte charClass = rs.getByte("charclass");
+                byte[] characterIDBytes = Packets.IntToByteArray(characterID);
+                byte[] nameBytes = characterName.getBytes(UTF_8);
+                byte nameLength = (byte)nameBytes.length;
+                byte[] fetched = new byte[6 + nameLength];
+                System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
+                fetched[4] = charClass;
+                fetched[5] = nameLength;
+                System.arraycopy(nameBytes,0,fetched,6, nameLength);
+                bytesReturned.add(fetched);
+                totalLength += (byte)fetched.length;
+            }
+            toReturn = new byte[1 + totalLength];
+            toReturn[1] = (byte)bytesReturned.size();
+            int index = 1;
+            for (byte[] toAdd : bytesReturned) {
+                System.arraycopy(toAdd, 0, toReturn, index, toAdd.length);
+                index += toAdd.length;
+            }
+        }
+        catch(Exception e){
+            Main.LogError("Credential validation failure: " + e.getMessage());
+        }
+        return toReturn;
     }
 
     public static Object[] ValidateCredentials(String username, String hash){

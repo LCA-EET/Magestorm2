@@ -17,6 +17,12 @@ public static class ComponentRegister
     private static PlayerStatusPanel _playerStatusPanel;
     private static UIPrefabManager _uiprefabManager;
     private static UILoginForm _loginForm;
+    private static Transform _uiParent;
+    public static Transform UIParent
+    {
+        get {  return _uiParent; }
+        set { _uiParent = value; }
+    }
     public static UILoginForm UILoginForm
     {
         get { return _loginForm; }

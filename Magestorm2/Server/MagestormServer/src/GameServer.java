@@ -19,6 +19,10 @@ public class GameServer extends Thread {
         return _loggedInClients.containsKey(accountID);
     }
 
+    public static boolean IsLoggedIn(byte[] decrypted){
+        return _loggedInClients.containsKey(Packets.ExtractInt(decrypted,0));
+    }
+
     public static void ClientLoggedIn(RemoteClient rc)
     {
         _loggedInClients.put(rc.AccountID(), rc);

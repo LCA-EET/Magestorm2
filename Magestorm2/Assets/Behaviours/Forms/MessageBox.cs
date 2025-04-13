@@ -22,9 +22,8 @@ public class MessageBox : InstantiatableForm
     {
 
     }
-    public override void SetInstantiator(GameObject instantiator, object[] paramArray)
+    public override void SetParams(object[] paramArray)
     {
-        base.SetInstantiator(instantiator);
         _textBox.text = paramArray[0].ToString();
     }
 }

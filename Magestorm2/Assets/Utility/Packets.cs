@@ -12,14 +12,17 @@ public enum OpCode_Receive : byte
     LogInSucceeded = 1,
     LogInFailed = 2,
     AccountCreated = 3,
-    AccountCreationFailed = 4,
+    CreationFailed = 4,
     AccountAlreadyExists = 5,
     ProhibitedLanguage = 6,
     AlreadyLoggedIn = 7,
-    RemovedFromServer = 8
+    RemovedFromServer = 8,
+    CharacterExists = 9,
+    CharacterCreated = 10
 }
 public static class Packets
 {
+
     public static byte DeterminePayloadLength(byte[] received)
     {
         return received[16];
@@ -27,7 +30,6 @@ public static class Packets
 
     public static byte[] IVBytes(byte[] received)
     {
-        Debug.Log("RECEIVED_LENGTH: " + received.Length);
         return new ArraySegment<byte>(received, 0, 16).ToArray();
     }
 

@@ -26,12 +26,15 @@ public class PregamePacketProcessor implements PacketProcessor
         byte opCode = decrypted[0];
         Main.LogMessage("OpCode: " + opCode);
         switch (opCode){
-            case OpCode_Receive.LogIn:
-                HandleLogInPacket(decrypted, rc);
-                break;
-            case OpCode_Receive.CreateAccount:
-                HandleCreateAccountPacket(decrypted, rc);
-                break;
+                case OpCode_Receive.LogIn:
+                    HandleLogInPacket(decrypted, rc);
+                    break;
+                case OpCode_Receive.CreateAccount:
+                    HandleCreateAccountPacket(decrypted, rc);
+                    break;
+                case OpCode_Receive.CreateCharacter:
+                    HandleCreateCharacterPacket(decrypted, rc);
+                    break;
         }
     }
 
@@ -43,6 +46,32 @@ public class PregamePacketProcessor implements PacketProcessor
         toReturn[0] = new String(userNameBytes, StandardCharsets.UTF_8);
         toReturn[1] = Base64.getEncoder().encodeToString(pwHashBytes);
         return toReturn;
+    }
+
+    private void HandleCreateCharacterPacket(byte[] decrypted, RemoteClient rc){
+        int accountID = Packets.ExtractInt(decrypted,1);
+        if(GameServer.IsLoggedIn(accountID)){
+            byte nameLength = decrypted[5];
+            String characterName = new String(Packets.ExtractBytes(decrypted, 6, nameLength), StandardCharsets.UTF_8);
+            if(ProfanityChecker.ContainsProhibitedLanguage(characterName)){
+                EnqueueForSend(Packets.ProhibitedLanguagePacket(), rc);
+            }
+            else{
+                if(Database.SeeIfCharacterExists(characterName)){
+                    EnqueueForSend(Packets.CharacterExistsPacket(), rc);
+                }
+                else{
+                    byte classCode = decrypted[6 + nameLength];
+                    int charID = Database.AddCharacter(accountID, characterName, classCode);
+                    if(charID == -1){
+                        EnqueueForSend(Packets.CreationFailedPacket(), rc);
+                    }
+                    else{
+                        EnqueueForSend(Packets.CharacterCreatedPacket(charID, classCode, characterName), rc);
+                    }
+                }
+            }
+        }
     }
 
     private void HandleLogInPacket(byte[] decrypted, RemoteClient rc){
@@ -63,7 +92,7 @@ public class PregamePacketProcessor implements PacketProcessor
                 }
             }
             else {
-                toSend = Packets.LoginSucceededPacket();
+                toSend = Packets.LoginSucceededPacket(accountID);
                 rc.SetNameAndID(username, accountID);
                 GameServer.ClientLoggedIn(rc);
             }
@@ -99,7 +128,7 @@ public class PregamePacketProcessor implements PacketProcessor
                 Main.LogMessage("Account " + username + " does not already exist.");
                 long token = Cryptographer.RandomToken();
                 boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
-                byte[] toSend = accountCreated?Packets.AccountCreatedPacket():Packets.AccountCreationFailedPacket();
+                byte[] toSend = accountCreated?Packets.AccountCreatedPacket():Packets.CreationFailedPacket();
                 EnqueueForSend(toSend, rc);
                 String activationMessage = "Hello<br><br>Click the following link to activate your Magus account:<br><a href='https://www.fosiemods.net/ms2.php?appid=ms2&func=activate&activationtoken=" + token + "'>Activation Link</a>";
                 Main.Mailer.SendMail(email, "Magus Account Activation Link", activationMessage, "Magus Activation");

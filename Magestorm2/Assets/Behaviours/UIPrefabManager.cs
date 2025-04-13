@@ -2,15 +2,17 @@ using UnityEngine;
 using System.Collections.Generic;
 public class UIPrefabManager : MonoBehaviour
 {
+    private Stack<GameObject> _uiStack;
+    private GameObject _topOfStack;
     public GameObject PrefabMessageBox;
     public GameObject PrefabCreateAccount;
-    public GameObject PrefabUIPacketProcessor;
-    private Queue<GameObject> _toActivate;
-    private Queue<GameObject> _toDestroy;
+    public GameObject PrefabPregamePacketProcessor;
+    public GameObject PrefabCharacterSelector;
+    private Queue<GameObject> _poppedObjects;
     private void Awake()
     {
-        _toActivate = new Queue<GameObject>();
-        _toDestroy = new Queue<GameObject>();
+        _uiStack = new Stack<GameObject>();
+        _poppedObjects = new Queue<GameObject>();
         ComponentRegister.UIPrefabManager = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -23,49 +25,54 @@ public class UIPrefabManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        while (_toActivate.Count > 0)
+        while(_poppedObjects.Count > 0)
         {
-            GameObject toActivate = _toActivate.Dequeue();
-            toActivate.SetActive(true);
-        }
-        while(_toDestroy.Count > 0)
-        {
-            GameObject toDestroy = _toDestroy.Dequeue();
-            toDestroy.SetActive(false);
-            Destroy(toDestroy);
+            Destroy(_poppedObjects.Dequeue());
         }
     }
-    public void InstantiateMessageBox(string message, GameObject instantiator, Transform parentTransform)
+    public void InstantiateCharacterSelector()
+    {
+
+    }
+    public void InstantiateMessageBox(string message)
     {
         MessageBox instantiated = Instantiate(PrefabMessageBox).GetComponent<MessageBox>();
-        instantiated.SetInstantiator(instantiator, new object[] { message });
-        SpawnPrefab(instantiated.gameObject, instantiator, parentTransform, false);
+        instantiated.SetParams(new object[] { message });
+        SpawnPrefab(instantiated.gameObject);
     }
-    public void InstantiateCreateAccountForm(GameObject instantiator, Transform parentTransform, int port)
+    public void InstantiateCreateAccountForm(GameObject instantiator, int port)
     {
         UICreateAccountForm instantiated = Instantiate(PrefabCreateAccount).GetComponent<UICreateAccountForm>();
-        instantiated.SetInstantiator(instantiator, new object[] {port});
-        SpawnPrefab(instantiated.gameObject, instantiator, parentTransform, false);
+        instantiated.SetParams(new object[] {port});
+        SpawnPrefab(instantiated.gameObject);
     }
     public void InstantiateUIPacketProcessor(int port)
     {
-        PregamePacketProcessor packetProcessor = Instantiate(PrefabUIPacketProcessor).GetComponent<PregamePacketProcessor>();
+        PregamePacketProcessor packetProcessor = Instantiate(PrefabPregamePacketProcessor).GetComponent<PregamePacketProcessor>();
         packetProcessor.Init(port);
-        SpawnPrefab(packetProcessor.gameObject, gameObject, gameObject.transform.parent, true);
     }
-    private void SpawnPrefab(GameObject instantiated, GameObject instantiator, Transform parentTransform, bool parentActive)
+    private void SpawnPrefab(GameObject instantiated)
     {
-        instantiated.transform.SetParent(parentTransform);
-        instantiated.transform.position = instantiator.transform.position;
+        AddToStack(instantiated);
+        //instantiated.transform.position = transform.parent.position;
         instantiated.transform.localPosition = Vector3.zero;
-        instantiator.SetActive(parentActive);
     }
-    public void ActivateUIPrefab(GameObject go)
+
+    public void AddToStack(GameObject go)
     {
-        _toActivate.Enqueue(go);
+        go.transform.SetParent(ComponentRegister.UIParent);
+        go.SetActive(true);
+        if (_uiStack.Count > 0)
+        {
+            _uiStack.Peek().SetActive(false);
+        }
+        _uiStack.Push(go);
     }
-    public void DestroyUIPrefab(GameObject go)
+
+    public void PopFromStack()
     {
-        _toDestroy.Enqueue(go);
+        GameObject popped = _uiStack.Pop();
+        _uiStack.Peek().SetActive(true);
+        _poppedObjects.Enqueue(popped);
     }
 }

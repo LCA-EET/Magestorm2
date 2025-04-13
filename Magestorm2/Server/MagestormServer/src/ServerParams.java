@@ -15,6 +15,8 @@ public class ServerParams {
         ExecutionDirectory = System.getProperty("user.dir");
         LogFilePath = ExecutionDirectory + "/log.txt";
         ErrorFilePath = ExecutionDirectory + "/error.txt";
+        System.out.println("Log file: " + LogFilePath);
+        System.out.println("Error file: " + ErrorFilePath);
         Main.InitLog(LogFilePath, ErrorFilePath);
         System.out.println("Loading parameters from " + paramFilePath);
         File paramFile = new File(paramFilePath);

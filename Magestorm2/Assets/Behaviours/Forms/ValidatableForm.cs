@@ -40,7 +40,7 @@ public class ValidatableForm : InstantiatableForm
         }
         if (!passValidation)
         {
-            ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(19), gameObject, transform.parent);
+            Game.MessageBox(Language.GetBaseString(19));
         }
         return passValidation;
     }

@@ -23,9 +23,8 @@ public class UICreateAccountForm : ValidatableForm
         CloseForm();
     }
 
-    public override void SetInstantiator(GameObject instantiator, object[] paramArray)
+    public override void SetParams(object[] paramArray)
     {
-        base.SetInstantiator(instantiator);
         _udpPort = (int)paramArray[0];
     }
 

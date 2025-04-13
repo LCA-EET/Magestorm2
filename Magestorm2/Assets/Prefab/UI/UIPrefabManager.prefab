@@ -46,3 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PrefabMessageBox: {fileID: 2212529997909402293, guid: 5a8af9e9d280b8643aa86ec13c9f9c98, type: 3}
   PrefabCreateAccount: {fileID: 4208800765276099659, guid: db39c720b2951c44893a8aebd3d145c5, type: 3}
+  PrefabPregamePacketProcessor: {fileID: 1420652153896453702, guid: b8006dda8b0a1844e8a6ada79e2aa022, type: 3}
+  PrefabCharacterSelector: {fileID: 9190357501265961709, guid: b63ac9520eb7ac147891adbc9c29c082, type: 3}

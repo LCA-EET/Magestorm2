@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7537177013815846926}
   - component: {fileID: 6880021186079134990}
   m_Layer: 0
-  m_Name: UIPacketProcessor
+  m_Name: UIPregamePacketProcessor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
