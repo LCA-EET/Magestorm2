@@ -8,6 +8,8 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabCreateAccount;
     public GameObject PrefabPregamePacketProcessor;
     public GameObject PrefabCharacterSelector;
+    public GameObject PrefabCharacterCreator;
+
     private Queue<GameObject> _poppedObjects;
     private void Awake()
     {
@@ -32,7 +34,8 @@ public class UIPrefabManager : MonoBehaviour
     }
     public void InstantiateCharacterSelector()
     {
-
+        CharacterSelectForm form = Instantiate(PrefabCharacterSelector).GetComponent<CharacterSelectForm>();
+        SpawnPrefab(form.gameObject);
     }
     public void InstantiateMessageBox(string message)
     {
@@ -46,15 +49,19 @@ public class UIPrefabManager : MonoBehaviour
         instantiated.SetParams(new object[] {port});
         SpawnPrefab(instantiated.gameObject);
     }
-    public void InstantiateUIPacketProcessor(int port)
+    public void InstantiatePregamePacketProcessor(int port)
     {
         PregamePacketProcessor packetProcessor = Instantiate(PrefabPregamePacketProcessor).GetComponent<PregamePacketProcessor>();
         packetProcessor.Init(port);
     }
+    public void InstantiateCharacterCreator()
+    {
+        UICharacterCreationForm form = Instantiate(PrefabCharacterCreator).GetComponent<UICharacterCreationForm>();
+        SpawnPrefab(form.gameObject);
+    }
     private void SpawnPrefab(GameObject instantiated)
     {
         AddToStack(instantiated);
-        //instantiated.transform.position = transform.parent.position;
         instantiated.transform.localPosition = Vector3.zero;
     }
 

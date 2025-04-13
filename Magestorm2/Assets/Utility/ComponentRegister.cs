@@ -18,6 +18,13 @@ public static class ComponentRegister
     private static UIPrefabManager _uiprefabManager;
     private static UILoginForm _loginForm;
     private static Transform _uiParent;
+    private static PregamePacketProcessor _pregamePacketProcessor;
+
+    public static PregamePacketProcessor PregamePacketProcessor
+    {
+        get { return _pregamePacketProcessor; }
+        set { _pregamePacketProcessor = value; }
+    }
     public static Transform UIParent
     {
         get {  return _uiParent; }

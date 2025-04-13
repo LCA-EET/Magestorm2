@@ -19,4 +19,13 @@ public static class PlayerAccount
         PlayerCharacter pc = new PlayerCharacter(characterID, characterName, characterClass, characterLevel);
         AddCharacter(pc);
     }
+    public static List<PlayerCharacter> GetCharacterList()
+    {
+        return _characterList;
+    }
+
+    public static int AccountID
+    {
+        get { return _accountID; }
+    }
 }

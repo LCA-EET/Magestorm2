@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 6680374260395734527}
   - component: {fileID: 4638043897248246353}
   m_Layer: 5
-  m_Name: CharacterSelectForm
+  m_Name: UICharacterSelectForm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

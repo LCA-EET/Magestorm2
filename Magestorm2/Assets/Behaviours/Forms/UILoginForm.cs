@@ -21,7 +21,7 @@ public class UILoginForm : ValidatableForm
         _udpPort = Game.FetchServerInfo();
         if(_udpPort > 0)
         {
-            ComponentRegister.UIPrefabManager.InstantiateUIPacketProcessor(_udpPort);
+            ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor(_udpPort);
             UDPBuilder.StartListening(_udpPort);
         }
         else

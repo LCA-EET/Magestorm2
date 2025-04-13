@@ -35,6 +35,10 @@ public class PregamePacketProcessor implements PacketProcessor
                 case OpCode_Receive.CreateCharacter:
                     HandleCreateCharacterPacket(decrypted, rc);
                     break;
+                case OpCode_Receive.LogOut:
+                    HandleLogOutPacket(decrypted);
+                    break;
+
         }
     }
 
@@ -46,6 +50,13 @@ public class PregamePacketProcessor implements PacketProcessor
         toReturn[0] = new String(userNameBytes, StandardCharsets.UTF_8);
         toReturn[1] = Base64.getEncoder().encodeToString(pwHashBytes);
         return toReturn;
+    }
+
+    private void HandleLogOutPacket(byte[] decrypted){
+        int accountID = Packets.ExtractInt(decrypted, 1);
+        if(GameServer.IsLoggedIn(accountID)){
+            GameServer.ClientLoggedOut(accountID);
+        }
     }
 
     private void HandleCreateCharacterPacket(byte[] decrypted, RemoteClient rc){

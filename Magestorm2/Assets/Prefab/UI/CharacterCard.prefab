@@ -359,8 +359,9 @@ GameObject:
   - component: {fileID: 7082110931541261248}
   - component: {fileID: 3612496899085852490}
   - component: {fileID: 9058351978220081830}
+  - component: {fileID: 3024525648961242539}
   m_Layer: 0
-  m_Name: Image
+  m_Name: NewCharacterButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,6 +468,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3024525648961242539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4080967121614106719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83373d7b915789e4fb7a9e958b4ec6e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonType: 0
 --- !u!1 &5246031100065467996
 GameObject:
   m_ObjectHideFlags: 0
@@ -1045,5 +1059,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb2434942d8781247aac0a9b2c0744f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EntriesToValidate: []
+  FormButtons:
+  - {fileID: 3024525648961242539}
   NewPanel: {fileID: 5246031100065467996}
   ExistingPanel: {fileID: 8146131103312963741}
+  CharacterName: {fileID: 3939160639133977008}
+  CharacterClass: {fileID: 778227894274999008}
+  CharacterLevel: {fileID: 3645821448639680237}

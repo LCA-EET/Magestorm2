@@ -6,6 +6,8 @@ public static class OpCode_Send
 {
     public const byte LogIn = 1;
     public const byte CreateAccount = 2;
+    public const byte CreateCharacter = 3;
+    public const byte LogOut = 4;
 }
 public enum OpCode_Receive : byte
 {
@@ -69,5 +71,14 @@ public static class Packets
         hashedBytes.CopyTo(unencryptedPayload, 3 + usernameBytes.Length);
 
         return unencryptedPayload;
+    }
+
+    public static byte[] LogOutPacket()
+    {
+        byte[] toReturn = new byte[5];
+        toReturn[0] = OpCode_Send.LogOut;
+        byte[] accountIDBytes = BitConverter.GetBytes(PlayerAccount.AccountID);
+        accountIDBytes.CopyTo(toReturn, 1);
+        return toReturn;
     }
 }

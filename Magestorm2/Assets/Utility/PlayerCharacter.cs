@@ -15,8 +15,27 @@ public class PlayerCharacter
         _characterLevel = characterLevel;
     }
 
+    public string ClassToString(PlayerClass playerClass)
+    {
+        switch (playerClass)
+        {
+            case PlayerClass.Arcanist:
+                return Language.GetBaseString(6);
+            case PlayerClass.Magician:
+                return Language.GetBaseString(7);
+            case PlayerClass.Cleric:
+                return Language.GetBaseString(5);
+            case PlayerClass.Mentalist:
+                return Language.GetBaseString(8);
+        }
+        return "";
+    }
     public int CharacterID { get { return _characterID; } }
     public string CharacterName { get { return _characterName; } }
     public byte CharacterClass { get { return _characterClass; } }
     public byte CharacterLevel { get { return _characterLevel; } }
+    public string CharacterClassString
+    {
+        get { return ClassToString((PlayerClass)CharacterClass); }
+    }
 }

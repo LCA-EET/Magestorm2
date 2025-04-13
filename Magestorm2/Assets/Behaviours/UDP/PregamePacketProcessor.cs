@@ -12,6 +12,11 @@ public class PregamePacketProcessor : MonoBehaviour
     private int _listeningPort;
     private UDPGameClient _udp;
     private bool _checking;
+
+    private void Awake()
+    {
+        ComponentRegister.PregamePacketProcessor = this;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -72,6 +77,10 @@ public class PregamePacketProcessor : MonoBehaviour
             }
         }
     }
+    public void SendBytes(byte[] unencrypted)
+    {
+        Cryptography.EncryptAndSend(unencrypted, _udp);
+    }
     private void MessageBox(int stringReference)
     {
         Game.MessageBox(Language.GetBaseString(stringReference));
@@ -103,8 +112,10 @@ public class PregamePacketProcessor : MonoBehaviour
                 string charname = Encoding.UTF8.GetString(decrypted, index, nameLength);
                 index += nameLength;
                 PlayerAccount.AddCharacter(characterID, charname, charClass, 1);
+                charIndex++;
             }
-
+            
         }
+        ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
     }
 }

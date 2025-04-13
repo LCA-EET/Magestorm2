@@ -1,13 +1,22 @@
+using TMPro;
 using UnityEngine;
 
-public class CharacterCard : MonoBehaviour
+public class CharacterCard : ValidatableForm
 {
     public GameObject NewPanel;
     public GameObject ExistingPanel;
+    public TMP_Text CharacterName;
+    public TMP_Text CharacterClass;
+    public TMP_Text CharacterLevel;
+    private bool _wasPopulated;
+    public bool WasPopulated
+    {
+        get { return _wasPopulated; }
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        AssociateFormToButtons();
     }
 
     // Update is called once per frame
@@ -15,14 +24,25 @@ public class CharacterCard : MonoBehaviour
     {
         
     }
-    public void ActivateNewPanel()
+    public override void ButtonPressed(ButtonType buttonType)
     {
-        NewPanel.SetActive(true);
-        ExistingPanel.SetActive(false);
+        if (buttonType == ButtonType.Submit)
+        {
+            ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();
+        }
     }
-    public void ActivateExistingPanel()
+    public void ActivatePanel(bool newCharacter)
     {
-        NewPanel.SetActive(false);
-        ExistingPanel.SetActive(true);
+        NewPanel.SetActive(newCharacter);
+        ExistingPanel.SetActive(!newCharacter);
     }
+    public void Populate(PlayerCharacter character)
+    {
+        ActivatePanel(false);
+        CharacterName.text = character.CharacterName;
+        CharacterClass.text = character.CharacterClassString;
+        CharacterLevel.text = character.CharacterLevel.ToString();
+        _wasPopulated = true;
+    }
+  
 }

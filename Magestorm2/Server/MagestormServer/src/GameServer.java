@@ -25,7 +25,9 @@ public class GameServer extends Thread {
 
     public static void ClientLoggedIn(RemoteClient rc)
     {
-        _loggedInClients.put(rc.AccountID(), rc);
+        int accountID = rc.AccountID();
+        Main.LogMessage("Client logged in: " + accountID);
+        _loggedInClients.put(accountID, rc);
     }
 
     public static RemoteClient RemoveClient(int accountID){
@@ -44,5 +46,10 @@ public class GameServer extends Thread {
     }
     public void ClientTimeOut(RemoteClient rc){
 
+    }
+
+    public static void ClientLoggedOut(int accountID){
+        Main.LogMessage("Client logged out: " + accountID);
+        _loggedInClients.remove(accountID);
     }
 }

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class CharacterCreationForm : ValidatableForm
+public class UICharacterCreationForm : ValidatableForm
 {
     public TMP_Dropdown ClassDropdown;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

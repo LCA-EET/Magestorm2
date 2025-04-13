@@ -3271,7 +3271,7 @@ GameObject:
   - component: {fileID: 398855412978369588}
   - component: {fileID: 345136524336116390}
   m_Layer: 0
-  m_Name: LoginForm
+  m_Name: UILoginForm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

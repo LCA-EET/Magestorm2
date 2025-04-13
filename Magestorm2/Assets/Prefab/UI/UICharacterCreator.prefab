@@ -1505,7 +1505,7 @@ GameObject:
   - component: {fileID: 195979605880008520}
   - component: {fileID: 7053435573477075755}
   m_Layer: 5
-  m_Name: CharacterCreator
+  m_Name: UICharacterCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
