@@ -46,6 +46,7 @@ public class ValidatableForm : InstantiatableForm
     }
     public virtual void ButtonPressed(ButtonType buttonType)
     {
+        Debug.Log("ValidatableForm.ButtonPressed: " + buttonType.ToString());
         if (buttonType == ButtonType.Submit)
         {
             if (ValidateForm())

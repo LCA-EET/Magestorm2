@@ -3,7 +3,6 @@ using System.Collections.Generic;
 public class UIPrefabManager : MonoBehaviour
 {
     private Stack<GameObject> _uiStack;
-    private GameObject _topOfStack;
     public GameObject PrefabMessageBox;
     public GameObject PrefabCreateAccount;
     public GameObject PrefabPregamePacketProcessor;
@@ -34,20 +33,19 @@ public class UIPrefabManager : MonoBehaviour
     }
     public void InstantiateCharacterSelector()
     {
-        CharacterSelectForm form = Instantiate(PrefabCharacterSelector).GetComponent<CharacterSelectForm>();
-        SpawnPrefab(form.gameObject);
+        UICharacterSelectForm form = Instantiate(PrefabCharacterSelector).GetComponent<UICharacterSelectForm>();
+        AddToStack(form.gameObject);
     }
     public void InstantiateMessageBox(string message)
     {
         MessageBox instantiated = Instantiate(PrefabMessageBox).GetComponent<MessageBox>();
         instantiated.SetParams(new object[] { message });
-        SpawnPrefab(instantiated.gameObject);
+        AddToStack(instantiated.gameObject);
     }
     public void InstantiateCreateAccountForm(GameObject instantiator, int port)
     {
         UICreateAccountForm instantiated = Instantiate(PrefabCreateAccount).GetComponent<UICreateAccountForm>();
-        instantiated.SetParams(new object[] {port});
-        SpawnPrefab(instantiated.gameObject);
+        AddToStack(instantiated.gameObject);
     }
     public void InstantiatePregamePacketProcessor(int port)
     {
@@ -57,17 +55,15 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateCharacterCreator()
     {
         UICharacterCreationForm form = Instantiate(PrefabCharacterCreator).GetComponent<UICharacterCreationForm>();
-        SpawnPrefab(form.gameObject);
-    }
-    private void SpawnPrefab(GameObject instantiated)
-    {
-        AddToStack(instantiated);
-        instantiated.transform.localPosition = Vector3.zero;
+        AddToStack(form.gameObject);
     }
 
     public void AddToStack(GameObject go)
     {
+        Debug.Log("Adding " + go.ToString() + " to the UI stack");
         go.transform.SetParent(ComponentRegister.UIParent);
+        go.transform.localPosition = Vector3.zero;
+        //go.transform.localScale = ComponentRegister.UIParent.localScale;
         go.SetActive(true);
         if (_uiStack.Count > 0)
         {

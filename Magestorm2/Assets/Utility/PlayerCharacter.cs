@@ -14,8 +14,11 @@ public class PlayerCharacter
         _characterClass = characterClass;
         _characterLevel = characterLevel;
     }
-
-    public string ClassToString(PlayerClass playerClass)
+    public static byte StringToClass(string playerClass)
+    {
+        return 0;
+    }
+    public static string ClassToString(PlayerClass playerClass)
     {
         switch (playerClass)
         {

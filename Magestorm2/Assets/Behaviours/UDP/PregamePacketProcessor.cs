@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -65,13 +66,18 @@ public class PregamePacketProcessor : MonoBehaviour
                             MessageBox(30);
                             break;
                         case OpCode_Receive.RemovedFromServer:
+                        case OpCode_Receive.InactivityDisconnect:
                             MessageBox(31);
-                            _udp.StopListening();
-                            Application.Quit();
+                            if (!EditorApplication.isPlaying)
+                            {
+                                Game.Quit();
+                            }
                             break;
                         case OpCode_Receive.CharacterExists:
                             MessageBox(33);
                             break;
+                      
+
                     }
                 }
             }

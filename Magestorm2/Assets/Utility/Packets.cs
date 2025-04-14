@@ -20,7 +20,8 @@ public enum OpCode_Receive : byte
     AlreadyLoggedIn = 7,
     RemovedFromServer = 8,
     CharacterExists = 9,
-    CharacterCreated = 10
+    CharacterCreated = 10,
+    InactivityDisconnect = 11
 }
 public static class Packets
 {
@@ -80,5 +81,19 @@ public static class Packets
         byte[] accountIDBytes = BitConverter.GetBytes(PlayerAccount.AccountID);
         accountIDBytes.CopyTo(toReturn, 1);
         return toReturn;
+    }
+
+    public static byte[] CreateCharacterPacket(string charname, byte charclass)
+    {
+        byte[] idBytes = PlayerAccount.AccountIDBytes;
+        byte[] nameBytes = Encoding.UTF8.GetBytes(charname);
+        byte nameLength = (byte)nameBytes.Length;
+        byte[] toSend = new byte[1 + 4 + 1 + nameLength + 1 + 1];
+        toSend[0] = OpCode_Send.CreateCharacter;
+        idBytes.CopyTo(toSend, 1);
+        nameBytes[5] = nameLength;
+        nameBytes.CopyTo(toSend, 6);
+        toSend[6 + nameLength] = charclass;
+        return toSend;
     }
 }

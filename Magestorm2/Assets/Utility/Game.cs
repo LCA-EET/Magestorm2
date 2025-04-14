@@ -12,6 +12,12 @@ public static class Game
 {
     public static bool Running;
 
+    public static void Quit()
+    {
+        Running = false;
+        UDPBuilder.StopAllListeners();
+        Application.Quit();
+    }
     public static void MessageBox(string message)
     {
         ComponentRegister.UIPrefabManager.InstantiateMessageBox(message);

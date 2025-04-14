@@ -150,7 +150,7 @@ public class PregamePacketProcessor implements PacketProcessor
         }
 
     }
-    private void EnqueueForSend(byte[] data, RemoteClient rc){
+    public void EnqueueForSend(byte[] data, RemoteClient rc){
         _outgoingPackets.add(new OutgoingPacket(data, rc));
     }
 

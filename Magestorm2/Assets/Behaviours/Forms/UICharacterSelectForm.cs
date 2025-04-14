@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterSelectForm : ValidatableForm
+public class UICharacterSelectForm : ValidatableForm
 {
     public CharacterCard[] CharacterCards;
 

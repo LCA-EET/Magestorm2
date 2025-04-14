@@ -60,6 +60,9 @@ public class UILoginForm : ValidatableForm
             case ButtonType.CreateAccount:
                 ComponentRegister.UIPrefabManager.InstantiateCreateAccountForm(gameObject, _udpPort);
                 break;
+            case ButtonType.Cancel:
+                Game.Quit();
+                break;
         }
     }
 }

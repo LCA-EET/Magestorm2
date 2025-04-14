@@ -52,4 +52,7 @@ public class GameServer extends Thread {
         Main.LogMessage("Client logged out: " + accountID);
         _loggedInClients.remove(accountID);
     }
+    public static void EnqueueForSend(byte[] encrypted, RemoteClient rc){
+        _pgProcessor.EnqueueForSend(encrypted, rc);
+    }
 }

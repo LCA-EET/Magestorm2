@@ -11,7 +11,8 @@ public class RemoteClientMonitor extends Thread{
                 ArrayList<RemoteClient> clients = GameServer.ConnectedClients();
                 for(RemoteClient client : clients){
                     if(client.TimeOut()){
-
+                        GameServer.ClientLoggedOut(client.AccountID());
+                        GameServer.EnqueueForSend(Packets.InactivityDisconnectPacket(), client);
                     }
                 }
                 Thread.sleep(60000);

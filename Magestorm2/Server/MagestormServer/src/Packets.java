@@ -11,7 +11,9 @@ public class Packets {
     private static final byte[] LoginFailedPacket_Bytes = new byte[]{OpCode_Send.LogInFailed};
     private static final byte[] ProhibitedLanguagePacket_Bytes = new byte[]{OpCode_Send.ProhibitedLanguage};
     private static final byte[] CharacterExistsPacket_Bytes = new byte[]{OpCode_Send.CharacterExists};
+    private static final byte[] InactivityDisconnect_Bytes = new byte[]{OpCode_Send.InactivityDisconnect};
 
+    public static byte[] InactivityDisconnectPacket() { return Cryptographer.Encrypt(InactivityDisconnect_Bytes);}
     public static byte[] LoginFailedPacket(){
         return Cryptographer.Encrypt(LoginFailedPacket_Bytes);
     }

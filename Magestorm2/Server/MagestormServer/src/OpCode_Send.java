@@ -9,4 +9,6 @@ public class OpCode_Send{
     public static final byte RemovedFromServer = 8;
     public static final byte CharacterExists = 9;
     public static final byte CharacterCreated = 10;
+    public static final byte InactivityDisconnect = 11;
+
 }
