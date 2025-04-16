@@ -38,8 +38,17 @@ public class Packets {
 
     public static byte[] CharacterExistsPacket(){ return Cryptographer.Encrypt(CharacterExistsPacket_Bytes);}
 
+    public static byte[] CharacterDeletedPacket(int characterID) {
+        byte[] toEncrypt = new byte[5];
+        toEncrypt[0] = OpCode_Send.CharacterDeleted;
+        byte[] idBytes = Packets.IntToByteArray(characterID);
+        System.arraycopy(idBytes,0, toEncrypt, 1, 4);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] LoginSucceededPacket(int accountID){
         byte[] characterBytes = Database.GetCharactersForAccount(accountID);
+        Main.LogMessage("Character bytes retrieved: " + characterBytes.length);
         byte[] toSend;
         if(characterBytes.length > 0){
             toSend = new byte[5 + characterBytes.length];

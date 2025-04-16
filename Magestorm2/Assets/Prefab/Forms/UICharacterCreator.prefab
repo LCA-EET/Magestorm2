@@ -660,6 +660,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9116496647423066276}
     m_Modifications:
+    - target: {fileID: 1642347294863216574, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+      propertyPath: MaxLength
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642347294863216574, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+      propertyPath: MinLength
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642347294863216574, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+      propertyPath: RegexExpression
+      value: ^[a-zA-Z0-9]+$
+      objectReference: {fileID: 0}
     - target: {fileID: 2304074668684741220, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: m_Name
       value: CharacterNameField

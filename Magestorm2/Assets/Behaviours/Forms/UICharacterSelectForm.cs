@@ -8,6 +8,10 @@ public class UICharacterSelectForm : ValidatableForm
 
     private void Awake()
     {
+        RefreshCards();
+    }
+    private void RefreshCards()
+    {
         List<PlayerCharacter> characterList = PlayerAccount.GetCharacterList();
         int cardIndex = 0;
         foreach (PlayerCharacter character in characterList)
@@ -15,11 +19,12 @@ public class UICharacterSelectForm : ValidatableForm
             CharacterCards[cardIndex].Populate(character);
             cardIndex++;
         }
-        while(cardIndex < CharacterCards.Length)
+        while (cardIndex < CharacterCards.Length)
         {
             CharacterCards[cardIndex].ActivatePanel(true);
             cardIndex++;
         }
+        PlayerAccount.UpdatesMade = false;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -30,7 +35,10 @@ public class UICharacterSelectForm : ValidatableForm
     // Update is called once per frame
     void Update()
     {
-        
+        if (PlayerAccount.UpdatesMade)
+        {
+            RefreshCards();
+        }
     }
     public override void CloseForm()
     {

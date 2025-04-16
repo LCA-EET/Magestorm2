@@ -10,7 +10,9 @@ public enum ButtonType : byte
     English = 4,
     Russian = 5,
     Spanish = 6,
-    Chinese = 7
+    Chinese = 7,
+    Edit = 8,
+    Delete = 9
 }
 public class FormButton : MonoBehaviour
 {
@@ -19,13 +21,13 @@ public class FormButton : MonoBehaviour
     private Button _button;
     void Awake()
     {
-        _button = GetComponent<Button>();
-        _button.onClick.AddListener(NotifyForm);
+        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _button = GetComponent<Button>();
+        _button.onClick.AddListener(NotifyForm);
     }
 
     // Update is called once per frame

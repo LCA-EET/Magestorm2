@@ -9,6 +9,7 @@ public class CharacterCard : ValidatableForm
     public TMP_Text CharacterClass;
     public TMP_Text CharacterLevel;
     private bool _wasPopulated;
+    private PlayerCharacter _character;
     public bool WasPopulated
     {
         get { return _wasPopulated; }
@@ -26,9 +27,20 @@ public class CharacterCard : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
+        switch (buttonType)
+        {
+            case ButtonType.Delete:
+                ComponentRegister.PregamePacketProcessor.SendBytes(Packets.DeleteCharacterPacket(_character.CharacterID));
+                break;
+            case ButtonType.Submit:
+                ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();
+                break;
+            case ButtonType.Edit:
+                break;
+        }
         if (buttonType == ButtonType.Submit)
         {
-            ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();
+            
         }
     }
     public void ActivatePanel(bool newCharacter)
@@ -39,6 +51,7 @@ public class CharacterCard : ValidatableForm
     public void Populate(PlayerCharacter character)
     {
         ActivatePanel(false);
+        _character = character;
         CharacterName.text = character.CharacterName;
         CharacterClass.text = character.CharacterClassString;
         CharacterLevel.text = character.CharacterLevel.ToString();

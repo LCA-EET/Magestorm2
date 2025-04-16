@@ -1,3 +1,5 @@
+import com.mysql.cj.x.protobuf.MysqlxPrepare;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -125,10 +127,26 @@ public class Database {
          }
          return characterExists;
     }
+    public static boolean DeactivateCharacter(int characterID, int accountID){
+        boolean toReturn = false;
+        String sql = "UPDATE characters SET charstatus=0 WHERE id=? and accountid=?";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, characterID);
+            ps.setInt(2, accountID);
+            ps.execute();
+            toReturn = true;
+        }
+        catch(Exception e){
+            Main.LogError("Deactivate character: " + e.getMessage());
+        }
+        return toReturn;
+    }
 
     public static int AddCharacter(int accountID, String charname, byte classCode){
         int charID = -1;
         String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus) VALUES (?,?,?,?)";
+        Main.LogMessage("Adding character " + charname + " to database.");
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, accountID);
@@ -156,12 +174,12 @@ public class Database {
             ps.setByte(2, CharacterStatus.Activated);
             ResultSet rs = ps.executeQuery();
             byte totalLength = 0;
-
             ArrayList<byte[]> bytesReturned = new ArrayList<>();
             while (rs.next()) {
                 int characterID = rs.getInt("id");
                 String characterName = rs.getString("charname");
                 byte charClass = rs.getByte("charclass");
+                Main.LogMessage("Fetched character: " + characterName);
                 byte[] characterIDBytes = Packets.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte)nameBytes.length;
@@ -174,7 +192,7 @@ public class Database {
                 totalLength += (byte)fetched.length;
             }
             toReturn = new byte[1 + totalLength];
-            toReturn[1] = (byte)bytesReturned.size();
+            toReturn[0] = (byte)bytesReturned.size();
             int index = 1;
             for (byte[] toAdd : bytesReturned) {
                 System.arraycopy(toAdd, 0, toReturn, index, toAdd.length);
@@ -182,7 +200,7 @@ public class Database {
             }
         }
         catch(Exception e){
-            Main.LogError("Credential validation failure: " + e.getMessage());
+            Main.LogError("Exception in GetCharactersForAccount: " + e.getMessage());
         }
         return toReturn;
     }

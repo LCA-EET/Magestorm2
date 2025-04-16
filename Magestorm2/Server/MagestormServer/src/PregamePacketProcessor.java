@@ -26,18 +26,21 @@ public class PregamePacketProcessor implements PacketProcessor
         byte opCode = decrypted[0];
         Main.LogMessage("OpCode: " + opCode);
         switch (opCode){
-                case OpCode_Receive.LogIn:
-                    HandleLogInPacket(decrypted, rc);
-                    break;
-                case OpCode_Receive.CreateAccount:
-                    HandleCreateAccountPacket(decrypted, rc);
-                    break;
-                case OpCode_Receive.CreateCharacter:
-                    HandleCreateCharacterPacket(decrypted, rc);
-                    break;
-                case OpCode_Receive.LogOut:
-                    HandleLogOutPacket(decrypted);
-                    break;
+            case OpCode_Receive.LogIn:
+                HandleLogInPacket(decrypted, rc);
+                break;
+            case OpCode_Receive.CreateAccount:
+                HandleCreateAccountPacket(decrypted, rc);
+                break;
+            case OpCode_Receive.CreateCharacter:
+                HandleCreateCharacterPacket(decrypted, rc);
+                break;
+            case OpCode_Receive.LogOut:
+                HandleLogOutPacket(decrypted);
+                break;
+            case OpCode_Receive.DeleteCharacter:
+                HandleDeleteCharacterPacket(decrypted, rc);
+                break;
 
         }
     }
@@ -50,6 +53,15 @@ public class PregamePacketProcessor implements PacketProcessor
         toReturn[0] = new String(userNameBytes, StandardCharsets.UTF_8);
         toReturn[1] = Base64.getEncoder().encodeToString(pwHashBytes);
         return toReturn;
+    }
+
+    private void HandleDeleteCharacterPacket(byte[] decrypted, RemoteClient rc){
+        int accountID = Packets.ExtractInt(decrypted, 1);
+        if(GameServer.IsLoggedIn(accountID)){
+            int characterID = Packets.ExtractInt(decrypted, 5);
+            Database.DeactivateCharacter(characterID, accountID);
+            EnqueueForSend(Packets.CharacterDeletedPacket(characterID), rc);
+        }
     }
 
     private void HandleLogOutPacket(byte[] decrypted){

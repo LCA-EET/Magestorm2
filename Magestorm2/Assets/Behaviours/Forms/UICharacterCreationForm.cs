@@ -18,13 +18,16 @@ public class UICharacterCreationForm : ValidatableForm
     }
     protected override void PassedValidation()
     {
-        Debug.Log(_selectedClass);
+        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(), _selectedClass));
+        CloseForm();
     }
     protected override bool ValidateForm()
     {
+        //Debug.Log("Character name: " + EntriesToValidate[0].GetValue().ToString());
         if (base.ValidateForm())
         {
             _selectedClass = ClassToggleGroup.GetChecked();
+        
             if (_selectedClass < 255)
             {
                 return true;

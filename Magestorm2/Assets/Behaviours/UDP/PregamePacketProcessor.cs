@@ -76,13 +76,19 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.CharacterExists:
                             MessageBox(33);
                             break;
-                      
+                        case OpCode_Receive.CharacterCreated:
+                            HandleCharacterCreatedPacket(decryptedPayload);
+                            break;
+                        case OpCode_Receive.CharacterDeleted:
+                            HandleCharacterDeletedPacket(decryptedPayload);
+                            break;
 
                     }
                 }
             }
         }
     }
+    
     public void SendBytes(byte[] unencrypted)
     {
         Cryptography.EncryptAndSend(unencrypted, _udp);
@@ -97,7 +103,19 @@ public class PregamePacketProcessor : MonoBehaviour
         _listeningPort = port;
         _udp = UDPBuilder.GetClient(port);
     }
-
+    private void HandleCharacterDeletedPacket(byte[] decryptedPayload)
+    {
+        int characterID = BitConverter.ToInt32(decryptedPayload, 1);
+        PlayerAccount.DeleteCharacter(characterID);
+    }
+    private void HandleCharacterCreatedPacket(byte[] decrypted)
+    {
+        byte classCode = decrypted[1];
+        byte nameLength = decrypted[2];
+        int characterID = BitConverter.ToInt32(decrypted, 3);
+        string characterName = Encoding.UTF8.GetString(decrypted, 7, nameLength);
+        PlayerAccount.AddCharacter(characterID, characterName, classCode, 1);
+    }
     private void HandleLogInSuccessfulPacket(byte[] decrypted)
     {
         int accountID = BitConverter.ToInt32(decrypted, 1);

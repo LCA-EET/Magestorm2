@@ -8,6 +8,7 @@ public static class OpCode_Send
     public const byte CreateAccount = 2;
     public const byte CreateCharacter = 3;
     public const byte LogOut = 4;
+    public const byte DeleteCharacter = 5;
 }
 public enum OpCode_Receive : byte
 {
@@ -21,7 +22,8 @@ public enum OpCode_Receive : byte
     RemovedFromServer = 8,
     CharacterExists = 9,
     CharacterCreated = 10,
-    InactivityDisconnect = 11
+    InactivityDisconnect = 11,
+    CharacterDeleted = 12
 }
 public static class Packets
 {
@@ -91,9 +93,20 @@ public static class Packets
         byte[] toSend = new byte[1 + 4 + 1 + nameLength + 1 + 1];
         toSend[0] = OpCode_Send.CreateCharacter;
         idBytes.CopyTo(toSend, 1);
-        nameBytes[5] = nameLength;
+        toSend[5] = nameLength;
         nameBytes.CopyTo(toSend, 6);
         toSend[6 + nameLength] = charclass;
+        return toSend;
+    }
+
+    public static byte[] DeleteCharacterPacket(int characterID)
+    {
+        byte[] characterIDbytes = BitConverter.GetBytes(characterID);
+        byte[] accountIDbytes = PlayerAccount.AccountIDBytes;
+        byte[] toSend = new byte[1 + 4 + 4];
+        toSend[0] = OpCode_Send.DeleteCharacter;
+        accountIDbytes.CopyTo(toSend, 1);
+        characterIDbytes.CopyTo(toSend, 5);
         return toSend;
     }
 }

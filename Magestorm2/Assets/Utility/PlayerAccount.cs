@@ -2,20 +2,31 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 public static class PlayerAccount
 {
     private static int _accountID;
     private static byte[] _accountIDBytes;
-    private static List<PlayerCharacter> _characterList;
+    private static Dictionary<int, PlayerCharacter> _characterList;
+    public static bool UpdatesMade;
     public static void Init(int accountID)
     {
-        _characterList = new List<PlayerCharacter>();
+        _characterList = new Dictionary<int, PlayerCharacter>();
         _accountID = accountID;
         _accountIDBytes = BitConverter.GetBytes(_accountID);
-    }  
+    }
+    public static void DeleteCharacter(int characterID)
+    {
+        if (_characterList.ContainsKey(characterID))
+        {
+            _characterList.Remove(characterID);
+            UpdatesMade = true;
+        }
+    }
     public static void AddCharacter(PlayerCharacter toAdd)
     {
-        _characterList.Add(toAdd);
+        _characterList.Add(toAdd.CharacterID, toAdd);
+        UpdatesMade = true;
     }
     public static void AddCharacter(int characterID, string characterName, byte characterClass, byte characterLevel)
     {
@@ -24,7 +35,7 @@ public static class PlayerAccount
     }
     public static List<PlayerCharacter> GetCharacterList()
     {
-        return _characterList;
+        return _characterList.Values.ToList<PlayerCharacter>();
     }
 
     public static int AccountID
