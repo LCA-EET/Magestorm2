@@ -24,6 +24,7 @@ public static class Game
     }
     public static void Init()
     {
+        Colors.Init();
         Language.Init();
         LayerManager.Init();
         InputControls.Init();

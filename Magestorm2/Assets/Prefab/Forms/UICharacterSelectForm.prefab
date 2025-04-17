@@ -686,6 +686,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3276722632786269403, guid: 8d4463d83d13b7648a7fe282cb80ae3e, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9051226994585229208, guid: 8d4463d83d13b7648a7fe282cb80ae3e, type: 3}
       propertyPath: m_Name
       value: CharacterCard (2)

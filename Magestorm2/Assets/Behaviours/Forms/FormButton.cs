@@ -12,7 +12,8 @@ public enum ButtonType : byte
     Spanish = 6,
     Chinese = 7,
     Edit = 8,
-    Delete = 9
+    Delete = 9,
+    Select = 10
 }
 public class FormButton : MonoBehaviour
 {

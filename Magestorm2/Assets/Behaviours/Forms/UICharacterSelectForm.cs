@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class UICharacterSelectForm : ValidatableForm
 {
-    public CharacterCard[] CharacterCards;
+    public UICharacterCard[] CharacterCards;
 
     private void Awake()
     {
+        foreach (UICharacterCard card in CharacterCards)
+        {
+            card.SetOwningForm(this);
+        }
         RefreshCards();
     }
     private void RefreshCards()
     {
+        DeselectCards();
         List<PlayerCharacter> characterList = PlayerAccount.GetCharacterList();
         int cardIndex = 0;
         foreach (PlayerCharacter character in characterList)
@@ -38,6 +43,39 @@ public class UICharacterSelectForm : ValidatableForm
         if (PlayerAccount.UpdatesMade)
         {
             RefreshCards();
+        }
+    }
+    private void DeselectCards()
+    {
+        foreach (UICharacterCard card in CharacterCards)
+        {
+            card.MarkSelected(false);
+        }
+    }
+    public void CardSelected(UICharacterCard selected)
+    {
+        DeselectCards();
+        selected.MarkSelected(true);   
+    }
+    protected override void PassedValidation()
+    {
+        ComponentRegister.UIPrefabManager.InstantiateMatchList();
+        base.PassedValidation();
+    }
+    protected override bool ValidateForm()
+    {
+        return base.ValidateForm();
+    }
+    public override void ButtonPressed(ButtonType buttonType)
+    {
+        switch (buttonType)
+        {
+            case ButtonType.Cancel:
+                CloseForm();
+                break;
+            case ButtonType.Submit:
+                ValidateForm();
+                break;
         }
     }
     public override void CloseForm()

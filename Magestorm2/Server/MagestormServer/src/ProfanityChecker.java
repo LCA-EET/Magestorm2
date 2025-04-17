@@ -38,8 +38,9 @@ public class ProfanityChecker {
         }
     }
     public static boolean ContainsProhibitedLanguage(String text){
+        String lower = text.toLowerCase(Locale.ROOT);
         for (String prohibited : _prohibitedTerms){
-            if(text.contains(prohibited)){
+            if(lower.contains(prohibited)){
                 return true;
             }
         }

@@ -8,6 +8,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabPregamePacketProcessor;
     public GameObject PrefabCharacterSelector;
     public GameObject PrefabCharacterCreator;
+    public GameObject PrefabMatchList;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -55,6 +56,11 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateCharacterCreator()
     {
         UICharacterCreationForm form = Instantiate(PrefabCharacterCreator).GetComponent<UICharacterCreationForm>();
+        AddToStack(form.gameObject);
+    }
+    public void InstantiateMatchList()
+    {
+        UIMatchList form = Instantiate(PrefabMatchList).GetComponent<UIMatchList>();
         AddToStack(form.gameObject);
     }
 
