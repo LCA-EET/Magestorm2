@@ -9,6 +9,7 @@ public class UIMatchList : ValidatableForm
     private float _elapsed = 0.0f;
     private void Awake()
     {
+        Game.SendBytes(Packets.SubscribeToMatchesPacket());
         foreach (MatchEntry entry in MatchEntries)
         {
             entry.SetOwningList(this);
@@ -35,7 +36,11 @@ public class UIMatchList : ValidatableForm
         switch (buttonType)
         {
             case ButtonType.CharacterSelect:
+                Game.SendBytes(Packets.UnsubscribeFromMatchesPacket());
                 ComponentRegister.UIPrefabManager.PopFromStack();
+                break;
+            case ButtonType.CreateMatch:
+                Game.SendBytes(Packets.CreateMatchPacket(0));
                 break;
         }
     }

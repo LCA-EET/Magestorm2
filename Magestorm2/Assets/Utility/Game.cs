@@ -18,6 +18,10 @@ public static class Game
         UDPBuilder.StopAllListeners();
         Application.Quit();
     }
+    public static void SendBytes(byte[] unencrypted)
+    {
+        ComponentRegister.PregamePacketProcessor.SendBytes(unencrypted);
+    }
     public static void MessageBox(string message)
     {
         ComponentRegister.UIPrefabManager.InstantiateMessageBox(message);

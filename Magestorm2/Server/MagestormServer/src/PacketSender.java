@@ -16,7 +16,10 @@ public class PacketSender extends Thread{
                 if(_processor.HasOutgoingPackets()){
                     ArrayList<OutgoingPacket> outgoing = _processor.OutgoingPackets();
                     for(OutgoingPacket packet : outgoing){
-                        _udp.Send(packet.Bytes(), packet.Recipient());
+                        RemoteClient[] recipients = packet.Recipients();
+                        for(RemoteClient rc : recipients){
+                            _udp.Send(packet.Bytes(), rc);
+                        }
                     }
                 }
                 Thread.sleep(GameServer.Tick);

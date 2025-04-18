@@ -8,8 +8,11 @@ public class RemoteClient {
     private int _accountID;
     private String _username;
     private long _timeLastReceived = 0;
+    private boolean _subscribedToMatches;
+    private String _characterName;
 
     public RemoteClient(DatagramPacket received, int receivingPort){
+        _subscribedToMatches = false;
         _emanatingPort = received.getPort();
         _receivingPort = receivingPort;
         _address = received.getAddress();
@@ -34,11 +37,26 @@ public class RemoteClient {
         _timeLastReceived = System.currentTimeMillis();
     }
 
+    public void SetCharacterName(String characterName){
+        _characterName = characterName;
+    }
+
+    public String SelectedCharacterName(){
+        return _characterName;
+    }
+
     public int AccountID(){
         return _accountID;
     }
 
     public boolean TimeOut(){
         return (System.currentTimeMillis() - _timeLastReceived) > GameServer.TimeOut;
+    }
+    public void SubscribeToMatches(boolean subscribed, String characterName){
+        _subscribedToMatches = subscribed;
+        _characterName = characterName;
+    }
+    public boolean IsSubscribedToMatches(){
+        return _subscribedToMatches;
     }
 }

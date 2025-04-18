@@ -1,6 +1,7 @@
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Packets {
 
@@ -12,6 +13,8 @@ public class Packets {
     private static final byte[] ProhibitedLanguagePacket_Bytes = new byte[]{OpCode_Send.ProhibitedLanguage};
     private static final byte[] CharacterExistsPacket_Bytes = new byte[]{OpCode_Send.CharacterExists};
     private static final byte[] InactivityDisconnect_Bytes = new byte[]{OpCode_Send.InactivityDisconnect};
+    private static final byte[] MatchAlreadyCreated_Bytes = new byte[]{OpCode_Send.MatchAlreadyCreated};
+    private static final byte[] MatchLimitReached_Bytes = new byte[]{OpCode_Send.MatchLimitReached};
 
     public static byte[] InactivityDisconnectPacket() { return Cryptographer.Encrypt(InactivityDisconnect_Bytes);}
     public static byte[] LoginFailedPacket(){
@@ -38,12 +41,38 @@ public class Packets {
 
     public static byte[] CharacterExistsPacket(){ return Cryptographer.Encrypt(CharacterExistsPacket_Bytes);}
 
+    public static byte[] MatchAlreadyCreatedPacket() {return Cryptographer.Encrypt(MatchAlreadyCreated_Bytes);}
+
+    public static byte[] MatchLimitReachedPacket() {return Cryptographer.Encrypt(MatchLimitReached_Bytes);}
+
     public static byte[] CharacterDeletedPacket(int characterID) {
         byte[] toEncrypt = new byte[5];
         toEncrypt[0] = OpCode_Send.CharacterDeleted;
         byte[] idBytes = Packets.IntToByteArray(characterID);
         System.arraycopy(idBytes,0, toEncrypt, 1, 4);
         return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] MatchDataPacket(Collection<Match> matches){
+        ArrayList<byte[]> matchData = new ArrayList<>();
+        int totalSize = 2;
+        byte matchCount = 0;
+        for(Match match : matches){
+            byte[] matchBytes = match.ToByteArray();
+            totalSize += matchBytes.length;
+            matchData.add(matchBytes);
+            matchCount++;
+        }
+        byte[] toSend = new byte[totalSize];
+        toSend[0] = OpCode_Send.MatchData;
+        toSend[1] = matchCount;
+        int index = 2;
+        for (byte[] matchBytes : matchData){
+            int length = matchBytes.length;
+            System.arraycopy(matchBytes, 0, toSend, index, length);
+            index += length;
+        }
+        return toSend;
     }
 
     public static byte[] LoginSucceededPacket(int accountID){

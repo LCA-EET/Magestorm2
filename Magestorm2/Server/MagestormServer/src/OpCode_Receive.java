@@ -6,4 +6,5 @@ public class OpCode_Receive {
     public static final byte DeleteCharacter = 5;
     public static final byte SubscribeToMatches = 6;
     public static final byte UnsubscribeFromMatches = 7;
+    public static final byte CreateMatch = 8;
 }

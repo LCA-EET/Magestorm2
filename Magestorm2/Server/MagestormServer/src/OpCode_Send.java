@@ -11,4 +11,7 @@ public class OpCode_Send{
     public static final byte CharacterCreated = 10;
     public static final byte InactivityDisconnect = 11;
     public static final byte CharacterDeleted = 12;
+    public static final byte MatchData = 13;
+    public static final byte MatchAlreadyCreated = 14;
+    public static final byte MatchLimitReached = 15;
 }

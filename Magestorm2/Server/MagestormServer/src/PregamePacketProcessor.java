@@ -42,9 +42,31 @@ public class PregamePacketProcessor implements PacketProcessor
                 HandleDeleteCharacterPacket(decrypted, rc);
                 break;
             case OpCode_Receive.SubscribeToMatches:
-
+                HandleMatchSubscribePacket(decrypted, true);
                 break;
+            case OpCode_Receive.UnsubscribeFromMatches:
+                HandleMatchSubscribePacket(decrypted, false);
+                break;
+            case OpCode_Receive.CreateMatch:
+                HandleMatchCreatedPacket(decrypted, rc);
+                break;
+
         }
+    }
+    public void HandleMatchCreatedPacket(byte[] decrypted, RemoteClient rc){
+        int accountID = Packets.ExtractInt(decrypted,1);
+        byte sceneID = decrypted[6];
+        GameServer.GetMatchManager().RequestMatchCreation(rc, accountID, sceneID);
+    }
+
+    public void HandleMatchSubscribePacket(byte[] decrypted, boolean subscribe){
+        int accountID = Packets.ExtractInt(decrypted,1);
+        String characterName = "";
+        if(subscribe){
+            byte nameLength = decrypted[5];
+            characterName = new String(decrypted, 6, nameLength, StandardCharsets.UTF_8);
+        }
+        GameServer.MatchSubscribe(accountID, subscribe, characterName);
     }
 
     public String[] LogInDetails(byte[] decrypted){
@@ -165,6 +187,9 @@ public class PregamePacketProcessor implements PacketProcessor
 
     }
     public void EnqueueForSend(byte[] data, RemoteClient rc){
+        _outgoingPackets.add(new OutgoingPacket(data, rc));
+    }
+    public void EnqueueForSend(byte[] data, RemoteClient[] rc){
         _outgoingPackets.add(new OutgoingPacket(data, rc));
     }
 

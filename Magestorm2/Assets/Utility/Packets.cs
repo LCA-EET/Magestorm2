@@ -9,6 +9,9 @@ public static class OpCode_Send
     public const byte CreateCharacter = 3;
     public const byte LogOut = 4;
     public const byte DeleteCharacter = 5;
+    public const byte SubscribeToMatches = 6;
+    public const byte UnsubscribeFromMatches = 7;
+    public const byte CreateMatch = 8;
 }
 public enum OpCode_Receive : byte
 {
@@ -23,7 +26,10 @@ public enum OpCode_Receive : byte
     CharacterExists = 9,
     CharacterCreated = 10,
     InactivityDisconnect = 11,
-    CharacterDeleted = 12
+    CharacterDeleted = 12,
+    MatchData = 13,
+    MatchAlreadyCreated = 14,
+    MatchLimitReached = 15
 }
 public static class Packets
 {
@@ -76,13 +82,14 @@ public static class Packets
         return unencryptedPayload;
     }
 
-    public static byte[] LogOutPacket()
+    public static byte[] CreateMatchPacket(byte sceneID)
     {
-        byte[] toReturn = new byte[5];
-        toReturn[0] = OpCode_Send.LogOut;
-        byte[] accountIDBytes = BitConverter.GetBytes(PlayerAccount.AccountID);
-        accountIDBytes.CopyTo(toReturn, 1);
-        return toReturn;
+        byte[] idBytes = PlayerAccount.AccountIDBytes;
+        byte[] toSend = new byte[1 + 4 + 1];
+        toSend[0] = OpCode_Send.CreateMatch;
+        idBytes.CopyTo(toSend, 1);
+        toSend[5] = sceneID;
+        return toSend;
     }
 
     public static byte[] CreateCharacterPacket(string charname, byte charclass)
@@ -109,4 +116,34 @@ public static class Packets
         characterIDbytes.CopyTo(toSend, 5);
         return toSend;
     }
+    #region OpCodePlusAccountID
+    public static byte[] LogOutPacket()
+    {
+        return OpCodePlusAccountIDBytes(OpCode_Send.LogOut);
+    }
+    public static byte[] UnsubscribeFromMatchesPacket()
+    {
+        return OpCodePlusAccountIDBytes(OpCode_Send.UnsubscribeFromMatches);
+    }
+    public static byte[] SubscribeToMatchesPacket()
+    {
+        byte[] nameBytes = PlayerAccount.SelectedCharacter.CharacterNameBytes;
+        byte nameLength = (byte)nameBytes.Length;
+        byte[] toSend = new byte[1 + 4 + 1 + nameLength];
+        toSend[0] = OpCode_Send.SubscribeToMatches;
+        PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
+        toSend[5] = nameLength;
+        nameBytes.CopyTo(toSend, 6);
+        return toSend;
+    }
+    public static byte[] OpCodePlusAccountIDBytes(byte opCode)
+    {
+        byte[] toSend = new byte[1 + 4];
+        toSend[0] = opCode;
+        PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
+        return toSend;
+    }
+    #endregion
+
+
 }

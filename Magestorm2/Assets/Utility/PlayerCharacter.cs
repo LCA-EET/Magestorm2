@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System.Text;
 using UnityEngine;
 
 public class PlayerCharacter
@@ -7,12 +8,13 @@ public class PlayerCharacter
     private string _characterName;
     private byte _characterClass;
     private byte _characterLevel;
-
+    private byte[] _characterNameBytes;
     public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel) { 
         _characterID = characterID;
         _characterName = characterName;
         _characterClass = characterClass;
         _characterLevel = characterLevel;
+        _characterNameBytes = Encoding.UTF8.GetBytes(characterName);
     }
     public static byte StringToClass(string playerClass)
     {
@@ -33,6 +35,7 @@ public class PlayerCharacter
         }
         return "";
     }
+    public byte[] CharacterNameBytes { get { return _characterNameBytes; } }
     public int CharacterID { get { return _characterID; } }
     public string CharacterName { get { return _characterName; } }
     public byte CharacterClass { get { return _characterClass; } }
