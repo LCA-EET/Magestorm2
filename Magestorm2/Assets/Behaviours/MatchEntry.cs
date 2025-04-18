@@ -42,4 +42,9 @@ public class MatchEntry : ValidatableForm
     {
         get { return _selected; }
     }
+
+    public void PopulateFromMatch(ListedMatch match)
+    {
+        gameObject.SetActive(true);
+    }
 }

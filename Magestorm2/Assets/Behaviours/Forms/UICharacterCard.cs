@@ -36,6 +36,7 @@ public class UICharacterCard : ValidatableForm
     public void MarkSelected(bool selected)
     {
         _selected = selected;
+        PlayerAccount.SelectedCharacter = selected ? _character : null;
         BackgroundImage.color = Colors.ApplyCardSelectionColor(_selected);
     }
     public override void ButtonPressed(ButtonType buttonType)

@@ -60,11 +60,10 @@ public class UICharacterSelectForm : ValidatableForm
     protected override void PassedValidation()
     {
         ComponentRegister.UIPrefabManager.InstantiateMatchList();
-        base.PassedValidation();
     }
     protected override bool ValidateForm()
     {
-        return base.ValidateForm();
+        return PlayerAccount.SelectedCharacter != null;
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
@@ -74,7 +73,14 @@ public class UICharacterSelectForm : ValidatableForm
                 CloseForm();
                 break;
             case ButtonType.Submit:
-                ValidateForm();
+                if (ValidateForm())
+                {
+                    PassedValidation();
+                }
+                else
+                {
+                    Game.MessageBox(Language.GetBaseString(35));
+                }
                 break;
         }
     }

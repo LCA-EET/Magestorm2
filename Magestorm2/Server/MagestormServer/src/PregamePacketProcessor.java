@@ -41,7 +41,9 @@ public class PregamePacketProcessor implements PacketProcessor
             case OpCode_Receive.DeleteCharacter:
                 HandleDeleteCharacterPacket(decrypted, rc);
                 break;
+            case OpCode_Receive.SubscribeToMatches:
 
+                break;
         }
     }
 

@@ -13,7 +13,10 @@ public enum ButtonType : byte
     Chinese = 7,
     Edit = 8,
     Delete = 9,
-    Select = 10
+    Select = 10,
+    CharacterSelect = 11,
+    CreateMatch = 12,
+    JoinMatch = 13
 }
 public class FormButton : MonoBehaviour
 {

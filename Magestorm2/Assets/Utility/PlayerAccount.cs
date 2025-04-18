@@ -8,6 +8,7 @@ public static class PlayerAccount
     private static int _accountID;
     private static byte[] _accountIDBytes;
     private static Dictionary<int, PlayerCharacter> _characterList;
+    public static PlayerCharacter SelectedCharacter; 
     public static bool UpdatesMade;
     public static void Init(int accountID)
     {

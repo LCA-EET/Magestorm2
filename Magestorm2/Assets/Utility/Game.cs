@@ -29,6 +29,7 @@ public static class Game
         LayerManager.Init();
         InputControls.Init();
         Teams.Init();
+        ActiveMatches.Init();
     }
     private static int ComputeChecksum(byte[] data)
     {

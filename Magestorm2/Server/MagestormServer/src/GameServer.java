@@ -6,11 +6,13 @@ public class GameServer extends Thread {
     public static final long TimeOut = 600000; // 10 minutes
     public static final long Tick = 10;
     private static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
+    private static ConcurrentHashMap<Integer, Match> _activeMatches;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
 
     public static void init(){
        _loggedInClients = new ConcurrentHashMap<Integer, RemoteClient>();
+        _activeMatches = new ConcurrentHashMap<Integer, Match>();
        _rcMonitor = new RemoteClientMonitor();
        _pgProcessor = new PregamePacketProcessor();
     }

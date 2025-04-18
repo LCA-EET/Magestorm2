@@ -4,4 +4,6 @@ public class OpCode_Receive {
     public static final byte CreateCharacter = 3;
     public static final byte LogOut = 4;
     public static final byte DeleteCharacter = 5;
+    public static final byte SubscribeToMatches = 6;
+    public static final byte UnsubscribeFromMatches = 7;
 }
