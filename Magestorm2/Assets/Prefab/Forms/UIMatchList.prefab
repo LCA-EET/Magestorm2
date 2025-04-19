@@ -54,6 +54,7 @@ MonoBehaviour:
   - {fileID: 8362483829959025529}
   - {fileID: 2257371913503061589}
   - {fileID: 430529275823046456}
+  - {fileID: 1224407235244955850}
   MatchEntries:
   - {fileID: 5692756488644353648}
   - {fileID: 7340550354223816799}
@@ -760,6 +761,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3c0423f07ad7243bab9292fac37466, type: 3}
+--- !u!114 &1224407235244955850 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3700052363128109851, guid: 9c3c0423f07ad7243bab9292fac37466, type: 3}
+  m_PrefabInstance: {fileID: 2568404057780249553}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83373d7b915789e4fb7a9e958b4ec6e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5184763003275294386 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7230308864844256611, guid: 9c3c0423f07ad7243bab9292fac37466, type: 3}

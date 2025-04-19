@@ -15,7 +15,9 @@ public class Packets {
     private static final byte[] InactivityDisconnect_Bytes = new byte[]{OpCode_Send.InactivityDisconnect};
     private static final byte[] MatchAlreadyCreated_Bytes = new byte[]{OpCode_Send.MatchAlreadyCreated};
     private static final byte[] MatchLimitReached_Bytes = new byte[]{OpCode_Send.MatchLimitReached};
+    private static final byte[] MatchStillHasPlayers_Bytes = new byte[]{OpCode_Send.MatchStillHasPlayers};
 
+    public static byte[] MatchStillHasPlayersPacket() {return Cryptographer.Encrypt(MatchStillHasPlayers_Bytes);}
     public static byte[] InactivityDisconnectPacket() { return Cryptographer.Encrypt(InactivityDisconnect_Bytes);}
     public static byte[] LoginFailedPacket(){
         return Cryptographer.Encrypt(LoginFailedPacket_Bytes);
@@ -72,7 +74,7 @@ public class Packets {
             System.arraycopy(matchBytes, 0, toSend, index, length);
             index += length;
         }
-        return toSend;
+        return Cryptographer.Encrypt(toSend);
     }
 
     public static byte[] LoginSucceededPacket(int accountID){

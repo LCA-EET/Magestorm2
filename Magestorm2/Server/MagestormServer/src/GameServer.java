@@ -6,13 +6,12 @@ public class GameServer extends Thread {
     public static final long TimeOut = 600000; // 10 minutes
     public static final long Tick = 10;
     private static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
-    private static MatchManager _matchManager;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
 
     public static void init(){
        _loggedInClients = new ConcurrentHashMap<Integer, RemoteClient>();
-       _matchManager = new MatchManager();
+       MatchManager.init();
        _rcMonitor = new RemoteClientMonitor();
        _pgProcessor = new PregamePacketProcessor();
     }
@@ -58,9 +57,6 @@ public class GameServer extends Thread {
 
     }
 
-    public static void MatchSubscribe(int accountID, boolean subscribe, String characterName){
-        _matchManager.Subscribe(accountID, subscribe, characterName);
-    }
     public static void ClientLoggedOut(int accountID){
         Main.LogMessage("Client logged out: " + accountID);
         _loggedInClients.remove(accountID);
@@ -71,7 +67,5 @@ public class GameServer extends Thread {
     public static void EnqueueForSend(byte[] encrypted, RemoteClient[] recipients){
         _pgProcessor.EnqueueForSend(encrypted, recipients);
     }
-    public static MatchManager GetMatchManager(){
-        return _matchManager;
-    }
+
 }

@@ -26,8 +26,14 @@ public class Match {
         _matchBytes[2] = nameBytesLength;
         System.arraycopy(creatorNameBytes, 0, _matchBytes, 3, nameBytesLength);
     }
+    public byte MatchID(){
+        return _matchID;
+    }
     public int CreatorAccountID(){
         return _creatorID;
+    }
+    public byte NumPlayersInMatch(){
+        return _numPlayers;
     }
     public byte[] ToByteArray(){
         int length = _matchBytes.length;

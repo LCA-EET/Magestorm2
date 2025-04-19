@@ -30,7 +30,8 @@ public enum OpCode_Receive : byte
     CharacterDeleted = 12,
     MatchData = 13,
     MatchAlreadyCreated = 14,
-    MatchLimitReached = 15
+    MatchLimitReached = 15,
+    MatchStillHasPlayers = 16
 }
 public static class Packets
 {

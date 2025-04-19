@@ -14,4 +14,5 @@ public class OpCode_Send{
     public static final byte MatchData = 13;
     public static final byte MatchAlreadyCreated = 14;
     public static final byte MatchLimitReached = 15;
+    public static final byte MatchStillHasPlayers = 16;
 }

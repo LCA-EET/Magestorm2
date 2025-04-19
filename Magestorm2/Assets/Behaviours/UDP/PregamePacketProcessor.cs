@@ -82,6 +82,15 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.CharacterDeleted:
                             HandleCharacterDeletedPacket(decryptedPayload);
                             break;
+                        case OpCode_Receive.MatchStillHasPlayers:
+                            MessageBox(48);
+                            break;
+                        case OpCode_Receive.MatchLimitReached:
+                            MessageBox(46);
+                            break;
+                        case OpCode_Receive.MatchAlreadyCreated:
+                            MessageBox(45);
+                            break;
 
                     }
                 }

@@ -57,12 +57,17 @@ public class PregamePacketProcessor implements PacketProcessor
         }
     }
     public void HandleDeleteMatchPacket(byte[] decrypted, RemoteClient rc){
-        
+        int accountID = Packets.ExtractInt(decrypted, 1);
+        if(GameServer.IsLoggedIn(accountID)){
+            MatchManager.DeleteMatch(accountID, rc);
+        }
     }
     public void HandleMatchCreatedPacket(byte[] decrypted, RemoteClient rc){
         int accountID = Packets.ExtractInt(decrypted,1);
-        byte sceneID = decrypted[6];
-        GameServer.GetMatchManager().RequestMatchCreation(rc, accountID, sceneID);
+        byte sceneID = decrypted[5];
+        if(GameServer.IsLoggedIn(accountID)){
+            MatchManager.RequestMatchCreation(rc, accountID, sceneID);
+        }
     }
 
     public void HandleMatchSubscribePacket(byte[] decrypted, boolean subscribe){
@@ -72,7 +77,7 @@ public class PregamePacketProcessor implements PacketProcessor
             byte nameLength = decrypted[5];
             characterName = new String(decrypted, 6, nameLength, StandardCharsets.UTF_8);
         }
-        GameServer.MatchSubscribe(accountID, subscribe, characterName);
+        MatchManager.Subscribe(accountID, subscribe, characterName);
     }
 
     public String[] LogInDetails(byte[] decrypted){
