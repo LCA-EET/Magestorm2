@@ -30,7 +30,6 @@ public class UIMatchList : ValidatableForm
         AssociateFormToButtons();
         ClearEntries(0);
     }
-
     public override void ButtonPressed(ButtonType buttonType)
     {
         switch (buttonType)
@@ -41,6 +40,9 @@ public class UIMatchList : ValidatableForm
                 break;
             case ButtonType.CreateMatch:
                 Game.SendBytes(Packets.CreateMatchPacket(0));
+                break;
+            case ButtonType.DeleteMatch:
+                Game.SendBytes(Packets.DeleteMatchPacket());
                 break;
         }
     }

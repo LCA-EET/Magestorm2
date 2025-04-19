@@ -8,6 +8,7 @@ public class MatchEntry : ValidatableForm
     public Image Background;
     public Button SelectButton;
     private UIMatchList _owningList;
+    private ListedMatch _match;
     private bool _selected;
     public bool Selectable;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -45,6 +46,7 @@ public class MatchEntry : ValidatableForm
 
     public void PopulateFromMatch(ListedMatch match)
     {
+        _match = match;
         gameObject.SetActive(true);
     }
 }

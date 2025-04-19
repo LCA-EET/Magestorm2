@@ -16,7 +16,8 @@ public enum ButtonType : byte
     Select = 10,
     CharacterSelect = 11,
     CreateMatch = 12,
-    JoinMatch = 13
+    JoinMatch = 13,
+    DeleteMatch = 14
 }
 public class FormButton : MonoBehaviour
 {

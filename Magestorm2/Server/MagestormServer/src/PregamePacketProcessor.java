@@ -50,8 +50,14 @@ public class PregamePacketProcessor implements PacketProcessor
             case OpCode_Receive.CreateMatch:
                 HandleMatchCreatedPacket(decrypted, rc);
                 break;
+            case OpCode_Receive.DeleteMatch:
+                HandleDeleteMatchPacket(decrypted, rc);
+                break;
 
         }
+    }
+    public void HandleDeleteMatchPacket(byte[] decrypted, RemoteClient rc){
+        
     }
     public void HandleMatchCreatedPacket(byte[] decrypted, RemoteClient rc){
         int accountID = Packets.ExtractInt(decrypted,1);

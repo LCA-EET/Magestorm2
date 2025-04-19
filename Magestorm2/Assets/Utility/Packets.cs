@@ -12,6 +12,7 @@ public static class OpCode_Send
     public const byte SubscribeToMatches = 6;
     public const byte UnsubscribeFromMatches = 7;
     public const byte CreateMatch = 8;
+    public const byte DeleteMatch = 9;
 }
 public enum OpCode_Receive : byte
 {
@@ -81,7 +82,10 @@ public static class Packets
 
         return unencryptedPayload;
     }
-
+    public static byte[] DeleteMatchPacket()
+    {
+        return OpCodePlusAccountIDBytes(OpCode_Send.DeleteMatch);
+    }
     public static byte[] CreateMatchPacket(byte sceneID)
     {
         byte[] idBytes = PlayerAccount.AccountIDBytes;
