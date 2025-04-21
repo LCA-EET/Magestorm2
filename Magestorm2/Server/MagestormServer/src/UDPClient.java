@@ -35,7 +35,7 @@ public class UDPClient extends Thread{
             } catch (Exception e)
             {
                 if(dataReceived){
-                    Main.LogError(e.getMessage());
+                    Main.LogError("UDPClient.run():" + e.getMessage());
                 }
             }
             receivedBuffer = new byte[_bufferSize];
@@ -52,7 +52,7 @@ public class UDPClient extends Thread{
         try{
             _udpSocket.send(toSend);
         }catch(Exception e){
-            Main.LogError(e.getMessage());
+            Main.LogError("UDPClient.Send(): " + e.getMessage());
         }
     }
 }

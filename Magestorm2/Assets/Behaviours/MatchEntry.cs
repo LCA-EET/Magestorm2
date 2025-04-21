@@ -47,6 +47,9 @@ public class MatchEntry : ValidatableForm
     public void PopulateFromMatch(ListedMatch match)
     {
         _match = match;
+        ID.text = _match.MatchID.ToString();
+        Creator.text = _match.CreatorName.ToString();
+        TimeLeft.text = TimeUtil.MinutesAndSecondsRemaining(match.Expiration);
         gameObject.SetActive(true);
     }
 }

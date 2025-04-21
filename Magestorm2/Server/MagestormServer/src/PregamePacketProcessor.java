@@ -57,21 +57,21 @@ public class PregamePacketProcessor implements PacketProcessor
         }
     }
     public void HandleDeleteMatchPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = Packets.ExtractInt(decrypted, 1);
+        int accountID = ByteUtils.ExtractInt(decrypted, 1);
         if(GameServer.IsLoggedIn(accountID)){
             MatchManager.DeleteMatch(accountID, rc);
         }
     }
     public void HandleMatchCreatedPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = Packets.ExtractInt(decrypted,1);
+        int accountID = ByteUtils.ExtractInt(decrypted,1);
         byte sceneID = decrypted[5];
         if(GameServer.IsLoggedIn(accountID)){
-            MatchManager.RequestMatchCreation(rc, accountID, sceneID);
+            MatchManager.RequestMatchCreation(accountID, sceneID);
         }
     }
 
     public void HandleMatchSubscribePacket(byte[] decrypted, boolean subscribe){
-        int accountID = Packets.ExtractInt(decrypted,1);
+        int accountID = ByteUtils.ExtractInt(decrypted,1);
         String characterName = "";
         if(subscribe){
             byte nameLength = decrypted[5];
@@ -91,23 +91,23 @@ public class PregamePacketProcessor implements PacketProcessor
     }
 
     private void HandleDeleteCharacterPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = Packets.ExtractInt(decrypted, 1);
+        int accountID = ByteUtils.ExtractInt(decrypted, 1);
         if(GameServer.IsLoggedIn(accountID)){
-            int characterID = Packets.ExtractInt(decrypted, 5);
+            int characterID = ByteUtils.ExtractInt(decrypted, 5);
             Database.DeactivateCharacter(characterID, accountID);
             EnqueueForSend(Packets.CharacterDeletedPacket(characterID), rc);
         }
     }
 
     private void HandleLogOutPacket(byte[] decrypted){
-        int accountID = Packets.ExtractInt(decrypted, 1);
+        int accountID = ByteUtils.ExtractInt(decrypted, 1);
         if(GameServer.IsLoggedIn(accountID)){
             GameServer.ClientLoggedOut(accountID);
         }
     }
 
     private void HandleCreateCharacterPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = Packets.ExtractInt(decrypted,1);
+        int accountID = ByteUtils.ExtractInt(decrypted,1);
         if(GameServer.IsLoggedIn(accountID)){
             byte nameLength = decrypted[5];
             String characterName = new String(Packets.ExtractBytes(decrypted, 6, nameLength), StandardCharsets.UTF_8);

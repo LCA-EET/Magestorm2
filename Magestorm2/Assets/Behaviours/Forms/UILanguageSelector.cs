@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LanguageSelector : ValidatableForm
+public class UILanguageSelector : ValidatableForm
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,6 +15,7 @@ public class LanguageSelector : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
+        UIAudio.PlayButtonPress();
         Debug.Log(buttonType.ToString());
         switch (buttonType)
         {

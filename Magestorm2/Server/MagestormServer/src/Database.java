@@ -41,7 +41,7 @@ public class Database {
             return true;
         }
         catch(Exception ex){
-            Main.LogError("Failed to update database with port and key information: " + ex.getMessage());
+            Main.LogError("Database.UpdateServerInfo():" + " Failed to update database with port and key information: " + ex.getMessage());
         }
         return false;
     }
@@ -51,7 +51,7 @@ public class Database {
             Main.LogMessage("DB Connection Test Successful.");
             return true;
         } catch (Exception e) {
-            Main.LogError(e.getMessage());
+            Main.LogError("Database.TestDBConnection(): " + e.getMessage());
         }
         Main.LogMessage("DB Connection Test Failed.");
         return false;
@@ -180,7 +180,7 @@ public class Database {
                 String characterName = rs.getString("charname");
                 byte charClass = rs.getByte("charclass");
                 Main.LogMessage("Fetched character: " + characterName);
-                byte[] characterIDBytes = Packets.IntToByteArray(characterID);
+                byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte)nameBytes.length;
                 byte[] fetched = new byte[6 + nameLength];
@@ -201,6 +201,7 @@ public class Database {
         }
         catch(Exception e){
             Main.LogError("Exception in GetCharactersForAccount: " + e.getMessage());
+            //e.printStackTrace();
         }
         return toReturn;
     }

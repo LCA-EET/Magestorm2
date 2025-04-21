@@ -19,6 +19,7 @@ public class ServerParams {
         System.out.println("Error file: " + ErrorFilePath);
         Main.InitLog(LogFilePath, ErrorFilePath);
         System.out.println("Loading parameters from " + paramFilePath);
+        System.out.println("Time since epoch: " + System.currentTimeMillis());
         File paramFile = new File(paramFilePath);
         Scanner paramScanner = null;
         try {

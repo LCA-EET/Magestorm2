@@ -41,7 +41,7 @@ public class Cryptographer {
             Main.LogMessage("Key checksum: " + ComputeChecksum(_key) + ", key length: " + _key.length);
         }
         catch(Exception ex){
-            Main.LogError("Failed to generate key and IV: " + ex.getMessage());
+            Main.LogError("Cryptographer.GenerateKeyAndIV(): Failed to generate key and IV: " + ex.getMessage());
         }
     }
     private static byte[] LongToBytes(long toConvert){
@@ -64,7 +64,7 @@ public class Cryptographer {
             toReturn[16] = (byte)encryptedPayload.length;
             System.arraycopy(encryptedPayload, 0, toReturn, 17, encryptedPayload.length);
         } catch (Exception e) {
-            Main.LogError(e.getMessage());
+            Main.LogError("Cryptographer.Encrypt(): " + e.getMessage());
         }
         return toReturn;
     }
@@ -93,7 +93,7 @@ public class Cryptographer {
             _decryptionCipher.init(Cipher.DECRYPT_MODE, _secretKey, iv);
             return _decryptionCipher.doFinal(payload);
         } catch (Exception e) {
-            Main.LogError("Decryption error: " + e.getMessage());
+            Main.LogError("Cryptographer.Decrypt(): Decryption error: " + e.getMessage());
         }
         return new byte[0];
     }
@@ -118,7 +118,7 @@ public class Cryptographer {
             _encryptionCipher.init(Cipher.ENCRYPT_MODE, _keySpec);
         }
         catch(Exception e){
-            Main.LogError(e.getMessage());
+            Main.LogError("Cryptographer.getAESKey(): " + e.getMessage());
         }
         return _secretKey;
     }

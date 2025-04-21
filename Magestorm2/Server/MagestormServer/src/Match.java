@@ -8,23 +8,36 @@ public class Match {
     private byte _minutesLeft;
     private byte _secondsLeft;
     private long _creationTime;
+    private long _expirationTime;
     private String _creator;
     private byte[] _matchBytes;
+    private byte _lastIndex;
 
     public Match(byte matchID, int creatorID, String creator, byte sceneID, long creationTime){
+
         _matchID = matchID;
         _numPlayers = 0;
         _creatorID = creatorID;
         _sceneID = sceneID;
         _creator = creator;
         _creationTime = creationTime;
+        _expirationTime = creationTime + 3600000; // one hour
+        Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte[] creatorNameBytes = creator.getBytes(StandardCharsets.UTF_8);
         byte nameBytesLength = (byte)creatorNameBytes.length;
-        _matchBytes = new byte[1 + 1 + 1 + nameBytesLength  + 1 + 1 + 1];
-        _matchBytes[0] = matchID;
-        _matchBytes[1] = sceneID;
-        _matchBytes[2] = nameBytesLength;
-        System.arraycopy(creatorNameBytes, 0, _matchBytes, 3, nameBytesLength);
+        _matchBytes = new byte[1 + 1 + 8 + 1 +  nameBytesLength + 1];
+        _lastIndex = (byte)(_matchBytes.length-1);
+        int index = 0;
+        _matchBytes[index] = matchID;
+        index++;
+        _matchBytes[index] = sceneID;
+        index++;
+        byte[] expirationBytes = ByteUtils.LongToByteArray(_expirationTime);
+        System.arraycopy(expirationBytes, 0, _matchBytes, index, 8);
+        index+=8;
+        _matchBytes[index] = nameBytesLength;
+        index++;
+        System.arraycopy(creatorNameBytes, 0, _matchBytes, index, nameBytesLength);
     }
     public byte MatchID(){
         return _matchID;
@@ -36,10 +49,7 @@ public class Match {
         return _numPlayers;
     }
     public byte[] ToByteArray(){
-        int length = _matchBytes.length;
-        _matchBytes[length - 3] = _numPlayers;
-        _matchBytes[length - 2] = _minutesLeft;
-        _matchBytes[length - 1] = _secondsLeft;
+        _matchBytes[_lastIndex] = _numPlayers;
         return _matchBytes;
     }
 }

@@ -50,7 +50,7 @@ public class Packets {
     public static byte[] CharacterDeletedPacket(int characterID) {
         byte[] toEncrypt = new byte[5];
         toEncrypt[0] = OpCode_Send.CharacterDeleted;
-        byte[] idBytes = Packets.IntToByteArray(characterID);
+        byte[] idBytes = ByteUtils.IntToByteArray(characterID);
         System.arraycopy(idBytes,0, toEncrypt, 1, 4);
         return Cryptographer.Encrypt(toEncrypt);
     }
@@ -78,19 +78,21 @@ public class Packets {
     }
 
     public static byte[] LoginSucceededPacket(int accountID){
-        byte[] characterBytes = Database.GetCharactersForAccount(accountID);
+        byte[] characterBytes = Database.GetCharactersForAccount(accountID); // this includes the name length as the first byte
         Main.LogMessage("Character bytes retrieved: " + characterBytes.length);
         byte[] toSend;
         if(characterBytes.length > 0){
-            toSend = new byte[5 + characterBytes.length];
-            System.arraycopy(characterBytes, 0, toSend, 5, characterBytes.length);
+            toSend = new byte[1 + 4 + 8 + characterBytes.length];
+            System.arraycopy(characterBytes, 0, toSend, 13, characterBytes.length);
         }
         else{
-            toSend = new byte[5];
+            toSend = new byte[1 + 4 + 8];
         }
         toSend[0] = OpCode_Send.LogInSucceeded;
-        byte[] accountBytes = Packets.IntToByteArray(accountID);
+        byte[] accountBytes = ByteUtils.IntToByteArray(accountID);
+        byte[] timeBytes = ByteUtils.LongToByteArray(System.currentTimeMillis());
         System.arraycopy(accountBytes, 0, toSend, 1, 4);
+        System.arraycopy(timeBytes, 0, toSend, 5, 8);
         return Cryptographer.Encrypt(toSend);
     }
 
@@ -101,7 +103,7 @@ public class Packets {
 
         toReturn[1] = classCode;
         toReturn[2] = nameLength;
-        byte[] idBytes = Packets.IntToByteArray(characterID);
+        byte[] idBytes = ByteUtils.IntToByteArray(characterID);
         byte[] nameBytes = charname.getBytes(StandardCharsets.UTF_8);
         System.arraycopy(idBytes,0,toReturn, 3, 4);
         System.arraycopy(nameBytes,0,toReturn,7,nameLength);
@@ -126,9 +128,7 @@ public class Packets {
         return toReturn;
     }
 
-    public static int ExtractInt(byte[] decrypted, int index){
-        return ByteBuffer.wrap(decrypted).getInt(index);
-    }
+
 
     public static byte[] ExtractBytes(byte[] decrypted, int index, int length){
         byte[] toReturn = new byte[length];
@@ -136,11 +136,4 @@ public class Packets {
         return toReturn;
     }
 
-    public static byte[] IntToByteArray(int value) {
-        return new byte[] {
-                (byte)(value >> 24),
-                (byte)(value >> 16),
-                (byte)(value >> 8),
-                (byte)value};
-    }
 }

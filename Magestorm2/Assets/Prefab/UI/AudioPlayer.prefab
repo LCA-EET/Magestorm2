@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7286137903679271951
+--- !u!1 &838080232697229696
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6405325960276156931}
-  - component: {fileID: 3293048657728644219}
-  - component: {fileID: 7185910421088315080}
+  - component: {fileID: 8992784449868024318}
+  - component: {fileID: 3749079298673622323}
+  - component: {fileID: 2462916265095586121}
   m_Layer: 0
-  m_Name: UIPrefabManager
+  m_Name: AudioPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6405325960276156931
+--- !u!4 &8992784449868024318
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7286137903679271951}
+  m_GameObject: {fileID: 838080232697229696}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -33,38 +33,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3293048657728644219
+--- !u!114 &3749079298673622323
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7286137903679271951}
+  m_GameObject: {fileID: 838080232697229696}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cd00f214a6192e4cada3868649ac989, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e315a4c6e4b47e4d96858ce74e4caad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PrefabMessageBox: {fileID: 2212529997909402293, guid: 5a8af9e9d280b8643aa86ec13c9f9c98, type: 3}
-  PrefabCreateAccount: {fileID: 4208800765276099659, guid: db39c720b2951c44893a8aebd3d145c5, type: 3}
-  PrefabPregamePacketProcessor: {fileID: 1420652153896453702, guid: b8006dda8b0a1844e8a6ada79e2aa022, type: 3}
-  PrefabCharacterSelector: {fileID: 5709800364939135258, guid: 6290c6e50aa0a794a9b36c5863b953a1, type: 3}
-  PrefabCharacterCreator: {fileID: 6345535734875823570, guid: 758bf0cee6a8bc346995500000dfdee3, type: 3}
-  PrefabMatchList: {fileID: 739774822516366062, guid: d08142468573e044ca12a5ac46254248, type: 3}
-  UIAudioSource: {fileID: 0}
---- !u!82 &7185910421088315080
+  SFXButtonPress: {fileID: 8300000, guid: 3bea1429ef30dd14da1bbe540ec9d7fb, type: 3}
+--- !u!82 &2462916265095586121
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7286137903679271951}
+  m_GameObject: {fileID: 838080232697229696}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

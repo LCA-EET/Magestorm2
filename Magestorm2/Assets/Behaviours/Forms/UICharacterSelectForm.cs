@@ -67,6 +67,7 @@ public class UICharacterSelectForm : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
+        UIAudio.PlayButtonPress();
         switch (buttonType)
         {
             case ButtonType.Cancel:

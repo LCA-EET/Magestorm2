@@ -10,7 +10,8 @@ public class GameServer extends Thread {
     private static PregamePacketProcessor _pgProcessor;
 
     public static void init(){
-       _loggedInClients = new ConcurrentHashMap<Integer, RemoteClient>();
+       ByteUtils.init();
+        _loggedInClients = new ConcurrentHashMap<Integer, RemoteClient>();
        MatchManager.init();
        _rcMonitor = new RemoteClientMonitor();
        _pgProcessor = new PregamePacketProcessor();
@@ -21,7 +22,7 @@ public class GameServer extends Thread {
     }
 
     public static boolean IsLoggedIn(byte[] decrypted){
-        return _loggedInClients.containsKey(Packets.ExtractInt(decrypted,0));
+        return _loggedInClients.containsKey(ByteUtils.ExtractInt(decrypted,0));
     }
 
     public static void ClientLoggedIn(RemoteClient rc)

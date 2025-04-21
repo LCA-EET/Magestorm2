@@ -10,6 +10,7 @@ public class UIMatchList : ValidatableForm
     private void Awake()
     {
         Game.SendBytes(Packets.SubscribeToMatchesPacket());
+        Debug.Log("Match subscription packet sent.");
         foreach (MatchEntry entry in MatchEntries)
         {
             entry.SetOwningList(this);
@@ -32,11 +33,13 @@ public class UIMatchList : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
+        UIAudio.PlayButtonPress();
         switch (buttonType)
         {
             case ButtonType.CharacterSelect:
                 Game.SendBytes(Packets.UnsubscribeFromMatchesPacket());
                 ComponentRegister.UIPrefabManager.PopFromStack();
+                ActiveMatches.ClearMatches();
                 break;
             case ButtonType.CreateMatch:
                 Game.SendBytes(Packets.CreateMatchPacket(0));
@@ -54,9 +57,9 @@ public class UIMatchList : ValidatableForm
         if (_elapsed > 1.0f)
         {
             _elapsed = 0.0f;
-            if (ActiveMatches.MatchCount > 0)
+            if (ActiveMatches.UpdatesMade)
             {
-                List<ListedMatch> matches = new List<ListedMatch>();
+                List<ListedMatch> matches = ActiveMatches.MatchListing();
                 int index = 0;
                 foreach (ListedMatch match in matches)
                 {

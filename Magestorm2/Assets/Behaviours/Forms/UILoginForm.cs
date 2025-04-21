@@ -16,6 +16,7 @@ public class UILoginForm : ValidatableForm
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("Time since epoch: " + TimeUtil.CurrentTime());
         ComponentRegister.UIPrefabManager.AddToStack(gameObject);
         AssociateFormToButtons();
         _udpPort = Game.FetchServerInfo();
@@ -44,6 +45,7 @@ public class UILoginForm : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
+        UIAudio.PlayButtonPress();
         //Debug.Log(buttonType);
         switch (buttonType)
         {

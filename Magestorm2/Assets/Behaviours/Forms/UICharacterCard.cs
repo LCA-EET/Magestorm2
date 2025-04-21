@@ -41,6 +41,7 @@ public class UICharacterCard : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
+        UIAudio.PlayButtonPress();
         Debug.Log("CC Button Pressed: " + buttonType);
         switch (buttonType)
         {

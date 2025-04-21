@@ -91,13 +91,41 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.MatchAlreadyCreated:
                             MessageBox(45);
                             break;
+                        case OpCode_Receive.MatchData:
+                            HandleMatchDataPacket(decryptedPayload);
+                            break;
 
                     }
                 }
             }
         }
     }
-    
+    private void HandleMatchDataPacket(byte[] decrypted)
+    {
+        byte matchCount = decrypted[1];
+        int index = 2;
+        Debug.Log("Match count: " + matchCount);
+        ActiveMatches.ClearMatches();
+        for(int i = 0; i < matchCount; i++)
+        {
+            byte matchID = decrypted[index];
+            index++;
+            byte sceneID = decrypted[index];
+            index++;
+            long expirationTime = BitConverter.ToInt64(decrypted, index);
+            long currentTime = TimeUtil.CurrentTime();
+            //Debug.Log("Expiration: " + expirationTime + ", current time: " + currentTime + ", delta: " + (expirationTime - currentTime));
+            index += 8;
+            byte nameLength = decrypted[index];
+            byte[] nameBytes = new byte[nameLength];
+            index++;
+            Array.Copy(decrypted, index, nameBytes, 0, nameLength);
+            string creatorName = Encoding.UTF8.GetString(nameBytes);
+            index += nameLength;
+            ListedMatch toAdd = new ListedMatch(matchID, sceneID, creatorName, expirationTime);
+            ActiveMatches.AddMatch(toAdd);
+        }
+    }
     public void SendBytes(byte[] unencrypted)
     {
         Cryptography.EncryptAndSend(unencrypted, _udp);
@@ -108,7 +136,6 @@ public class PregamePacketProcessor : MonoBehaviour
     }
     public void Init(int port)
     {
-        Debug.Log("Initialized UI packet listener on port: " + port);
         _listeningPort = port;
         _udp = UDPBuilder.GetClient(port);
     }
@@ -128,12 +155,15 @@ public class PregamePacketProcessor : MonoBehaviour
     private void HandleLogInSuccessfulPacket(byte[] decrypted)
     {
         int accountID = BitConverter.ToInt32(decrypted, 1);
+        Debug.Log("AccountID: " + accountID);
+        Game.SetServerTime(BitConverter.ToInt64(decrypted, 5));
         PlayerAccount.Init(accountID);
-        if (decrypted.Length > 5)
+        byte characterBytesStart = 13;
+        if (decrypted.Length > characterBytesStart)
         {
-            byte numCharacters = decrypted[5];
+            byte numCharacters = decrypted[characterBytesStart];
             int charIndex = 0;
-            int index = 6;
+            int index = characterBytesStart + 1;
             while (charIndex < numCharacters)
             {
                 int characterID = BitConverter.ToInt32(decrypted, index);

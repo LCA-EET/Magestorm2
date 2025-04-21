@@ -11,7 +11,7 @@ using System.Text;
 public static class Game
 {
     public static bool Running;
-
+    private static long _serverTime;
     public static void Quit()
     {
         Running = false;
@@ -51,6 +51,11 @@ public static class Game
             }
         }
         return toReturn;
+    }
+    public static void SetServerTime(long serverTime)
+    {
+        _serverTime = serverTime;
+        Debug.Log("Server time: " + _serverTime);
     }
     public static int FetchServerInfo()
     {

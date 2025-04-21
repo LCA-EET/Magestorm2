@@ -19,6 +19,13 @@ public static class ComponentRegister
     private static UILoginForm _loginForm;
     private static Transform _uiParent;
     private static PregamePacketProcessor _pregamePacketProcessor;
+    private static AudioPlayer _audioPlayer;
+
+    public static AudioPlayer AudioPlayer
+    {
+        get { return _audioPlayer; }
+        set { _audioPlayer = value; }
+    }
 
     public static PregamePacketProcessor PregamePacketProcessor
     {

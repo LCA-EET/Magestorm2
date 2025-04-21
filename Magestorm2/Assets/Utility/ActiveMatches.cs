@@ -5,6 +5,7 @@ using UnityEngine;
 public static class ActiveMatches
 {
     private static Dictionary<int, ListedMatch> _activeMatches;
+    public static bool UpdatesMade;
 
     public static void Init()
     {
@@ -13,9 +14,14 @@ public static class ActiveMatches
 
     public static List<ListedMatch> MatchListing()
     {
+        UpdatesMade = false;
         return _activeMatches.Values.ToList<ListedMatch>();
     }
-
+    public static void ClearMatches()
+    {
+        _activeMatches.Clear();
+        UpdatesMade = true;
+    }
     public static byte MatchCount
     {
         get
@@ -23,4 +29,12 @@ public static class ActiveMatches
             return (byte) _activeMatches.Count;
         }
     }
+
+    public static void AddMatch(ListedMatch match)
+    {
+        Debug.Log("Match added.");
+        _activeMatches.Add(match.MatchID, match);
+        UpdatesMade = true;
+    }
+
 }

@@ -15,10 +15,14 @@ public class MatchManager{
     }
 
     public static void Subscribe(int accountID, boolean subscribe, String characterName){
+        Main.LogMessage("MatchManager.Subscribe: " + characterName +", " + subscribe);
         RemoteClient rc = GameServer.GetClient(accountID);
         if(rc != null){
             rc.SubscribeToMatches(subscribe, characterName);
             GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
+        }
+        else{
+            Main.LogMessage("MatchManager.Subscribe: rc is null for account id: " + accountID);
         }
     }
     public static void NotifySubscribers(){
@@ -33,18 +37,21 @@ public class MatchManager{
         GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), recipients);
         UpdatesNeeded = false;
     }
-    public static void RequestMatchCreation(RemoteClient rc, int accountID, byte sceneID){
-        if(CheckOtherMatchesCreatedByAccount(accountID)){
-            GameServer.EnqueueForSend(Packets.MatchAlreadyCreatedPacket(), rc);
-        }
-        else{
-            if(_activeMatches.size() >= _maxMatches){
-                GameServer.EnqueueForSend(Packets.MatchLimitReachedPacket(), rc);
+    public static void RequestMatchCreation(int accountID, byte sceneID){
+        RemoteClient rc = GameServer.GetClient(accountID);
+        if(rc != null){
+            if(CheckOtherMatchesCreatedByAccount(accountID)){
+                GameServer.EnqueueForSend(Packets.MatchAlreadyCreatedPacket(), rc);
             }
             else{
-                byte matchID = NextMatchID();
-                Match newlyCreated = new Match(matchID, accountID, rc.SelectedCharacterName(), sceneID, System.currentTimeMillis());
-                AddMatch(matchID, newlyCreated);
+                if(_activeMatches.size() >= _maxMatches){
+                    GameServer.EnqueueForSend(Packets.MatchLimitReachedPacket(), rc);
+                }
+                else{
+                    byte matchID = NextMatchID();
+                    Match newlyCreated = new Match(matchID, accountID, rc.SelectedCharacterName(), sceneID, System.currentTimeMillis());
+                    AddMatch(matchID, newlyCreated);
+                }
             }
         }
     }
@@ -62,6 +69,7 @@ public class MatchManager{
         }
         if(toDelete != null){
             _activeMatches.remove(toDelete.MatchID());
+            UpdatesNeeded = true;
         }
     }
     private static void AddMatch(byte matchID, Match newlyCreated){

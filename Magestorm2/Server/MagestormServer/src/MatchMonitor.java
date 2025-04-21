@@ -9,7 +9,7 @@ public class MatchMonitor extends Thread{
                 if(MatchManager.UpdatesNeeded){
                     MatchManager.NotifySubscribers();
                 }
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
