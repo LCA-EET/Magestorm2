@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using System.Runtime.CompilerServices;
 public class MatchEntry : ValidatableForm
 {
     public TMP_Text ID, Arena, Creator, TimeLeft;
@@ -24,7 +25,7 @@ public class MatchEntry : ValidatableForm
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     private void NotifyOwner()
     {
@@ -43,13 +44,16 @@ public class MatchEntry : ValidatableForm
     {
         get { return _selected; }
     }
-
+    public void RefreshTimeRemaining()
+    {
+        TimeLeft.text = TimeUtil.MinutesAndSecondsRemaining(_match.Expiration);
+    }
     public void PopulateFromMatch(ListedMatch match)
     {
         _match = match;
         ID.text = _match.MatchID.ToString();
         Creator.text = _match.CreatorName.ToString();
-        TimeLeft.text = TimeUtil.MinutesAndSecondsRemaining(match.Expiration);
+        RefreshTimeRemaining();
         gameObject.SetActive(true);
     }
 }

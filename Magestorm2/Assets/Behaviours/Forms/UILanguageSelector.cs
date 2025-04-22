@@ -26,6 +26,7 @@ public class UILanguageSelector : ValidatableForm
                 Language.SetLanguage(Languages.Russian);
                 break;
             case ButtonType.Spanish:
+                Language.SetLanguage(Languages.Spanish);
                 break;
             case ButtonType.Chinese:
                 break;

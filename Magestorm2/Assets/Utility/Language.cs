@@ -7,7 +7,8 @@ using System;
 public enum Languages : byte
 {
     English = 0,
-    Russian = 1
+    Russian = 1,
+    Spanish = 2
 }
 public static class Language
 {

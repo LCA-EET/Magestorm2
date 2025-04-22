@@ -9,6 +9,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabCharacterSelector;
     public GameObject PrefabCharacterCreator;
     public GameObject PrefabMatchList;
+    public GameObject PrefabYesNoBox;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -36,6 +37,12 @@ public class UIPrefabManager : MonoBehaviour
     {
         UICharacterSelectForm form = Instantiate(PrefabCharacterSelector).GetComponent<UICharacterSelectForm>();
         AddToStack(form.gameObject);
+    }
+    public void InstantiateYesNoBox(string message, ValidatableForm instantiator) 
+    {
+        YesNo instantiated = Instantiate(PrefabYesNoBox).GetComponent<YesNo>();
+        instantiated.SetParams(new object[] { message, instantiator });
+        AddToStack(instantiated.gameObject);
     }
     public void InstantiateMessageBox(string message)
     {

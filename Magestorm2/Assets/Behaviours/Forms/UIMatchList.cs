@@ -45,11 +45,33 @@ public class UIMatchList : ValidatableForm
                 Game.SendBytes(Packets.CreateMatchPacket(0));
                 break;
             case ButtonType.DeleteMatch:
-                Game.SendBytes(Packets.DeleteMatchPacket());
+                DeleteMatch();
                 break;
         }
     }
-
+    private void DeleteMatch()
+    {
+        MatchEntry selected = SelectedEntry();
+        if (selected != null)
+        {
+            Game.SendBytes(Packets.DeleteMatchPacket());
+        }
+        else
+        {
+            Game.MessageBox(Language.GetBaseString(50));
+        }
+    }
+    public MatchEntry SelectedEntry()
+    {
+        foreach(MatchEntry entry in MatchEntries)
+        {
+            if (entry.IsSelected)
+            {
+                return entry;
+            }
+        }
+        return null;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -67,6 +89,16 @@ public class UIMatchList : ValidatableForm
                     index++;
                 }
                 ClearEntries(index);
+            }
+            else
+            {
+                foreach(MatchEntry entry in MatchEntries)
+                {
+                    if (entry.isActiveAndEnabled)
+                    {
+                        entry.RefreshTimeRemaining();
+                    }
+                }
             }
         }
     }

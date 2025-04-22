@@ -4,6 +4,7 @@ public class ValidatableForm : InstantiatableForm
 {
     public ValidateableObject[] EntriesToValidate;
     public FormButton[] FormButtons;
+    protected FormResult _result;
      
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,6 +16,10 @@ public class ValidatableForm : InstantiatableForm
     void Update()
     {
         
+    }
+    public virtual void SetResult(FormResult result)
+    {
+        _result = result;
     }
     protected void AssociateFormToButtons()
     {

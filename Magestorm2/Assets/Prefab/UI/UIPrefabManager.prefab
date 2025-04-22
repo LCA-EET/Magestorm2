@@ -51,7 +51,7 @@ MonoBehaviour:
   PrefabCharacterSelector: {fileID: 5709800364939135258, guid: 6290c6e50aa0a794a9b36c5863b953a1, type: 3}
   PrefabCharacterCreator: {fileID: 6345535734875823570, guid: 758bf0cee6a8bc346995500000dfdee3, type: 3}
   PrefabMatchList: {fileID: 739774822516366062, guid: d08142468573e044ca12a5ac46254248, type: 3}
-  UIAudioSource: {fileID: 0}
+  PrefabYesNoBox: {fileID: 5106132542721312946, guid: e5ade64a4b3cf7e4894672c7d12e152f, type: 3}
 --- !u!82 &7185910421088315080
 AudioSource:
   m_ObjectHideFlags: 0

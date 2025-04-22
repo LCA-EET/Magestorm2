@@ -26,6 +26,11 @@ public static class Game
     {
         ComponentRegister.UIPrefabManager.InstantiateMessageBox(message);
     }
+
+    public static void YesNo(string message, ValidatableForm instantiator)
+    {
+        ComponentRegister.UIPrefabManager.InstantiateYesNoBox(message, instantiator);
+    }
     public static void Init()
     {
         Colors.Init();

@@ -27,7 +27,11 @@ public class UICharacterCard : ValidatableForm
     // Update is called once per frame
     void Update()
     {
-        
+        if(_result == FormResult.Yes)
+        {
+            _result = FormResult.Pending;
+            ComponentRegister.PregamePacketProcessor.SendBytes(Packets.DeleteCharacterPacket(_character.CharacterID));
+        }
     }
     public void SetOwningForm(UICharacterSelectForm form)
     {
@@ -46,7 +50,7 @@ public class UICharacterCard : ValidatableForm
         switch (buttonType)
         {
             case ButtonType.Delete:
-                ComponentRegister.PregamePacketProcessor.SendBytes(Packets.DeleteCharacterPacket(_character.CharacterID));
+                Game.YesNo(Language.BuildString(49, _character.CharacterName), this);
                 break;
             case ButtonType.Submit:
                 ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();

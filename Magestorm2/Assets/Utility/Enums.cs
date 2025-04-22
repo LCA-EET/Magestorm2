@@ -21,4 +21,11 @@ public enum Team : byte
     Chaos = 3
 }
 
+public enum FormResult : byte
+{
+    Pending = 0,
+    Yes = 1,
+    No = 2
+}
+
 
