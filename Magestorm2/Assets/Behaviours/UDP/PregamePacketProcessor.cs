@@ -116,13 +116,15 @@ public class PregamePacketProcessor : MonoBehaviour
             long currentTime = TimeUtil.CurrentTime();
             //Debug.Log("Expiration: " + expirationTime + ", current time: " + currentTime + ", delta: " + (expirationTime - currentTime));
             index += 8;
+            int creatorAccountID = BitConverter.ToInt32(decrypted, index);
+            index += 4;
             byte nameLength = decrypted[index];
             byte[] nameBytes = new byte[nameLength];
             index++;
             Array.Copy(decrypted, index, nameBytes, 0, nameLength);
             string creatorName = Encoding.UTF8.GetString(nameBytes);
             index += nameLength;
-            ListedMatch toAdd = new ListedMatch(matchID, sceneID, creatorName, expirationTime);
+            ListedMatch toAdd = new ListedMatch(matchID, sceneID, creatorName, expirationTime, creatorAccountID);
             ActiveMatches.AddMatch(toAdd);
         }
     }

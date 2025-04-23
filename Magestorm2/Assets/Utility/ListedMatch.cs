@@ -7,15 +7,20 @@ public class ListedMatch
 {
     private byte _matchID, _sceneID;
     private long _expiration;
+    private int _creatorID;
     private String _creatorName;
-    public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration)
+    public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration, int creatorID)
     {
         _matchID = matchID;
         _sceneID = sceneID;
         _creatorName = creatorName;
         _expiration = expiration;
+        _creatorID = creatorID;
     }
-
+    public int CreatorID
+    {
+        get { return _creatorID; }
+    }
     public byte MatchID
     {
         get { return _matchID; }

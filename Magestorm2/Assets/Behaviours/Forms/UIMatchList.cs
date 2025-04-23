@@ -10,7 +10,6 @@ public class UIMatchList : ValidatableForm
     private void Awake()
     {
         Game.SendBytes(Packets.SubscribeToMatchesPacket());
-        Debug.Log("Match subscription packet sent.");
         foreach (MatchEntry entry in MatchEntries)
         {
             entry.SetOwningList(this);
@@ -54,7 +53,14 @@ public class UIMatchList : ValidatableForm
         MatchEntry selected = SelectedEntry();
         if (selected != null)
         {
-            Game.SendBytes(Packets.DeleteMatchPacket());
+            if(selected.CreatorAccountID == PlayerAccount.AccountID)
+            {
+                Game.SendBytes(Packets.DeleteMatchPacket());
+            }
+            else
+            {
+                Game.MessageBox(Language.GetBaseString(51));
+            }
         }
         else
         {

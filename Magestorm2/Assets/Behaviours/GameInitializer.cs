@@ -5,6 +5,7 @@ public class GameInitializer : MonoBehaviour
     
     private void Awake()
     {
+        LoadPrefs();
         Game.Init();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,5 +18,10 @@ public class GameInitializer : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void LoadPrefs()
+    {
+
     }
 }

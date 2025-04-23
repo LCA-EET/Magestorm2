@@ -49,3 +49,8 @@ Delete
 There are still players in the match.
 Delete {0} — are you sure?
 Select a match and try again.
+You can't delete match you didn't create.
+ID
+Arena
+Creator
+Time Left

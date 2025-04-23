@@ -56,4 +56,9 @@ public class MatchEntry : ValidatableForm
         RefreshTimeRemaining();
         gameObject.SetActive(true);
     }
+
+    public int CreatorAccountID
+    {
+        get { return _match.CreatorID; }
+    }
 }

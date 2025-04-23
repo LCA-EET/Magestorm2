@@ -25,7 +25,7 @@ public class Match {
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte[] creatorNameBytes = creator.getBytes(StandardCharsets.UTF_8);
         byte nameBytesLength = (byte)creatorNameBytes.length;
-        _matchBytes = new byte[1 + 1 + 8 + 1 +  nameBytesLength + 1];
+        _matchBytes = new byte[1 + 1 + 8 + 4 + 1 +  nameBytesLength + 1];
         _lastIndex = (byte)(_matchBytes.length-1);
         int index = 0;
         _matchBytes[index] = matchID;
@@ -35,6 +35,9 @@ public class Match {
         byte[] expirationBytes = ByteUtils.LongToByteArray(_expirationTime);
         System.arraycopy(expirationBytes, 0, _matchBytes, index, 8);
         index+=8;
+        byte[] accountIDBytes = ByteUtils.IntToByteArray(creatorID);
+        System.arraycopy(accountIDBytes, 0, _matchBytes, index, 4);
+        index+=4;
         _matchBytes[index] = nameBytesLength;
         index++;
         System.arraycopy(creatorNameBytes, 0, _matchBytes, index, nameBytesLength);
