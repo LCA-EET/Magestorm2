@@ -32,11 +32,9 @@ public class PregamePacketProcessor : MonoBehaviour
             if (!_checking)
             {
                 _checking = true;
-                Debug.Log("Checking for new packets.");
             }
             if (_udp.HasPacketsPending)
             {
-                Debug.Log("Packets pending!");
                 List<byte[]> toProcess = _udp.PacketsReceived();
                 foreach (byte[] decryptedPayload in toProcess)
                 {
@@ -94,11 +92,18 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.MatchData:
                             HandleMatchDataPacket(decryptedPayload);
                             break;
+                        case OpCode_Receive.LevelsList:
+                            HandleLevelListPacket(decryptedPayload);
+                            break;
 
                     }
                 }
             }
         }
+    }
+    private void HandleLevelListPacket(byte[] decrypted)
+    {
+
     }
     private void HandleMatchDataPacket(byte[] decrypted)
     {
@@ -180,6 +185,10 @@ public class PregamePacketProcessor : MonoBehaviour
                 charIndex++;
             }
             
+        }
+        if(LevelData.LevelCount == 0)
+        {
+            SendBytes(Packets.RequestLevelsListPacket());
         }
         ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
     }

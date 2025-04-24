@@ -47,6 +47,8 @@ public class Packets {
 
     public static byte[] MatchLimitReachedPacket() {return Cryptographer.Encrypt(MatchLimitReached_Bytes);}
 
+    public static byte[] LevelListPacket(){return Cryptographer.Encrypt(GameServer.LevelList());}
+
     public static byte[] CharacterDeletedPacket(int characterID) {
         byte[] toEncrypt = new byte[5];
         toEncrypt[0] = OpCode_Send.CharacterDeleted;

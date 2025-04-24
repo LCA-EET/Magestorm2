@@ -230,4 +230,41 @@ public class Database {
         toReturn[1] = accountid;
         return toReturn;
     }
+
+    public static byte[] GetLevelsList(byte status){
+        byte[] toReturn = null;
+        String sql = "SELECT id, scenename, maxplayers FROM levels WHERE status=?";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setByte(1, status);
+            ResultSet rs = ps.executeQuery();
+            ArrayList<byte[]> bytesReturned = new ArrayList<>();
+            int totalLength = 0;
+            while (rs.next()) {
+                byte sceneID = rs.getByte("id");
+                String sceneName = rs.getString("scenename");
+                byte maxPlayers = rs.getByte("maxplayers");
+                byte[] nameBytes = sceneName.getBytes(UTF_8);
+                byte[] fetched = new byte[1 + 1 + 1 + nameBytes.length];
+                fetched[0] = sceneID;
+                fetched[1] = maxPlayers;
+                fetched[2] = (byte)nameBytes.length;
+                System.arraycopy(nameBytes, 0, fetched, 3, nameBytes.length);
+                bytesReturned.add(fetched);
+                totalLength += fetched.length;
+            }
+            toReturn = new byte[totalLength + 2];
+            toReturn[0] = OpCode_Send.LevelsList;
+            toReturn[1] = (byte)bytesReturned.size();
+            int index = 2;
+            for(byte[] sceneData : bytesReturned){
+                System.arraycopy(sceneData, 0, toReturn, index, sceneData.length);
+                index += sceneData.length;
+            }
+        }
+        catch(Exception e){
+            Main.LogError("Database.GetScenes(): " + e.getMessage());
+        }
+        return toReturn;
+    }
 }

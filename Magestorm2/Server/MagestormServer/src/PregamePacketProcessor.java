@@ -53,7 +53,15 @@ public class PregamePacketProcessor implements PacketProcessor
             case OpCode_Receive.DeleteMatch:
                 HandleDeleteMatchPacket(decrypted, rc);
                 break;
-
+            case OpCode_Receive.RequestLevelsList:
+                HandleLevelListPacket(decrypted, rc);
+                break;
+        }
+    }
+    public void HandleLevelListPacket(byte[] decrypted, RemoteClient rc){
+        int accountID = ByteUtils.ExtractInt(decrypted, 1);
+        if(GameServer.IsLoggedIn(accountID)){
+            EnqueueForSend(Packets.LevelListPacket(), rc);
         }
     }
     public void HandleDeleteMatchPacket(byte[] decrypted, RemoteClient rc){

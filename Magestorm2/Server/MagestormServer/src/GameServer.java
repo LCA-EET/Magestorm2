@@ -8,13 +8,15 @@ public class GameServer extends Thread {
     private static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
-
+    private static byte[] _levelData;
     public static void init(){
        ByteUtils.init();
+       GameUtils.init();
         _loggedInClients = new ConcurrentHashMap<Integer, RemoteClient>();
        MatchManager.init();
        _rcMonitor = new RemoteClientMonitor();
        _pgProcessor = new PregamePacketProcessor();
+       _levelData = Database.GetLevelsList((byte)1);
     }
 
     public static boolean IsLoggedIn(int accountID){
@@ -69,4 +71,7 @@ public class GameServer extends Thread {
         _pgProcessor.EnqueueForSend(encrypted, recipients);
     }
 
+    public static byte[] LevelList(){
+        return _levelData;
+    }
 }

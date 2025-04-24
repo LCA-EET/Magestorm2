@@ -36,6 +36,7 @@ public static class Game
         Colors.Init();
         Language.Init();
         LayerManager.Init();
+        LevelData.Init();
         InputControls.Init();
         Teams.Init();
         ActiveMatches.Init();

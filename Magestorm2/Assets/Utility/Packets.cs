@@ -13,6 +13,7 @@ public static class OpCode_Send
     public const byte UnsubscribeFromMatches = 7;
     public const byte CreateMatch = 8;
     public const byte DeleteMatch = 9;
+    public const byte RequestLevelsList = 10;
 }
 public enum OpCode_Receive : byte
 {
@@ -31,7 +32,8 @@ public enum OpCode_Receive : byte
     MatchData = 13,
     MatchAlreadyCreated = 14,
     MatchLimitReached = 15,
-    MatchStillHasPlayers = 16
+    MatchStillHasPlayers = 16,
+    LevelsList = 17
 }
 public static class Packets
 {
@@ -82,6 +84,10 @@ public static class Packets
         hashedBytes.CopyTo(unencryptedPayload, 3 + usernameBytes.Length);
 
         return unencryptedPayload;
+    }
+    public static byte[] RequestLevelsListPacket()
+    {
+        return OpCodePlusAccountIDBytes(OpCode_Send.RequestLevelsList);
     }
     public static byte[] DeleteMatchPacket()
     {

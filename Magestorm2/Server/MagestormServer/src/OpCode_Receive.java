@@ -8,4 +8,5 @@ public class OpCode_Receive {
     public static final byte UnsubscribeFromMatches = 7;
     public static final byte CreateMatch = 8;
     public static final byte DeleteMatch = 9;
+    public static final byte RequestLevelsList = 10;
 }
