@@ -103,7 +103,23 @@ public class PregamePacketProcessor : MonoBehaviour
     }
     private void HandleLevelListPacket(byte[] decrypted)
     {
-
+        byte numLevels = decrypted[1];
+        byte levelIdx = 0;
+        int index = 2;
+        while(levelIdx < numLevels)
+        {
+            byte sceneID = decrypted[index];
+            index++;
+            byte maxPlayers = decrypted[index];
+            index++;
+            byte nameLength = decrypted[index];
+            index++;
+            byte[] nameBytes = new byte[nameLength];
+            Array.Copy(decrypted, index, nameBytes, 0, nameLength);
+            index += nameLength;
+            levelIdx++;
+            LevelData.AddLevel(sceneID, maxPlayers, Encoding.UTF8.GetString(nameBytes));
+        }
     }
     private void HandleMatchDataPacket(byte[] decrypted)
     {

@@ -6,22 +6,11 @@ using System.Runtime.CompilerServices;
 public class UIMatchList : ValidatableForm
 {
     public MatchEntry[] MatchEntries;
+    public SelectionGroup MatchSelectionGroup;
     private float _elapsed = 0.0f;
     private void Awake()
     {
         Game.SendBytes(Packets.SubscribeToMatchesPacket());
-        foreach (MatchEntry entry in MatchEntries)
-        {
-            entry.SetOwningList(this);
-        }
-    }
-    public void EntrySelected(MatchEntry selectedEntry)
-    {
-        foreach (MatchEntry entry in MatchEntries)
-        {
-            entry.MarkSelected(false);
-        }
-        selectedEntry.MarkSelected(true);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     
@@ -41,19 +30,71 @@ public class UIMatchList : ValidatableForm
                 ActiveMatches.ClearMatches();
                 break;
             case ButtonType.CreateMatch:
-                Game.SendBytes(Packets.CreateMatchPacket(0));
+                CreateMatch();
                 break;
             case ButtonType.DeleteMatch:
                 DeleteMatch();
                 break;
+            case ButtonType.JoinMatch:
+                JoinMatch();
+                break;
         }
+    }
+    private void JoinMatch()
+    {
+        MatchEntry selected = GetSelectedEntry();
+        if(selected == null)
+        {
+            Game.MessageBox(Language.GetBaseString(50));
+        }
+        else
+        {
+
+        }
+    }
+    private void CreateMatch()
+    {
+        bool matchAlreadyCreated = false;
+        foreach (MatchEntry entry in MatchEntries)
+        {
+            if (entry.gameObject.activeSelf)
+            {
+                if (entry.CreatorAccountID == PlayerAccount.AccountID)
+                {
+                    matchAlreadyCreated = true;
+                    break;
+                }
+            }
+        }
+        if (matchAlreadyCreated)
+        {
+            Game.MessageBox(Language.GetBaseString(45));
+        }
+        else
+        {
+            ComponentRegister.UIPrefabManager.InstantiateMatchCreator();
+        }
+    }
+    private MatchEntry GetSelectedEntry()
+    {
+        MatchEntry toReturn = null;
+        int selectedIndex = MatchSelectionGroup.SelectedIndex;
+        if(selectedIndex != -1)
+        {
+            toReturn = MatchEntries[selectedIndex];
+        }
+        return toReturn;
     }
     private void DeleteMatch()
     {
-        MatchEntry selected = SelectedEntry();
-        if (selected != null)
+        MatchEntry selected = GetSelectedEntry();
+        if(selected == null)
         {
-            if(selected.CreatorAccountID == PlayerAccount.AccountID)
+            Game.MessageBox(Language.GetBaseString(50));
+        }
+        else
+        {
+            if (selected.CreatorAccountID == PlayerAccount.AccountID)
             {
                 Game.SendBytes(Packets.DeleteMatchPacket());
             }
@@ -62,21 +103,6 @@ public class UIMatchList : ValidatableForm
                 Game.MessageBox(Language.GetBaseString(51));
             }
         }
-        else
-        {
-            Game.MessageBox(Language.GetBaseString(50));
-        }
-    }
-    public MatchEntry SelectedEntry()
-    {
-        foreach(MatchEntry entry in MatchEntries)
-        {
-            if (entry.IsSelected)
-            {
-                return entry;
-            }
-        }
-        return null;
     }
     // Update is called once per frame
     void Update()

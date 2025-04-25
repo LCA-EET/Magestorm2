@@ -10,7 +10,7 @@ public static class Colors
         EntryUnselected = new Color(0f, 0f, 0f, 0f);
         CardUnselected = new Color(1f, 1f, 1f, 1f);
     }
-    public static Color ApplyMatchSelectionColor(bool isSelected)
+    public static Color ApplySelectionHighlightColor(bool isSelected)
     {
         return isSelected ? EntrySelected : EntryUnselected;
     }

@@ -10,6 +10,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabCharacterCreator;
     public GameObject PrefabMatchList;
     public GameObject PrefabYesNoBox;
+    public GameObject PrefabMatchCreator;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -35,8 +36,7 @@ public class UIPrefabManager : MonoBehaviour
     }
     public void InstantiateCharacterSelector()
     {
-        UICharacterSelectForm form = Instantiate(PrefabCharacterSelector).GetComponent<UICharacterSelectForm>();
-        AddToStack(form.gameObject);
+        AddToStack(Instantiate(PrefabCharacterSelector));
     }
     public void InstantiateYesNoBox(string message, ValidatableForm instantiator) 
     {
@@ -52,8 +52,7 @@ public class UIPrefabManager : MonoBehaviour
     }
     public void InstantiateCreateAccountForm(GameObject instantiator, int port)
     {
-        UICreateAccountForm instantiated = Instantiate(PrefabCreateAccount).GetComponent<UICreateAccountForm>();
-        AddToStack(instantiated.gameObject);
+        AddToStack(Instantiate(PrefabCreateAccount));
     }
     public void InstantiatePregamePacketProcessor(int port)
     {
@@ -62,13 +61,15 @@ public class UIPrefabManager : MonoBehaviour
     }
     public void InstantiateCharacterCreator()
     {
-        UICharacterCreationForm form = Instantiate(PrefabCharacterCreator).GetComponent<UICharacterCreationForm>();
-        AddToStack(form.gameObject);
+        AddToStack(Instantiate(PrefabCharacterCreator));
     }
     public void InstantiateMatchList()
     {
-        UIMatchList form = Instantiate(PrefabMatchList).GetComponent<UIMatchList>();
-        AddToStack(form.gameObject);
+        AddToStack(Instantiate(PrefabMatchList));
+    }
+    public void InstantiateMatchCreator()
+    {
+        AddToStack(Instantiate(PrefabMatchCreator));
     }
 
     public void AddToStack(GameObject go)

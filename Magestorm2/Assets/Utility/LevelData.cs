@@ -23,4 +23,8 @@ public static class LevelData
             _levelTable.Add(id, toAdd);
         }
     }
+    public static List<Level> GetLevelList()
+    {
+        return _levelTable.Values.ToList();
+    }
 }
