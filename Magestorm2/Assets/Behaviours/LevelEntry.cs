@@ -22,4 +22,8 @@ public class LevelEntry : MonoBehaviour
         LevelName.text = _level.LevelName;
         MaxPlayers.text = _level.MaxPlayers.ToString();
     }
+    public byte LevelID
+    {
+        get { return _level.LevelID; }
+    }
 }

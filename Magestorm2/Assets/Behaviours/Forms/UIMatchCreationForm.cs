@@ -39,8 +39,21 @@ public class UIMatchCreationForm : ValidatableForm
         UIAudio.PlayButtonPress();
         if(buttonType == ButtonType.Submit)
         {
-            Game.SendBytes(Packets.CreateMatchPacket(0));
+            int selectedIndex = LevelSelection.SelectedIndex;
+            if (selectedIndex == -1)
+            {
+                Game.MessageBox(Language.GetBaseString(59));
+            }
+            else
+            {
+                LevelEntry selected = LevelEntries[selectedIndex];
+                Game.SendBytes(Packets.CreateMatchPacket(selected.LevelID));
+                CloseForm();
+            }
         }
-        CloseForm();
+        else
+        {
+            CloseForm();
+        }
     }
 }

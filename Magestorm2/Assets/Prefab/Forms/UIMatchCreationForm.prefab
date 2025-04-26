@@ -77,6 +77,7 @@ MonoBehaviour:
   - {fileID: 4719004714645512001}
   - {fileID: 4365569539837247055}
   - {fileID: 6560477321052948161}
+  LevelSelection: {fileID: 3392994926824532602}
 --- !u!114 &3392994926824532602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -804,6 +805,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 401028893087177381, guid: df479af0eb77d7b43a57a38de455d6f4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3085810193270742029, guid: df479af0eb77d7b43a57a38de455d6f4, type: 3}
+      propertyPath: buttonType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3413548875669355581, guid: df479af0eb77d7b43a57a38de455d6f4, type: 3}
