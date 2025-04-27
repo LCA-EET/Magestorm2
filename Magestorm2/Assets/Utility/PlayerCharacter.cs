@@ -9,12 +9,14 @@ public class PlayerCharacter
     private byte _characterClass;
     private byte _characterLevel;
     private byte[] _characterNameBytes;
-    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel) { 
+    private byte[] _statBytes;
+    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes) { 
         _characterID = characterID;
         _characterName = characterName;
         _characterClass = characterClass;
         _characterLevel = characterLevel;
         _characterNameBytes = Encoding.UTF8.GetBytes(characterName);
+        _statBytes = statBytes;
     }
     public static byte StringToClass(string playerClass)
     {

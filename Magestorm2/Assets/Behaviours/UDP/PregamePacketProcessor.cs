@@ -125,7 +125,6 @@ public class PregamePacketProcessor : MonoBehaviour
     {
         byte matchCount = decrypted[1];
         int index = 2;
-        Debug.Log("Match count: " + matchCount);
         ActiveMatches.ClearMatches();
         for(int i = 0; i < matchCount; i++)
         {
@@ -135,7 +134,6 @@ public class PregamePacketProcessor : MonoBehaviour
             index++;
             long expirationTime = BitConverter.ToInt64(decrypted, index);
             long currentTime = TimeUtil.CurrentTime();
-            //Debug.Log("Expiration: " + expirationTime + ", current time: " + currentTime + ", delta: " + (expirationTime - currentTime));
             index += 8;
             int creatorAccountID = BitConverter.ToInt32(decrypted, index);
             index += 4;
@@ -172,13 +170,19 @@ public class PregamePacketProcessor : MonoBehaviour
         byte classCode = decrypted[1];
         byte nameLength = decrypted[2];
         int characterID = BitConverter.ToInt32(decrypted, 3);
-        string characterName = Encoding.UTF8.GetString(decrypted, 7, nameLength);
-        PlayerAccount.AddCharacter(characterID, characterName, classCode, 1);
+        byte[] statBytes = FillStats(decrypted, 7);
+        string characterName = Encoding.UTF8.GetString(decrypted, 13, nameLength);
+        PlayerAccount.AddCharacter(characterID, characterName, classCode, 1, statBytes);
+    }
+    private byte[] FillStats(byte[] decrypted, int sourceIndex)
+    {
+        byte[] statBytes = new byte[6];
+        Array.Copy(decrypted, sourceIndex, statBytes, 0, 6);
+        return statBytes;
     }
     private void HandleLogInSuccessfulPacket(byte[] decrypted)
     {
         int accountID = BitConverter.ToInt32(decrypted, 1);
-        Debug.Log("AccountID: " + accountID);
         Game.SetServerTime(BitConverter.ToInt64(decrypted, 5));
         PlayerAccount.Init(accountID);
         byte characterBytesStart = 13;
@@ -193,11 +197,13 @@ public class PregamePacketProcessor : MonoBehaviour
                 index += 4;
                 byte charClass = decrypted[index];
                 index++;
+                byte[] statBytes = FillStats(decrypted, index);
+                index += 6;
                 byte nameLength = decrypted[index];
                 index++;
                 string charname = Encoding.UTF8.GetString(decrypted, index, nameLength);
                 index += nameLength;
-                PlayerAccount.AddCharacter(characterID, charname, charClass, 1);
+                PlayerAccount.AddCharacter(characterID, charname, charClass, 1, statBytes);
                 charIndex++;
             }
             

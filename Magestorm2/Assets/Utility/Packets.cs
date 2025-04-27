@@ -103,7 +103,7 @@ public static class Packets
         return toSend;
     }
 
-    public static byte[] CreateCharacterPacket(string charname, byte charclass)
+    public static byte[] CreateCharacterPacket(string charname, byte charclass, byte[] stats)
     {
         byte[] idBytes = PlayerAccount.AccountIDBytes;
         byte[] nameBytes = Encoding.UTF8.GetBytes(charname);

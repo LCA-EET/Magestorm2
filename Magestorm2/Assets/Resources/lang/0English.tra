@@ -58,3 +58,12 @@ Level
 Max Players
 Level Select
 Select a level.
+Strength
+Dexterity
+Constitution
+Intellect
+Charisma
+Wisdom
+Minimum is 10, maximum is 20.
+No more stat points to allocate.
+Total: {0}

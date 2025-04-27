@@ -22,6 +22,10 @@ public static class Game
     {
         ComponentRegister.PregamePacketProcessor.SendBytes(unencrypted);
     }
+    public static void MessageBoxReference(int referenceID)
+    {
+        MessageBox(Language.GetBaseString(referenceID));
+    }
     public static void MessageBox(string message)
     {
         ComponentRegister.UIPrefabManager.InstantiateMessageBox(message);

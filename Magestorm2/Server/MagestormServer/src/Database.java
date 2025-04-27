@@ -167,7 +167,7 @@ public class Database {
 
     public static byte[] GetCharactersForAccount(int accountID){
         byte[] toReturn = new byte[0];
-        String sql = "SELECT id, charname, charclass FROM characters WHERE accountid = ? AND charstatus = ?";
+        String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis FROM characters WHERE accountid = ? AND charstatus = ?";
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, accountID);
@@ -183,11 +183,23 @@ public class Database {
                 byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte)nameBytes.length;
-                byte[] fetched = new byte[6 + nameLength];
+                byte[] fetched = new byte[12 + nameLength ];
                 System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
                 fetched[4] = charClass;
-                fetched[5] = nameLength;
-                System.arraycopy(nameBytes,0,fetched,6, nameLength);
+                byte strength = rs.getByte("statstr");
+                byte dexterity = rs.getByte("statdex");
+                byte constitution = rs.getByte("statcon");
+                byte intellect = rs.getByte("statint");
+                byte charisma = rs.getByte("statcha");
+                byte wisdom = rs.getByte("statwis");
+                fetched[5] = strength;
+                fetched[6] = dexterity;
+                fetched[7] = constitution;
+                fetched[8] = intellect;
+                fetched[9] = charisma;
+                fetched[10] = wisdom;
+                fetched[11] = nameLength;
+                System.arraycopy(nameBytes,0,fetched,12, nameLength);
                 bytesReturned.add(fetched);
                 totalLength += (byte)fetched.length;
             }

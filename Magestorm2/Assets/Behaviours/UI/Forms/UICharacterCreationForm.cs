@@ -4,10 +4,12 @@ using UnityEngine;
 public class UICharacterCreationForm : ValidatableForm
 {
     public ClassToggleGroup ClassToggleGroup;
+    private StatPanel _statPanel;
     private byte _selectedClass;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _statPanel = GetComponentInChildren<StatPanel>();
         AssociateFormToButtons();
     }
 
