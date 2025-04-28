@@ -102,6 +102,7 @@ public class PregamePacketProcessor implements PacketProcessor
         int accountID = ByteUtils.ExtractInt(decrypted, 1);
         if(GameServer.IsLoggedIn(accountID)){
             int characterID = ByteUtils.ExtractInt(decrypted, 5);
+            Main.LogMessage("Deactivating character: " + characterID);
             Database.DeactivateCharacter(characterID, accountID);
             EnqueueForSend(Packets.CharacterDeletedPacket(characterID), rc);
         }

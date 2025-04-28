@@ -49,7 +49,7 @@ public class UICharacterCard : ValidatableForm
         switch (buttonType)
         {
             case ButtonType.Delete:
-                Game.YesNo(Language.BuildString(49, _character.CharacterName), _owner);
+                Game.YesNo(Language.BuildString(49, _character.CharacterName), this);
                 break;
             case ButtonType.Submit:
                 ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();
