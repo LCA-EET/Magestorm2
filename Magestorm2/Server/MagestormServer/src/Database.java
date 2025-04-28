@@ -23,6 +23,17 @@ public class Database {
         _password = pass;
         _psk = psk;
     }
+    public static void BanAccount(int accountID){
+        String sql = "UPDATE accounts SET accountstatus = 2 WHERE (accoundID = ?)";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.execute();
+        }
+        catch(Exception e){
+            Main.LogError("Database.BanAccount(): " + e.getMessage());
+        }
+    }
     public static boolean UpdateServerInfo(){
         String portNumber = "6000";
 
@@ -36,7 +47,6 @@ public class Database {
             ps.setString(2, key64);
             ps.addBatch();
             ps.executeBatch();
-            conn.close();
             Main.LogMessage("Updated database with port and key information.");
             return true;
         }
@@ -62,7 +72,7 @@ public class Database {
             return DriverManager.getConnection(_conn, _userName, _password);
         }
         catch(Exception e){
-
+            Main.LogError("Database.DBConnection(): " + e.getMessage());
         }
         return null;
     }
@@ -80,7 +90,6 @@ public class Database {
             else{
                 toReturn = 0;
             }
-            conn.close();
             Main.LogMessage("Record Count " + toReturn);
         }
         catch(Exception e){
@@ -143,9 +152,9 @@ public class Database {
         return toReturn;
     }
 
-    public static int AddCharacter(int accountID, String charname, byte classCode){
+    public static int AddCharacter(int accountID, String charname, byte classCode, byte[] stats){
         int charID = -1;
-        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis) VALUES (?,?,?,?,?,?,?,?,?,?)";
         Main.LogMessage("Adding character " + charname + " to database.");
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -153,6 +162,12 @@ public class Database {
             ps.setString(2, charname);
             ps.setByte(3, classCode);
             ps.setByte(4, CharacterStatus.Activated);
+            ps.setByte(5, stats[0]);
+            ps.setByte(6, stats[1]);
+            ps.setByte(7, stats[2]);
+            ps.setByte(8, stats[3]);
+            ps.setByte(9, stats[4]);
+            ps.setByte(10, stats[5]);
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -160,7 +175,7 @@ public class Database {
             }
         }
         catch(Exception e){
-            Main.LogError("Credential validation failure: " + e.getMessage());
+            Main.LogError("Database.AddCredential(): " + e.getMessage());
         }
         return charID;
     }
@@ -182,8 +197,8 @@ public class Database {
                 Main.LogMessage("Fetched character: " + characterName);
                 byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
-                byte nameLength = (byte)nameBytes.length;
-                byte[] fetched = new byte[12 + nameLength ];
+                byte nameLength = (byte) nameBytes.length;
+                byte[] fetched = new byte[12 + nameLength];
                 System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
                 fetched[4] = charClass;
                 byte strength = rs.getByte("statstr");
@@ -199,9 +214,9 @@ public class Database {
                 fetched[9] = charisma;
                 fetched[10] = wisdom;
                 fetched[11] = nameLength;
-                System.arraycopy(nameBytes,0,fetched,12, nameLength);
+                System.arraycopy(nameBytes, 0, fetched, 12, nameLength);
                 bytesReturned.add(fetched);
-                totalLength += (byte)fetched.length;
+                totalLength += (byte) fetched.length;
             }
             toReturn = new byte[1 + totalLength];
             toReturn[0] = (byte)bytesReturned.size();
@@ -236,7 +251,7 @@ public class Database {
             }
         }
         catch(Exception e){
-            Main.LogError("Credential validation failure: " + e.getMessage());
+            Main.LogError("Database.ValidateCredentials(): " + e.getMessage());
         }
         toReturn[0] = validated;
         toReturn[1] = accountid;

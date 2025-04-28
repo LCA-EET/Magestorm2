@@ -5,7 +5,6 @@ public class InstantiatableForm : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
-        
     }
     void Start()
     {
@@ -15,8 +14,9 @@ public class InstantiatableForm : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+ 
     }
+
     public virtual void SetParams(object[] args)
     {
 

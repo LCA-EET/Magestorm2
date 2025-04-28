@@ -16,4 +16,6 @@ public class OpCode_Send{
     public static final byte MatchLimitReached = 15;
     public static final byte MatchStillHasPlayers = 16;
     public static final byte LevelsList = 17;
+    public static final byte BannedForCheating = 18;
+    public static final byte BannedForBehavior = 19;
 }

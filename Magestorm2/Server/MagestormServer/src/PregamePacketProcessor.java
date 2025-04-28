@@ -117,8 +117,14 @@ public class PregamePacketProcessor implements PacketProcessor
     private void HandleCreateCharacterPacket(byte[] decrypted, RemoteClient rc){
         int accountID = ByteUtils.ExtractInt(decrypted,1);
         if(GameServer.IsLoggedIn(accountID)){
-            byte nameLength = decrypted[5];
-            String characterName = new String(Packets.ExtractBytes(decrypted, 6, nameLength), StandardCharsets.UTF_8);
+            byte[] stats = new byte[6];
+            System.arraycopy(decrypted, 5, stats, 0, 6);
+            if(AntiCheat.CheckStats(stats, rc, accountID)){
+                return;
+            }
+            byte nameLength = decrypted[11];
+            String characterName = new String(Packets.ExtractBytes(decrypted, 12, nameLength),
+                    StandardCharsets.UTF_8);
             if(ProfanityChecker.ContainsProhibitedLanguage(characterName)){
                 EnqueueForSend(Packets.ProhibitedLanguagePacket(), rc);
             }
@@ -127,13 +133,13 @@ public class PregamePacketProcessor implements PacketProcessor
                     EnqueueForSend(Packets.CharacterExistsPacket(), rc);
                 }
                 else{
-                    byte classCode = decrypted[6 + nameLength];
-                    int charID = Database.AddCharacter(accountID, characterName, classCode);
+                    byte classCode = decrypted[12 + nameLength];
+                    int charID = Database.AddCharacter(accountID, characterName, classCode, stats);
                     if(charID == -1){
                         EnqueueForSend(Packets.CreationFailedPacket(), rc);
                     }
                     else{
-                        EnqueueForSend(Packets.CharacterCreatedPacket(charID, classCode, characterName), rc);
+                        EnqueueForSend(Packets.CharacterCreatedPacket(charID, classCode, characterName, stats), rc);
                     }
                 }
             }

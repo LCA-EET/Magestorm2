@@ -66,10 +66,7 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.RemovedFromServer:
                         case OpCode_Receive.InactivityDisconnect:
                             MessageBox(31);
-                            if (!EditorApplication.isPlaying)
-                            {
-                                Game.Quit();
-                            }
+                            Game.Quit();
                             break;
                         case OpCode_Receive.CharacterExists:
                             MessageBox(33);
@@ -95,7 +92,15 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.LevelsList:
                             HandleLevelListPacket(decryptedPayload);
                             break;
-
+                        case OpCode_Receive.BannedForBehavior:
+                            MessageBox(70);
+                            Game.Quit();
+                            break;
+                        case OpCode_Receive.BannedForCheating:
+                            MessageBox(69);
+                            Game.Quit();
+                            break;
+                        
                     }
                 }
             }

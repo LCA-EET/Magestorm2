@@ -74,7 +74,6 @@ public class UIPrefabManager : MonoBehaviour
 
     public void AddToStack(GameObject go)
     {
-        Debug.Log("Adding " + go.ToString() + " to the UI stack");
         go.transform.SetParent(ComponentRegister.UIParent);
         go.transform.localPosition = Vector3.zero;
         //go.transform.localScale = ComponentRegister.UIParent.localScale;

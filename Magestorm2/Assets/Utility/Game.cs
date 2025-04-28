@@ -14,9 +14,12 @@ public static class Game
     private static long _serverTime;
     public static void Quit()
     {
-        Running = false;
-        UDPBuilder.StopAllListeners();
-        Application.Quit();
+        if (!EditorApplication.isPlaying)
+        {
+            Running = false;
+            UDPBuilder.StopAllListeners();
+            Application.Quit();
+        }
     }
     public static void SendBytes(byte[] unencrypted)
     {

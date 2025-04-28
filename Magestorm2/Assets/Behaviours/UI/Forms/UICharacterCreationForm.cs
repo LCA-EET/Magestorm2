@@ -20,7 +20,9 @@ public class UICharacterCreationForm : ValidatableForm
     }
     protected override void PassedValidation()
     {
-        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(), _selectedClass));
+        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(), 
+            _selectedClass, 
+            _statPanel.GetStats()));
         CloseForm();
     }
     protected override bool ValidateForm()

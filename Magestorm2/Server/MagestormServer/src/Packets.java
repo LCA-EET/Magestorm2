@@ -16,6 +16,11 @@ public class Packets {
     private static final byte[] MatchAlreadyCreated_Bytes = new byte[]{OpCode_Send.MatchAlreadyCreated};
     private static final byte[] MatchLimitReached_Bytes = new byte[]{OpCode_Send.MatchLimitReached};
     private static final byte[] MatchStillHasPlayers_Bytes = new byte[]{OpCode_Send.MatchStillHasPlayers};
+    private static final byte[] BannedForCheating_Bytes = new byte[]{OpCode_Send.BannedForCheating};
+    private static final byte[] BannedForBehavior_Bytes = new byte[]{OpCode_Send.BannedForBehavior};
+
+    public static byte[] BannedForCheatingPacket() {return Cryptographer.Encrypt(BannedForCheating_Bytes);}
+    public static byte[] BannedForBehaviorPacket() {return Cryptographer.Encrypt(BannedForBehavior_Bytes);}
 
     public static byte[] MatchStillHasPlayersPacket() {return Cryptographer.Encrypt(MatchStillHasPlayers_Bytes);}
     public static byte[] InactivityDisconnectPacket() { return Cryptographer.Encrypt(InactivityDisconnect_Bytes);}
@@ -98,17 +103,17 @@ public class Packets {
         return Cryptographer.Encrypt(toSend);
     }
 
-    public static byte[] CharacterCreatedPacket(int characterID, byte classCode, String charname){
-        byte nameLength = (byte)charname.length();
-        byte[] toReturn = new byte[7 + nameLength];
+    public static byte[] CharacterCreatedPacket(int characterID, byte classCode, String charname, byte[] stats){
+        byte[] nameBytes = charname.getBytes(StandardCharsets.UTF_8);
+        byte nameLength = (byte)nameBytes.length;
+        byte[] toReturn = new byte[1 + 1 + 1 + 4 + 6 + nameLength];
         toReturn[0] = OpCode_Send.CharacterCreated;
-
         toReturn[1] = classCode;
         toReturn[2] = nameLength;
         byte[] idBytes = ByteUtils.IntToByteArray(characterID);
-        byte[] nameBytes = charname.getBytes(StandardCharsets.UTF_8);
         System.arraycopy(idBytes,0,toReturn, 3, 4);
-        System.arraycopy(nameBytes,0,toReturn,7,nameLength);
+        System.arraycopy(stats, 0, toReturn, 7, 6);
+        System.arraycopy(nameBytes,0,toReturn,13,nameLength);
         return Cryptographer.Encrypt(toReturn);
     }
 

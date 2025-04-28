@@ -2,39 +2,6 @@ using UnityEngine;
 using System;
 using System.Text;
 
-public static class OpCode_Send
-{
-    public const byte LogIn = 1;
-    public const byte CreateAccount = 2;
-    public const byte CreateCharacter = 3;
-    public const byte LogOut = 4;
-    public const byte DeleteCharacter = 5;
-    public const byte SubscribeToMatches = 6;
-    public const byte UnsubscribeFromMatches = 7;
-    public const byte CreateMatch = 8;
-    public const byte DeleteMatch = 9;
-    public const byte RequestLevelsList = 10;
-}
-public enum OpCode_Receive : byte
-{
-    LogInSucceeded = 1,
-    LogInFailed = 2,
-    AccountCreated = 3,
-    CreationFailed = 4,
-    AccountAlreadyExists = 5,
-    ProhibitedLanguage = 6,
-    AlreadyLoggedIn = 7,
-    RemovedFromServer = 8,
-    CharacterExists = 9,
-    CharacterCreated = 10,
-    InactivityDisconnect = 11,
-    CharacterDeleted = 12,
-    MatchData = 13,
-    MatchAlreadyCreated = 14,
-    MatchLimitReached = 15,
-    MatchStillHasPlayers = 16,
-    LevelsList = 17
-}
 public static class Packets
 {
 
@@ -108,12 +75,13 @@ public static class Packets
         byte[] idBytes = PlayerAccount.AccountIDBytes;
         byte[] nameBytes = Encoding.UTF8.GetBytes(charname);
         byte nameLength = (byte)nameBytes.Length;
-        byte[] toSend = new byte[1 + 4 + 1 + nameLength + 1 + 1];
+        byte[] toSend = new byte[1 + 4 + 6 + 1 + nameLength + 1 + 1];
         toSend[0] = OpCode_Send.CreateCharacter;
         idBytes.CopyTo(toSend, 1);
-        toSend[5] = nameLength;
-        nameBytes.CopyTo(toSend, 6);
-        toSend[6 + nameLength] = charclass;
+        stats.CopyTo(toSend, 5);
+        toSend[11] = nameLength;
+        nameBytes.CopyTo(toSend, 12);
+        toSend[12 + nameLength] = charclass;
         return toSend;
     }
 

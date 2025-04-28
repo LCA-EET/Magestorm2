@@ -47,7 +47,12 @@ public class StatPanel : MonoBehaviour
     public byte[] GetStats()
     {
         byte[] toReturn = new byte[6];
-
+        toReturn[0] = _statTable[PlayerStats.Strength].Value;
+        toReturn[1] = _statTable[PlayerStats.Dexterity].Value;
+        toReturn[2] = _statTable[PlayerStats.Constitution].Value;
+        toReturn[3] = _statTable[PlayerStats.Intellect].Value;
+        toReturn[4] = _statTable[PlayerStats.Charisma].Value;
+        toReturn[5] = _statTable[PlayerStats.Wisdom].Value;
         return toReturn;
     }
 }

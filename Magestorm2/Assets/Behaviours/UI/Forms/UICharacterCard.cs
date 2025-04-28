@@ -46,11 +46,10 @@ public class UICharacterCard : ValidatableForm
     public override void ButtonPressed(ButtonType buttonType)
     {
         UIAudio.PlayButtonPress();
-        Debug.Log("CC Button Pressed: " + buttonType);
         switch (buttonType)
         {
             case ButtonType.Delete:
-                Game.YesNo(Language.BuildString(49, _character.CharacterName), this);
+                Game.YesNo(Language.BuildString(49, _character.CharacterName), _owner);
                 break;
             case ButtonType.Submit:
                 ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();
