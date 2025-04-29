@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UICharacterCreationForm : ValidatableForm
 {
-    public ClassToggleGroup ClassToggleGroup;
+    public QuaternaryToggle ClassToggleGroup;
     public BinaryToggle SexToggleGroup;
     public BinaryToggle SkinToggleGroup;
     private StatPanel _statPanel;
@@ -41,9 +41,7 @@ public class UICharacterCreationForm : ValidatableForm
             bool[] classCode = ClassToggleGroup.Value;
             controlByte[2] = classCode[0];
             controlByte[3] = classCode[1];
-            byte[] control = new byte[1];
-            controlByte.CopyTo(control, 0);
-            _controlByte = control[0];
+            _controlByte = ByteUtils.BitArrayToByte(controlByte);
             return true;
 
         }
