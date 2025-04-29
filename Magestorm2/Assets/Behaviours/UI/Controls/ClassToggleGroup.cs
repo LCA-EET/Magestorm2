@@ -15,6 +15,30 @@ public class ClassToggleGroup : MonoBehaviour
     {
         
     }
+    public bool[] Value{
+        get
+        {
+            if (ClassToggles[0].isOn)
+            {
+                return new bool[] { false, false};
+            }
+            if (ClassToggles[1].isOn)
+            {
+                return new bool[] { true, false };
+            }
+            if (ClassToggles[2].isOn)
+            {
+                return new bool[] { false, true };
+            }
+            if (ClassToggles[3].isOn)
+            {
+                return new bool[] { true, true };
+            }
+            return new bool[0];
+        }
+    
+    }
+
 
     public byte GetChecked()
     {

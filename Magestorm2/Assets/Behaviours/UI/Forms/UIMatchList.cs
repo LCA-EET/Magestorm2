@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using System.Runtime.CompilerServices;
+using TMPro;
 
 public class UIMatchList : ValidatableForm
 {
     public MatchEntry[] MatchEntries;
     public SelectionGroup MatchSelectionGroup;
+    public TMP_Text NoMatchesText;
     private float _elapsed = 0.0f;
     private void Awake()
     {
@@ -140,5 +140,6 @@ public class UIMatchList : ValidatableForm
         {
             MatchEntries[i].gameObject.SetActive(false);
         }
+        NoMatchesText.gameObject.SetActive(index == 0);
     }
 }
