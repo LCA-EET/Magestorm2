@@ -64,10 +64,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3834627877862580847}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b93810568df99b4fa5e9123e6fd904b, type: 3}
+  m_Script: {fileID: 11500000, guid: cfe936e49a6294c4eb024a32569c7976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClassToggles:
+  m_AllowSwitchOff: 0
+  Options:
   - {fileID: 5979099703261194791}
   - {fileID: 8832472986156142932}
   - {fileID: 5044310659198889945}

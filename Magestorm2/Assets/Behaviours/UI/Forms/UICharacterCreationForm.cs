@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class UICharacterCreationForm : ValidatableForm
 {
-    public QuaternaryToggle ClassToggleGroup;
-    public BinaryToggle SexToggleGroup;
-    public BinaryToggle SkinToggleGroup;
+    public BitwiseToggleGroup ClassToggleGroup;
+    public BitwiseToggleGroup SexToggleGroup;
+    public BitwiseToggleGroup SkinToggleGroup;
     private StatPanel _statPanel;
     private byte _controlByte;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -36,9 +36,9 @@ public class UICharacterCreationForm : ValidatableForm
         if (base.ValidateForm())
         {
             BitArray controlByte = new BitArray(8, false);
-            controlByte[0] = SexToggleGroup.Value;
-            controlByte[1] = SkinToggleGroup.Value;
-            bool[] classCode = ClassToggleGroup.Value;
+            controlByte[0] = SexToggleGroup.GetBits()[0];
+            controlByte[1] = SkinToggleGroup.GetBits()[0];
+            bool[] classCode = ClassToggleGroup.GetBits();
             controlByte[2] = classCode[0];
             controlByte[3] = classCode[1];
             _controlByte = ByteUtils.BitArrayToByte(controlByte);
