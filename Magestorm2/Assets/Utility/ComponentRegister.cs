@@ -20,7 +20,13 @@ public static class ComponentRegister
     private static Transform _uiParent;
     private static PregamePacketProcessor _pregamePacketProcessor;
     private static AudioPlayer _audioPlayer;
+    private static ModelBuilder _modelBuilder;
 
+    public static ModelBuilder ModelBuilder
+    {
+        get { return _modelBuilder; }
+        set { _modelBuilder = value; }
+    }
     public static AudioPlayer AudioPlayer
     {
         get { return _audioPlayer; }

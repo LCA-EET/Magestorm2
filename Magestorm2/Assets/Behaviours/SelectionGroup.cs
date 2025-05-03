@@ -38,5 +38,4 @@ public class SelectionGroup : MonoBehaviour
     {
         get { return _selectedIndex; }
     }
-    
 }

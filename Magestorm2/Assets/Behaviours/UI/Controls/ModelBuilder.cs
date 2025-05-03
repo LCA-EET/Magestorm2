@@ -1,12 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ModelContainer : MonoBehaviour
+public class ModelBuilder : MonoBehaviour
 {
-    private const byte _body = 0;
-    private const byte _hair = 1;
-    private const byte _head = 2;
-    private const byte _face = 3;
+    public const byte FairSkin = 0;
+    public const byte TanSkin = 1;
+    
+    public const byte MaleSex = 0;
+    public const byte FemaleSex = 1;
+
+    public const byte IndexBody = 0;
+    public const byte IndexHair = 1;
+    public const byte IndexHead = 2;
+    public const byte IndexFace = 3;
 
     public GameObject[] MaleLightNeutralBody;
     public GameObject[] MaleDarkNeutralBody;
@@ -28,21 +34,25 @@ public class ModelContainer : MonoBehaviour
 
     private Dictionary<byte, GameObject[]> _maleLightParts;
     private Dictionary<byte, GameObject[]> _maleDarkParts;
+    private Dictionary<byte, GameObject[]> _femaleLightParts;
+    private Dictionary<byte, GameObject[]> _femaleDarkParts;
 
     private int[] _componentIndices;
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         _componentIndices = new int[4];
-        FillDictionary(_maleDarkParts, MaleDarkNeutralBody, MaleHair, MaleDarkHeads, MaleFaces);
-        FillDictionary(_maleLightParts, MaleLightNeutralBody, MaleHair, MaleLightHeads, MaleFaces);
+        FillDictionary(ref _maleDarkParts, MaleDarkNeutralBody, MaleHair, MaleDarkHeads, MaleFaces);
+        FillDictionary(ref _maleLightParts, MaleLightNeutralBody, MaleHair, MaleLightHeads, MaleFaces);
+        ComponentRegister.ModelBuilder = this;
     }
-    private void FillDictionary(Dictionary<byte, GameObject[]> toFill, GameObject[] body, GameObject[] hair, GameObject[] head, GameObject[] face)
+    private void FillDictionary(ref Dictionary<byte, GameObject[]> toFill, GameObject[] body, GameObject[] hair, GameObject[] head, GameObject[] face)
     {
         toFill = new Dictionary<byte, GameObject[]>();
-        toFill.Add(_body, body);
-        toFill.Add(_hair, hair);
-        toFill.Add(_head, head);
-        toFill.Add(_face, face);
+        toFill.Add(IndexBody, body);
+        toFill.Add(IndexHair, hair);
+        toFill.Add(IndexHead, head);
+        toFill.Add(IndexFace, face);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -54,5 +64,31 @@ public class ModelContainer : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public Dictionary<byte, GameObject[]> GetOptions(byte sex, byte skin)
+    {
+        if(sex == MaleSex)
+        {
+            if(skin == FairSkin)
+            {
+                return _maleLightParts;
+            }
+            else
+            {
+                return _maleDarkParts;
+            }
+        }
+        else
+        {
+            if (skin == FairSkin)
+            {
+                return _femaleLightParts;
+            }
+            else
+            {
+                return _femaleDarkParts;
+            }
+        }
     }
 }

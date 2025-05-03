@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4069362562082638444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5639430589902897427}
+  - component: {fileID: 7195540692738195368}
+  m_Layer: 5
+  m_Name: CharacterModelBuilder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5639430589902897427
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4069362562082638444}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7195540692738195368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4069362562082638444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa6f4523e69c40d40a4835a6f297e192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaleLightNeutralBody:
+  - {fileID: 5258025216332610634, guid: 38c90e7d44bd15246b85a63b7c463abf, type: 3}
+  - {fileID: 5780761803706686830, guid: ab27c1fe05636884cba172afba65a1c9, type: 3}
+  - {fileID: 5949501345163707780, guid: b63a685dabb116a44b18c5a9e68546d7, type: 3}
+  MaleDarkNeutralBody:
+  - {fileID: 1049523204894020420, guid: 3fa02aff571501540921275ebb764f37, type: 3}
+  - {fileID: 3711923144060314551, guid: b5decfe150fd42344a9aab912077756e, type: 3}
+  - {fileID: 4393023487850108495, guid: aa279195ed4880d4da4e4f41ce08b073, type: 3}
+  MaleLightOrderBody:
+  - {fileID: 1275338166883739358, guid: 8397df2174fd0a94da6a7b672dc22672, type: 3}
+  - {fileID: 4195105202571368833, guid: b0a1d03046f2d4348b7050704b3423b9, type: 3}
+  - {fileID: 5003638534238363547, guid: fd804b53666764447821ee82d2586844, type: 3}
+  MaleDarkOrderBody:
+  - {fileID: 6505664538362729783, guid: b89b09bae10edb34c89b143865098803, type: 3}
+  - {fileID: 2398115934085516635, guid: 1c9148cda341c104092679be18077b79, type: 3}
+  - {fileID: 2893018644857203521, guid: 9654f2ba0728db7468bd122d370220eb, type: 3}
+  MaleLightBalanceBody:
+  - {fileID: 5313852607815963169, guid: d7d602925f55c244089104529f96b3c8, type: 3}
+  - {fileID: 5188832915554612792, guid: 040e9dc4a91e8e04f8cbd393266af6f6, type: 3}
+  - {fileID: 500208416065063205, guid: 628ed55139b7fc84283591999ec8b3c4, type: 3}
+  MaleDarkBalanceBody:
+  - {fileID: 4618584364469369989, guid: c5c92d0e913bd6c42bf3fe01cac82802, type: 3}
+  - {fileID: 8098802689467772770, guid: db2c0b9ebe6a20c4897b6800058278c4, type: 3}
+  - {fileID: 6845092182345809753, guid: a598defc181fa6d459d991bcb3507d34, type: 3}
+  MaleLightChaosBody:
+  - {fileID: 1592491059766207274, guid: 98a6111148ec06b47b7bc56e017e9329, type: 3}
+  - {fileID: 5942072426098687360, guid: f684ee38e61cfaa418299008be0733b8, type: 3}
+  - {fileID: 1834199276134828507, guid: b5a483033563a33409545e0775ec5903, type: 3}
+  MaleDarkChaosBody:
+  - {fileID: 4279561584008850940, guid: 5ee3879366a88eb43a3f1a05073b2203, type: 3}
+  - {fileID: 7443263243608281535, guid: 89336dbc29f239948bef2956e6a0d990, type: 3}
+  - {fileID: 3436305650747439328, guid: 1015b2984d1b5d843b55dfed531281c3, type: 3}
+  MaleHair:
+  - {fileID: 7709592250652146324, guid: 0e222f1b9776b23428ee5bd2e3aae6d2, type: 3}
+  - {fileID: 3420077196208132480, guid: 0dce5721ce0c50945b68081ef3c4af4d, type: 3}
+  - {fileID: 3205810025240634525, guid: 97f24e200b7c398448f6ff7dbd4542a7, type: 3}
+  - {fileID: 7480245162048355766, guid: 98ecf5ed101c0e943847bdd233635087, type: 3}
+  - {fileID: 5252911804231810021, guid: 42f65287e535a3449aee2f9a0f6cd60d, type: 3}
+  - {fileID: 3420077196208132480, guid: f4dba9b36a49fd04688809001e0ee09c, type: 3}
+  - {fileID: 7709592250652146324, guid: feec38850e46c9b45a227894c43663e1, type: 3}
+  - {fileID: 3205810025240634525, guid: 4e33960e529136b4986d5336e09b8177, type: 3}
+  - {fileID: 7480245162048355766, guid: 372f6bb4ca3de57428d4a1e895b832f7, type: 3}
+  - {fileID: 5252911804231810021, guid: 6fe5c8b4d443bf7418703756093959eb, type: 3}
+  - {fileID: 3420077196208132480, guid: 7218e12abc2571b45a32fa2ecc76d206, type: 3}
+  - {fileID: 7709592250652146324, guid: 0b0247b82f9c521439015e6db4902c78, type: 3}
+  - {fileID: 3205810025240634525, guid: 20a6e35a31f841e4c969cdd124a8c81c, type: 3}
+  - {fileID: 7480245162048355766, guid: 6a07e65c3cd6384489f645c5a22bd512, type: 3}
+  - {fileID: 5252911804231810021, guid: 418e8be779f6bdc439ee14bf0aedd44b, type: 3}
+  - {fileID: 4445755073631534311, guid: 8dbf246f741900d4997a06cf21ff9d1a, type: 3}
+  - {fileID: 8834353528948509786, guid: 27aa8de094d2d9243b4d048736c25124, type: 3}
+  - {fileID: 4414031417064827466, guid: e9eec5f1cfc561c44bee7a8286c6daa4, type: 3}
+  - {fileID: 2351104628867433763, guid: 24e3e079f7017f342ae860563c626ae4, type: 3}
+  - {fileID: 3735605456231184478, guid: a022f87195cfee145ac88428ff545a93, type: 3}
+  MaleFaces:
+  - {fileID: 6672452283609618782, guid: 4008f458f907a4a4ea536c302d7ff47c, type: 3}
+  - {fileID: 6859511089570260906, guid: b1e3fcb5712b6494fa527cfbd74a5849, type: 3}
+  - {fileID: 554947813622418829, guid: dd0a4496dd67cb149a89349a60b6a5cd, type: 3}
+  - {fileID: 5315210187450253028, guid: 4a7c267e9cb7c8244abe4c13e14bfd8c, type: 3}
+  - {fileID: 273541279120373057, guid: ec9c477745503c4418f75e001015be35, type: 3}
+  - {fileID: 5788464411015287754, guid: 2b69a82f6be67824fb1b49e87fa85e9e, type: 3}
+  - {fileID: 1408175269263755328, guid: bbf34249dceca7d4180a32d1a2c47900, type: 3}
+  - {fileID: 3622569088578312609, guid: 19af5208cfe64f24b95f7fb89858d18e, type: 3}
+  - {fileID: 5721433798116060735, guid: d10950c921461754bb654f193a38eb60, type: 3}
+  - {fileID: 3174010472532562036, guid: c56a4cea125321d47ad491143678e402, type: 3}
+  - {fileID: 8493058836699952306, guid: 694fe910063d6794c986855429c4d3d7, type: 3}
+  - {fileID: 2146383181418711706, guid: a48806fc9a3f44d4092b7a18edc9220d, type: 3}
+  - {fileID: 8508447952602442379, guid: 8d17396b6b9ea6b409c3749833cde5b9, type: 3}
+  - {fileID: 7024688136908479755, guid: 1bd2d82be8a13354dbd32de98291de6f, type: 3}
+  - {fileID: 891595249403174434, guid: b68321e0cc5d7e34ca00316cca10ff80, type: 3}
+  MaleLightHeads:
+  - {fileID: 748358387108527456, guid: 74832b4893f7e104a8e8419ebe82d0d9, type: 3}
+  - {fileID: 2634349007816627988, guid: 953828d771bf03a498dcac53c0e22c39, type: 3}
+  MaleDarkHeads:
+  - {fileID: 4710130169166428788, guid: 4d6ca77f379c30046adc5978d5f0e638, type: 3}
+  - {fileID: 3891784013233585213, guid: 310f7b67f4adba7419d00e67cdd36f35, type: 3}

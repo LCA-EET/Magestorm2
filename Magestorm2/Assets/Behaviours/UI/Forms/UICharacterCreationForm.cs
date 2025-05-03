@@ -8,6 +8,8 @@ public class UICharacterCreationForm : ValidatableForm
     public BitwiseToggleGroup ClassToggleGroup;
     public BitwiseToggleGroup SexToggleGroup;
     public BitwiseToggleGroup SkinToggleGroup;
+
+
     private StatPanel _statPanel;
     private byte _controlByte;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

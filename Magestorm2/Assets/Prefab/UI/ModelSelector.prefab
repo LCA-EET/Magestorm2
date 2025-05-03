@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 1394465141167548751}
   - component: {fileID: 8418879404138514721}
   m_Layer: 5
-  m_Name: SequentialSelector
+  m_Name: ModelSelector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
