@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
-public class UIModelPreview : MonoBehaviour
+public class UIModelPreview : ValidatableForm
 {
     public SequentialSelector SexSelector;
     public SequentialSelector SkinSelector;
@@ -40,6 +41,18 @@ public class UIModelPreview : MonoBehaviour
     {
         
     }
+    public override void ButtonPressed(ButtonType buttonType)
+    {
+        UIAudio.PlayButtonPress();
+        switch (buttonType)
+        {
+            case ButtonType.Submit:
+                break;
+            case ButtonType.Cancel:
+                CloseForm();
+                break;
+        }
+    }
     private void RebuildModel()
     {
         Dictionary<byte, GameObject[]> _bodyParts = ComponentRegister.ModelBuilder.GetOptions(SexSelector.SelectedIndex, SkinSelector.SelectedIndex);
@@ -69,8 +82,14 @@ public class UIModelPreview : MonoBehaviour
     {
         RebuildModel();
     }
-    public void ButtonPressed(byte index, bool increase)
+    public byte[] AppearanceBytes()
     {
-        
+        byte[] toReturn = new byte[5];
+        toReturn[0] = SexSelector.SelectedIndex;
+        toReturn[1] = SkinSelector.SelectedIndex;
+        toReturn[2] = HairSelector.SelectedIndex;
+        toReturn[3] = FaceSelector.SelectedIndex;
+        toReturn[4] = HeadSelector.SelectedIndex;
+        return toReturn;
     }
 }

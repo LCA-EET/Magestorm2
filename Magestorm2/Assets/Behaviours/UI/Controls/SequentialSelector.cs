@@ -5,7 +5,7 @@ public class SequentialSelector : ValidatableForm
 {
     private UIModelPreview _owner;
     private byte _options;
-    private byte _index;
+    private int _index;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -55,6 +55,6 @@ public class SequentialSelector : ValidatableForm
     }
     public byte SelectedIndex
     {
-        get { return _index; }
+        get { return (byte)_index; }
     }
 }

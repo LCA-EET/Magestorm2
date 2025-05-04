@@ -103,17 +103,18 @@ public class Packets {
         return Cryptographer.Encrypt(toSend);
     }
 
-    public static byte[] CharacterCreatedPacket(int characterID, byte classCode, String charname, byte[] stats){
+    public static byte[] CharacterCreatedPacket(int characterID, byte classCode, String charname, byte[] stats, byte[] appearance){
         byte[] nameBytes = charname.getBytes(StandardCharsets.UTF_8);
         byte nameLength = (byte)nameBytes.length;
-        byte[] toReturn = new byte[1 + 1 + 1 + 4 + 6 + nameLength];
+        byte[] toReturn = new byte[1 + 1 + 4 + 5 + 6 + 1 + nameLength];
         toReturn[0] = OpCode_Send.CharacterCreated;
         toReturn[1] = classCode;
-        toReturn[2] = nameLength;
         byte[] idBytes = ByteUtils.IntToByteArray(characterID);
-        System.arraycopy(idBytes,0,toReturn, 3, 4);
-        System.arraycopy(stats, 0, toReturn, 7, 6);
-        System.arraycopy(nameBytes,0,toReturn,13,nameLength);
+        System.arraycopy(idBytes,0,toReturn, 2, 4);
+        System.arraycopy(appearance, 0, toReturn, 6, 5);
+        System.arraycopy(stats, 0, toReturn, 11, 6);
+        toReturn[17] = nameLength;
+        System.arraycopy(nameBytes,0,toReturn,18,nameLength);
         return Cryptographer.Encrypt(toReturn);
     }
 

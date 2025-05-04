@@ -70,18 +70,19 @@ public static class Packets
         return toSend;
     }
 
-    public static byte[] CreateCharacterPacket(string charname, byte charclass, byte[] stats)
+    public static byte[] CreateCharacterPacket(string charname, byte charclass, byte[] stats, byte[] appearance)
     {
         byte[] idBytes = PlayerAccount.AccountIDBytes;
         byte[] nameBytes = Encoding.UTF8.GetBytes(charname);
         byte nameLength = (byte)nameBytes.Length;
-        byte[] toSend = new byte[1 + 4 + 6 + 1 + nameLength + 1 + 1];
+        byte[] toSend = new byte[1 + 4 + 1 + 6 + 5 + 1 + nameLength];
         toSend[0] = OpCode_Send.CreateCharacter;
         idBytes.CopyTo(toSend, 1);
-        stats.CopyTo(toSend, 5);
-        toSend[11] = nameLength;
-        nameBytes.CopyTo(toSend, 12);
-        toSend[12 + nameLength] = charclass;
+        toSend[5] = charclass;
+        stats.CopyTo(toSend, 6);
+        appearance.CopyTo(toSend, 12);
+        toSend[17] = nameLength;
+        nameBytes.CopyTo(toSend, 18);
         return toSend;
     }
 

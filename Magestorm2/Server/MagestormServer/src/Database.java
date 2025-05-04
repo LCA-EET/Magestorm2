@@ -152,9 +152,9 @@ public class Database {
         return toReturn;
     }
 
-    public static int AddCharacter(int accountID, String charname, byte classCode, byte[] stats){
+    public static int AddCharacter(int accountID, String charname, byte classCode, byte[] stats, byte[] appearance){
         int charID = -1;
-        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Main.LogMessage("Adding character " + charname + " to database.");
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -168,6 +168,11 @@ public class Database {
             ps.setByte(8, stats[3]);
             ps.setByte(9, stats[4]);
             ps.setByte(10, stats[5]);
+            ps.setByte(11, appearance[0]);
+            ps.setByte(12, appearance[1]);
+            ps.setByte(13, appearance[2]);
+            ps.setByte(14, appearance[3]);
+            ps.setByte(15, appearance[4]);
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -182,7 +187,7 @@ public class Database {
 
     public static byte[] GetCharactersForAccount(int accountID){
         byte[] toReturn = new byte[0];
-        String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis FROM characters WHERE accountid = ? AND charstatus = ?";
+        String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead FROM characters WHERE accountid = ? AND charstatus = ?";
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, accountID);
@@ -198,7 +203,7 @@ public class Database {
                 byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte) nameBytes.length;
-                byte[] fetched = new byte[12 + nameLength];
+                byte[] fetched = new byte[17 + nameLength];
                 System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
                 fetched[4] = charClass;
                 byte strength = rs.getByte("statstr");
@@ -207,14 +212,24 @@ public class Database {
                 byte intellect = rs.getByte("statint");
                 byte charisma = rs.getByte("statcha");
                 byte wisdom = rs.getByte("statwis");
+                byte appsex = rs.getByte("appsex");
+                byte appskin = rs.getByte("appskin");
+                byte apphair = rs.getByte("apphair");
+                byte appface = rs.getByte("appface");
+                byte apphead = rs.getByte("apphead");
                 fetched[5] = strength;
                 fetched[6] = dexterity;
                 fetched[7] = constitution;
                 fetched[8] = intellect;
                 fetched[9] = charisma;
                 fetched[10] = wisdom;
-                fetched[11] = nameLength;
-                System.arraycopy(nameBytes, 0, fetched, 12, nameLength);
+                fetched[11] = appsex;
+                fetched[12] = appskin;
+                fetched[13] = apphair;
+                fetched[14] = appface;
+                fetched[15] = apphead;
+                fetched[16] = nameLength;
+                System.arraycopy(nameBytes, 0, fetched, 17, nameLength);
                 bytesReturned.add(fetched);
                 totalLength += (byte) fetched.length;
             }

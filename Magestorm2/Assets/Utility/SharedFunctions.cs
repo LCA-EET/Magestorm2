@@ -3,6 +3,12 @@ using UnityEngine;
 
 public static class SharedFunctions
 {
+    private static object[] _params;
+    public static object[] Params {  
+        get { return _params; } 
+        set { _params = value; }
+    }
+
     public static bool CastDown(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
     {
         return Physics.Raycast(origin.position, origin.TransformDirection(Vector3.down), out hitInfo, distance);

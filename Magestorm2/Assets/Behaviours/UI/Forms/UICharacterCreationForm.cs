@@ -1,21 +1,20 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UICharacterCreationForm : ValidatableForm
 {
     public BitwiseToggleGroup ClassToggleGroup;
-    public BitwiseToggleGroup SexToggleGroup;
-    public BitwiseToggleGroup SkinToggleGroup;
-
+    public UIModelPreview ModelPanel;
 
     private StatPanel _statPanel;
     private byte _controlByte;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        ComponentRegister.UICharacterCreationForm = this;
         _statPanel = GetComponentInChildren<StatPanel>();
         AssociateFormToButtons();
     }
@@ -27,27 +26,22 @@ public class UICharacterCreationForm : ValidatableForm
     }
     protected override void PassedValidation()
     {
+        /*
         ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(), 
             _controlByte, 
             _statPanel.GetStats()));
         CloseForm();
-    }
-    protected override bool ValidateForm()
-    {
-        //Debug.Log("Character name: " + EntriesToValidate[0].GetValue().ToString());
-        if (base.ValidateForm())
+        */
+        byte[] stats = _statPanel.GetStats();
+        byte[] appearanceBytes = ModelPanel.AppearanceBytes();
+        //byte[] nameBytes
+        object[] parameters = new object[8];
+        parameters[0] = EntriesToValidate[0].GetValue().ToString();
+        parameters[1] = ClassToggleGroup.GetSelectedIndex();
+        for (int i = 2; i < parameters.Length; i++)
         {
-            BitArray controlByte = new BitArray(8, false);
-            controlByte[0] = SexToggleGroup.GetBits()[0];
-            controlByte[1] = SkinToggleGroup.GetBits()[0];
-            bool[] classCode = ClassToggleGroup.GetBits();
-            controlByte[2] = classCode[0];
-            controlByte[3] = classCode[1];
-            _controlByte = ByteUtils.BitArrayToByte(controlByte);
-            return true;
-
+            parameters[i] = stats[i - 2];
         }
-        return false;
     }
     public override void ButtonPressed(ButtonType buttonType)
     {

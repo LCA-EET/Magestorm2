@@ -9,14 +9,16 @@ public class PlayerCharacter
     private byte _characterClass;
     private byte _characterLevel;
     private byte[] _characterNameBytes;
+    private byte[] _appearanceBytes;
     private byte[] _statBytes;
-    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes) { 
+    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes) { 
         _characterID = characterID;
         _characterName = characterName;
         _characterClass = characterClass;
         _characterLevel = characterLevel;
         _characterNameBytes = Encoding.UTF8.GetBytes(characterName);
         _statBytes = statBytes;
+        _appearanceBytes = appearanceBytes;
     }
     public static byte StringToClass(string playerClass)
     {
@@ -36,6 +38,13 @@ public class PlayerCharacter
                 return Language.GetBaseString(8);
         }
         return "";
+    }
+    public byte[] AppearanceBytes
+    {
+        get
+        {
+            return _appearanceBytes;
+        }
     }
     public byte[] CharacterNameBytes { get { return _characterNameBytes; } }
     public int CharacterID { get { return _characterID; } }

@@ -32,8 +32,27 @@ public class ModelBuilder : MonoBehaviour
     public GameObject[] MaleLightHeads;
     public GameObject[] MaleDarkHeads;
 
+    public GameObject[] FemaleLightNeutralBody;
+    public GameObject[] FemaleDarkNeutralBody;
+
+    public GameObject[] FemaleLightOrderBody;
+    public GameObject[] FemaleDarkOrderBody;
+
+    public GameObject[] FemaleLightBalanceBody;
+    public GameObject[] FemaleDarkBalanceBody;
+
+    public GameObject[] FemaleLightChaosBody;
+    public GameObject[] FemaleDarkChaosBody;
+
+    public GameObject[] FemaleHair;
+    public GameObject[] FemaleFaces;
+
+    public GameObject[] FemaleLightHeads;
+    public GameObject[] FemaleDarkHeads;
+
     private Dictionary<byte, GameObject[]> _maleLightParts;
     private Dictionary<byte, GameObject[]> _maleDarkParts;
+
     private Dictionary<byte, GameObject[]> _femaleLightParts;
     private Dictionary<byte, GameObject[]> _femaleDarkParts;
 
@@ -44,6 +63,8 @@ public class ModelBuilder : MonoBehaviour
         _componentIndices = new int[4];
         FillDictionary(ref _maleDarkParts, MaleDarkNeutralBody, MaleHair, MaleDarkHeads, MaleFaces);
         FillDictionary(ref _maleLightParts, MaleLightNeutralBody, MaleHair, MaleLightHeads, MaleFaces);
+        FillDictionary(ref _femaleDarkParts, FemaleDarkNeutralBody, FemaleHair, FemaleDarkHeads, FemaleFaces);
+        FillDictionary(ref _femaleLightParts, FemaleLightNeutralBody, FemaleHair, FemaleLightHeads, FemaleFaces);
         ComponentRegister.ModelBuilder = this;
     }
     private void FillDictionary(ref Dictionary<byte, GameObject[]> toFill, GameObject[] body, GameObject[] hair, GameObject[] head, GameObject[] face)

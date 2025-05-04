@@ -118,13 +118,16 @@ public class PregamePacketProcessor implements PacketProcessor
     private void HandleCreateCharacterPacket(byte[] decrypted, RemoteClient rc){
         int accountID = ByteUtils.ExtractInt(decrypted,1);
         if(GameServer.IsLoggedIn(accountID)){
+            byte classCode = decrypted[5];
             byte[] stats = new byte[6];
-            System.arraycopy(decrypted, 5, stats, 0, 6);
+            byte[] appearance = new byte[5];
+            System.arraycopy(decrypted, 6, stats, 0, 6);
+            System.arraycopy(decrypted, 12, appearance, 0, 5);
             if(AntiCheat.CheckStats(stats, rc, accountID)){
                 return;
             }
-            byte nameLength = decrypted[11];
-            String characterName = new String(Packets.ExtractBytes(decrypted, 12, nameLength),
+            byte nameLength = decrypted[17];
+            String characterName = new String(Packets.ExtractBytes(decrypted, 18, nameLength),
                     StandardCharsets.UTF_8);
             if(ProfanityChecker.ContainsProhibitedLanguage(characterName)){
                 EnqueueForSend(Packets.ProhibitedLanguagePacket(), rc);
@@ -134,13 +137,12 @@ public class PregamePacketProcessor implements PacketProcessor
                     EnqueueForSend(Packets.CharacterExistsPacket(), rc);
                 }
                 else{
-                    byte classCode = decrypted[12 + nameLength];
-                    int charID = Database.AddCharacter(accountID, characterName, classCode, stats);
+                    int charID = Database.AddCharacter(accountID, characterName, classCode, stats, appearance);
                     if(charID == -1){
                         EnqueueForSend(Packets.CreationFailedPacket(), rc);
                     }
                     else{
-                        EnqueueForSend(Packets.CharacterCreatedPacket(charID, classCode, characterName, stats), rc);
+                        EnqueueForSend(Packets.CharacterCreatedPacket(charID, classCode, characterName, stats, appearance), rc);
                     }
                 }
             }

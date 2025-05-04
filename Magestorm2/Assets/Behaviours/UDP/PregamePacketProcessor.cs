@@ -173,16 +173,18 @@ public class PregamePacketProcessor : MonoBehaviour
     private void HandleCharacterCreatedPacket(byte[] decrypted)
     {
         byte classCode = decrypted[1];
-        byte nameLength = decrypted[2];
-        int characterID = BitConverter.ToInt32(decrypted, 3);
-        byte[] statBytes = FillStats(decrypted, 7);
-        string characterName = Encoding.UTF8.GetString(decrypted, 13, nameLength);
-        PlayerAccount.AddCharacter(characterID, characterName, classCode, 1, statBytes);
+        int characterID = BitConverter.ToInt32(decrypted, 2);
+        byte[] appearanceBytes = FillSegment(decrypted, 6, 5);
+        byte[] statBytes = FillSegment(decrypted, 11, 6);
+        byte nameLength = decrypted[17];
+        string characterName = Encoding.UTF8.GetString(decrypted, 18, nameLength);
+        PlayerAccount.AddCharacter(characterID, characterName, classCode, 1, statBytes, appearanceBytes);
     }
-    private byte[] FillStats(byte[] decrypted, int sourceIndex)
+    
+    private byte[] FillSegment(byte[] source, int sourceIndex, int length)
     {
-        byte[] statBytes = new byte[6];
-        Array.Copy(decrypted, sourceIndex, statBytes, 0, 6);
+        byte[] statBytes = new byte[length];
+        Array.Copy(source, sourceIndex, statBytes, 0, length);
         return statBytes;
     }
     private void HandleLogInSuccessfulPacket(byte[] decrypted)

@@ -11,6 +11,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabMatchList;
     public GameObject PrefabYesNoBox;
     public GameObject PrefabMatchCreator;
+    public GameObject PrefabCharacterModelBuilder;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -33,6 +34,10 @@ public class UIPrefabManager : MonoBehaviour
         {
             Destroy(_poppedObjects.Dequeue());
         }
+    }
+    public void InstantiateCharacterModelBuilder()
+    {
+        AddToStack(Instantiate(PrefabCharacterModelBuilder));
     }
     public void InstantiateCharacterSelector()
     {

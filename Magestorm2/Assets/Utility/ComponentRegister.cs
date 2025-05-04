@@ -17,11 +17,17 @@ public static class ComponentRegister
     private static PlayerStatusPanel _playerStatusPanel;
     private static UIPrefabManager _uiprefabManager;
     private static UILoginForm _loginForm;
+    private static UICharacterCreationForm _uiCharacterCreationForm;
     private static Transform _uiParent;
     private static PregamePacketProcessor _pregamePacketProcessor;
     private static AudioPlayer _audioPlayer;
     private static ModelBuilder _modelBuilder;
 
+    public static UICharacterCreationForm UICharacterCreationForm
+    {
+        get { return _uiCharacterCreationForm; }
+        set { _uiCharacterCreationForm = value; }
+    }
     public static ModelBuilder ModelBuilder
     {
         get { return _modelBuilder; }

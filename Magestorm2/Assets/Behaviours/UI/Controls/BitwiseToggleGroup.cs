@@ -5,6 +5,17 @@ public class BitwiseToggleGroup : ToggleGroup
 {
     public Toggle[] Options;
 
+    public byte GetSelectedIndex()
+    {
+        for (byte b = 0; b < Options.Length; b++)
+        {
+            if (Options[b].isOn)
+            {
+                return b;
+            }
+        }
+        return 255;
+    }
     protected override void Awake()
     {
         base.Awake();

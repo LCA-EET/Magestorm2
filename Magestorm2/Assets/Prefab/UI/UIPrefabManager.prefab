@@ -53,6 +53,7 @@ MonoBehaviour:
   PrefabMatchList: {fileID: 739774822516366062, guid: d08142468573e044ca12a5ac46254248, type: 3}
   PrefabYesNoBox: {fileID: 2212529997909402293, guid: 69e5a49bdbadbdf4fb3847c1a543583e, type: 3}
   PrefabMatchCreator: {fileID: 2155154494730097077, guid: 8120e23c1bcac9d48890bb31336abf67, type: 3}
+  PrefabCharacterModelBuilder: {fileID: 739774822516366062, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
 --- !u!82 &7185910421088315080
 AudioSource:
   m_ObjectHideFlags: 0
