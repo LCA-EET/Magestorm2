@@ -86,7 +86,10 @@ public class ModelBuilder : MonoBehaviour
     {
         
     }
+    public GameObject ConstructModel(byte[] appearance, byte team, byte level)
+    {
 
+    }
     public Dictionary<byte, GameObject[]> GetOptions(byte sex, byte skin)
     {
         if(sex == MaleSex)

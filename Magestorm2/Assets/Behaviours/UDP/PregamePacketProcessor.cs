@@ -179,6 +179,15 @@ public class PregamePacketProcessor : MonoBehaviour
         byte nameLength = decrypted[17];
         string characterName = Encoding.UTF8.GetString(decrypted, 18, nameLength);
         PlayerAccount.AddCharacter(characterID, characterName, classCode, 1, statBytes, appearanceBytes);
+        UICharacterCreationForm creationForm = ComponentRegister.UICharacterCreationForm;
+        if(creationForm != null)
+        {
+            if (!creationForm.gameObject.IsDestroyed())
+            {
+                creationForm.CloseForm();
+                ComponentRegister.UICharacterCreationForm = null;
+            }
+        }
     }
     
     private byte[] FillSegment(byte[] source, int sourceIndex, int length)
@@ -204,13 +213,15 @@ public class PregamePacketProcessor : MonoBehaviour
                 index += 4;
                 byte charClass = decrypted[index];
                 index++;
-                byte[] statBytes = FillStats(decrypted, index);
+                byte[] statBytes = FillSegment(decrypted, index, 6);
                 index += 6;
+                byte[] appearanceBytes = FillSegment(decrypted, index, 5);
+                index += 5;
                 byte nameLength = decrypted[index];
                 index++;
                 string charname = Encoding.UTF8.GetString(decrypted, index, nameLength);
                 index += nameLength;
-                PlayerAccount.AddCharacter(characterID, charname, charClass, 1, statBytes);
+                PlayerAccount.AddCharacter(characterID, charname, charClass, 1, statBytes, appearanceBytes);
                 charIndex++;
             }
             

@@ -602,6 +602,7 @@ MonoBehaviour:
   - {fileID: 1309929074529841414}
   - {fileID: 1905031356505659063}
   ClassToggleGroup: {fileID: 7824856435166640562}
+  ModelPanel: {fileID: 2212441289479535898}
 --- !u!1 &8240772619704672782
 GameObject:
   m_ObjectHideFlags: 0
@@ -1489,6 +1490,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
+--- !u!114 &2212441289479535898 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3655535763649968644, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
+  m_PrefabInstance: {fileID: 3174819800887199518}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 814abac60a8113f499f9032790d0c05a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8186663895258972119 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6742986752126826697, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}

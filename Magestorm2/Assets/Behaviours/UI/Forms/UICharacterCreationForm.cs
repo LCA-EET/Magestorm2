@@ -26,22 +26,12 @@ public class UICharacterCreationForm : ValidatableForm
     }
     protected override void PassedValidation()
     {
-        /*
-        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(), 
-            _controlByte, 
-            _statPanel.GetStats()));
-        CloseForm();
-        */
         byte[] stats = _statPanel.GetStats();
         byte[] appearanceBytes = ModelPanel.AppearanceBytes();
-        //byte[] nameBytes
-        object[] parameters = new object[8];
-        parameters[0] = EntriesToValidate[0].GetValue().ToString();
-        parameters[1] = ClassToggleGroup.GetSelectedIndex();
-        for (int i = 2; i < parameters.Length; i++)
-        {
-            parameters[i] = stats[i - 2];
-        }
+        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
+            ClassToggleGroup.GetSelectedIndex(),
+            stats,
+            appearanceBytes));
     }
     public override void ButtonPressed(ButtonType buttonType)
     {

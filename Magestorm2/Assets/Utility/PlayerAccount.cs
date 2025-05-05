@@ -31,7 +31,7 @@ public static class PlayerAccount
     }
     public static void AddCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes)
     {
-        PlayerCharacter pc = new PlayerCharacter(characterID, characterName, characterClass, characterLevel, statBytes);
+        PlayerCharacter pc = new PlayerCharacter(characterID, characterName, characterClass, characterLevel, statBytes, appearanceBytes);
         AddCharacter(pc);
     }
     public static List<PlayerCharacter> GetCharacterList()
