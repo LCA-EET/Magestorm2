@@ -25,9 +25,9 @@ public enum PlayerIndicator : byte
 public enum Team : byte
 {
     Neutral = 0,
-    Balance = 1,
-    Order = 2,
-    Chaos = 3
+    Chaos = 1,
+    Balance = 2,
+    Order = 3
 }
 
 public enum FormResult : byte

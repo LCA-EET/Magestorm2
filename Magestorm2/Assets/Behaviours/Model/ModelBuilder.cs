@@ -14,6 +14,18 @@ public class ModelBuilder : MonoBehaviour
     public const byte IndexHead = 2;
     public const byte IndexFace = 3;
 
+    public const byte IndexModelSex = 0;
+    public const byte IndexModelSkin = 1;
+    public const byte IndexModelHair = 2;
+    public const byte IndexModelFace = 3;
+    public const byte IndexModelHead = 3;
+
+    private GameObject[] _maleLightBodies;
+    private GameObject[] _femaleLightBodies;
+
+    private GameObject[] _maleDarkBodies;
+    private GameObject[] _femaleDarkBodies;
+
     public GameObject[] MaleLightNeutralBody;
     public GameObject[] MaleDarkNeutralBody;
 
@@ -61,11 +73,33 @@ public class ModelBuilder : MonoBehaviour
     {
         DontDestroyOnLoad(this);
         _componentIndices = new int[4];
-        FillDictionary(ref _maleDarkParts, MaleDarkNeutralBody, MaleHair, MaleDarkHeads, MaleFaces);
-        FillDictionary(ref _maleLightParts, MaleLightNeutralBody, MaleHair, MaleLightHeads, MaleFaces);
-        FillDictionary(ref _femaleDarkParts, FemaleDarkNeutralBody, FemaleHair, FemaleDarkHeads, FemaleFaces);
-        FillDictionary(ref _femaleLightParts, FemaleLightNeutralBody, FemaleHair, FemaleLightHeads, FemaleFaces);
+        _maleLightBodies = new GameObject[12];
+        _femaleLightBodies = new GameObject[12];
+
+        _maleDarkBodies = new GameObject[12];
+        _femaleDarkBodies = new GameObject[12];
+
+        FillBodyArray(ref _maleLightBodies, new GameObject[][] { MaleLightNeutralBody, MaleLightChaosBody, MaleLightBalanceBody, MaleLightOrderBody });
+        FillBodyArray(ref _maleDarkBodies, new GameObject[][] { MaleDarkNeutralBody, MaleDarkChaosBody, MaleDarkBalanceBody, MaleDarkOrderBody });
+        FillBodyArray(ref _femaleLightBodies, new GameObject[][] { FemaleLightNeutralBody, FemaleLightChaosBody, FemaleLightBalanceBody, FemaleLightOrderBody });
+        FillBodyArray(ref _femaleDarkBodies, new GameObject[][] { FemaleDarkNeutralBody, FemaleDarkChaosBody, FemaleDarkBalanceBody, FemaleDarkOrderBody });
+        FillDictionary(ref _maleDarkParts, _maleDarkBodies, MaleHair, MaleDarkHeads, MaleFaces);
+        FillDictionary(ref _maleLightParts, _maleLightBodies, MaleHair, MaleLightHeads, MaleFaces);
+        FillDictionary(ref _femaleDarkParts, _femaleDarkBodies, FemaleHair, FemaleDarkHeads, FemaleFaces);
+        FillDictionary(ref _femaleLightParts, _femaleLightBodies, FemaleHair, FemaleLightHeads, FemaleFaces);
         ComponentRegister.ModelBuilder = this;
+    }
+    private void FillBodyArray(ref GameObject[] array, GameObject[][] bodies)
+    {
+        int index = 0;
+        for(int i = 0; i < bodies.Length; i++)
+        {
+            for(int j = 0; j < bodies[i].Length; j++)
+            {
+                array[index] = bodies[i][j];
+                index++;
+            }
+        }
     }
     private void FillDictionary(ref Dictionary<byte, GameObject[]> toFill, GameObject[] body, GameObject[] hair, GameObject[] head, GameObject[] face)
     {
@@ -82,13 +116,32 @@ public class ModelBuilder : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void Update() 
     {
         
     }
     public GameObject ConstructModel(byte[] appearance, byte team, byte level)
     {
-
+        byte sex = appearance[IndexModelSex];
+        byte skin = appearance[IndexModelSkin];
+        Dictionary<byte, GameObject[]> components = GetOptions(sex, skin);
+        
+        GameObject head = components[IndexHead][appearance[IndexModelHead]];
+        GameObject face = components[IndexFace][appearance[IndexModelFace]];
+        GameObject hair = components[IndexHair][appearance[IndexModelHair]];
+        GameObject body = components[IndexBody][team + (int)(Mathf.Floor(level / 8))];
+        return InstantiateModel(body, head, face, hair);
+    }
+    public static GameObject InstantiateModel(GameObject bodyPrefab, GameObject headPrefab, GameObject facePrefab, GameObject hairPrefab)
+    {
+        GameObject head = Instantiate(headPrefab);
+        GameObject hair = Instantiate(hairPrefab);
+        GameObject face = Instantiate(facePrefab);
+        GameObject body = Instantiate(bodyPrefab);
+        head.transform.parent = body.transform;
+        face.transform.parent = head.transform;
+        hair.transform.parent = head.transform;
+        return body;
     }
     public Dictionary<byte, GameObject[]> GetOptions(byte sex, byte skin)
     {

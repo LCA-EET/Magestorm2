@@ -64,16 +64,16 @@ public class UIModelPreview : ValidatableForm
         HeadSelector.SetOptionCount((byte)headParts.Length);
         HairSelector.SetOptionCount((byte)hairParts.Length);
         FaceSelector.SetOptionCount((byte)faceParts.Length);
-        GameObject head = Instantiate(headParts[HeadSelector.SelectedIndex]);
-        GameObject hair = Instantiate(hairParts[HairSelector.SelectedIndex]);
-        GameObject face = Instantiate(faceParts[FaceSelector.SelectedIndex]);
-        GameObject body = Instantiate(bodyParts[0]);
-        head.transform.parent = body.transform;
-        face.transform.parent = head.transform;
-        hair.transform.parent = head.transform;
+        GameObject model = ModelBuilder.InstantiateModel(
+            headParts[HeadSelector.SelectedIndex],
+            hairParts[HairSelector.SelectedIndex],
+            faceParts[FaceSelector.SelectedIndex],
+            bodyParts[0]
+        );
+        
         
         Destroy(Displayed);
-        Displayed = body;
+        Displayed = model;
         Displayed.transform.parent = ModelContainer.transform;
         Displayed.transform.localRotation = Quaternion.identity;
         Displayed.transform.localPosition = Vector3.zero;
@@ -85,11 +85,11 @@ public class UIModelPreview : ValidatableForm
     public byte[] AppearanceBytes()
     {
         byte[] toReturn = new byte[5];
-        toReturn[0] = SexSelector.SelectedIndex;
-        toReturn[1] = SkinSelector.SelectedIndex;
-        toReturn[2] = HairSelector.SelectedIndex;
-        toReturn[3] = FaceSelector.SelectedIndex;
-        toReturn[4] = HeadSelector.SelectedIndex;
+        toReturn[ModelBuilder.IndexModelSex] = SexSelector.SelectedIndex;
+        toReturn[ModelBuilder.IndexModelSkin] = SkinSelector.SelectedIndex;
+        toReturn[ModelBuilder.IndexModelHair] = HairSelector.SelectedIndex;
+        toReturn[ModelBuilder.IndexModelFace] = FaceSelector.SelectedIndex;
+        toReturn[ModelBuilder.IndexModelHead] = HeadSelector.SelectedIndex;
         return toReturn;
     }
 }
