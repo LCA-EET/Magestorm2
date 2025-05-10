@@ -292,6 +292,11 @@ MonoBehaviour:
   - {fileID: 9174247772492172125}
   - {fileID: 526160956331779898}
   - {fileID: 2200903206589902928}
+  RenderTextures:
+  - {fileID: 8400000, guid: 6578eb95f4735a8488db776401496a07, type: 2}
+  - {fileID: 8400000, guid: 61c4c6f0cdab3944ea77bdb6e9cad209, type: 2}
+  - {fileID: 8400000, guid: d9b3f0b7e53df6e4eb5db9a19486b20b, type: 2}
+  - {fileID: 8400000, guid: 828a0aad5d078924c85192cde287114d, type: 2}
 --- !u!1001 &3209729736669663125
 PrefabInstance:
   m_ObjectHideFlags: 0

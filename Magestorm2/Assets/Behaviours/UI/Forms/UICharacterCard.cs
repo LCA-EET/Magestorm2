@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,10 +14,19 @@ public class UICharacterCard : ValidatableForm
     private PlayerCharacter _character;
     private UICharacterSelectForm _owner;
     private bool _selected;
+    private RenderTexture _renderTexture;
     public Image BackgroundImage;
+    public GameObject ModelContainer;
+    private GameObject _model;
+    private Camera _modelCamera;
+    private RawImage _rawImage;
     public bool Populated
     {
         get { return _populated; }
+    }
+    private void Awake()
+    {
+        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,9 +43,14 @@ public class UICharacterCard : ValidatableForm
             ComponentRegister.PregamePacketProcessor.SendBytes(Packets.DeleteCharacterPacket(_character.CharacterID));
         }
     }
-    public void SetOwningForm(UICharacterSelectForm form)
+    public void SetOwningForm(UICharacterSelectForm form, RenderTexture render)
     {
         _owner = form;
+        _renderTexture = render;
+        _rawImage = GetComponentInChildren<RawImage>();
+        _modelCamera = GetComponentInChildren<Camera>();
+        _modelCamera.targetTexture = _renderTexture;
+        _rawImage.texture = _renderTexture;
     }
     public void MarkSelected(bool selected)
     {
@@ -81,6 +96,9 @@ public class UICharacterCard : ValidatableForm
         CharacterName.text = character.CharacterName;
         CharacterClass.text = character.CharacterClassString;
         CharacterLevel.text = character.CharacterLevel.ToString();
+        Destroy(_model);
+        _model = ComponentRegister.ModelBuilder.ConstructModel(character.AppearanceBytes, (byte)Team.Neutral, character.CharacterLevel);
+        _model.transform.parent = ModelContainer.transform;
     }
   
 }

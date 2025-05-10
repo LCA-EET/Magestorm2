@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class SharedFunctions
@@ -18,7 +19,6 @@ public static class SharedFunctions
         RaycastHit hitInfo;
         return CastDown(origin, layerMask, distance, out hitInfo);
     }
-
     public static string PlayerClassToString(PlayerClass playerClass)
     {
         switch (playerClass)

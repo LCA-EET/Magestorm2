@@ -5,12 +5,12 @@ using UnityEngine;
 public class UICharacterSelectForm : ValidatableForm
 {
     public UICharacterCard[] CharacterCards;
-
+    public RenderTexture[] RenderTextures;
     private void Awake()
     {
-        foreach (UICharacterCard card in CharacterCards)
+        for (int i = 0; i < CharacterCards.Length; i++)
         {
-            card.SetOwningForm(this);
+            CharacterCards[i].SetOwningForm(this, RenderTextures[i]);
         }
         RefreshCards();
     }
@@ -22,6 +22,7 @@ public class UICharacterSelectForm : ValidatableForm
         foreach (PlayerCharacter character in characterList)
         {
             CharacterCards[cardIndex].Populate(character);
+            
             cardIndex++;
         }
         while (cardIndex < CharacterCards.Length)
