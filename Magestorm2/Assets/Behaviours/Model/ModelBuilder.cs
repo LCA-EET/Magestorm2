@@ -120,7 +120,7 @@ public class ModelBuilder : MonoBehaviour
     {
         
     }
-    public GameObject ConstructModel(byte[] appearance, byte team, byte level)
+    public GameObject ConstructModel(byte[] appearance, byte team, byte level, GameObject parent)
     {
         byte sex = appearance[IndexModelSex];
         byte skin = appearance[IndexModelSkin];
@@ -130,9 +130,9 @@ public class ModelBuilder : MonoBehaviour
         GameObject face = components[IndexFace][appearance[IndexModelFace]];
         GameObject hair = components[IndexHair][appearance[IndexModelHair]];
         GameObject body = components[IndexBody][team + (int)(Mathf.Floor(level / 8))];
-        return InstantiateModel(body, head, face, hair);
+        return InstantiateModel(body, head, face, hair, parent);
     }
-    public static GameObject InstantiateModel(GameObject bodyPrefab, GameObject headPrefab, GameObject facePrefab, GameObject hairPrefab)
+    public static GameObject InstantiateModel(GameObject bodyPrefab, GameObject headPrefab, GameObject facePrefab, GameObject hairPrefab, GameObject parent)
     {
         GameObject head = Instantiate(headPrefab);
         GameObject hair = Instantiate(hairPrefab);
@@ -141,6 +141,9 @@ public class ModelBuilder : MonoBehaviour
         head.transform.parent = body.transform;
         face.transform.parent = head.transform;
         hair.transform.parent = head.transform;
+        body.transform.parent = parent.transform;
+        body.transform.localRotation = Quaternion.identity;
+        body.transform.localPosition = Vector3.zero;
         return body;
     }
     public Dictionary<byte, GameObject[]> GetOptions(byte sex, byte skin)

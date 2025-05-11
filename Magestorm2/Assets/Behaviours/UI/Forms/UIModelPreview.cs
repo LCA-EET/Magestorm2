@@ -68,15 +68,11 @@ public class UIModelPreview : ValidatableForm
             headParts[HeadSelector.SelectedIndex],
             hairParts[HairSelector.SelectedIndex],
             faceParts[FaceSelector.SelectedIndex],
-            bodyParts[0]
+            bodyParts[0],
+            ModelContainer
         );
-        
-        
         Destroy(Displayed);
         Displayed = model;
-        Displayed.transform.parent = ModelContainer.transform;
-        Displayed.transform.localRotation = Quaternion.identity;
-        Displayed.transform.localPosition = Vector3.zero;
     }
     public void SelectionChanged()
     {
