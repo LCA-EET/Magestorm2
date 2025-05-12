@@ -49,6 +49,7 @@ public class UIMatchList : ValidatableForm
         }
         else
         {
+            SharedFunctions.Params = new object[] { selected };
 
         }
     }

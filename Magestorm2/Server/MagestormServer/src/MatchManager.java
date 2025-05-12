@@ -14,11 +14,11 @@ public class MatchManager{
         _monitor = new MatchMonitor();
     }
 
-    public static void Subscribe(int accountID, boolean subscribe, String characterName){
+    public static void Subscribe(int accountID, boolean subscribe, String characterName, byte[] nameBytes, int charID){
         Main.LogMessage("MatchManager.Subscribe: " + characterName +", " + subscribe);
         RemoteClient rc = GameServer.GetClient(accountID);
         if(rc != null){
-            rc.SubscribeToMatches(subscribe, characterName);
+            rc.SubscribeToMatches(subscribe, characterName, nameBytes, charID);
             GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
         }
         else{
@@ -92,5 +92,12 @@ public class MatchManager{
             _nextMatchID = 1;
         }
         return toReturn;
+    }
+
+    public static Match GetMatch(byte matchID){
+        if(_activeMatches.containsKey(matchID)){
+            return _activeMatches.get(matchID);
+        }
+        return null;
     }
 }

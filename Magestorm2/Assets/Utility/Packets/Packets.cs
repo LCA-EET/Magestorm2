@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Text;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public static class Packets
 {
@@ -18,6 +19,14 @@ public static class Packets
     public static byte[] EncryptedPayload(byte[] received)
     {
         return new ArraySegment<byte>(received, 17, DeterminePayloadLength(received)).ToArray();
+    }
+    public static byte[] MatchDetailsPacket(MatchEntry matchDetails)
+    {
+        byte[] unencrypted = new byte[6];
+        unencrypted[0] = OpCode_Send.MatchDetails;
+        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        unencrypted[5] = matchDetails.MatchID;
+        return unencrypted;
     }
     public static byte[] CreateAccountPacket(string username, string hashedPassword, string email)
     {
@@ -109,11 +118,12 @@ public static class Packets
     {
         byte[] nameBytes = PlayerAccount.SelectedCharacter.CharacterNameBytes;
         byte nameLength = (byte)nameBytes.Length;
-        byte[] toSend = new byte[1 + 4 + 1 + nameLength];
+        byte[] toSend = new byte[1 + 4 + + 4 + 1 + nameLength];
         toSend[0] = OpCode_Send.SubscribeToMatches;
         PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
-        toSend[5] = nameLength;
-        nameBytes.CopyTo(toSend, 6);
+        PlayerAccount.SelectedCharacter.IDBytes.CopyTo(toSend, 5);
+        toSend[9] = nameLength;
+        nameBytes.CopyTo(toSend, 10);
         return toSend;
     }
     public static byte[] OpCodePlusAccountIDBytes(byte opCode)

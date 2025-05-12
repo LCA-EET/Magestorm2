@@ -1,5 +1,7 @@
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 
 public class ByteUtils {
     private static final ByteOrder _order = ByteOrder.LITTLE_ENDIAN;
@@ -22,5 +24,15 @@ public class ByteUtils {
 
     public static byte[] LongToByteArray(long value){
         return _longBuffer.putLong(0, value).array();
+    }
+
+    public static byte[] ArrayListToByteArray(ArrayList<byte[]> arrayList, int totalLength, int startIndex){
+        byte[] toReturn = new byte[totalLength];
+        int index = startIndex;
+        for(byte[] bytes : arrayList){
+            System.arraycopy(bytes, 0, toReturn, index , bytes.length);
+            index += bytes.length;
+        }
+        return toReturn;
     }
 }

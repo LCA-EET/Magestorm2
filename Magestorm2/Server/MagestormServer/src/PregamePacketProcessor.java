@@ -56,6 +56,15 @@ public class PregamePacketProcessor implements PacketProcessor
             case OpCode_Receive.RequestLevelsList:
                 HandleLevelListPacket(decrypted, rc);
                 break;
+            case OpCode_Receive.MatchDetails:
+                HandleMatchDetailsPacket(decrypted, rc);
+                break;
+        }
+    }
+    public void HandleMatchDetailsPacket(byte[] decrypted, RemoteClient rc){
+        int accountID = ByteUtils.ExtractInt(decrypted, 1);
+        if(GameServer.IsLoggedIn(accountID)){
+            byte matchID = decrypted[5];
         }
     }
     public void HandleLevelListPacket(byte[] decrypted, RemoteClient rc){
@@ -80,12 +89,15 @@ public class PregamePacketProcessor implements PacketProcessor
 
     public void HandleMatchSubscribePacket(byte[] decrypted, boolean subscribe){
         int accountID = ByteUtils.ExtractInt(decrypted,1);
+        int characterID = ByteUtils.ExtractInt(decrypted, 5);
         String characterName = "";
+        byte[] nameBytes = null;
         if(subscribe){
-            byte nameLength = decrypted[5];
-            characterName = new String(decrypted, 6, nameLength, StandardCharsets.UTF_8);
+            byte nameLength = decrypted[9];
+            nameBytes = Packets.ExtractBytes(decrypted, 10, nameLength );
+            characterName = new String(nameBytes, 0, nameLength, StandardCharsets.UTF_8);
         }
-        MatchManager.Subscribe(accountID, subscribe, characterName);
+        MatchManager.Subscribe(accountID, subscribe, characterName, nameBytes, characterID);
     }
 
     public String[] LogInDetails(byte[] decrypted){

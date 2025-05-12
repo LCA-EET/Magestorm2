@@ -31,7 +31,10 @@ public class MatchEntry : ValidatableForm
         RefreshTimeRemaining();
         gameObject.SetActive(true);
     }
-
+    public byte MatchID
+    {
+        get {  return _match.MatchID; }
+    }
     public int CreatorAccountID
     {
         get { return _match.CreatorID; }

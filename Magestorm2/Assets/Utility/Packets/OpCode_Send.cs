@@ -1,4 +1,6 @@
-﻿public static class OpCode_Send
+﻿using System.Runtime.CompilerServices;
+
+public static class OpCode_Send
 {
     public const byte LogIn = 1;
     public const byte CreateAccount = 2;
@@ -10,4 +12,5 @@
     public const byte CreateMatch = 8;
     public const byte DeleteMatch = 9;
     public const byte RequestLevelsList = 10;
+    public const byte MatchDetails = 11;
 }

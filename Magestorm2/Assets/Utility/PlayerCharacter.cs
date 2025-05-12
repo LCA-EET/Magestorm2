@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Text;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class PlayerCharacter
     private byte[] _characterNameBytes;
     private byte[] _appearanceBytes;
     private byte[] _statBytes;
+    private byte[] _idBytes;
     public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes) { 
         _characterID = characterID;
         _characterName = characterName;
@@ -19,6 +21,7 @@ public class PlayerCharacter
         _characterNameBytes = Encoding.UTF8.GetBytes(characterName);
         _statBytes = statBytes;
         _appearanceBytes = appearanceBytes;
+        _idBytes = BitConverter.GetBytes(characterID);
     }
     public static byte StringToClass(string playerClass)
     {
@@ -38,6 +41,10 @@ public class PlayerCharacter
                 return Language.GetBaseString(8);
         }
         return "";
+    }
+    public byte[] IDBytes
+    {
+        get { return _idBytes; }
     }
     public byte[] AppearanceBytes
     {

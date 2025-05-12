@@ -6,10 +6,14 @@ public class RemoteClient {
     private int _emanatingPort, _receivingPort;
     private InetAddress _address;
     private int _accountID;
+    private int _characterID;
     private String _username;
     private long _timeLastReceived = 0;
     private boolean _subscribedToMatches;
     private String _characterName;
+    private byte[] _nameBytes;
+    private byte[] _characterIDBytes;
+    private MatchPlayer _matchPlayer;
 
     public RemoteClient(DatagramPacket received, int receivingPort){
         _subscribedToMatches = false;
@@ -52,11 +56,17 @@ public class RemoteClient {
     public boolean TimeOut(){
         return (System.currentTimeMillis() - _timeLastReceived) > GameServer.TimeOut;
     }
-    public void SubscribeToMatches(boolean subscribed, String characterName){
+    public void SubscribeToMatches(boolean subscribed, String characterName, byte[] nameBytes, int charID){
         _subscribedToMatches = subscribed;
         _characterName = characterName;
+        _nameBytes = nameBytes;
+        _characterID = ByteUtils.ExtractInt(_characterIDBytes, 0);
     }
     public boolean IsSubscribedToMatches(){
         return _subscribedToMatches;
+    }
+    public void AssignToMatch(byte matchID, byte teamID, byte idInMatch){
+        _matchPlayer = new MatchPlayer(this, _characterID,idInMatch, _characterName, _nameBytes, teamID);
+
     }
 }
