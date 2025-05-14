@@ -23,7 +23,7 @@ public static class Packets
     public static byte[] MatchDetailsPacket(MatchEntry matchDetails)
     {
         byte[] unencrypted = new byte[6];
-        unencrypted[0] = OpCode_Send.MatchDetails;
+        unencrypted[0] = OpCode_Send.RequestMatchDetails;
         PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
         unencrypted[5] = matchDetails.MatchID;
         return unencrypted;

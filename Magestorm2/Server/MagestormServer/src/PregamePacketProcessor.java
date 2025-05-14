@@ -56,7 +56,7 @@ public class PregamePacketProcessor implements PacketProcessor
             case OpCode_Receive.RequestLevelsList:
                 HandleLevelListPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.MatchDetails:
+            case OpCode_Receive.RequestMatchDetails:
                 HandleMatchDetailsPacket(decrypted, rc);
                 break;
         }
@@ -65,6 +65,10 @@ public class PregamePacketProcessor implements PacketProcessor
         int accountID = ByteUtils.ExtractInt(decrypted, 1);
         if(GameServer.IsLoggedIn(accountID)){
             byte matchID = decrypted[5];
+            Match match = MatchManager.GetMatch(matchID);
+            if(match != null){
+                EnqueueForSend(Packets.MatchDetailsPacket(match), rc);
+            }
         }
     }
     public void HandleLevelListPacket(byte[] decrypted, RemoteClient rc){

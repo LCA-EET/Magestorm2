@@ -54,8 +54,8 @@ public class Packets {
 
     public static byte[] LevelListPacket(){return Cryptographer.Encrypt(GameServer.LevelList());}
 
-    public static byte[] MatchDetailsPacket(){
-
+    public static byte[] MatchDetailsPacket(Match match){
+        return Cryptographer.Encrypt(match.PlayersInMatch(OpCode_Send.MatchDetails));
     }
 
     public static byte[] CharacterDeletedPacket(int characterID) {

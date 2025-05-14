@@ -17,6 +17,7 @@ public class Match {
 
     public Match(byte matchID, int creatorID, String creator, byte sceneID, long creationTime){
         InitTeams();
+
         _nextPlayerID = 0;
         _matchID = matchID;
         _creatorID = creatorID;
@@ -70,15 +71,18 @@ public class Match {
     public void JoinMatch(RemoteClient rc, byte teamID){
         rc.AssignToMatch(_matchID, teamID, ObtainNextPlayerID());
     }
-    public byte[] PlayersInMatch(){
+    public byte[] PlayersInMatch(byte opCode){
         ArrayList<byte[]> teamBytes = new ArrayList<>();
-        int length = 0;
+        int length = 2;
         for(byte teamID : MatchTeam.TeamCodes){
             byte[] teamPlayers = _matchTeams.get(teamID).GetPlayerBytes();
             teamBytes.add(teamPlayers);
             length+=teamPlayers.length;
         }
-        return ByteUtils.ArrayListToByteArray(teamBytes, length, 0);
+        byte[] toReturn = ByteUtils.ArrayListToByteArray(teamBytes, length, 2);
+        toReturn[0] = opCode;
+        toReturn[1] = _matchID;
+        return toReturn;
     }
     public byte ObtainNextPlayerID(){
         boolean idUsed = false;

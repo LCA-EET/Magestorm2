@@ -12,5 +12,5 @@ public static class OpCode_Send
     public const byte CreateMatch = 8;
     public const byte DeleteMatch = 9;
     public const byte RequestLevelsList = 10;
-    public const byte MatchDetails = 11;
+    public const byte RequestMatchDetails = 11;
 }
