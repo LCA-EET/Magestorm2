@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class Teams
 {
-    public static Sprite IconBalance, IconChaos, IconOrder;
     private static Dictionary<Team, Sprite> _teamIcons;
     private static Dictionary<Team, int> _teamNames;
     private static Dictionary<Team, Color> _teamColors;
@@ -14,9 +13,9 @@ public static class Teams
         if (!_init)
         {
             _teamIcons = new Dictionary<Team, Sprite>();
-            _teamIcons.Add(Team.Balance, IconBalance);
-            _teamIcons.Add(Team.Chaos, IconChaos);
-            _teamIcons.Add(Team.Order, IconOrder);
+            _teamIcons.Add(Team.Balance, Resources.Load<Sprite>("img/team/balance_colored"));
+            _teamIcons.Add(Team.Chaos, Resources.Load<Sprite>("img/team/chaos_colored"));
+            _teamIcons.Add(Team.Order, Resources.Load<Sprite>("img/team/order_colored"));
 
             _teamColors = new Dictionary<Team, Color>();
             _teamColors.Add(Team.Neutral, Color.white);
