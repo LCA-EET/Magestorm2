@@ -18,11 +18,17 @@ public static class ComponentRegister
     private static UIPrefabManager _uiprefabManager;
     private static UILoginForm _loginForm;
     private static UICharacterCreationForm _uiCharacterCreationForm;
+    private static UIJoinMatch _uiJoinMatch;
     private static Transform _uiParent;
     private static PregamePacketProcessor _pregamePacketProcessor;
     private static AudioPlayer _audioPlayer;
     private static ModelBuilder _modelBuilder;
-
+    
+    public static UIJoinMatch UIJoinMatch
+    {
+        get { return _uiJoinMatch; }
+        set { _uiJoinMatch = value; }
+    }
     public static UICharacterCreationForm UICharacterCreationForm
     {
         get { return _uiCharacterCreationForm; }

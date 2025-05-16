@@ -34,4 +34,20 @@ public static class SharedFunctions
         }
         return "Undefined";
     }
+
+    public static string ClassAbbreviation(PlayerClass playerClass)
+    {
+        switch (playerClass)
+        {
+            case PlayerClass.Arcanist:
+                return "Ar";
+            case PlayerClass.Cleric:
+                return "Cl";
+            case PlayerClass.Magician:
+                return "Ma";
+            case PlayerClass.Mentalist:
+                return "Me";
+        }
+        return "";
+    }
 }
