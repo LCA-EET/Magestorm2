@@ -14,11 +14,11 @@ public class MatchManager{
         _monitor = new MatchMonitor();
     }
 
-    public static void Subscribe(int accountID, boolean subscribe, String characterName, byte[] nameBytes, int charID){
-        Main.LogMessage("MatchManager.Subscribe: " + characterName +", " + subscribe);
+    public static void Subscribe(int accountID, boolean subscribe, int charID){
+        Main.LogMessage("MatchManager.Subscribe: " + charID +", " + subscribe);
         RemoteClient rc = GameServer.GetClient(accountID);
         if(rc != null){
-            rc.SubscribeToMatches(subscribe, characterName, nameBytes, charID);
+            rc.SubscribeToMatches(subscribe, charID);
             GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
         }
         else{

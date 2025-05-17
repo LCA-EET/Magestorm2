@@ -94,14 +94,7 @@ public class PregamePacketProcessor implements PacketProcessor
     public void HandleMatchSubscribePacket(byte[] decrypted, boolean subscribe){
         int accountID = ByteUtils.ExtractInt(decrypted,1);
         int characterID = ByteUtils.ExtractInt(decrypted, 5);
-        String characterName = "";
-        byte[] nameBytes = null;
-        if(subscribe){
-            byte nameLength = decrypted[9];
-            nameBytes = Packets.ExtractBytes(decrypted, 10, nameLength );
-            characterName = new String(nameBytes, 0, nameLength, StandardCharsets.UTF_8);
-        }
-        MatchManager.Subscribe(accountID, subscribe, characterName, nameBytes, characterID);
+        MatchManager.Subscribe(accountID, subscribe, characterID);
     }
 
     public String[] LogInDetails(byte[] decrypted){

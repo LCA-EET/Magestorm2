@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -100,11 +101,49 @@ public class PregamePacketProcessor : MonoBehaviour
                             MessageBox(69);
                             Game.Quit();
                             break;
-                        
+                        case OpCode_Receive.MatchDetails:
+                            HandleMatchDetailsPacket(decryptedPayload);
+                            break;
                     }
                 }
             }
         }
+    }
+    private void HandleMatchDetailsPacket(byte[] decrypted)
+    {
+        byte matchID = decrypted[1];
+        int index = 2;
+        RemotePlayerData[] neutralPlayers = ProcessMatchPlayers(ref index, decrypted);
+        RemotePlayerData[] balancePlayers = ProcessMatchPlayers(ref index, decrypted);
+        RemotePlayerData[] chaosPlayers = ProcessMatchPlayers(ref index, decrypted);
+        RemotePlayerData[] orderPlayers = ProcessMatchPlayers(ref index, decrypted);
+        ComponentRegister.UIJoinMatch.FillPlayers(chaosPlayers, balancePlayers, orderPlayers);
+        
+    }
+    private RemotePlayerData[] ProcessMatchPlayers(ref int index, byte[] decrypted)
+    {
+        byte numPlayers = decrypted[index];
+        RemotePlayerData[] toReturn = new RemotePlayerData[numPlayers];
+        index++;
+        int playerIndex = 0;
+        while (playerIndex < numPlayers)
+        {
+            byte idInMatch = decrypted[index];
+            index++;
+            byte teamID = decrypted[index];
+            index++;
+            byte playerClass = decrypted[index];
+            index++;
+            byte playerLevel = decrypted[index];
+            index++;
+            byte nameLength = decrypted[index];
+            index++;
+            string playerName = ByteUtils.BytesToUTF8(decrypted, index, nameLength);
+            index += nameLength;
+            toReturn[playerIndex] = new RemotePlayerData(idInMatch, teamID, playerName, playerLevel, (PlayerClass)playerClass);
+            playerIndex++;
+        }
+        return toReturn;
     }
     private void HandleLevelListPacket(byte[] decrypted)
     {

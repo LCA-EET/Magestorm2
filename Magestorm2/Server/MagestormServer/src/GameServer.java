@@ -12,6 +12,7 @@ public class GameServer extends Thread {
     public static void init(){
        ByteUtils.init();
        GameUtils.init();
+       CharacterManager.init();
         _loggedInClients = new ConcurrentHashMap<Integer, RemoteClient>();
        MatchManager.init();
        _rcMonitor = new RemoteClientMonitor();

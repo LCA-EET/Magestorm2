@@ -89,7 +89,7 @@ public class Packets {
     }
 
     public static byte[] LoginSucceededPacket(int accountID){
-        byte[] characterBytes = Database.GetCharactersForAccount(accountID); // this includes the name length as the first byte
+        byte[] characterBytes = Database.GetCharactersOfAccount(accountID); // this includes the name length as the first byte
         //Main.LogMessage("Character bytes retrieved: " + characterBytes.length);
         byte[] toSend;
         if(characterBytes.length > 0){

@@ -1,6 +1,7 @@
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class ByteUtils {
@@ -35,4 +36,16 @@ public class ByteUtils {
         }
         return toReturn;
     }
+
+    public static String BytesToUTF8(byte[] toConvert){
+        return new String(toConvert, StandardCharsets.UTF_8);
+    }
+
+    public static String BytesToUTF8(byte[] decrypted, int index, int length)
+    {
+        byte[] nameBytes = new byte[length];
+        System.arraycopy(decrypted, index, nameBytes, 0, length);
+        return BytesToUTF8(nameBytes);
+    }
+
 }

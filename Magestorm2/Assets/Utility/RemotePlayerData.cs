@@ -7,15 +7,20 @@ using System.Threading.Tasks;
 public class RemotePlayerData
 {
     private string _name;
-    private byte _level;
+    private byte _idInMatch, _level, _teamID;
     private PlayerClass _playerClass;
-    public RemotePlayerData(string name, byte level, PlayerClass playerClass)
+    public RemotePlayerData(byte idInMatch, byte teamID, string name, byte level, PlayerClass playerClass)
     {
         _name = name;
+        _teamID = teamID;
+        _idInMatch = idInMatch;
         _level = level;
         _playerClass = playerClass;
     }
-
+    public byte IdInMatch
+    {
+        get { return _idInMatch; }
+    }
     public string Name
     {
         get { return _name; }

@@ -116,14 +116,10 @@ public static class Packets
     }
     public static byte[] SubscribeToMatchesPacket()
     {
-        byte[] nameBytes = PlayerAccount.SelectedCharacter.CharacterNameBytes;
-        byte nameLength = (byte)nameBytes.Length;
-        byte[] toSend = new byte[1 + 4 + + 4 + 1 + nameLength];
+        byte[] toSend = new byte[1 + 4 + 4];
         toSend[0] = OpCode_Send.SubscribeToMatches;
         PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
         PlayerAccount.SelectedCharacter.IDBytes.CopyTo(toSend, 5);
-        toSend[9] = nameLength;
-        nameBytes.CopyTo(toSend, 10);
         return toSend;
     }
     public static byte[] OpCodePlusAccountIDBytes(byte opCode)

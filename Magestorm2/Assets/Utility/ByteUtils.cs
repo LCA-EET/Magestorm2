@@ -13,5 +13,9 @@ public static class ByteUtils
         toConvert.CopyTo(temp, 0);
         return temp[0];
     }
+    public static string BytesToUTF8(byte[] decrypted, int index, int length)
+    {
+        return Encoding.UTF8.GetString(decrypted, index, length);
+    }
 }
 

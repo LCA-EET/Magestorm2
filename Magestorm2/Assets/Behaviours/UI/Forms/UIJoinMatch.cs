@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class UIJoinMatch : MonoBehaviour
 {
+    public TeamPlayerList ChaosPlayerList;
+    public TeamPlayerList BalancePlayerList;
+    public TeamPlayerList OrderPlayerList;
     private void Awake()
     {
         ComponentRegister.UIJoinMatch = this;
@@ -17,5 +20,12 @@ public class UIJoinMatch : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void FillPlayers(RemotePlayerData[] chaos, RemotePlayerData[] balance, RemotePlayerData[] order)
+    {
+        ChaosPlayerList.FillTeam(chaos);
+        BalancePlayerList.FillTeam(balance);
+        OrderPlayerList.FillTeam(order);
     }
 }

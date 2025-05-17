@@ -184,26 +184,22 @@ public class Database {
         }
         return charID;
     }
-
-    public static byte[] GetCharactersForAccount(int accountID){
-        byte[] toReturn = new byte[0];
-        String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead FROM characters WHERE accountid = ? AND charstatus = ?";
-        try(Connection conn = DBConnection()){
+    private static PlayerCharacter GetCharacter(int accountID, int characterID, Connection conn){
+        PlayerCharacter toReturn = null;
+        String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead, level, experience FROM characters WHERE accountid = ? AND id = ?";
+        try{
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, accountID);
-            ps.setByte(2, CharacterStatus.Activated);
+            ps.setInt(2, characterID);
             ResultSet rs = ps.executeQuery();
-            byte totalLength = 0;
-            ArrayList<byte[]> bytesReturned = new ArrayList<>();
             while (rs.next()) {
-                int characterID = rs.getInt("id");
                 String characterName = rs.getString("charname");
                 byte charClass = rs.getByte("charclass");
                 Main.LogMessage("Fetched character: " + characterName);
                 byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte) nameBytes.length;
-                byte[] fetched = new byte[17 + nameLength];
+                byte[] fetched = new byte[26 + nameLength];
                 System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
                 fetched[4] = charClass;
                 byte strength = rs.getByte("statstr");
@@ -217,6 +213,8 @@ public class Database {
                 byte apphair = rs.getByte("apphair");
                 byte appface = rs.getByte("appface");
                 byte apphead = rs.getByte("apphead");
+                byte level = rs.getByte("level");
+                int experience = rs.getInt("experience");
                 fetched[5] = strength;
                 fetched[6] = dexterity;
                 fetched[7] = constitution;
@@ -228,25 +226,54 @@ public class Database {
                 fetched[13] = apphair;
                 fetched[14] = appface;
                 fetched[15] = apphead;
-                fetched[16] = nameLength;
-                System.arraycopy(nameBytes, 0, fetched, 17, nameLength);
-                bytesReturned.add(fetched);
-                totalLength += (byte) fetched.length;
-            }
-            toReturn = new byte[1 + totalLength];
-            toReturn[0] = (byte)bytesReturned.size();
-            int index = 1;
-            for (byte[] toAdd : bytesReturned) {
-                System.arraycopy(toAdd, 0, toReturn, index, toAdd.length);
-                index += toAdd.length;
+                fetched[16] = level;
+                System.arraycopy(ByteUtils.IntToByteArray(experience), 0,fetched, 17, 8);
+                fetched[25] = nameLength;
+                System.arraycopy(nameBytes, 0, fetched, 26, nameLength);
+                toReturn = new PlayerCharacter(fetched);
             }
         }
-        catch(Exception e){
-            Main.LogError("Exception in GetCharactersForAccount: " + e.getMessage());
-            //e.printStackTrace();
+        catch(Exception ex){
+            Main.LogError("Database.GetCharacter(): " + ex.getMessage());
         }
         return toReturn;
     }
+
+    public static byte[] GetCharactersOfAccount(int accountID){
+        String sql = "SELECT id FROM characters WHERE accountid = ? AND charstatus = ?";
+        ArrayList<byte[]> characterBytes = new ArrayList<>();
+        int totalLength = 0;
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.setByte(2, CharacterStatus.Activated);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                int characterID = rs.getInt("id");
+                PlayerCharacter character = CharacterManager.GetCharacter(characterID);
+                if(character == null){
+                    character = GetCharacter(accountID, characterID, conn);
+                }
+                if(character != null){
+                    byte[] charBytes = character.GetCharacterBytes();
+                    totalLength += charBytes.length;
+                    characterBytes.add(charBytes);
+                }
+            }
+        }
+        catch(Exception e){
+            Main.LogError("Database.GetCharactersOfAccount(): " + e.getMessage());
+        }
+        byte[] toReturn = new byte[1 + totalLength];
+        toReturn[0] = (byte)characterBytes.size();
+        int index = 1;
+        for (byte[] toAdd : characterBytes) {
+            System.arraycopy(toAdd, 0, toReturn, index, toAdd.length);
+            index += toAdd.length;
+        }
+        return toReturn;
+    }
+
 
     public static Object[] ValidateCredentials(String username, String hash){
         Object[] toReturn = new Object[2];

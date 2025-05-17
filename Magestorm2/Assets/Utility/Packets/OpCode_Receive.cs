@@ -18,5 +18,6 @@
     MatchStillHasPlayers = 16,
     LevelsList = 17,
     BannedForCheating = 18,
-    BannedForBehavior = 19
+    BannedForBehavior = 19,
+    MatchDetails = 20
 }
