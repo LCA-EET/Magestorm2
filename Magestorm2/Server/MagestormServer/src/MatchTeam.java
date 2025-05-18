@@ -18,6 +18,7 @@ public class MatchTeam {
     {
         _teamID = teamID;
         _listChanged = true;
+        _teamPlayers = new ConcurrentHashMap<>();
     }
 
     public boolean PlayerIDUsed(byte idToCheck){
