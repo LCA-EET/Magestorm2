@@ -256,11 +256,15 @@ public class PregamePacketProcessor : MonoBehaviour
                 index += 6;
                 byte[] appearanceBytes = FillSegment(decrypted, index, 5);
                 index += 5;
+                byte level = decrypted[index];
+                index++;
+                int experience = BitConverter.ToInt32(decrypted, index);
+                index += 4;
                 byte nameLength = decrypted[index];
                 index++;
                 string charname = Encoding.UTF8.GetString(decrypted, index, nameLength);
                 index += nameLength;
-                PlayerAccount.AddCharacter(characterID, charname, charClass, 1, statBytes, appearanceBytes);
+                PlayerAccount.AddCharacter(characterID, charname, charClass, level, statBytes, appearanceBytes);
                 charIndex++;
             }
             

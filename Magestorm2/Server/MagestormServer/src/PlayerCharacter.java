@@ -38,9 +38,9 @@ public class PlayerCharacter {
         _apphead = fetched[15];
         _level = fetched[_indexLevel];
         _experience = ByteUtils.ExtractInt(fetched, _indexExperience);
-        byte nameLength = fetched[25];
+        byte nameLength = fetched[21];
         _nameBytes = new byte[nameLength];
-        System.arraycopy(fetched, 26, _nameBytes, 0, nameLength);
+        System.arraycopy(fetched, 22, _nameBytes, 0, nameLength);
         _characterName = ByteUtils.BytesToUTF8(_nameBytes);
         _nameLevelClass = new byte[1 + 1 + 1 + nameLength];
         _nameLevelClass[0] = _level;
@@ -68,6 +68,9 @@ public class PlayerCharacter {
     }
     public byte[] GetCharacterBytes(){
         return _characterBytes;
+    }
+    public byte[] GetNameBytes(){
+        return _nameBytes;
     }
 
 }

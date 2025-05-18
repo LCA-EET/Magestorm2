@@ -199,7 +199,7 @@ public class Database {
                 byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte) nameBytes.length;
-                byte[] fetched = new byte[26 + nameLength];
+                byte[] fetched = new byte[22 + nameLength];
                 System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
                 fetched[4] = charClass;
                 byte strength = rs.getByte("statstr");
@@ -227,9 +227,10 @@ public class Database {
                 fetched[14] = appface;
                 fetched[15] = apphead;
                 fetched[16] = level;
-                System.arraycopy(ByteUtils.IntToByteArray(experience), 0,fetched, 17, 8);
-                fetched[25] = nameLength;
-                System.arraycopy(nameBytes, 0, fetched, 26, nameLength);
+                byte[] experienceBytes = ByteUtils.IntToByteArray(experience);
+                System.arraycopy(experienceBytes, 0,fetched, 17, 4);
+                fetched[21] = nameLength;
+                System.arraycopy(nameBytes, 0, fetched, 22, nameLength);
                 toReturn = new PlayerCharacter(fetched);
             }
         }

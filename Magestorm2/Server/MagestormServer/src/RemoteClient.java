@@ -10,9 +10,7 @@ public class RemoteClient {
     private String _username;
     private long _timeLastReceived = 0;
     private boolean _subscribedToMatches;
-    private String _characterName;
-    private byte[] _nameBytes;
-    private byte[] _characterIDBytes;
+
     private PlayerCharacter _activeCharacter;
 
     public RemoteClient(DatagramPacket received, int receivingPort){
@@ -41,14 +39,6 @@ public class RemoteClient {
         _timeLastReceived = System.currentTimeMillis();
     }
 
-    public void SetCharacterName(String characterName){
-        _characterName = characterName;
-    }
-
-    public String SelectedCharacterName(){
-        return _characterName;
-    }
-
     public int AccountID(){
         return _accountID;
     }
@@ -66,5 +56,8 @@ public class RemoteClient {
     }
     public void AssignToMatch(byte matchID, byte teamID, byte idInMatch){
 
+    }
+    public PlayerCharacter GetActiveCharacter(){
+        return _activeCharacter;
     }
 }

@@ -9,25 +9,23 @@ public class Match {
     private byte _sceneID;
     private long _creationTime;
     private long _expirationTime;
-    private String _creator;
+    private byte[] _creatorName;
     private byte[] _matchBytes;
     private byte _lastIndex;
     private ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
     private byte _nextPlayerID;
 
-    public Match(byte matchID, int creatorID, String creator, byte sceneID, long creationTime){
+    public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime){
         InitTeams();
-
+        _creatorName = creatorName;
         _nextPlayerID = 0;
         _matchID = matchID;
         _creatorID = creatorID;
         _sceneID = sceneID;
-        _creator = creator;
         _creationTime = creationTime;
         _expirationTime = creationTime + 3600000; // one hour
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
-        byte[] creatorNameBytes = creator.getBytes(StandardCharsets.UTF_8);
-        byte nameBytesLength = (byte)creatorNameBytes.length;
+        byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 +  nameBytesLength + 1];
         _lastIndex = (byte)(_matchBytes.length-1);
         int index = 0;
@@ -43,7 +41,7 @@ public class Match {
         index+=4;
         _matchBytes[index] = nameBytesLength;
         index++;
-        System.arraycopy(creatorNameBytes, 0, _matchBytes, index, nameBytesLength);
+        System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
     }
     private void InitTeams(){
         _matchTeams = new ConcurrentHashMap<>();

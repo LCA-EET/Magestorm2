@@ -49,7 +49,8 @@ public class MatchManager{
                 }
                 else{
                     byte matchID = NextMatchID();
-                    Match newlyCreated = new Match(matchID, accountID, rc.SelectedCharacterName(), sceneID, System.currentTimeMillis());
+                    Match newlyCreated = new Match(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
+                            sceneID, System.currentTimeMillis());
                     AddMatch(matchID, newlyCreated);
                 }
             }

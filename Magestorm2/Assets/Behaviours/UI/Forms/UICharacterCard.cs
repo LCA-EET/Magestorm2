@@ -95,7 +95,7 @@ public class UICharacterCard : ValidatableForm
         _character = character;
         CharacterName.text = character.CharacterName;
         CharacterClass.text = character.CharacterClassString;
-        CharacterLevel.text = character.CharacterLevel.ToString();
+        CharacterLevel.text = Language.BuildString(81, character.CharacterLevel.ToString());
         Destroy(_model);
         _model = ComponentRegister.ModelBuilder.ConstructModel(character.AppearanceBytes, (byte)Team.Neutral, character.CharacterLevel, ModelContainer);
     }
