@@ -20,6 +20,7 @@ public class SelectEntryButton : MonoBehaviour
 
     private void OnPress()
     {
+        UIAudio.PlayButtonPress();
         if (Selected)
         {
             _owningGroup.DeselectAll();
@@ -28,7 +29,6 @@ public class SelectEntryButton : MonoBehaviour
         {
             _owningGroup.DeselectOthers(this);
         }
-        UIAudio.PlayButtonPress();
     }
     // Update is called once per frame
     void Update()

@@ -45,8 +45,6 @@ public class UILoginForm : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
-        UIAudio.PlayButtonPress();
-        //Debug.Log(buttonType);
         switch (buttonType)
         {
             case ButtonType.LogIn:

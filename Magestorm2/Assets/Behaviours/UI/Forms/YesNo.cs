@@ -30,7 +30,6 @@ public class YesNo : ValidatableForm
 
     public override void ButtonPressed(ButtonType buttonType)
     {
-        UIAudio.PlayButtonPress();
         switch (buttonType)
         {
             case ButtonType.Submit:

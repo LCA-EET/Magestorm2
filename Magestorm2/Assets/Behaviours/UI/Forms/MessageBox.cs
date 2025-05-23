@@ -26,7 +26,6 @@ public class MessageBox : ValidatableForm
 
     public override void ButtonPressed(ButtonType buttonType)
     {
-        UIAudio.PlayButtonPress();
         CloseForm();
     }
 }

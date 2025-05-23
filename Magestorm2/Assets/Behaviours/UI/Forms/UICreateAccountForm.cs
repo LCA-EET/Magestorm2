@@ -24,7 +24,6 @@ public class UICreateAccountForm : ValidatableForm
 
     public override void ButtonPressed(ButtonType buttonType)
     {
-        UIAudio.PlayButtonPress();
         Debug.Log(buttonType);
         switch (buttonType)
         {

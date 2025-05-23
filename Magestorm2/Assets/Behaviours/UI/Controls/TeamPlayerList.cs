@@ -4,8 +4,10 @@ using UnityEngine.UI;
 public class TeamPlayerList : MonoBehaviour
 {
     public Team TeamID;
-    private Image _teamIcon;
+    public Image _teamIcon;
     public PlayerEntry[] PlayerEntries;
+    public GameObject NoPlayersHeader;
+    private Color _initial;
     private void Awake()
     {
         
@@ -13,8 +15,7 @@ public class TeamPlayerList : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _teamIcon = GetComponentInChildren<Image>();
-       // _teamIcon.color = Teams.GetTeamColor(TeamID);
+        _initial = _teamIcon.color;
         _teamIcon.sprite = Teams.GetTeamIcon(TeamID);
     }
 
@@ -22,6 +23,10 @@ public class TeamPlayerList : MonoBehaviour
     void Update()
     {
         
+    }
+    public void MarkSelected(Team team)
+    {
+        _teamIcon.color = (TeamID == team) ? Teams.GetTeamColor(TeamID) : _initial;
     }
     public void FillTeam(RemotePlayerData[] teamPlayers)
     {
@@ -40,5 +45,6 @@ public class TeamPlayerList : MonoBehaviour
             PlayerEntries[i].gameObject.SetActive(false);
             i = i + 1;
         }
+        NoPlayersHeader.gameObject.SetActive(teamPlayers.Length == 0);
     }
 }

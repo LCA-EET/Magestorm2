@@ -15,7 +15,6 @@ public class UILanguageSelector : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
-        UIAudio.PlayButtonPress();
         Debug.Log(buttonType.ToString());
         switch (buttonType)
         {

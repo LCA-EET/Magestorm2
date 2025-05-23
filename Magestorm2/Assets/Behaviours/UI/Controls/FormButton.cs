@@ -19,7 +19,11 @@ public enum ButtonType : byte
     JoinMatch = 13,
     DeleteMatch = 14,
     Increase = 15,
-    Decrease = 16
+    Decrease = 16,
+    Misc0 = 17,
+    Misc1 = 18,
+    Misc2 = 19,
+    Misc3 = 20
 }
 public class FormButton : MonoBehaviour
 {
@@ -44,6 +48,7 @@ public class FormButton : MonoBehaviour
     }
     private void NotifyForm()
     {
+        UIAudio.PlayButtonPress();
         _associatedForm.ButtonPressed(buttonType);
     }
     public void SetForm(ValidatableForm associatedForm)

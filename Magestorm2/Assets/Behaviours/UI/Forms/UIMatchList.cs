@@ -21,7 +21,6 @@ public class UIMatchList : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
-        UIAudio.PlayButtonPress();
         switch (buttonType)
         {
             case ButtonType.CharacterSelect:
@@ -50,7 +49,7 @@ public class UIMatchList : ValidatableForm
         else
         {
             SharedFunctions.Params = new object[] { selected };
-
+            ComponentRegister.UIPrefabManager.InstantiateJoinMatch();
         }
     }
     private void CreateMatch()

@@ -60,7 +60,6 @@ public class UICharacterCard : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
-        UIAudio.PlayButtonPress();
         switch (buttonType)
         {
             case ButtonType.Delete:

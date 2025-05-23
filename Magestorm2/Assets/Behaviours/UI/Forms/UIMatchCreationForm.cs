@@ -36,7 +36,6 @@ public class UIMatchCreationForm : ValidatableForm
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
-        UIAudio.PlayButtonPress();
         if(buttonType == ButtonType.Submit)
         {
             int selectedIndex = LevelSelection.SelectedIndex;
