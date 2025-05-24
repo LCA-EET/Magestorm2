@@ -13,6 +13,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabMatchCreator;
     public GameObject PrefabCharacterModelBuilder;
     public GameObject PrefabJoinMatch;
+    public GameObject PrefabLoginScreen;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -35,6 +36,10 @@ public class UIPrefabManager : MonoBehaviour
         {
             Destroy(_poppedObjects.Dequeue());
         }
+    }
+    public void InstantiateLoginForm()
+    {
+        AddToStack(Instantiate(PrefabLoginScreen));
     }
     public void InstantiateJoinMatch()
     {
@@ -82,9 +87,9 @@ public class UIPrefabManager : MonoBehaviour
         AddToStack(Instantiate(PrefabMatchCreator));
     }
 
-    public void AddToStack(GameObject go)
+    public GameObject AddToStack(GameObject go)
     {
-        go.transform.SetParent(ComponentRegister.UIParent);
+        //go.transform.SetParent(ComponentRegister.UIParent);
         go.transform.localPosition = Vector3.zero;
         //go.transform.localScale = ComponentRegister.UIParent.localScale;
         go.SetActive(true);
@@ -93,6 +98,7 @@ public class UIPrefabManager : MonoBehaviour
             _uiStack.Peek().SetActive(false);
         }
         _uiStack.Push(go);
+        return go;
     }
 
     public void PopFromStack()

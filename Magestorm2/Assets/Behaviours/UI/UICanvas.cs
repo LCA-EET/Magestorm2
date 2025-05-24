@@ -1,27 +1,20 @@
 using UnityEngine;
 
-public class GameInitializer : MonoBehaviour
+public class UICanvas : MonoBehaviour
 {
-    
     private void Awake()
     {
-        LoadPrefs();
-        Game.Init();
+        ComponentRegister.UIParent = gameObject.transform;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ComponentRegister.UIPrefabManager.InstantiateLoginForm();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    private void LoadPrefs()
-    {
-
     }
 }
