@@ -130,14 +130,19 @@ public class PregamePacketProcessor : MonoBehaviour
     }
     private void HandleMatchDetailsPacket(byte[] decrypted)
     {
+        
         byte matchID = decrypted[1];
         int index = 2;
         RemotePlayerData[] neutralPlayers = ProcessMatchPlayers(ref index, decrypted);
         RemotePlayerData[] balancePlayers = ProcessMatchPlayers(ref index, decrypted);
         RemotePlayerData[] chaosPlayers = ProcessMatchPlayers(ref index, decrypted);
         RemotePlayerData[] orderPlayers = ProcessMatchPlayers(ref index, decrypted);
-        ComponentRegister.UIJoinMatch.FillPlayers(chaosPlayers, balancePlayers, orderPlayers);
-        
+        ListedMatch match = null;
+        if(ActiveMatches.GetMatch(matchID, ref match))
+        {
+            SharedFunctions.Params = new object[] { match, chaosPlayers, balancePlayers, orderPlayers };
+            ComponentRegister.UIPrefabManager.InstantiateJoinMatch();
+        }      
     }
     private RemotePlayerData[] ProcessMatchPlayers(ref int index, byte[] decrypted)
     {

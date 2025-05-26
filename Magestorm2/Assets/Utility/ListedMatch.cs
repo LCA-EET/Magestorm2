@@ -8,6 +8,7 @@ public class ListedMatch
     private byte _matchID, _sceneID;
     private long _expiration;
     private int _creatorID;
+    private string _sceneName;
     private String _creatorName;
     public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration, int creatorID)
     {
@@ -16,6 +17,7 @@ public class ListedMatch
         _creatorName = creatorName;
         _expiration = expiration;
         _creatorID = creatorID;
+        _sceneName = LevelData.GetLevel(sceneID).LevelName;
     }
     public int CreatorID
     {
@@ -33,9 +35,13 @@ public class ListedMatch
     {
         get { return _expiration; }
     }
-    public String CreatorName
+    public string CreatorName
     {
         get { return _creatorName; }
+    }
+    public string SceneName
+    {
+        get { return _sceneName; }
     }
 }
 

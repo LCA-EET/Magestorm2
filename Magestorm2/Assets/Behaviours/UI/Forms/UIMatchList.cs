@@ -48,8 +48,9 @@ public class UIMatchList : ValidatableForm
         }
         else
         {
-            SharedFunctions.Params = new object[] { selected };
-            ComponentRegister.UIPrefabManager.InstantiateJoinMatch();
+            Game.SendBytes(Packets.MatchDetailsPacket(selected.MatchID));
+            //SharedFunctions.Params = new object[] { selected.Match };
+            //ComponentRegister.UIPrefabManager.InstantiateJoinMatch();
         }
     }
     private void CreateMatch()

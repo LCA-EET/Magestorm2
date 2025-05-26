@@ -40,12 +40,12 @@ public static class Packets
         nameBytes.CopyTo(unencrypted, 6);
         return unencrypted;
     }
-    public static byte[] MatchDetailsPacket(MatchEntry matchDetails)
+    public static byte[] MatchDetailsPacket(byte matchID)
     {
         byte[] unencrypted = new byte[6];
         unencrypted[0] = OpCode_Send.RequestMatchDetails;
         PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
-        unencrypted[5] = matchDetails.MatchID;
+        unencrypted[5] = matchID;
         return unencrypted;
     }
     public static byte[] CreateAccountPacket(string username, string hashedPassword, string email)

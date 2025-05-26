@@ -4,12 +4,12 @@ using UnityEngine;
 
 public static class ActiveMatches
 {
-    private static Dictionary<int, ListedMatch> _activeMatches;
+    private static Dictionary<byte, ListedMatch> _activeMatches;
     public static bool UpdatesMade;
 
     public static void Init()
     {
-        _activeMatches = new Dictionary<int, ListedMatch>();
+        _activeMatches = new Dictionary<byte, ListedMatch>();
     }
 
     public static List<ListedMatch> MatchListing()
@@ -32,9 +32,18 @@ public static class ActiveMatches
 
     public static void AddMatch(ListedMatch match)
     {
-        Debug.Log("Match added.");
+        //Debug.Log("Match added.");
         _activeMatches.Add(match.MatchID, match);
         UpdatesMade = true;
     }
 
+    public static bool GetMatch(byte matchID, ref ListedMatch match)
+    {
+        if (_activeMatches.ContainsKey(matchID))
+        {
+            match = _activeMatches[matchID];
+            return true;
+        }
+        return false;
+    }
 }

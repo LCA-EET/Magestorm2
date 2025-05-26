@@ -27,4 +27,8 @@ public static class LevelData
     {
         return _levelTable.Values.ToList();
     }
+    public static Level GetLevel(byte id)
+    {
+        return _levelTable[id];
+    }
 }

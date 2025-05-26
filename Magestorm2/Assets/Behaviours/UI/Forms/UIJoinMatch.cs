@@ -16,17 +16,20 @@ public class UIJoinMatch : ValidatableForm
     {
         _selectedTeam = Team.Neutral;
         ComponentRegister.UIJoinMatch = this;
-        Game.SendBytes(Packets.MatchDetailsPacket((MatchEntry)SharedFunctions.Params[0]));
-        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         AssociateFormToButtons();
-        _match = (ListedMatch)SharedFunctions.Params[0];
-        MatchIDText.text = _match.MatchID.ToString();
-        //MatchLevelText.text = _match..ToString();
-        MatchCreatorText.text = _match.CreatorName.ToString();
+        object[] matchParams = SharedFunctions.Params;
+        _match = (ListedMatch)matchParams[0];
+        ChaosPlayerList.FillTeam((RemotePlayerData[])matchParams[1]);
+        BalancePlayerList.FillTeam((RemotePlayerData[])matchParams[2]);
+        OrderPlayerList.FillTeam((RemotePlayerData[])matchParams[3]);
+
+        MatchIDText.text = Language.BuildString(97,_match.MatchID.ToString());
+        MatchLevelText.text = Language.BuildString(99,_match.SceneName);
+        MatchCreatorText.text = Language.BuildString(98, _match.CreatorName);
     }
 
     // Update is called once per frame
@@ -35,12 +38,6 @@ public class UIJoinMatch : ValidatableForm
         
     }
 
-    public void FillPlayers(RemotePlayerData[] chaos, RemotePlayerData[] balance, RemotePlayerData[] order)
-    {
-        ChaosPlayerList.FillTeam(chaos);
-        BalancePlayerList.FillTeam(balance);
-        OrderPlayerList.FillTeam(order);
-    }
     protected override bool ValidateForm()
     {
         if(_selectedTeam == Team.Neutral)

@@ -211,6 +211,9 @@ MonoBehaviour:
   ChaosPlayerList: {fileID: 7362241222714907500}
   BalancePlayerList: {fileID: 5049294229175581409}
   OrderPlayerList: {fileID: 6950338402780466627}
+  MatchCreatorText: {fileID: 3389656826855952606}
+  MatchIDText: {fileID: 4906844494928684769}
+  MatchLevelText: {fileID: 1964031667853973749}
 --- !u!1 &5607359097453974051
 GameObject:
   m_ObjectHideFlags: 0

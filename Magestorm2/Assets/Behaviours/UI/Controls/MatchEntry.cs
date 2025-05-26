@@ -28,6 +28,7 @@ public class MatchEntry : ValidatableForm
         _match = match;
         ID.text = _match.MatchID.ToString();
         Creator.text = _match.CreatorName.ToString();
+        Arena.text = LevelData.GetLevel(_match.SceneID).LevelName;
         RefreshTimeRemaining();
         gameObject.SetActive(true);
     }
@@ -38,5 +39,9 @@ public class MatchEntry : ValidatableForm
     public int CreatorAccountID
     {
         get { return _match.CreatorID; }
+    }
+    public ListedMatch Match
+    {
+        get { return _match; }
     }
 }
