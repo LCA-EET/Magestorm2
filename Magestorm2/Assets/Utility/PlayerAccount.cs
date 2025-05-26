@@ -34,6 +34,14 @@ public static class PlayerAccount
         PlayerCharacter pc = new PlayerCharacter(characterID, characterName, characterClass, characterLevel, statBytes, appearanceBytes);
         AddCharacter(pc);
     }
+    public static void MarkUpdatesMade()
+    {
+        UpdatesMade = true;
+    }
+    public static PlayerCharacter GetCharacter(int characterID)
+    {
+        return _characterList[characterID];
+    }
     public static List<PlayerCharacter> GetCharacterList()
     {
         return _characterList.Values.ToList<PlayerCharacter>();

@@ -10,8 +10,6 @@ public class UILoginForm : ValidatableForm
     private void Awake()
     {
         ComponentRegister.UILoginForm = this;
-        
-        
     }
    
 

@@ -3,13 +3,9 @@ using UnityEngine;
 
 public class YesNo : ValidatableForm
 {
-    private TMP_Text _textBox;
+    public TMP_Text MessageText;
     private ValidatableForm _instantiator;
 
-    private void Awake()
-    {
-        _textBox = GetComponentInChildren<TMP_Text>();
-    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,7 +20,7 @@ public class YesNo : ValidatableForm
 
     public override void SetParams(object[] paramArray)
     {
-        _textBox.text = paramArray[0].ToString();
+        MessageText.text = paramArray[0].ToString();
         _instantiator = (ValidatableForm)paramArray[1];
     }
 

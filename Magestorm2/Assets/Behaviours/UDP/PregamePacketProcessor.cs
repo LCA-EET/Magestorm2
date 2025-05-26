@@ -104,9 +104,28 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.MatchDetails:
                             HandleMatchDetailsPacket(decryptedPayload);
                             break;
+                        case OpCode_Receive.NameCheckResult:
+                            HandleNameCheckResultPacket(decryptedPayload);
+                            break;
                     }
                 }
             }
+        }
+    }
+    private void HandleNameCheckResultPacket(byte[] decrypted)
+    {
+        byte isUsed = decrypted[1];
+        switch (isUsed)
+        {
+            case 0:
+                ComponentRegister.UICharacterCreationForm.NameCheckPassed();
+                break;
+            case 1:
+                Game.MessageBoxReference(95);
+                break;
+            case 2:
+                Game.MessageBoxReference(96);
+                break;
         }
     }
     private void HandleMatchDetailsPacket(byte[] decrypted)
@@ -219,7 +238,7 @@ public class PregamePacketProcessor : MonoBehaviour
         string characterName = Encoding.UTF8.GetString(decrypted, 18, nameLength);
         PlayerAccount.AddCharacter(characterID, characterName, classCode, 1, statBytes, appearanceBytes);
         UICharacterCreationForm creationForm = ComponentRegister.UICharacterCreationForm;
-        if(creationForm != null)
+        if (creationForm != null)
         {
             if (!creationForm.gameObject.IsDestroyed())
             {
@@ -227,6 +246,8 @@ public class PregamePacketProcessor : MonoBehaviour
                 ComponentRegister.UICharacterCreationForm = null;
             }
         }
+        SharedFunctions.Params = new object[] { characterID, characterName };
+        ComponentRegister.UIPrefabManager.InstantiateAppearanceChooser();
     }
     
     private byte[] FillSegment(byte[] source, int sourceIndex, int length)

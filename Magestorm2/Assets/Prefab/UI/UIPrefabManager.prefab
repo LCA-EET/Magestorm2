@@ -55,6 +55,8 @@ MonoBehaviour:
   PrefabMatchCreator: {fileID: 2155154494730097077, guid: 8120e23c1bcac9d48890bb31336abf67, type: 3}
   PrefabCharacterModelBuilder: {fileID: 739774822516366062, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
   PrefabJoinMatch: {fileID: 2155154494730097077, guid: b7f13b8c78fa040448058b6fbf92583b, type: 3}
+  PrefabLoginScreen: {fileID: 9190357501265961709, guid: f82a0e47a0b85ee488fb4c5adf5abeab, type: 3}
+  PrefabAppearanceChooser: {fileID: 9190357501265961709, guid: a48e3a24a5845cf49be81af3d4801039, type: 3}
 --- !u!82 &7185910421088315080
 AudioSource:
   m_ObjectHideFlags: 0

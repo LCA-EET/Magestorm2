@@ -19,5 +19,6 @@
     LevelsList = 17,
     BannedForCheating = 18,
     BannedForBehavior = 19,
-    MatchDetails = 20
+    MatchDetails = 20,
+    NameCheckResult = 21
 }

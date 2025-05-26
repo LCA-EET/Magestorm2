@@ -59,11 +59,35 @@ public class PregamePacketProcessor implements PacketProcessor
             case OpCode_Receive.RequestMatchDetails:
                 HandleMatchDetailsPacket(decrypted, rc);
                 break;
+            case OpCode_Receive.NameCheck:
+                HandleNameCheckPacket(decrypted, rc);
+                break;
+            case OpCode_Receive.UpdateAppearance:
+                HandleAppearanceUpdatePacket(decrypted);
+                break;
+        }
+    }
+    private int IsLoggedIn(byte[] decrypted){
+        int accountID = ByteUtils.ExtractInt(decrypted, 1);
+        return GameServer.IsLoggedIn(accountID) ? accountID: 0;
+    }
+    public void HandleAppearanceUpdatePacket(byte[] decrypted){
+        if(IsLoggedIn(decrypted) > 0){
+            int characterID = ByteUtils.ExtractInt(decrypted, 5);
+            byte[] appearanceBytes = new byte[5];
+            System.arraycopy(decrypted, 9, appearanceBytes, 0, appearanceBytes.length);
+            Database.UpdateCharacterAppearance(characterID, appearanceBytes);
+        }
+    }
+    public void HandleNameCheckPacket(byte[] decrypted, RemoteClient rc){
+        if(IsLoggedIn(decrypted) > 0){
+            byte nameLength = decrypted[5];
+            String toCheck = ByteUtils.BytesToUTF8(decrypted, 6, nameLength);
+            EnqueueForSend(Packets.NameCheckResults(Database.CheckIfNameIsUsed(toCheck)), rc);
         }
     }
     public void HandleMatchDetailsPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = ByteUtils.ExtractInt(decrypted, 1);
-        if(GameServer.IsLoggedIn(accountID)){
+        if(IsLoggedIn(decrypted) > 0){
             byte matchID = decrypted[5];
             Match match = MatchManager.GetMatch(matchID);
             if(match != null){
@@ -72,21 +96,20 @@ public class PregamePacketProcessor implements PacketProcessor
         }
     }
     public void HandleLevelListPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = ByteUtils.ExtractInt(decrypted, 1);
-        if(GameServer.IsLoggedIn(accountID)){
+        if(IsLoggedIn(decrypted) > 0){
             EnqueueForSend(Packets.LevelListPacket(), rc);
         }
     }
     public void HandleDeleteMatchPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = ByteUtils.ExtractInt(decrypted, 1);
-        if(GameServer.IsLoggedIn(accountID)){
+        int accountID = IsLoggedIn(decrypted);
+        if(accountID > 0){
             MatchManager.DeleteMatch(accountID, rc);
         }
     }
     public void HandleMatchCreatedPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = ByteUtils.ExtractInt(decrypted,1);
-        byte sceneID = decrypted[5];
-        if(GameServer.IsLoggedIn(accountID)){
+        int accountID = IsLoggedIn(decrypted);
+        if(accountID > 0){
+            byte sceneID = decrypted[5];
             MatchManager.RequestMatchCreation(accountID, sceneID);
         }
     }
@@ -108,8 +131,8 @@ public class PregamePacketProcessor implements PacketProcessor
     }
 
     private void HandleDeleteCharacterPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = ByteUtils.ExtractInt(decrypted, 1);
-        if(GameServer.IsLoggedIn(accountID)){
+        int accountID = IsLoggedIn(decrypted);
+        if(accountID > 0){
             int characterID = ByteUtils.ExtractInt(decrypted, 5);
             Main.LogMessage("Deactivating character: " + characterID);
             Database.DeactivateCharacter(characterID, accountID);
@@ -118,15 +141,15 @@ public class PregamePacketProcessor implements PacketProcessor
     }
 
     private void HandleLogOutPacket(byte[] decrypted){
-        int accountID = ByteUtils.ExtractInt(decrypted, 1);
-        if(GameServer.IsLoggedIn(accountID)){
+        int accountID = IsLoggedIn(decrypted);
+        if(accountID > 0){
             GameServer.ClientLoggedOut(accountID);
         }
     }
 
     private void HandleCreateCharacterPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = ByteUtils.ExtractInt(decrypted,1);
-        if(GameServer.IsLoggedIn(accountID)){
+        int accountID = IsLoggedIn(decrypted);
+        if(accountID > 0){
             byte classCode = decrypted[5];
             byte[] stats = new byte[6];
             byte[] appearance = new byte[5];

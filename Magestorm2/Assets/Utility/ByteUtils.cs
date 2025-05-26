@@ -17,5 +17,9 @@ public static class ByteUtils
     {
         return Encoding.UTF8.GetString(decrypted, index, length);
     }
+    public static byte[] UTF8ToBytes(string utf8String)
+    {
+        return Encoding.UTF8.GetBytes(utf8String);
+    }
 }
 

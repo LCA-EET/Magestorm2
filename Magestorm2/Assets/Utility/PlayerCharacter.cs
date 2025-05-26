@@ -52,6 +52,10 @@ public class PlayerCharacter
         {
             return _appearanceBytes;
         }
+        set
+        {
+            _appearanceBytes = value;
+        }
     }
     public byte[] CharacterNameBytes { get { return _characterNameBytes; } }
     public int CharacterID { get { return _characterID; } }

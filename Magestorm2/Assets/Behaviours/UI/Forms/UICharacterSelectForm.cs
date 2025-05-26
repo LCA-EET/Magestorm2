@@ -14,7 +14,7 @@ public class UICharacterSelectForm : ValidatableForm
         }
         RefreshCards();
     }
-    private void RefreshCards()
+    public void RefreshCards()
     {
         DeselectCards();
         List<PlayerCharacter> characterList = PlayerAccount.GetCharacterList();

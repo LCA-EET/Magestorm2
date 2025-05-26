@@ -10,4 +10,6 @@ public class OpCode_Receive {
     public static final byte DeleteMatch = 9;
     public static final byte RequestLevelsList = 10;
     public static final byte RequestMatchDetails = 11;
+    public static final byte NameCheck = 12;
+    public static final byte UpdateAppearance = 13;
 }

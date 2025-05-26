@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UICharacterCreationForm : ValidatableForm
 {
     public BitwiseToggleGroup ClassToggleGroup;
-    public UIModelPreview ModelPanel;
+    //public UIModelPreview ModelPanel;
 
     private StatPanel _statPanel;
     private byte _controlByte;
@@ -24,14 +24,19 @@ public class UICharacterCreationForm : ValidatableForm
     {
         
     }
-    protected override void PassedValidation()
+    public void NameCheckPassed()
     {
         byte[] stats = _statPanel.GetStats();
-        byte[] appearanceBytes = ModelPanel.AppearanceBytes();
+        byte[] appearanceBytes = new byte[5];
         ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
             ClassToggleGroup.GetSelectedIndex(),
             stats,
             appearanceBytes));
+        CloseForm();
+    }
+    protected override void PassedValidation()
+    {
+        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.NameCheckPacket(EntriesToValidate[0].GetValue().ToString()));
     }
     public override void ButtonPressed(ButtonType buttonType)
     {

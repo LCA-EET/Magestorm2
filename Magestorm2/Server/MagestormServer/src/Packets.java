@@ -54,6 +54,12 @@ public class Packets {
 
     public static byte[] LevelListPacket(){return Cryptographer.Encrypt(GameServer.LevelList());}
 
+    public static byte[] NameCheckResults(byte isUsed){
+        byte[] toEncrypt = new byte[2];
+        toEncrypt[0] = OpCode_Send.NameCheckResult;
+        toEncrypt[1] = isUsed;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] MatchDetailsPacket(Match match){
         return Cryptographer.Encrypt(match.PlayersInMatch(OpCode_Send.MatchDetails));
     }

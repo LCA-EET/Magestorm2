@@ -13,4 +13,6 @@ public static class OpCode_Send
     public const byte DeleteMatch = 9;
     public const byte RequestLevelsList = 10;
     public const byte RequestMatchDetails = 11;
+    public const byte NameCheck = 12;
+    public const byte UpdateAppearance = 13;
 }

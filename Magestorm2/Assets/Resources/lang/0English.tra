@@ -47,7 +47,7 @@ You already have a match active.
 Server match limit reached.
 Delete
 There are still players in the match.
-Delete {0} — are you sure?
+Are you sure that you want to delete {0}?
 Select a match and try again.
 You can't delete match you didn't create.
 ID
@@ -86,3 +86,12 @@ Account
 Cancel
 Save
 OK
+Matches
+Active Matches
+Back
+There are no active matches. Press Create to start a match.
+No
+Yes
+Choose Appearance
+The name you've chosen is already in use.
+Unable to complete name check. Try again later.

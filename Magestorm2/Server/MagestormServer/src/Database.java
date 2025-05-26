@@ -154,7 +154,7 @@ public class Database {
 
     public static int AddCharacter(int accountID, String charname, byte classCode, byte[] stats, byte[] appearance){
         int charID = -1;
-        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead, level) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Main.LogMessage("Adding character " + charname + " to database.");
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -173,6 +173,7 @@ public class Database {
             ps.setByte(13, appearance[2]);
             ps.setByte(14, appearance[3]);
             ps.setByte(15, appearance[4]);
+            ps.setByte(16, (byte)1);
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -180,7 +181,7 @@ public class Database {
             }
         }
         catch(Exception e){
-            Main.LogError("Database.AddCredential(): " + e.getMessage());
+            Main.LogError("Database.AddCharacter(): " + e.getMessage());
         }
         return charID;
     }
@@ -238,6 +239,39 @@ public class Database {
             Main.LogError("Database.GetCharacter(): " + ex.getMessage());
         }
         return toReturn;
+    }
+    public static byte CheckIfNameIsUsed(String toCheck)
+    {
+        String sql = "SELECT id FROM characters WHERE charname = ? AND charstatus = 1";
+        byte toReturn = 0;
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, toCheck);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                toReturn = 1;
+            }
+        }
+        catch(Exception e){
+            toReturn = 2;
+            Main.LogError("Database.CheckIfNameIsUsed(): " + e.getMessage());
+        }
+        return toReturn;
+    }
+
+    public static void UpdateCharacterAppearance(int characterID, byte[] appearanceBytes){
+        try(Connection conn = DBConnection()){
+            String sql = "UPDATE characters SET appsex = ?, appskin = ?, apphair = ?, appface = ?, apphead = ? WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            for(int i = 0; i< appearanceBytes.length; i++){
+                ps.setByte(i + 1, appearanceBytes[i]);
+            }
+            ps.setInt(6, characterID);
+            ps.execute();
+        }
+        catch (Exception e){
+            Main.LogError("Database.UpdateCharacterAppearance(): " + e.getMessage());
+        }
     }
 
     public static byte[] GetCharactersOfAccount(int accountID){

@@ -18,7 +18,7 @@ public class ModelBuilder : MonoBehaviour
     public const byte IndexModelSkin = 1;
     public const byte IndexModelHair = 2;
     public const byte IndexModelFace = 3;
-    public const byte IndexModelHead = 3;
+    public const byte IndexModelHead = 4;
 
     private GameObject[] _maleLightBodies;
     private GameObject[] _femaleLightBodies;

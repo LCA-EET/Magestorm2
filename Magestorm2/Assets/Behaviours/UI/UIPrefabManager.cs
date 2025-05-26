@@ -14,6 +14,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabCharacterModelBuilder;
     public GameObject PrefabJoinMatch;
     public GameObject PrefabLoginScreen;
+    public GameObject PrefabAppearanceChooser;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -36,6 +37,10 @@ public class UIPrefabManager : MonoBehaviour
         {
             Destroy(_poppedObjects.Dequeue());
         }
+    }
+    public void InstantiateAppearanceChooser()
+    {
+        AddToStack(Instantiate(PrefabAppearanceChooser));
     }
     public void InstantiateLoginForm()
     {

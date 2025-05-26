@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class UIJoinMatch : ValidatableForm
@@ -5,8 +6,11 @@ public class UIJoinMatch : ValidatableForm
     public TeamPlayerList ChaosPlayerList;
     public TeamPlayerList BalancePlayerList;
     public TeamPlayerList OrderPlayerList;
-
+    public TMP_Text MatchCreatorText;
+    public TMP_Text MatchIDText;
+    public TMP_Text MatchLevelText;
     private Team _selectedTeam;
+    private ListedMatch _match;
 
     private void Awake()
     {
@@ -19,6 +23,10 @@ public class UIJoinMatch : ValidatableForm
     void Start()
     {
         AssociateFormToButtons();
+        _match = (ListedMatch)SharedFunctions.Params[0];
+        MatchIDText.text = _match.MatchID.ToString();
+        //MatchLevelText.text = _match..ToString();
+        MatchCreatorText.text = _match.CreatorName.ToString();
     }
 
     // Update is called once per frame

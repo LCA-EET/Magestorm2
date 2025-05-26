@@ -41,17 +41,6 @@ public class UIModelPreview : ValidatableForm
     {
         
     }
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        switch (buttonType)
-        {
-            case ButtonType.Submit:
-                break;
-            case ButtonType.Cancel:
-                CloseForm();
-                break;
-        }
-    }
     private void RebuildModel()
     {
         Dictionary<byte, GameObject[]> _bodyParts = ComponentRegister.ModelBuilder.GetOptions(SexSelector.SelectedIndex, SkinSelector.SelectedIndex);

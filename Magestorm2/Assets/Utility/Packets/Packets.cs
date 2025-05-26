@@ -20,6 +20,26 @@ public static class Packets
     {
         return new ArraySegment<byte>(received, 17, DeterminePayloadLength(received)).ToArray();
     }
+    public static byte[] UpdateAppearancePacket(byte[] appearaneBytes, int characterID)
+    {
+        byte[] unencrypted = new byte[14];
+        unencrypted[0] = OpCode_Send.UpdateAppearance;
+        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
+        appearaneBytes.CopyTo(unencrypted, 9);
+        return unencrypted;
+    }
+    public static byte[] NameCheckPacket(string name)
+    { 
+        byte[] nameBytes = ByteUtils.UTF8ToBytes(name);
+        byte nameLength = (byte)nameBytes.Length;
+        byte[] unencrypted = new byte[6 + nameLength];
+        unencrypted[0] = OpCode_Send.NameCheck;
+        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        unencrypted[5] = nameLength;
+        nameBytes.CopyTo(unencrypted, 6);
+        return unencrypted;
+    }
     public static byte[] MatchDetailsPacket(MatchEntry matchDetails)
     {
         byte[] unencrypted = new byte[6];
