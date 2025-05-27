@@ -23,7 +23,7 @@ public class Match {
         _creatorID = creatorID;
         _sceneID = sceneID;
         _creationTime = creationTime;
-        _expirationTime = creationTime + 3600000; // one hour
+        _expirationTime = creationTime + (3600000 / 60); // one hour
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 +  nameBytesLength + 1];
@@ -104,5 +104,11 @@ public class Match {
             _nextPlayerID ++;
             return toReturn;
         }
+    }
+    public long GetExpiration(){
+        return _expirationTime;
+    }
+    public void MarkExpired(){
+        MatchManager.RemoveMatch(_matchID);
     }
 }

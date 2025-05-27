@@ -1268,6 +1268,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1475775636425171380, guid: 2db3754e7615cce4aa84ec63567187da, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5112922162986061008, guid: 2db3754e7615cce4aa84ec63567187da, type: 3}
       propertyPath: m_Name
       value: LevelEntry_Header

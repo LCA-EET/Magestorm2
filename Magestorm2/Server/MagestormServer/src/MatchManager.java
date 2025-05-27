@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchManager{
@@ -100,5 +101,18 @@ public class MatchManager{
             return _activeMatches.get(matchID);
         }
         return null;
+    }
+
+    public static void RemoveMatch(byte matchID){
+        _activeMatches.remove(matchID);
+        UpdatesNeeded = true;
+    }
+
+    public static ArrayList<Match> GetMatches(){
+        ArrayList<Match> toReturn = new ArrayList<>();
+        for(Match match : _activeMatches.values()){
+            toReturn.add(match);
+        }
+        return toReturn;
     }
 }

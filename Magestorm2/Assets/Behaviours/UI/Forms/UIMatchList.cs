@@ -48,6 +48,7 @@ public class UIMatchList : ValidatableForm
         }
         else
         {
+            Debug.Log("Requesting match details: " + selected.MatchID);
             Game.SendBytes(Packets.MatchDetailsPacket(selected.MatchID));
             //SharedFunctions.Params = new object[] { selected.Match };
             //ComponentRegister.UIPrefabManager.InstantiateJoinMatch();
@@ -122,6 +123,7 @@ public class UIMatchList : ValidatableForm
                     index++;
                 }
                 ClearEntries(index);
+                MatchSelectionGroup.DeselectAll();
             }
             else
             {

@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class MatchMonitor extends Thread{
 
     public MatchMonitor(){
@@ -6,6 +9,7 @@ public class MatchMonitor extends Thread{
     public void run(){
         while(Main.Running){
             try {
+                CheckForExpiration();
                 if(MatchManager.UpdatesNeeded){
                     MatchManager.NotifySubscribers();
                 }
@@ -15,4 +19,15 @@ public class MatchMonitor extends Thread{
             }
         }
     }
+    private void CheckForExpiration()
+    {
+        long currentTime = System.currentTimeMillis();
+        ArrayList<Match> activeMatches = MatchManager.GetMatches();
+        for(Match match : activeMatches){
+            if(currentTime >= match.GetExpiration()){
+                match.MarkExpired();
+            }
+        }
+    }
+
 }
