@@ -8,11 +8,14 @@ public class ByteUtils {
     private static final ByteOrder _order = ByteOrder.LITTLE_ENDIAN;
     private static ByteBuffer _intBuffer;
     private static ByteBuffer _longBuffer;
+    private static ByteBuffer _floatBuffer;
     public static void init(){
         _intBuffer = ByteBuffer.allocate(4);
         _intBuffer.order(_order);
         _longBuffer = ByteBuffer.allocate(8);
         _longBuffer.order(_order);
+        _floatBuffer = ByteBuffer.allocate(4);
+        _floatBuffer.order(_order);
     }
 
     public static int ExtractInt(byte[] decrypted, int index){
@@ -21,6 +24,10 @@ public class ByteUtils {
 
     public static byte[] IntToByteArray(int value) {
         return _intBuffer.putInt(0, value).array();
+    }
+
+    public static byte[] FloatToByteArray(float value){
+        return  _floatBuffer.putFloat(value).array();
     }
 
     public static byte[] LongToByteArray(long value){

@@ -25,7 +25,7 @@ public class PregamePacketProcessor implements PacketProcessor
         byte[] decrypted = Cryptographer.Decrypt(receivedBytes);
         byte opCode = decrypted[0];
         Main.LogMessage("OpCode: " + opCode);
-        switch (opCode){
+        switch (opCode) {
             case OpCode_Receive.LogIn:
                 HandleLogInPacket(decrypted, rc);
                 break;
@@ -65,12 +65,28 @@ public class PregamePacketProcessor implements PacketProcessor
             case OpCode_Receive.UpdateAppearance:
                 HandleAppearanceUpdatePacket(decrypted);
                 break;
+            case OpCode_Receive.JoinMatch:
+                HandleJoinMatchPacket(decrypted);
+                break;
         }
     }
     private int IsLoggedIn(byte[] decrypted){
         int accountID = ByteUtils.ExtractInt(decrypted, 1);
         return GameServer.IsLoggedIn(accountID) ? accountID: 0;
     }
+    private void HandleJoinMatchPacket(byte[] decrypted)
+    {
+        int accountID = IsLoggedIn(decrypted);
+        if(accountID > 0){
+            byte matchID = decrypted[5];
+            byte teamID = decrypted[6];
+            Match toJoin = MatchManager.GetMatch(matchID);
+            if(toJoin != null){
+                toJoin.JoinMatch(GameServer.GetClient(accountID), teamID);
+            }
+        }
+    }
+
     public void HandleAppearanceUpdatePacket(byte[] decrypted){
         if(IsLoggedIn(decrypted) > 0){
             int characterID = ByteUtils.ExtractInt(decrypted, 5);

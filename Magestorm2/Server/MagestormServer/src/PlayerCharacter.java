@@ -10,18 +10,18 @@ public class PlayerCharacter {
     private byte _charisma;
     private byte _wisdom;
     private byte _intellect;
-    private byte _appsex;
-    private byte _appskin;
-    private byte _apphair;
-    private byte _appface;
-    private byte _apphead;
     private byte[] _characterBytes;
-    private byte[] _nameBytes;
-    private byte[] _nameLevelClass;
+    private final byte[] _nameBytes;
+    private final byte[] _nameLevelClass;
+    private final byte[] _appearanceBytes;
+    private Vector3 _position;
     private final int _indexExperience = 17;
     private final int _indexLevel = 16;
+    private byte[] _matchEntryBytes;
+
 
     public PlayerCharacter(byte[] fetched){
+        _position = new Vector3();
         _characterBytes = fetched;
         _characterID = ByteUtils.ExtractInt(fetched, 0);
         _characterClass = fetched[4];
@@ -31,11 +31,12 @@ public class PlayerCharacter {
         _intellect = fetched[8];
         _charisma = fetched[9];
         _wisdom = fetched[10];
-        _appsex = fetched[11];
-        _appskin = fetched[12];
-        _apphair = fetched[13];
-        _appface = fetched[14];
-        _apphead = fetched[15];
+        _appearanceBytes = new byte[5];
+        _appearanceBytes[0] = fetched[11];
+        _appearanceBytes[1] = fetched[12];
+        _appearanceBytes[2] = fetched[13];
+        _appearanceBytes[3] = fetched[14];
+        _appearanceBytes[4] = fetched[15];
         _level = fetched[_indexLevel];
         _experience = ByteUtils.ExtractInt(fetched, _indexExperience);
         byte nameLength = fetched[21];
@@ -48,6 +49,20 @@ public class PlayerCharacter {
         _nameLevelClass[2] = nameLength;
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
         CharacterManager.AddToCache(this);
+        BuildMatchEntryBytes();
+    }
+    private void BuildMatchEntryBytes(){
+        int totalLength = 0;
+        totalLength += _nameLevelClass.length;
+        totalLength += 5; // appearance
+        totalLength += 12; // position;
+        _matchEntryBytes = new byte[totalLength];
+        int index = 0;
+        System.arraycopy(_nameLevelClass, 0, _matchEntryBytes, 0, _nameLevelClass.length);
+        index+= _nameLevelClass.length;
+        System.arraycopy(_appearanceBytes, 0, _matchEntryBytes, index, 5);
+        index += 5;
+        System.arraycopy(_position.GetPosition(), 0, _matchEntryBytes, index, 12);
     }
     public void UpdateExperience(int experience){
         _experience = experience;
@@ -71,6 +86,12 @@ public class PlayerCharacter {
     }
     public byte[] GetNameBytes(){
         return _nameBytes;
+    }
+    public byte[] GetAppearanceBytes(){
+        return _appearanceBytes;
+    }
+    public byte[] GetMatchEntryBytes(){
+        return _matchEntryBytes;
     }
 
 }

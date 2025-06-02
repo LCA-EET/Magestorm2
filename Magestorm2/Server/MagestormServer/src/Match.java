@@ -67,7 +67,8 @@ public class Match {
         return _matchBytes;
     }
     public void JoinMatch(RemoteClient rc, byte teamID){
-        rc.AssignToMatch(_matchID, teamID, ObtainNextPlayerID());
+        MatchTeam matchTeam = _matchTeams.get(teamID);
+        matchTeam.AddPlayer(rc.GetActiveCharacter());
     }
     public byte[] PlayersInMatch(byte opCode){
         ArrayList<byte[]> teamBytes = new ArrayList<>();

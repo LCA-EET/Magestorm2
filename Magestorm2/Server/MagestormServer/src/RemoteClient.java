@@ -54,9 +54,6 @@ public class RemoteClient {
     public boolean IsSubscribedToMatches(){
         return _subscribedToMatches;
     }
-    public void AssignToMatch(byte matchID, byte teamID, byte idInMatch){
-
-    }
     public PlayerCharacter GetActiveCharacter(){
         return _activeCharacter;
     }
