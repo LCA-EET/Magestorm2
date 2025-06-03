@@ -15,4 +15,5 @@ public static class OpCode_Send
     public const byte RequestMatchDetails = 11;
     public const byte NameCheck = 12;
     public const byte UpdateAppearance = 13;
+    public const byte JoinMatch = 14;
 }

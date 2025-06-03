@@ -20,5 +20,7 @@
     BannedForCheating = 18,
     BannedForBehavior = 19,
     MatchDetails = 20,
-    NameCheckResult = 21
+    NameCheckResult = 21,
+    MatchEntryPacket = 22,
+    MatchIsFullPacket = 23
 }

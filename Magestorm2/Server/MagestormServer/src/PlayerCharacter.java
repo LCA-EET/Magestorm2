@@ -53,12 +53,15 @@ public class PlayerCharacter {
     }
     private void BuildMatchEntryBytes(){
         int totalLength = 0;
+        totalLength += 4;
         totalLength += _nameLevelClass.length;
         totalLength += 5; // appearance
         totalLength += 12; // position;
         _matchEntryBytes = new byte[totalLength];
         int index = 0;
-        System.arraycopy(_nameLevelClass, 0, _matchEntryBytes, 0, _nameLevelClass.length);
+        System.arraycopy(ByteUtils.IntToByteArray(_characterID), 0, _matchEntryBytes, index, 4);
+        index+=4;
+        System.arraycopy(_nameLevelClass, 0, _matchEntryBytes, index, _nameLevelClass.length);
         index+= _nameLevelClass.length;
         System.arraycopy(_appearanceBytes, 0, _matchEntryBytes, index, 5);
         index += 5;

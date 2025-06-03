@@ -20,6 +20,15 @@ public static class Packets
     {
         return new ArraySegment<byte>(received, 17, DeterminePayloadLength(received)).ToArray();
     }
+    public static byte[] JoinMatchPacket(byte matchID, byte teamID)
+    {
+        byte[] unencrypted = new byte[7];
+        unencrypted[0] = OpCode_Send.JoinMatch;
+        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        unencrypted[5] = matchID;
+        unencrypted[6] = teamID;
+        return unencrypted;
+    }
     public static byte[] UpdateAppearancePacket(byte[] appearaneBytes, int characterID)
     {
         byte[] unencrypted = new byte[14];

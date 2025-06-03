@@ -7,6 +7,7 @@ using System.Text;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class PregamePacketProcessor : MonoBehaviour
@@ -107,10 +108,18 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.NameCheckResult:
                             HandleNameCheckResultPacket(decryptedPayload);
                             break;
+                        case OpCode_Receive.MatchIsFullPacket:
+                            HandleMatchIsFullPacket();
+                            break;
+
                     }
                 }
             }
         }
+    }
+    private void HandleMatchIsFullPacket()
+    {
+        Game.MessageBoxReference(100);
     }
     private void HandleNameCheckResultPacket(byte[] decrypted)
     {

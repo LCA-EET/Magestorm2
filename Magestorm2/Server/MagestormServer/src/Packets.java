@@ -18,6 +18,7 @@ public class Packets {
     private static final byte[] MatchStillHasPlayers_Bytes = new byte[]{OpCode_Send.MatchStillHasPlayers};
     private static final byte[] BannedForCheating_Bytes = new byte[]{OpCode_Send.BannedForCheating};
     private static final byte[] BannedForBehavior_Bytes = new byte[]{OpCode_Send.BannedForBehavior};
+    private static final byte[] MatchIsFull_Bytes = new byte[]{OpCode_Send.MatchIsFullPacket};
 
     public static byte[] BannedForCheatingPacket() {return Cryptographer.Encrypt(BannedForCheating_Bytes);}
     public static byte[] BannedForBehaviorPacket() {return Cryptographer.Encrypt(BannedForBehavior_Bytes);}
@@ -53,6 +54,19 @@ public class Packets {
     public static byte[] MatchLimitReachedPacket() {return Cryptographer.Encrypt(MatchLimitReached_Bytes);}
 
     public static byte[] LevelListPacket(){return Cryptographer.Encrypt(GameServer.LevelList());}
+
+    public static byte[] MatchIsFullPacket(){
+        return Cryptographer.Encrypt(MatchIsFull_Bytes);
+    }
+
+    public static byte[] MatchEntryPacket(byte sceneID, byte teamID, byte playerID){
+        byte[] toEncrypt = new byte[4];
+        toEncrypt[0] = OpCode_Send.MatchEntryPacket;
+        toEncrypt[1] = sceneID;
+        toEncrypt[2] = teamID;
+        toEncrypt[3] = playerID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
 
     public static byte[] NameCheckResults(byte isUsed){
         byte[] toEncrypt = new byte[2];

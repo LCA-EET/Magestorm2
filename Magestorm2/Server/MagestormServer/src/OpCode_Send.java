@@ -20,4 +20,6 @@ public class OpCode_Send{
     public static final byte BannedForBehavior = 19;
     public static final byte MatchDetails = 20;
     public static final byte NameCheckResult = 21;
+    public static final byte MatchEntryPacket = 22;
+    public static final byte MatchIsFullPacket = 23;
 }

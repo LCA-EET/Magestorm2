@@ -37,18 +37,20 @@ public class UIJoinMatch : ValidatableForm
     {
         
     }
-
-    protected override bool ValidateForm()
+    private void JoinMatch()
     {
-        if(_selectedTeam == Team.Neutral)
+        if (ValidateForm())
         {
-            Game.MessageBoxReference(82);
+            Game.SendBytes(Packets.JoinMatchPacket(_match.MatchID, (byte)_selectedTeam));
         }
         else
         {
-
+            Game.MessageBoxReference(82);
         }
-        return base.ValidateForm();
+    }
+    protected override bool ValidateForm()
+    {
+        return _selectedTeam > Team.Neutral;
     }
     private void SelectTeam(Team team)
     {
@@ -57,6 +59,7 @@ public class UIJoinMatch : ValidatableForm
         OrderPlayerList.MarkSelected(team);
         _selectedTeam = team;
     }
+    
     public override void ButtonPressed(ButtonType buttonType)
     {
         switch (buttonType)
@@ -65,7 +68,7 @@ public class UIJoinMatch : ValidatableForm
                 CloseForm();
                 break;
             case ButtonType.Submit:
-                ValidateForm();
+                JoinMatch();
                 break;
             case ButtonType.Misc0:
                 SelectTeam(Team.Chaos);

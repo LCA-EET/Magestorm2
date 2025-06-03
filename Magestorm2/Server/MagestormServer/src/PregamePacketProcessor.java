@@ -83,6 +83,7 @@ public class PregamePacketProcessor implements PacketProcessor
             Match toJoin = MatchManager.GetMatch(matchID);
             if(toJoin != null){
                 toJoin.JoinMatch(GameServer.GetClient(accountID), teamID);
+
             }
         }
     }

@@ -13,4 +13,5 @@ public class OpCode_Receive {
     public static final byte NameCheck = 12;
     public static final byte UpdateAppearance = 13;
     public static final byte JoinMatch = 14;
+    public static final byte RequestMatchPlayers = 15;
 }
