@@ -12,7 +12,7 @@ public class MatchTeam {
     private boolean _listChanged;
     private byte _teamID;
     private byte[] _playerListBytes;
-    private final ConcurrentHashMap<Byte, PlayerCharacter> _teamPlayers;
+    private final ConcurrentHashMap<Byte, MatchCharacter> _teamPlayers;
 
     public MatchTeam(byte teamID)
     {
@@ -25,7 +25,7 @@ public class MatchTeam {
         return _teamPlayers.containsKey(idToCheck);
     }
 
-    public void AddPlayer(byte id, PlayerCharacter toAdd){
+    public void AddPlayer(byte id, MatchCharacter toAdd){
         _teamPlayers.put(id, toAdd);
         _listChanged = true;
     }
@@ -51,7 +51,7 @@ public class MatchTeam {
         int length = 1;
         ArrayList<byte[]> players = new ArrayList<>();
         for(MatchCharacter player : _teamPlayers.values()){
-            byte[] playerBytes = player.GetNLCTBytes();
+            byte[] playerBytes = player.GetINLCTBytes();
             players.add(playerBytes);
             length += playerBytes.length;
         }

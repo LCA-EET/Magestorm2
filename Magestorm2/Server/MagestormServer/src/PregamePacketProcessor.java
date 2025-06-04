@@ -4,23 +4,16 @@ import java.util.Base64;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class PregamePacketProcessor implements PacketProcessor
+public class PregamePacketProcessor extends UDPProcessor
 {
-    private UDPClient _udpClient;
-    private PacketSender _sender;
-    private int _serverPort;
-    private ConcurrentLinkedQueue<OutgoingPacket> _outgoingPackets;
 
-    public PregamePacketProcessor(){
-        _serverPort = ServerParams.ListeningPort;
-        _outgoingPackets = new ConcurrentLinkedQueue<>();
-        _udpClient = new UDPClient(_serverPort, this);
-        _sender = new PacketSender(_udpClient, this);
+    public PregamePacketProcessor(int port){
+        super(port);
     }
 
     @Override
-    public void ProcessPacket(DatagramPacket received) {
-        RemoteClient rc = new RemoteClient(received, _serverPort);
+    protected void ProcessPacket(DatagramPacket received) {
+        RemoteClient rc = new RemoteClient(received, _listeningPort);
         byte[] receivedBytes = received.getData();
         byte[] decrypted = Cryptographer.Decrypt(receivedBytes);
         byte opCode = decrypted[0];
@@ -268,19 +261,5 @@ public class PregamePacketProcessor implements PacketProcessor
     }
     public void EnqueueForSend(byte[] data, RemoteClient[] rc){
         _outgoingPackets.add(new OutgoingPacket(data, rc));
-    }
-
-    @Override
-    public ArrayList<OutgoingPacket> OutgoingPackets() {
-        ArrayList<OutgoingPacket> toReturn = new ArrayList<>();
-        while(!_outgoingPackets.isEmpty()){
-            toReturn.add(_outgoingPackets.remove());
-        }
-        return toReturn;
-    }
-
-    @Override
-    public boolean HasOutgoingPackets(){
-        return !_outgoingPackets.isEmpty();
     }
 }

@@ -14,6 +14,8 @@ public class Match {
     private byte _lastIndex;
     private ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
     private byte _nextPlayerID;
+    private final int _matchPort;
+    private final InGamePacketProcessor _processor;
 
     public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime){
         InitTeams();
@@ -24,6 +26,7 @@ public class Match {
         _sceneID = sceneID;
         _creationTime = creationTime;
         _expirationTime = creationTime + (3600000 / 60); // one hour
+        _matchPort = GameServer.GetNextMatchPort();
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 +  nameBytesLength + 1];
@@ -42,6 +45,7 @@ public class Match {
         _matchBytes[index] = nameBytesLength;
         index++;
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
+        _processor = new InGamePacketProcessor(_matchPort);
     }
     private void InitTeams(){
         _matchTeams = new ConcurrentHashMap<>();
@@ -69,7 +73,8 @@ public class Match {
     public void JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
         MatchTeam matchTeam = _matchTeams.get(teamID);
-        matchTeam.AddPlayer(playerID, rc.GetActiveCharacter());
+        MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID);
+        matchTeam.AddPlayer(playerID, toAdd);
         GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID), rc);
     }
     public byte[] PlayersInMatch(byte opCode){
@@ -113,5 +118,6 @@ public class Match {
     }
     public void MarkExpired(){
         MatchManager.RemoveMatch(_matchID);
+        _processor.TerminateProcessor();
     }
 }

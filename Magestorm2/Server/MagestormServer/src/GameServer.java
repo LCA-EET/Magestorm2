@@ -1,10 +1,14 @@
 import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GameServer extends Thread {
     public static final long TimeOut = 600000; // 10 minutes
     public static final long Tick = 10;
+    private static int _nextMatchPort;
+    private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     private static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
@@ -16,14 +20,24 @@ public class GameServer extends Thread {
         _loggedInClients = new ConcurrentHashMap<Integer, RemoteClient>();
        MatchManager.init();
        _rcMonitor = new RemoteClientMonitor();
-       _pgProcessor = new PregamePacketProcessor();
+       _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
        _levelData = Database.GetLevelsList((byte)1);
+       _usedMatchPorts = new ConcurrentSkipListSet<>();
     }
 
     public static boolean IsLoggedIn(int accountID){
         return _loggedInClients.containsKey(accountID);
     }
 
+    public static int GetNextMatchPort()
+    {
+        int nextAvailablePort = ServerParams.ListeningPort + 1;
+        while(_usedMatchPorts.contains(nextAvailablePort)){
+            nextAvailablePort++;
+        }
+        _usedMatchPorts.add(nextAvailablePort);
+        return nextAvailablePort;
+    }
     public static boolean IsLoggedIn(byte[] decrypted){
         return _loggedInClients.containsKey(ByteUtils.ExtractInt(decrypted,0));
     }

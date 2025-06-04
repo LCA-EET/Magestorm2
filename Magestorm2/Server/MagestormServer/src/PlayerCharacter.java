@@ -20,6 +20,22 @@ public class PlayerCharacter {
     private byte[] _matchEntryBytes;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public PlayerCharacter(byte[] fetched){
         _position = new Vector3();
         _characterBytes = fetched;

@@ -6,9 +6,9 @@ public class UDPClient extends Thread{
     private boolean _listening;
     private final int _localPort;
     private final int _bufferSize = 256;
-    private PacketProcessor _processor;
+    private UDPProcessor _processor;
 
-    public UDPClient(int localPort, PacketProcessor processor){
+    public UDPClient(int localPort, UDPProcessor processor){
         _listening = true;
         _localPort = localPort;
         _processor = processor;
