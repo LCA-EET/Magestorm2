@@ -10,6 +10,7 @@ public class GameServer extends Thread {
     private static int _nextMatchPort;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     private static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
+    private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
@@ -17,7 +18,8 @@ public class GameServer extends Thread {
        ByteUtils.init();
        GameUtils.init();
        CharacterManager.init();
-        _loggedInClients = new ConcurrentHashMap<Integer, RemoteClient>();
+        _loggedInClients = new ConcurrentHashMap<>();
+        _maxPlayerData = new ConcurrentHashMap<>();
        MatchManager.init();
        _rcMonitor = new RemoteClientMonitor();
        _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
@@ -88,5 +90,11 @@ public class GameServer extends Thread {
 
     public static byte[] LevelList(){
         return _levelData;
+    }
+    public static void RecordMaxPlayerData(byte sceneID, byte maxPlayers){
+        _maxPlayerData.put(sceneID, maxPlayers);
+    }
+    public static byte RetrieveMaxPlayerData(byte sceneID){
+        return _maxPlayerData.get(sceneID);
     }
 }

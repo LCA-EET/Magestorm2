@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using Unity.Collections;
 
 public static class OpCode_Send
 {
@@ -16,4 +17,9 @@ public static class OpCode_Send
     public const byte NameCheck = 12;
     public const byte UpdateAppearance = 13;
     public const byte JoinMatch = 14;
+
+    public const byte ReadyForPlayerData = 100;
+
+
 }
+        

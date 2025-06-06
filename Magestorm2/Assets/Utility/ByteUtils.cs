@@ -21,5 +21,6 @@ public static class ByteUtils
     {
         return Encoding.UTF8.GetBytes(utf8String);
     }
+
 }
 

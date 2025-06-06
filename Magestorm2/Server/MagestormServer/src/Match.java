@@ -1,6 +1,4 @@
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Match {
@@ -16,9 +14,13 @@ public class Match {
     private byte _nextPlayerID;
     private final int _matchPort;
     private final InGamePacketProcessor _processor;
+    private final byte _maxPlayers;
+    private byte _numPlayers;
 
     public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime){
         InitTeams();
+        _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
+        _numPlayers = 0;
         _creatorName = creatorName;
         _nextPlayerID = 0;
         _matchID = matchID;
@@ -60,22 +62,26 @@ public class Match {
         return _creatorID;
     }
     public byte NumPlayersInMatch(){
-        byte totalPlayers = 0;
-        for(MatchTeam team : _matchTeams.values()){
-            totalPlayers += team.NumPlayers();
-        }
-        return totalPlayers;
+        return _numPlayers;
     }
     public byte[] ToByteArray(){
         _matchBytes[_lastIndex] = NumPlayersInMatch();
         return _matchBytes;
+    }
+    public boolean HasRoomForAnotherPlayer(){
+        return _numPlayers < _maxPlayers;
+    }
+    public void LeaveMatch(RemoteClient rc){
+        _numPlayers--;
+        // TODO
     }
     public void JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
         MatchTeam matchTeam = _matchTeams.get(teamID);
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID);
         matchTeam.AddPlayer(playerID, toAdd);
-        GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID), rc);
+        _numPlayers++;
+        GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort), rc);
     }
     public byte[] PlayersInMatch(byte opCode){
         ArrayList<byte[]> teamBytes = new ArrayList<>();

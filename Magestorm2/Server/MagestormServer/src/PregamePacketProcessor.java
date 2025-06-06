@@ -2,7 +2,6 @@ import java.net.DatagramPacket;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class PregamePacketProcessor extends UDPProcessor
 {
@@ -19,47 +18,47 @@ public class PregamePacketProcessor extends UDPProcessor
         byte opCode = decrypted[0];
         Main.LogMessage("OpCode: " + opCode);
         switch (opCode) {
-            case OpCode_Receive.LogIn:
+            case Pregame_OpCode_Receive.LogIn:
                 HandleLogInPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.CreateAccount:
+            case Pregame_OpCode_Receive.CreateAccount:
                 HandleCreateAccountPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.CreateCharacter:
+            case Pregame_OpCode_Receive.CreateCharacter:
                 HandleCreateCharacterPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.LogOut:
+            case Pregame_OpCode_Receive.LogOut:
                 HandleLogOutPacket(decrypted);
                 break;
-            case OpCode_Receive.DeleteCharacter:
+            case Pregame_OpCode_Receive.DeleteCharacter:
                 HandleDeleteCharacterPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.SubscribeToMatches:
+            case Pregame_OpCode_Receive.SubscribeToMatches:
                 HandleMatchSubscribePacket(decrypted, true);
                 break;
-            case OpCode_Receive.UnsubscribeFromMatches:
+            case Pregame_OpCode_Receive.UnsubscribeFromMatches:
                 HandleMatchSubscribePacket(decrypted, false);
                 break;
-            case OpCode_Receive.CreateMatch:
+            case Pregame_OpCode_Receive.CreateMatch:
                 HandleMatchCreatedPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.DeleteMatch:
+            case Pregame_OpCode_Receive.DeleteMatch:
                 HandleDeleteMatchPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.RequestLevelsList:
+            case Pregame_OpCode_Receive.RequestLevelsList:
                 HandleLevelListPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.RequestMatchDetails:
+            case Pregame_OpCode_Receive.RequestMatchDetails:
                 HandleMatchDetailsPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.NameCheck:
+            case Pregame_OpCode_Receive.NameCheck:
                 HandleNameCheckPacket(decrypted, rc);
                 break;
-            case OpCode_Receive.UpdateAppearance:
+            case Pregame_OpCode_Receive.UpdateAppearance:
                 HandleAppearanceUpdatePacket(decrypted);
                 break;
-            case OpCode_Receive.JoinMatch:
-                HandleJoinMatchPacket(decrypted);
+            case Pregame_OpCode_Receive.JoinMatch:
+                HandleJoinMatchPacket(decrypted, rc);
                 break;
         }
     }
@@ -67,7 +66,7 @@ public class PregamePacketProcessor extends UDPProcessor
         int accountID = ByteUtils.ExtractInt(decrypted, 1);
         return GameServer.IsLoggedIn(accountID) ? accountID: 0;
     }
-    private void HandleJoinMatchPacket(byte[] decrypted)
+    private void HandleJoinMatchPacket(byte[] decrypted, RemoteClient rc)
     {
         int accountID = IsLoggedIn(decrypted);
         if(accountID > 0){
@@ -75,8 +74,12 @@ public class PregamePacketProcessor extends UDPProcessor
             byte teamID = decrypted[6];
             Match toJoin = MatchManager.GetMatch(matchID);
             if(toJoin != null){
-                toJoin.JoinMatch(GameServer.GetClient(accountID), teamID);
-
+                if(toJoin.HasRoomForAnotherPlayer()){
+                    toJoin.JoinMatch(GameServer.GetClient(accountID), teamID);
+                }
+                else{
+                    EnqueueForSend(Packets.MatchIsFullPacket(), rc);
+                }
             }
         }
     }
@@ -245,7 +248,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 Main.LogMessage("Account " + username + " does not already exist.");
                 long token = Cryptographer.RandomToken();
                 boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
-                byte[] toSend = accountCreated?Packets.AccountCreatedPacket():Packets.CreationFailedPacket();
+                byte[] toSend = accountCreated? Packets.AccountCreatedPacket(): Packets.CreationFailedPacket();
                 EnqueueForSend(toSend, rc);
                 String activationMessage = "Hello<br><br>Click the following link to activate your Magus account:<br><a href='https://www.fosiemods.net/ms2.php?appid=ms2&func=activate&activationtoken=" + token + "'>Activation Link</a>";
                 Main.Mailer.SendMail(email, "Magus Account Activation Link", activationMessage, "Magus Activation");

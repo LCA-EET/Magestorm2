@@ -21,9 +21,15 @@ public static class ComponentRegister
     private static UIJoinMatch _uiJoinMatch;
     private static Transform _uiParent;
     private static PregamePacketProcessor _pregamePacketProcessor;
+    private static InGamePacketProcessor _inGamePacketProcessor;
     private static AudioPlayer _audioPlayer;
     private static ModelBuilder _modelBuilder;
 
+    public static InGamePacketProcessor InGamePacketProcessor
+    {
+        get { return _inGamePacketProcessor; }
+        set { _inGamePacketProcessor = value; }
+    }
     public static UIJoinMatch UIJoinMatch
     {
         get { return _uiJoinMatch; }

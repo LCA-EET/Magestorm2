@@ -111,11 +111,23 @@ public class PregamePacketProcessor : MonoBehaviour
                         case OpCode_Receive.MatchIsFullPacket:
                             HandleMatchIsFullPacket();
                             break;
+                        case OpCode_Receive.MatchEntryPacket:
+                            HandleMatchEntryPacket(decryptedPayload);
+                            break;
 
                     }
                 }
             }
         }
+    }
+    private void HandleMatchEntryPacket(byte[] decrypted)
+    {
+        byte sceneID = decrypted[1];
+        byte teamID = decrypted[2];
+        byte playerID = decrypted[3];
+        int listeningPort = BitConverter.ToInt32(decrypted, 4);
+        SharedFunctions.Params = new object[] { teamID, playerID, listeningPort };
+        SceneManager.LoadScene(sceneID.ToString());
     }
     private void HandleMatchIsFullPacket()
     {
