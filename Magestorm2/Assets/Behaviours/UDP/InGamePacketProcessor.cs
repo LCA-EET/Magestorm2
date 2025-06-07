@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InGamePacketProcessor : MonoBehaviour
+public class InGamePacketProcessor : UDPProcessor
 {
     private int _listeningPort;
     private UDPGameClient _udp;
@@ -22,10 +22,5 @@ public class InGamePacketProcessor : MonoBehaviour
     {
         
     }
-
-    public void Init(int port)
-    {
-        _listeningPort = port;
-        _udp = UDPBuilder.GetClient(port);
-    }
+\\
 }
