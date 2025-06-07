@@ -146,6 +146,24 @@ public class Packets {
         return Cryptographer.Encrypt(new byte[]{Pregame_OpCode_Send.RemovedFromServer, reasonCode});
     }
 
+
+
+    /////////////////////// IN-GAME PACKETS ////////////////////////
+    public static byte[] PlayerDataPacket(byte[] dataForPlayer){
+        byte[] toReturn = new byte[dataForPlayer.length + 1];
+        toReturn[0] = InGame_OpCode_Send.PlayerData;
+        System.arraycopy(dataForPlayer, 0, toReturn, 1, dataForPlayer.length);
+        return toReturn;
+    }
+
+    /////////////////////// SHARED //////////////////////
+
+    public static byte[] ExtractBytes(byte[] decrypted, int index, int length){
+        byte[] toReturn = new byte[length];
+        System.arraycopy(decrypted, index, toReturn, 0, length);
+        return toReturn;
+    }
+
     public static ArrayList<byte[]> ExtractBytes(byte[] decrypted, int firstIndex){
         ArrayList<byte[]> toReturn = new ArrayList<>();
         int index = firstIndex;
@@ -159,13 +177,4 @@ public class Packets {
         }
         return toReturn;
     }
-
-
-
-    public static byte[] ExtractBytes(byte[] decrypted, int index, int length){
-        byte[] toReturn = new byte[length];
-        System.arraycopy(decrypted, index, toReturn, 0, length);
-        return toReturn;
-    }
-
 }

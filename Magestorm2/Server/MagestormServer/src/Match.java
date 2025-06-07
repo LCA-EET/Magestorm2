@@ -11,16 +11,16 @@ public class Match {
     private byte[] _matchBytes;
     private byte _lastIndex;
     private ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
+    private final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
     private byte _nextPlayerID;
     private final int _matchPort;
     private final InGamePacketProcessor _processor;
     private final byte _maxPlayers;
-    private byte _numPlayers;
 
     public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime){
         InitTeams();
+        _matchCharacters = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
-        _numPlayers = 0;
         _creatorName = creatorName;
         _nextPlayerID = 0;
         _matchID = matchID;
@@ -47,7 +47,7 @@ public class Match {
         _matchBytes[index] = nameBytesLength;
         index++;
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
-        _processor = new InGamePacketProcessor(_matchPort);
+        _processor = new InGamePacketProcessor(_matchPort, this);
     }
     private void InitTeams(){
         _matchTeams = new ConcurrentHashMap<>();
@@ -62,25 +62,21 @@ public class Match {
         return _creatorID;
     }
     public byte NumPlayersInMatch(){
-        return _numPlayers;
+        return (byte)_matchCharacters.size();
     }
     public byte[] ToByteArray(){
         _matchBytes[_lastIndex] = NumPlayersInMatch();
         return _matchBytes;
     }
     public boolean HasRoomForAnotherPlayer(){
-        return _numPlayers < _maxPlayers;
-    }
-    public void LeaveMatch(RemoteClient rc){
-        _numPlayers--;
-        // TODO
+        return NumPlayersInMatch() < _maxPlayers;
     }
     public void JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
         MatchTeam matchTeam = _matchTeams.get(teamID);
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID);
         matchTeam.AddPlayer(playerID, toAdd);
-        _numPlayers++;
+        _matchCharacters.put(playerID, toAdd);
         GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort), rc);
     }
     public byte[] PlayersInMatch(byte opCode){
@@ -95,6 +91,9 @@ public class Match {
         toReturn[0] = opCode;
         toReturn[1] = _matchID;
         return toReturn;
+    }
+    public byte[] PlayerData(byte idInMatch){
+        return _matchCharacters.get(idInMatch).GetINLCTABytes();
     }
     public byte ObtainNextPlayerID(){
         boolean idUsed = false;
@@ -125,5 +124,18 @@ public class Match {
     public void MarkExpired(){
         MatchManager.RemoveMatch(_matchID);
         _processor.TerminateProcessor();
+    }
+    public boolean IsPlayerOnTeam(byte idInMatch, byte teamID){
+        return _matchTeams.get(teamID).PlayerIDUsed(idInMatch);
+    }
+    public boolean IsPlayerVerified(byte playerID){
+        MatchCharacter toCheck = _matchCharacters.get(playerID);
+        if(toCheck != null){
+            return toCheck.IsVerified();
+        }
+        return false;
+    }
+    public void MarkPlayerVerified(byte playerID){
+        _matchCharacters.get(playerID).MarkVerified();
     }
 }

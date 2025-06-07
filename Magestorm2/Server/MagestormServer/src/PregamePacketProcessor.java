@@ -12,129 +12,122 @@ public class PregamePacketProcessor extends UDPProcessor
 
     @Override
     protected void ProcessPacket(DatagramPacket received) {
-        RemoteClient rc = new RemoteClient(received, _listeningPort);
-        byte[] receivedBytes = received.getData();
-        byte[] decrypted = Cryptographer.Decrypt(receivedBytes);
-        byte opCode = decrypted[0];
-        Main.LogMessage("OpCode: " + opCode);
-        switch (opCode) {
+        PreProcess(received);
+        switch (_opCode) {
             case Pregame_OpCode_Receive.LogIn:
-                HandleLogInPacket(decrypted, rc);
+                HandleLogInPacket();
                 break;
             case Pregame_OpCode_Receive.CreateAccount:
-                HandleCreateAccountPacket(decrypted, rc);
+                HandleCreateAccountPacket();
                 break;
             case Pregame_OpCode_Receive.CreateCharacter:
-                HandleCreateCharacterPacket(decrypted, rc);
+                HandleCreateCharacterPacket();
                 break;
             case Pregame_OpCode_Receive.LogOut:
-                HandleLogOutPacket(decrypted);
+                HandleLogOutPacket();
                 break;
             case Pregame_OpCode_Receive.DeleteCharacter:
-                HandleDeleteCharacterPacket(decrypted, rc);
+                HandleDeleteCharacterPacket();
                 break;
             case Pregame_OpCode_Receive.SubscribeToMatches:
-                HandleMatchSubscribePacket(decrypted, true);
+                HandleMatchSubscribePacket(true);
                 break;
             case Pregame_OpCode_Receive.UnsubscribeFromMatches:
-                HandleMatchSubscribePacket(decrypted, false);
+                HandleMatchSubscribePacket(false);
                 break;
             case Pregame_OpCode_Receive.CreateMatch:
-                HandleMatchCreatedPacket(decrypted, rc);
+                HandleMatchCreatedPacket();
                 break;
             case Pregame_OpCode_Receive.DeleteMatch:
-                HandleDeleteMatchPacket(decrypted, rc);
+                HandleDeleteMatchPacket();
                 break;
             case Pregame_OpCode_Receive.RequestLevelsList:
-                HandleLevelListPacket(decrypted, rc);
+                HandleLevelListPacket();
                 break;
             case Pregame_OpCode_Receive.RequestMatchDetails:
-                HandleMatchDetailsPacket(decrypted, rc);
+                HandleMatchDetailsPacket();
                 break;
             case Pregame_OpCode_Receive.NameCheck:
-                HandleNameCheckPacket(decrypted, rc);
+                HandleNameCheckPacket();
                 break;
             case Pregame_OpCode_Receive.UpdateAppearance:
-                HandleAppearanceUpdatePacket(decrypted);
+                HandleAppearanceUpdatePacket();
                 break;
             case Pregame_OpCode_Receive.JoinMatch:
-                HandleJoinMatchPacket(decrypted, rc);
+                HandleJoinMatchPacket();
                 break;
         }
     }
-    private int IsLoggedIn(byte[] decrypted){
-        int accountID = ByteUtils.ExtractInt(decrypted, 1);
-        return GameServer.IsLoggedIn(accountID) ? accountID: 0;
-    }
-    private void HandleJoinMatchPacket(byte[] decrypted, RemoteClient rc)
+
+    private void HandleJoinMatchPacket()
     {
-        int accountID = IsLoggedIn(decrypted);
+        int accountID = IsLoggedIn();
         if(accountID > 0){
-            byte matchID = decrypted[5];
-            byte teamID = decrypted[6];
+            byte matchID = _decrypted[5];
+            byte teamID = _decrypted[6];
             Match toJoin = MatchManager.GetMatch(matchID);
             if(toJoin != null){
                 if(toJoin.HasRoomForAnotherPlayer()){
                     toJoin.JoinMatch(GameServer.GetClient(accountID), teamID);
                 }
                 else{
-                    EnqueueForSend(Packets.MatchIsFullPacket(), rc);
+                    EnqueueForSend(Packets.MatchIsFullPacket(), _remote);
                 }
             }
         }
     }
 
-    public void HandleAppearanceUpdatePacket(byte[] decrypted){
-        if(IsLoggedIn(decrypted) > 0){
-            int characterID = ByteUtils.ExtractInt(decrypted, 5);
+    public void HandleAppearanceUpdatePacket(){
+        if(IsLoggedIn() > 0){
+            int characterID = ByteUtils.ExtractInt(_decrypted, 5);
             byte[] appearanceBytes = new byte[5];
-            System.arraycopy(decrypted, 9, appearanceBytes, 0, appearanceBytes.length);
+            System.arraycopy(_decrypted, 9, appearanceBytes, 0, appearanceBytes.length);
             Database.UpdateCharacterAppearance(characterID, appearanceBytes);
         }
     }
-    public void HandleNameCheckPacket(byte[] decrypted, RemoteClient rc){
-        if(IsLoggedIn(decrypted) > 0){
-            byte nameLength = decrypted[5];
-            String toCheck = ByteUtils.BytesToUTF8(decrypted, 6, nameLength);
-            EnqueueForSend(Packets.NameCheckResults(Database.CheckIfNameIsUsed(toCheck)), rc);
+    public void HandleNameCheckPacket(){
+        if(IsLoggedIn() > 0){
+            byte nameLength = _decrypted[5];
+            String toCheck = ByteUtils.BytesToUTF8(_decrypted, 6, nameLength);
+            EnqueueForSend(Packets.NameCheckResults(Database.CheckIfNameIsUsed(toCheck)), _remote);
         }
     }
-    public void HandleMatchDetailsPacket(byte[] decrypted, RemoteClient rc){
-        if(IsLoggedIn(decrypted) > 0){
-            byte matchID = decrypted[5];
+    public void HandleMatchDetailsPacket(){
+        if(IsLoggedIn() > 0){
+            byte matchID = _decrypted[5];
             Match match = MatchManager.GetMatch(matchID);
             if(match != null){
-                EnqueueForSend(Packets.MatchDetailsPacket(match), rc);
+                EnqueueForSend(Packets.MatchDetailsPacket(match), _remote);
             }
         }
     }
-    public void HandleLevelListPacket(byte[] decrypted, RemoteClient rc){
-        if(IsLoggedIn(decrypted) > 0){
-            EnqueueForSend(Packets.LevelListPacket(), rc);
+    public void HandleLevelListPacket(){
+        if(IsLoggedIn() > 0){
+            EnqueueForSend(Packets.LevelListPacket(), _remote);
         }
     }
-    public void HandleDeleteMatchPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = IsLoggedIn(decrypted);
+    public void HandleDeleteMatchPacket(){
+        int accountID = IsLoggedIn();
         if(accountID > 0){
-            MatchManager.DeleteMatch(accountID, rc);
+            MatchManager.DeleteMatch(accountID, _remote);
         }
     }
-    public void HandleMatchCreatedPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = IsLoggedIn(decrypted);
+    public void HandleMatchCreatedPacket(){
+        int accountID = IsLoggedIn();
         if(accountID > 0){
-            byte sceneID = decrypted[5];
+            byte sceneID = _decrypted[5];
             MatchManager.RequestMatchCreation(accountID, sceneID);
         }
     }
 
-    public void HandleMatchSubscribePacket(byte[] decrypted, boolean subscribe){
-        int accountID = ByteUtils.ExtractInt(decrypted,1);
-        int characterID = ByteUtils.ExtractInt(decrypted, 5);
+    public void HandleMatchSubscribePacket(boolean subscribe){
+        int accountID = ByteUtils.ExtractInt(_decrypted,1);
+        int characterID = ByteUtils.ExtractInt(_decrypted, 5);
         MatchManager.Subscribe(accountID, subscribe, characterID);
     }
 
-    public String[] LogInDetails(byte[] decrypted){
-        ArrayList<byte[]> toProcess = Packets.ExtractBytes(decrypted, 3);
+    public String[] LogInDetails(){
+        ArrayList<byte[]> toProcess = Packets.ExtractBytes(_decrypted, 3);
         byte[] userNameBytes = toProcess.get(0);
         byte[] pwHashBytes = toProcess.get(1);
         String[] toReturn = new String[2];
@@ -143,59 +136,59 @@ public class PregamePacketProcessor extends UDPProcessor
         return toReturn;
     }
 
-    private void HandleDeleteCharacterPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = IsLoggedIn(decrypted);
+    private void HandleDeleteCharacterPacket(){
+        int accountID = IsLoggedIn();
         if(accountID > 0){
-            int characterID = ByteUtils.ExtractInt(decrypted, 5);
+            int characterID = ByteUtils.ExtractInt(_decrypted, 5);
             Main.LogMessage("Deactivating character: " + characterID);
             Database.DeactivateCharacter(characterID, accountID);
-            EnqueueForSend(Packets.CharacterDeletedPacket(characterID), rc);
+            EnqueueForSend(Packets.CharacterDeletedPacket(characterID), _remote);
         }
     }
 
-    private void HandleLogOutPacket(byte[] decrypted){
-        int accountID = IsLoggedIn(decrypted);
+    private void HandleLogOutPacket(){
+        int accountID = IsLoggedIn();
         if(accountID > 0){
             GameServer.ClientLoggedOut(accountID);
         }
     }
 
-    private void HandleCreateCharacterPacket(byte[] decrypted, RemoteClient rc){
-        int accountID = IsLoggedIn(decrypted);
+    private void HandleCreateCharacterPacket(){
+        int accountID = IsLoggedIn();
         if(accountID > 0){
-            byte classCode = decrypted[5];
+            byte classCode = _decrypted[5];
             byte[] stats = new byte[6];
             byte[] appearance = new byte[5];
-            System.arraycopy(decrypted, 6, stats, 0, 6);
-            System.arraycopy(decrypted, 12, appearance, 0, 5);
-            if(AntiCheat.CheckStats(stats, rc, accountID)){
+            System.arraycopy(_decrypted, 6, stats, 0, 6);
+            System.arraycopy(_decrypted, 12, appearance, 0, 5);
+            if(AntiCheat.CheckStats(stats, _remote, accountID)){
                 return;
             }
-            byte nameLength = decrypted[17];
-            String characterName = new String(Packets.ExtractBytes(decrypted, 18, nameLength),
+            byte nameLength = _decrypted[17];
+            String characterName = new String(Packets.ExtractBytes(_decrypted, 18, nameLength),
                     StandardCharsets.UTF_8);
             if(ProfanityChecker.ContainsProhibitedLanguage(characterName)){
-                EnqueueForSend(Packets.ProhibitedLanguagePacket(), rc);
+                EnqueueForSend(Packets.ProhibitedLanguagePacket(), _remote);
             }
             else{
                 if(Database.SeeIfCharacterExists(characterName)){
-                    EnqueueForSend(Packets.CharacterExistsPacket(), rc);
+                    EnqueueForSend(Packets.CharacterExistsPacket(), _remote);
                 }
                 else{
                     int charID = Database.AddCharacter(accountID, characterName, classCode, stats, appearance);
                     if(charID == -1){
-                        EnqueueForSend(Packets.CreationFailedPacket(), rc);
+                        EnqueueForSend(Packets.CreationFailedPacket(), _remote);
                     }
                     else{
-                        EnqueueForSend(Packets.CharacterCreatedPacket(charID, classCode, characterName, stats, appearance), rc);
+                        EnqueueForSend(Packets.CharacterCreatedPacket(charID, classCode, characterName, stats, appearance), _remote);
                     }
                 }
             }
         }
     }
 
-    private void HandleLogInPacket(byte[] decrypted, RemoteClient rc){
-        String[] creds = LogInDetails(decrypted);
+    private void HandleLogInPacket(){
+        String[] creds = LogInDetails();
         String username = creds[0];
         String hashed = creds[1];
         Object[] validationResult = Database.ValidateCredentials(username, hashed);
@@ -213,18 +206,18 @@ public class PregamePacketProcessor extends UDPProcessor
             }
             else {
                 toSend = Packets.LoginSucceededPacket(accountID);
-                rc.SetNameAndID(username, accountID);
-                GameServer.ClientLoggedIn(rc);
+                _remote.SetNameAndID(username, accountID);
+                GameServer.ClientLoggedIn(_remote);
             }
         }
         else{
             toSend = Packets.LoginFailedPacket();
         }
-        EnqueueForSend(toSend,rc);
+        EnqueueForSend(toSend,_remote);
     }
 
-    public String[] CreateAccountDetails(byte[] decrypted){
-        ArrayList<byte[]> toProcess = Packets.ExtractBytes(decrypted, 4);
+    public String[] CreateAccountDetails(){
+        ArrayList<byte[]> toProcess = Packets.ExtractBytes(_decrypted, 4);
         byte[] userNameBytes = toProcess.get(0);
         byte[] pwHashBytes = toProcess.get(1);
         byte[] emailBytes = toProcess.get(2);
@@ -234,14 +227,14 @@ public class PregamePacketProcessor extends UDPProcessor
         toReturn[2] = new String(emailBytes, StandardCharsets.UTF_8);
         return toReturn;
     }
-    private void HandleCreateAccountPacket(byte[] decrypted, RemoteClient rc){
-        String[] creds = CreateAccountDetails(decrypted);
+    private void HandleCreateAccountPacket(){
+        String[] creds = CreateAccountDetails();
         String username = creds[0];
         if(!ProfanityChecker.ContainsProhibitedLanguage(username)){
             String email = creds[2];
             Main.LogMessage("Account creation requested: " + username + ", " + email);
             if(Database.AccountRecordCount(username, email) > 0){
-                EnqueueForSend(Packets.AccountExistsPacket(), rc);
+                EnqueueForSend(Packets.AccountExistsPacket(), _remote);
                 Main.LogMessage("Account " + username + " already exists .");
             }
             else{
@@ -249,20 +242,15 @@ public class PregamePacketProcessor extends UDPProcessor
                 long token = Cryptographer.RandomToken();
                 boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
                 byte[] toSend = accountCreated? Packets.AccountCreatedPacket(): Packets.CreationFailedPacket();
-                EnqueueForSend(toSend, rc);
+                EnqueueForSend(toSend, _remote);
                 String activationMessage = "Hello<br><br>Click the following link to activate your Magus account:<br><a href='https://www.fosiemods.net/ms2.php?appid=ms2&func=activate&activationtoken=" + token + "'>Activation Link</a>";
                 Main.Mailer.SendMail(email, "Magus Account Activation Link", activationMessage, "Magus Activation");
             }
         }
         else{
-            EnqueueForSend(Packets.ProhibitedLanguagePacket(), rc);
+            EnqueueForSend(Packets.ProhibitedLanguagePacket(), _remote);
         }
 
     }
-    public void EnqueueForSend(byte[] data, RemoteClient rc){
-        _outgoingPackets.add(new OutgoingPacket(data, rc));
-    }
-    public void EnqueueForSend(byte[] data, RemoteClient[] rc){
-        _outgoingPackets.add(new OutgoingPacket(data, rc));
-    }
+
 }

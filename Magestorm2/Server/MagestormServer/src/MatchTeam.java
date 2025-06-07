@@ -51,7 +51,7 @@ public class MatchTeam {
         int length = 1;
         ArrayList<byte[]> players = new ArrayList<>();
         for(MatchCharacter player : _teamPlayers.values()){
-            byte[] playerBytes = player.GetINLCTBytes();
+            byte[] playerBytes = player.GetINLCTABytes();
             players.add(playerBytes);
             length += playerBytes.length;
         }

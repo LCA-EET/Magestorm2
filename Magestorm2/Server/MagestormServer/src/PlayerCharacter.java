@@ -19,23 +19,6 @@ public class PlayerCharacter {
     private final int _indexLevel = 16;
     private byte[] _matchEntryBytes;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public PlayerCharacter(byte[] fetched){
         _position = new Vector3();
         _characterBytes = fetched;
