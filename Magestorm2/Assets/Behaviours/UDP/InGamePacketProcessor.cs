@@ -1,11 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class InGamePacketProcessor : UDPProcessor
 {
-    private int _listeningPort;
-    private UDPGameClient _udp;
-    private bool _checking;
-
     private void Awake()
     {
         ComponentRegister.InGamePacketProcessor = this;
@@ -20,7 +17,19 @@ public class InGamePacketProcessor : UDPProcessor
     // Update is called once per frame
     void Update()
     {
-        
-    }
-\\
+        if (_listeningPort > 0)
+        {
+            if (_udp.HasPacketsPending)
+            {
+                List<byte[]> toProcess = _udp.PacketsReceived();
+                foreach (byte[] decryptedPayload in toProcess)
+                {
+                    PreProcess(decryptedPayload);
+                    switch (_opCode)
+                    {
+
+                    }
+                }
+            }
+        }
 }
