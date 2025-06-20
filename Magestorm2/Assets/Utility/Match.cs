@@ -4,6 +4,7 @@ using UnityEngine;
 public static class Match
 {
     private static Dictionary<byte, Avatar> _matchPlayers;
+    private static Dictionary<byte, ActivateableObject> _objects;
 
     public static bool ChatMode;
     public static bool Running;
@@ -11,6 +12,7 @@ public static class Match
     public static void Init()
     {
         _matchPlayers = new Dictionary<byte, Avatar>();
+        _objects = new Dictionary<byte, ActivateableObject>(); 
     }
 
     public static void AddAvatar(Avatar avatar)
@@ -20,6 +22,10 @@ public static class Match
     public static void RemoveAvatar(byte ID)
     {
         _matchPlayers.Remove(ID);
+    }
+    public static void RegisterActivateableObject(ActivateableObject obj)
+    {
+        _objects.Add(obj.ObjectKey, obj);
     }
     public static Dictionary<byte, Avatar> GetMatchPlayers()
     {
@@ -46,5 +52,18 @@ public static class Match
         }
         toReturn.Sort();
         return toReturn;
+    }
+
+    public static void ChangeObjectState(byte key, byte state)
+    {
+        if (_objects.ContainsKey(key))
+        {
+            _objects[key].StatusChanged(state);
+        }
+    }
+
+    public static void Send(byte[] packetBytes)
+    {
+        ComponentRegister.InGamePacketProcessor.SendBytes(packetBytes);
     }
 }

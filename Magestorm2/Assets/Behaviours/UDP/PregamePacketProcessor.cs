@@ -114,12 +114,8 @@ public class PregamePacketProcessor : UDPProcessor
     }
     private void HandleMatchEntryPacket()
     {
-        byte sceneID = _decrypted[1];
-        byte teamID = _decrypted[2];
-        byte playerID = _decrypted[3];
-        int listeningPort = BitConverter.ToInt32(_decrypted, 4);
-        SharedFunctions.Params = new object[] { teamID, playerID, listeningPort };
-        SceneManager.LoadScene(sceneID.ToString());
+        MatchParams.Init(_decrypted);
+        SceneManager.LoadScene(MatchParams.SceneID.ToString());
     }
     private void HandleMatchIsFullPacket()
     {

@@ -14,6 +14,7 @@ public class SceneInitializer : MonoBehaviour
         Language.Init();
         LayerManager.Init();
         InputControls.Init();
+        
     }
 
     // Update is called once per frame

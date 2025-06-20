@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InGamePacketProcessor : UDPProcessor
@@ -6,12 +7,12 @@ public class InGamePacketProcessor : UDPProcessor
     private void Awake()
     {
         ComponentRegister.InGamePacketProcessor = this;
-        Init((int)SharedFunctions.Params[2]);
+        Init(MatchParams.ListeningPort);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -27,9 +28,18 @@ public class InGamePacketProcessor : UDPProcessor
                     PreProcess(decryptedPayload);
                     switch (_opCode)
                     {
-
+                        case OpCode_Receive.ObjectStateChange:
+                            ProcessObjectChangePacket();
+                            break;
                     }
                 }
             }
         }
+    }
+
+    private void ProcessObjectChangePacket()
+    {
+        Match.ChangeObjectState(_decrypted[1], _decrypted[2]);
+    }
 }
+

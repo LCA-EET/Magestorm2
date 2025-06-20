@@ -18,6 +18,14 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_OpCode_Receive.RequestPlayerData:
                 HandlePlayerDataRequest();
                 break;
+            case InGame_OpCode_Receive.ChangedObjectState:
+                HandleObjectStateChange();
+                break;
+        }
+    }
+    public void HandleObjectStateChange(){
+        if(IsVerified()) {
+            _owningMatch.ChangeObjectState(_decrypted[2], _decrypted[3]);
         }
     }
     public void HandlePlayerDataRequest(){

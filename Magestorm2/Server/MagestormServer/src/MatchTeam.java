@@ -10,12 +10,14 @@ public class MatchTeam {
 
 
     private boolean _listChanged;
+    private byte _shrineHealth;
     private byte _teamID;
     private byte[] _playerListBytes;
     private final ConcurrentHashMap<Byte, MatchCharacter> _teamPlayers;
 
     public MatchTeam(byte teamID)
     {
+        _shrineHealth = 100;
         _teamID = teamID;
         _listChanged = true;
         _teamPlayers = new ConcurrentHashMap<>();
@@ -37,6 +39,10 @@ public class MatchTeam {
 
     public byte NumPlayers(){
         return (byte)_teamPlayers.size();
+    }
+
+    public byte ShrineHealth(){
+        return _shrineHealth;
     }
 
     public byte[] GetPlayerBytes(){

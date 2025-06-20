@@ -1,4 +1,7 @@
+import java.awt.color.ICC_ProfileGray;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Match {
@@ -17,8 +20,11 @@ public class Match {
     private final InGamePacketProcessor _processor;
     private final byte _maxPlayers;
 
+    private ConcurrentHashMap<Byte, Byte> _objectStatus;
+
     public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime){
         InitTeams();
+        _objectStatus = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
         _creatorName = creatorName;
@@ -49,6 +55,24 @@ public class Match {
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
         _processor = new InGamePacketProcessor(_matchPort, this);
     }
+
+    public void ChangeObjectState(byte objectID, byte status){
+        _objectStatus.put(objectID, status);
+    }
+
+    public byte[] GetObjectStatusBytes(){
+        int length = _objectStatus.size() * 2;
+        byte[] toReturn = new byte[length];
+        int index = 0;
+        for(byte k : _objectStatus.keySet()){
+            toReturn[index] = k;
+            index++;
+            toReturn[index] = _objectStatus.get(k);
+            index++;
+        }
+        return toReturn;
+    }
+
     private void InitTeams(){
         _matchTeams = new ConcurrentHashMap<>();
         for(byte teamID : MatchTeam.TeamCodes){
@@ -138,4 +162,5 @@ public class Match {
     public void MarkPlayerVerified(byte playerID){
         _matchCharacters.get(playerID).MarkVerified();
     }
+    
 }
