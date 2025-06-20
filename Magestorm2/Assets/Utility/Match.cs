@@ -61,6 +61,10 @@ public static class Match
             _objects[key].StatusChanged(state);
         }
     }
+    public static void ChangeShrineHealth(byte shrineID, byte health)
+    {
+        ComponentRegister.ShrinePanel.SetFill((Team)shrineID, health);
+    }
 
     public static void Send(byte[] packetBytes)
     {

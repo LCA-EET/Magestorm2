@@ -21,11 +21,23 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_OpCode_Receive.ChangedObjectState:
                 HandleObjectStateChange();
                 break;
+            case InGame_OpCode_Receive.FetchShrineHealth:
+                HandleShrineHealthRequest();
+                break;
+        }
+    }
+    public void HandleShrineHealthRequest(){
+        if(IsVerified()){
+            byte[] health = _owningMatch.ReportAllShrineHealth();
+            EnqueueForSend(Packets.AllShrineHealthPacket(health[0], health[1], health[2]), _remote);
         }
     }
     public void HandleObjectStateChange(){
         if(IsVerified()) {
-            _owningMatch.ChangeObjectState(_decrypted[2], _decrypted[3]);
+            byte objectID = _decrypted[2];
+            byte state = _decrypted[3];
+            _owningMatch.ChangeObjectState(objectID, state);
+            _owningMatch.SendToAll(Packets.ObjectStateChangePacket(objectID, state));
         }
     }
     public void HandlePlayerDataRequest(){

@@ -6,6 +6,7 @@
         ShrineHealth = 2,
         ObjectData = 3,
         ObjectStateChange = 4,
+        AllShrineHealth = 5,
     //}
     //{ Pregame
         LogInSucceeded = 1,

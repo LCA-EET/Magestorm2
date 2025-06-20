@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchTeam {
@@ -14,13 +15,15 @@ public class MatchTeam {
     private byte _teamID;
     private byte[] _playerListBytes;
     private final ConcurrentHashMap<Byte, MatchCharacter> _teamPlayers;
+    private final Match _owningMatch;
 
-    public MatchTeam(byte teamID)
+    public MatchTeam(byte teamID, Match owningMatch)
     {
         _shrineHealth = 100;
         _teamID = teamID;
         _listChanged = true;
         _teamPlayers = new ConcurrentHashMap<>();
+        _owningMatch = owningMatch;
     }
 
     public boolean PlayerIDUsed(byte idToCheck){
@@ -37,12 +40,21 @@ public class MatchTeam {
         _listChanged = true;
     }
 
+    public Collection<MatchCharacter> GetPlayers(){
+        return _teamPlayers.values();
+    }
+
     public byte NumPlayers(){
         return (byte)_teamPlayers.size();
     }
 
     public byte ShrineHealth(){
         return _shrineHealth;
+    }
+
+    public void AdjustShrineHealth(byte adjustment){
+        _shrineHealth += adjustment;
+        _owningMatch.SendToAll(Packets.ShrineHealthPacket(_shrineHealth, _teamID));
     }
 
     public byte[] GetPlayerBytes(){

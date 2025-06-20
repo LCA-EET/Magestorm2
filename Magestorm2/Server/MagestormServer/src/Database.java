@@ -228,7 +228,7 @@ public class Database {
                 System.arraycopy(experienceBytes, 0,fetched, 17, 4);
                 fetched[21] = nameLength;
                 System.arraycopy(nameBytes, 0, fetched, 22, nameLength);
-                toReturn = new PlayerCharacter(fetched);
+                toReturn = new PlayerCharacter(fetched, accountID);
             }
         }
         catch(Exception ex){

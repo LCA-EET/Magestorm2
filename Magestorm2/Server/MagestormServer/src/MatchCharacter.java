@@ -40,4 +40,8 @@ public class MatchCharacter {
     public boolean IsVerified(){
         return _verified;
     }
+
+    public RemoteClient GetRemoteClient(){
+        return _pc.GetRemoteClient();
+    }
 }

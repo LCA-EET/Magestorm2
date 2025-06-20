@@ -58,6 +58,30 @@ public class Packets {
         return Cryptographer.Encrypt(MatchIsFull_Bytes);
     }
 
+    public static byte[] AllShrineHealthPacket(byte chaos, byte balance, byte order){
+        byte[] toEncrypt = new byte[4];
+        toEncrypt[0] = InGame_OpCode_Send.AllShrineHealth;
+        toEncrypt[1] = chaos;
+        toEncrypt[2] = balance;
+        toEncrypt[3] = order;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] ShrineHealthPacket(byte health, byte teamID){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_OpCode_Send.ShrineHealth;
+        toEncrypt[1] = teamID;
+        toEncrypt[2] = health;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+    public static byte[] ObjectStateChangePacket(byte objectID, byte state){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_OpCode_Send.ObjectStateChange;
+        toEncrypt[1] = objectID;
+        toEncrypt[2] = state;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] MatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port){
         byte[] toEncrypt = new byte[8];
         toEncrypt[0] = Pregame_OpCode_Send.MatchEntryPacket;

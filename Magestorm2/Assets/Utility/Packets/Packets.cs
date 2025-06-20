@@ -20,6 +20,13 @@ public static class Packets
     {
         return new ArraySegment<byte>(received, 17, DeterminePayloadLength(received)).ToArray();
     }
+    public static byte[] FetchShrineHealthPacket()
+    {
+        byte[] unencrypted = new byte[2];
+        unencrypted[0] = OpCode_Send.FetchShrineHealth;
+        unencrypted[1] = MatchParams.IDinMatch;
+        return unencrypted;
+    }
     public static byte[] ChangedObjectStatePacket(byte key, byte state)
     {
         byte[] unencrypted = new byte[4];

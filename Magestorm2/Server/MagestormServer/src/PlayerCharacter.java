@@ -17,10 +17,13 @@ public class PlayerCharacter {
     private Vector3 _position;
     private final int _indexExperience = 17;
     private final int _indexLevel = 16;
+    private final int _accountID;
     private byte[] _matchEntryBytes;
-
-    public PlayerCharacter(byte[] fetched){
+    private RemoteClient _remoteClient;
+    public PlayerCharacter(byte[] fetched, int accountID){
         _position = new Vector3();
+        _remoteClient = GameServer.GetClient(accountID);
+        _accountID = accountID;
         _characterBytes = fetched;
         _characterID = ByteUtils.ExtractInt(fetched, 0);
         _characterClass = fetched[4];
@@ -95,5 +98,10 @@ public class PlayerCharacter {
     public byte[] GetMatchEntryBytes(){
         return _matchEntryBytes;
     }
-
+    public int GetAccountID(){
+        return _accountID;
+    }
+    public RemoteClient GetRemoteClient(){
+        return _remoteClient;
+    }
 }

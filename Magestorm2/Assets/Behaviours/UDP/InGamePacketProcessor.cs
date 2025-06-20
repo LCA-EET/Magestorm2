@@ -31,12 +31,27 @@ public class InGamePacketProcessor : UDPProcessor
                         case OpCode_Receive.ObjectStateChange:
                             ProcessObjectChangePacket();
                             break;
+                        case OpCode_Receive.ShrineHealth:
+                            ProcessShrineHealthPacket();
+                            break;
+                        case OpCode_Receive.AllShrineHealth:
+                            ProcessAllShrineHealthPacket();
+                            break;
                     }
                 }
             }
         }
     }
-
+    private void ProcessAllShrineHealthPacket()
+    {
+        Match.ChangeShrineHealth((byte)Team.Chaos, _decrypted[1]);
+        Match.ChangeShrineHealth((byte)Team.Balance, _decrypted[2]);
+        Match.ChangeShrineHealth((byte)Team.Order, _decrypted[3]);
+    }
+    private void ProcessShrineHealthPacket()
+    {
+        Match.ChangeShrineHealth(_decrypted[1], _decrypted[2]);
+    }
     private void ProcessObjectChangePacket()
     {
         Match.ChangeObjectState(_decrypted[1], _decrypted[2]);

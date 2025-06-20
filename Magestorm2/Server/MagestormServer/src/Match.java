@@ -1,5 +1,6 @@
 import java.awt.color.ICC_ProfileGray;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -76,7 +77,7 @@ public class Match {
     private void InitTeams(){
         _matchTeams = new ConcurrentHashMap<>();
         for(byte teamID : MatchTeam.TeamCodes){
-            _matchTeams.put(teamID, new MatchTeam(teamID));
+            _matchTeams.put(teamID, new MatchTeam(teamID, this));
         }
     }
     public byte MatchID(){
@@ -115,6 +116,16 @@ public class Match {
         toReturn[0] = opCode;
         toReturn[1] = _matchID;
         return toReturn;
+    }
+    private byte ShrineHealth(byte teamID){
+        return _matchTeams.get(teamID).ShrineHealth();
+    }
+    public byte[] ReportAllShrineHealth(){
+        return new byte[]{
+                ShrineHealth(MatchTeam.Chaos) ,
+                ShrineHealth(MatchTeam.Balance),
+                ShrineHealth(MatchTeam.Order)
+        };
     }
     public byte[] PlayerData(byte idInMatch){
         return _matchCharacters.get(idInMatch).GetINLCTABytes();
@@ -162,5 +173,22 @@ public class Match {
     public void MarkPlayerVerified(byte playerID){
         _matchCharacters.get(playerID).MarkVerified();
     }
-    
+    public void SendToAll(byte[] encrypted){
+        SendToCollection(encrypted, _matchCharacters.values());
+    }
+    public void SendToPlayer(byte[] encrypted, MatchCharacter recipient){
+        _processor.EnqueueForSend(encrypted, recipient.GetRemoteClient());
+    }
+    public void SendToTeam(byte[] encrypted, byte teamID){
+        SendToCollection(encrypted, _matchTeams.get(teamID).GetPlayers());
+    }
+    private void SendToCollection(byte[] encrypted, Collection<MatchCharacter> recipientPlayers){
+        ArrayList<RemoteClient> recipients = new ArrayList<>();
+        for(MatchCharacter mc : _matchCharacters.values()){
+            if(mc.IsVerified()){
+                recipients.add(mc.GetRemoteClient());
+            }
+        }
+        _processor.EnqueueForSend(encrypted, recipients);
+    }
 }

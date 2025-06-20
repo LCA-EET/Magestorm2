@@ -31,8 +31,8 @@ public class ShrinePanel : MonoBehaviour
         }
         _indicators[Team.Order].SetFill(_elapsed);
     }
-    public void SetFill(Team team, float fill)
+    public void SetFill(Team team, byte health)
     {
-        _indicators[team].SetFill(fill);
+        _indicators[team].SetFill(health / 100f);
     }
 }
