@@ -28,10 +28,10 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     public void HandleShrineHealthRequest(){
         if(IsVerified()){
-            byte[] health = _owningMatch.ReportAllShrineHealth();
-            EnqueueForSend(Packets.AllShrineHealthPacket(health[0], health[1], health[2]), _remote);
+            SendShrineHealthPacket();
         }
     }
+
     public void HandleObjectStateChange(){
         if(IsVerified()) {
             byte objectID = _decrypted[2];
@@ -52,7 +52,7 @@ public class InGamePacketProcessor extends UDPProcessor{
             byte teamID = _decrypted[10];
             if(_owningMatch.IsPlayerOnTeam(idInMatch, teamID)){
                 _owningMatch.MarkPlayerVerified(idInMatch);
-                EnqueueForSend(_owningMatch.PlayersInMatch(InGame_OpCode_Send.PlayersInMatch), _remote);
+                SendShrineHealthPacket();
             }
         }
     }
@@ -70,4 +70,11 @@ public class InGamePacketProcessor extends UDPProcessor{
     private boolean IsVerified(){
         return _owningMatch.IsPlayerVerified(_decrypted[1]);
     }
+
+    private void SendShrineHealthPacket(){
+        byte[] health = _owningMatch.ReportAllShrineHealth();
+        EnqueueForSend(Packets.AllShrineHealthPacket(health[0], health[1], health[2]), _remote);
+    }
+
+    
 }
