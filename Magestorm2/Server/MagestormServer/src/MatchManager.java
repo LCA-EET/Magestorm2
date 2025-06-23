@@ -26,15 +26,14 @@ public class MatchManager{
         }
     }
     public static void NotifySubscribers(){
-        ArrayList<RemoteClient> connectedClients = GameServer.ConnectedClients();
+        Iterable<RemoteClient> connectedClients = GameServer.ConnectedClients();
         ArrayList<RemoteClient> subscribedClients = new ArrayList<>();
-        for (RemoteClient rc : connectedClients){
-            if(rc.IsSubscribedToMatches()){
+        for (RemoteClient rc : connectedClients) {
+            if (rc.IsSubscribedToMatches()) {
                 subscribedClients.add(rc);
             }
         }
-        RemoteClient[] recipients = subscribedClients.toArray(new RemoteClient[]{});
-        GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), recipients);
+        GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), subscribedClients);
         UpdatesNeeded = false;
     }
     public static void RequestMatchCreation(int accountID, byte sceneID){

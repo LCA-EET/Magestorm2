@@ -13,8 +13,10 @@ public class MatchTeam {
     private boolean _listChanged;
     private byte _shrineHealth;
     private byte _teamID;
+
     private byte[] _playerListBytes;
     private final ConcurrentHashMap<Byte, MatchCharacter> _teamPlayers;
+    private final ConcurrentHashMap<Byte, RemoteClient> _clients;
     private final Match _owningMatch;
 
     public MatchTeam(byte teamID, Match owningMatch)
@@ -24,6 +26,7 @@ public class MatchTeam {
         _listChanged = true;
         _teamPlayers = new ConcurrentHashMap<>();
         _owningMatch = owningMatch;
+        _clients = new ConcurrentHashMap<>();
     }
 
     public boolean PlayerIDUsed(byte idToCheck){
@@ -37,6 +40,7 @@ public class MatchTeam {
 
     public void RemovePlayer(byte idToRemove){
         _teamPlayers.remove(idToRemove);
+        _clients.remove(idToRemove);
         _listChanged = true;
     }
 
@@ -76,5 +80,12 @@ public class MatchTeam {
         byte[] toReturn = ByteUtils.ArrayListToByteArray(players, length, 1);
         toReturn[0] = (byte)players.size();
         return toReturn;
+    }
+
+    public Collection<RemoteClient> GetRemoteClients(){
+        return _clients.values();
+    }
+    public void RegisterVerifiedClient(byte id, RemoteClient verified){
+        _clients.put(id, verified);
     }
 }

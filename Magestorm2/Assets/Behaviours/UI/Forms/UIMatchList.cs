@@ -37,6 +37,9 @@ public class UIMatchList : ValidatableForm
             case ButtonType.JoinMatch:
                 JoinMatch();
                 break;
+            case ButtonType.Misc0: // Discord
+                System.Diagnostics.Process.Start("https://discord.com/invite/hwGf39gW9g");
+                break;
         }
     }
     private void JoinMatch()

@@ -1,23 +1,21 @@
 import java.rmi.Remote;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class OutgoingPacket {
     private byte[] _data;
-    private RemoteClient[] _recipients;
-
+    private Iterable _recipients;
     public OutgoingPacket(byte[] bytes, RemoteClient rc){
         _data = bytes;
-        _recipients = new RemoteClient[]{rc};
+        _recipients = Collections.singletonList(rc);
     }
-    public OutgoingPacket(byte[] bytes, RemoteClient[] rc){
+    public OutgoingPacket(byte[] bytes, Iterable<RemoteClient> recipients){
         _data = bytes;
-        _recipients = rc;
+        _recipients = recipients;
     }
-    public OutgoingPacket(byte[] bytes, ArrayList<RemoteClient> recipients){
-        _data = bytes;
-        _recipients = (RemoteClient[])recipients.toArray();
-    }
-    public RemoteClient[] Recipients(){
+    public Iterable<RemoteClient> Recipients(){
         return _recipients;
     }
     public byte[] Bytes(){

@@ -48,13 +48,10 @@ public class UDPProcessor {
         return !_outgoingPackets.isEmpty();
     }
 
-    public void EnqueueForSend(byte[] data, ArrayList<RemoteClient> recipients){
+    public void EnqueueForSend(byte[] data, Iterable<RemoteClient> recipients){
         _outgoingPackets.add(new OutgoingPacket(data, recipients));
     }
     public void EnqueueForSend(byte[] data, RemoteClient rc){
-        _outgoingPackets.add(new OutgoingPacket(data, rc));
-    }
-    public void EnqueueForSend(byte[] data, RemoteClient[] rc){
         _outgoingPackets.add(new OutgoingPacket(data, rc));
     }
 

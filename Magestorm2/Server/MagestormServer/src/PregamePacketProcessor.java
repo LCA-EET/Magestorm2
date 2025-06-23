@@ -168,7 +168,7 @@ public class PregamePacketProcessor extends UDPProcessor
             String characterName = new String(Packets.ExtractBytes(_decrypted, 18, nameLength),
                     StandardCharsets.UTF_8);
             if(ProfanityChecker.ContainsProhibitedLanguage(characterName)){
-                EnqueueForSend(Packets.ProhibitedLanguagePacket(), _remote);
+                EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_OpCode_Send.ProhibitedLanguage), _remote);
             }
             else{
                 if(Database.SeeIfCharacterExists(characterName)){
@@ -248,7 +248,7 @@ public class PregamePacketProcessor extends UDPProcessor
             }
         }
         else{
-            EnqueueForSend(Packets.ProhibitedLanguagePacket(), _remote);
+            EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_OpCode_Send.ProhibitedLanguage), _remote);
         }
 
     }

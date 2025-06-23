@@ -9,7 +9,6 @@ public class Packets {
     private static final byte[] AccountExistsPacket_Bytes = new byte[]{Pregame_OpCode_Send.AccountAlreadyExists};
     private static final byte[] AlreadyLoggedInPacket_Bytes = new byte[]{Pregame_OpCode_Send.AlreadyLoggedIn};
     private static final byte[] LoginFailedPacket_Bytes = new byte[]{Pregame_OpCode_Send.LogInFailed};
-    private static final byte[] ProhibitedLanguagePacket_Bytes = new byte[]{Pregame_OpCode_Send.ProhibitedLanguage};
     private static final byte[] CharacterExistsPacket_Bytes = new byte[]{Pregame_OpCode_Send.CharacterExists};
     private static final byte[] InactivityDisconnect_Bytes = new byte[]{Pregame_OpCode_Send.InactivityDisconnect};
     private static final byte[] MatchAlreadyCreated_Bytes = new byte[]{Pregame_OpCode_Send.MatchAlreadyCreated};
@@ -19,6 +18,10 @@ public class Packets {
     private static final byte[] BannedForBehavior_Bytes = new byte[]{Pregame_OpCode_Send.BannedForBehavior};
     private static final byte[] MatchIsFull_Bytes = new byte[]{Pregame_OpCode_Send.MatchIsFullPacket};
 
+    public static byte[] MessagePacket(byte[] decrypted, byte opCode){
+        decrypted[0] = opCode;
+        return Cryptographer.Encrypt(decrypted);
+    }
     public static byte[] BannedForCheatingPacket() {return Cryptographer.Encrypt(BannedForCheating_Bytes);}
     public static byte[] BannedForBehaviorPacket() {return Cryptographer.Encrypt(BannedForBehavior_Bytes);}
 
@@ -44,7 +47,7 @@ public class Packets {
         return Cryptographer.Encrypt(AlreadyLoggedInPacket_Bytes);
     }
 
-    public static byte[] ProhibitedLanguagePacket(){ return Cryptographer.Encrypt(ProhibitedLanguagePacket_Bytes);}
+    public static byte[] ProhibitedLanguagePacket(byte opCode){ return Cryptographer.Encrypt(new byte[]{opCode});}
 
     public static byte[] CharacterExistsPacket(){ return Cryptographer.Encrypt(CharacterExistsPacket_Bytes);}
 

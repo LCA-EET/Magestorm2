@@ -9,7 +9,7 @@ public class GameServer extends Thread {
     public static final long Tick = 10;
     private static int _nextMatchPort;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
-    private static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
+    public static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
@@ -67,8 +67,8 @@ public class GameServer extends Thread {
         return toReturn;
     }
 
-    public static ArrayList<RemoteClient> ConnectedClients(){
-        return new ArrayList<>(_loggedInClients.values());
+    public static Iterable<RemoteClient> ConnectedClients(){
+        return _loggedInClients.values();
     }
     private void CheckClientStatus(){
 
@@ -84,7 +84,7 @@ public class GameServer extends Thread {
     public static void EnqueueForSend(byte[] encrypted, RemoteClient recipient){
         _pgProcessor.EnqueueForSend(encrypted, recipient);
     }
-    public static void EnqueueForSend(byte[] encrypted, RemoteClient[] recipients){
+    public static void EnqueueForSend(byte[] encrypted, Iterable<RemoteClient> recipients){
         _pgProcessor.EnqueueForSend(encrypted, recipients);
     }
 

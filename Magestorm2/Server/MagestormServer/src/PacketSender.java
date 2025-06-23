@@ -16,7 +16,7 @@ public class PacketSender extends Thread{
                 if(_processor.HasOutgoingPackets()){
                     ArrayList<OutgoingPacket> outgoing = _processor.OutgoingPackets();
                     for(OutgoingPacket packet : outgoing){
-                        RemoteClient[] recipients = packet.Recipients();
+                        Iterable<RemoteClient> recipients = packet.Recipients();
                         for(RemoteClient rc : recipients){
                             _udp.Send(packet.Bytes(), rc);
                         }

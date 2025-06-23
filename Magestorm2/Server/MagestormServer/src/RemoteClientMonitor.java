@@ -8,7 +8,7 @@ public class RemoteClientMonitor extends Thread{
     public void run(){
         while(Main.Running){
             try {
-                ArrayList<RemoteClient> clients = GameServer.ConnectedClients();
+                Iterable<RemoteClient> clients = GameServer.ConnectedClients();
                 for(RemoteClient client : clients){
                     if(client.TimeOut()){
                         GameServer.ClientLoggedOut(client.AccountID());

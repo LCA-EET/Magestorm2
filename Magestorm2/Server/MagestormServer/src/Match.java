@@ -16,6 +16,7 @@ public class Match {
     private byte _lastIndex;
     private ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
     private final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
+    private final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     private byte _nextPlayerID;
     private final int _matchPort;
     private final InGamePacketProcessor _processor;
@@ -54,9 +55,12 @@ public class Match {
         _matchBytes[index] = nameBytesLength;
         index++;
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
+        _verifiedClients = new ConcurrentHashMap<>();
         _processor = new InGamePacketProcessor(_matchPort, this);
     }
-
+    public MatchTeam GetMatchTeam(byte teamID){
+        return _matchTeams.get(teamID);
+    }
     public void ChangeObjectState(byte objectID, byte status){
         _objectStatus.put(objectID, status);
     }
@@ -102,7 +106,13 @@ public class Match {
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID);
         matchTeam.AddPlayer(playerID, toAdd);
         _matchCharacters.put(playerID, toAdd);
+
         GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort), rc);
+    }
+    public void LeaveMatch(byte id, byte team){
+        _matchCharacters.remove(id);
+        _verifiedClients.remove(id);
+        _matchTeams.get(team).RemovePlayer(id);
     }
     public byte[] PlayersInMatch(byte opCode){
         ArrayList<byte[]> teamBytes = new ArrayList<>();
@@ -170,8 +180,11 @@ public class Match {
         }
         return false;
     }
-    public void MarkPlayerVerified(byte playerID){
-        _matchCharacters.get(playerID).MarkVerified();
+    public void MarkPlayerVerified(byte playerID, byte teamID){
+        MatchCharacter toVerify = _matchCharacters.get(playerID);
+        toVerify.MarkVerified();
+        _verifiedClients.put(playerID, toVerify.GetRemoteClient());
+        _matchTeams.get(teamID).RegisterVerifiedClient(playerID, toVerify.GetRemoteClient());
     }
     public void SendToAll(byte[] encrypted){
         SendToCollection(encrypted, _matchCharacters.values());
@@ -190,5 +203,11 @@ public class Match {
             }
         }
         _processor.EnqueueForSend(encrypted, recipients);
+    }
+    public MatchCharacter GetMatchCharacter(byte id){
+        return _matchCharacters.get(id);
+    }
+    public Collection<RemoteClient> GetVerifiedClients(){
+        return _verifiedClients.values();
     }
 }
