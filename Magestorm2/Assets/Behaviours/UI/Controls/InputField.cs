@@ -1,3 +1,4 @@
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -28,7 +29,15 @@ public class InputField : MonoBehaviour
             //ComponentRegister.Notifier.DisplayNotification(_tmpTextMessage.text);
             if (!ProfanityChecker.ContainsProhibitedLanguage(_tmpTextMessage.text))
             {
-                ComponentRegister.InGamePacketProcessor.SendMessage()
+                if (_tmpTextMessage.text.StartsWith("/"))
+                {
+
+                }
+                else
+                {
+                    ComponentRegister.InGamePacketProcessor.SendBytes(Packets.BroadcastMessagePacket(_tmpTextMessage.text));
+                }
+                    
             }
             CancelChat();
         }    

@@ -6,13 +6,15 @@ public static class OpCode_Send
     //{ InGame
     public const byte JoinedMatch = 1;
     public const byte RequestPlayerData = 2;
-    public const byte FetchObjectData = 3;
+    public const byte ChangedObjectState = 3;
     public const byte FetchShrineHealth = 4;
-    public const byte ChangedObjectState = 5;
+    public const byte DirectMessage = 5;
+    public const byte TeamMessage = 6;
+    public const byte BroadcastMessage = 7;
     //}
 
     //{ Pregame
-        public const byte LogIn = 1;
+    public const byte LogIn = 1;
         public const byte CreateAccount = 2;
         public const byte CreateCharacter = 3;
         public const byte LogOut = 4;

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -37,10 +39,21 @@ public class InGamePacketProcessor : UDPProcessor
                         case OpCode_Receive.AllShrineHealth:
                             ProcessAllShrineHealthPacket();
                             break;
+                        case OpCode_Receive.BroadcastMessage:
+                            ProcessBroadcastMessagePacket();
+                            break;
                     }
                 }
             }
         }
+    }
+    private void ProcessBroadcastMessagePacket()
+    {
+        int messageLength = BitConverter.ToInt32(_decrypted, 2);
+        byte[] messageBytes = new byte[messageLength];
+        Array.Copy(_decrypted, 6, messageBytes, 0, messageLength);
+        string message = Encoding.UTF8.GetString(messageBytes);
+        ComponentRegister.Notifier.DisplayNotification(message);
     }
     private void ProcessAllShrineHealthPacket()
     {

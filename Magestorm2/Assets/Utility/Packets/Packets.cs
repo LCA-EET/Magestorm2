@@ -20,6 +20,16 @@ public static class Packets
     {
         return new ArraySegment<byte>(received, 17, DeterminePayloadLength(received)).ToArray();
     }
+    public static byte[] BroadcastMessagePacket(string messageText)
+    {
+        byte[] utf8 = Encoding.UTF8.GetBytes(messageText);
+        byte[] unencrypted = new byte[1 + 1 + 4  + utf8.Length];
+        unencrypted[0] = OpCode_Send.BroadcastMessage;
+        unencrypted[1] = MatchParams.IDinMatch;
+        BitConverter.GetBytes(utf8.Length).CopyTo(unencrypted, 2);
+        utf8.CopyTo(unencrypted, 6);
+        return unencrypted;
+    }
     public static byte[] FetchShrineHealthPacket()
     {
         byte[] unencrypted = new byte[2];

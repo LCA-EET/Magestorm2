@@ -7,6 +7,8 @@
         ObjectData = 3,
         ObjectStateChange = 4,
         AllShrineHealth = 5,
+
+        BroadcastMessage = 8,
     //}
     //{ Pregame
         LogInSucceeded = 1,
