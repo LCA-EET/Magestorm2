@@ -113,6 +113,7 @@ public class Match {
         _matchCharacters.remove(id);
         _verifiedClients.remove(id);
         _matchTeams.get(team).RemovePlayer(id);
+        SendToAll(Packets.PlayerLeftMatchPacket(id, team));
     }
     public byte[] PlayersInMatch(byte opCode){
         ArrayList<byte[]> teamBytes = new ArrayList<>();
@@ -187,21 +188,15 @@ public class Match {
         _matchTeams.get(teamID).RegisterVerifiedClient(playerID, toVerify.GetRemoteClient());
     }
     public void SendToAll(byte[] encrypted){
-        SendToCollection(encrypted, _matchCharacters.values());
+        _processor.EnqueueForSend(encrypted, _verifiedClients.values());
     }
     public void SendToPlayer(byte[] encrypted, MatchCharacter recipient){
         _processor.EnqueueForSend(encrypted, recipient.GetRemoteClient());
     }
     public void SendToTeam(byte[] encrypted, byte teamID){
-        SendToCollection(encrypted, _matchTeams.get(teamID).GetPlayers());
+        SendToCollection(encrypted, _matchTeams.get(teamID).GetRemoteClients());
     }
-    private void SendToCollection(byte[] encrypted, Collection<MatchCharacter> recipientPlayers){
-        ArrayList<RemoteClient> recipients = new ArrayList<>();
-        for(MatchCharacter mc : _matchCharacters.values()){
-            if(mc.IsVerified()){
-                recipients.add(mc.GetRemoteClient());
-            }
-        }
+    private void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
         _processor.EnqueueForSend(encrypted, recipients);
     }
     public MatchCharacter GetMatchCharacter(byte id){

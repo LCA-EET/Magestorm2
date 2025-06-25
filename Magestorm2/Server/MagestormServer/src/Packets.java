@@ -18,6 +18,14 @@ public class Packets {
     private static final byte[] BannedForBehavior_Bytes = new byte[]{Pregame_OpCode_Send.BannedForBehavior};
     private static final byte[] MatchIsFull_Bytes = new byte[]{Pregame_OpCode_Send.MatchIsFullPacket};
 
+    public static byte[] PlayerLeftMatchPacket(byte playerID, byte teamID){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_OpCode_Send.PlayerLeftMatch;
+        toEncrypt[1] = playerID;
+        toEncrypt[2] = teamID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] MessagePacket(byte[] decrypted, byte opCode){
         decrypted[0] = opCode;
         return Cryptographer.Encrypt(decrypted);

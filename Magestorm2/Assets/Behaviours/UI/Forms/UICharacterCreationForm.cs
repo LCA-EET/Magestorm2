@@ -36,7 +36,16 @@ public class UICharacterCreationForm : ValidatableForm
     }
     protected override void PassedValidation()
     {
-        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.NameCheckPacket(EntriesToValidate[0].GetValue().ToString()));
+        string proposedName = EntriesToValidate[0].GetValue().ToString();
+
+        if (!ProfanityChecker.ContainsProhibitedLanguage(proposedName))
+        {
+            ComponentRegister.PregamePacketProcessor.SendBytes(Packets.NameCheckPacket(proposedName));
+        }
+        else
+        {
+            Game.MessageBoxReference(29);
+        }
     }
     public override void ButtonPressed(ButtonType buttonType)
     {

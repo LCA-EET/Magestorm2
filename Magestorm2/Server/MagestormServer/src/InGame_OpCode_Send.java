@@ -9,4 +9,5 @@ public class InGame_OpCode_Send {
     public static final byte TeamMessage = 7;
     public static final byte BroadcastMessage = 8;
     public static final byte ProhibitedLanguage = 9;
+    public static final byte PlayerLeftMatch = 10;
 }

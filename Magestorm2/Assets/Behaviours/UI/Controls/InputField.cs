@@ -25,7 +25,11 @@ public class InputField : MonoBehaviour
         }
         if (InputControls.SendMessage)
         {
-            ComponentRegister.Notifier.DisplayNotification(_tmpTextMessage.text);
+            //ComponentRegister.Notifier.DisplayNotification(_tmpTextMessage.text);
+            if (!ProfanityChecker.ContainsProhibitedLanguage(_tmpTextMessage.text))
+            {
+                ComponentRegister.InGamePacketProcessor.SendMessage()
+            }
             CancelChat();
         }    
         if (InputControls.CancelChat)

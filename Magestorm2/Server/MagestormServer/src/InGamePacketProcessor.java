@@ -1,6 +1,6 @@
 import java.net.DatagramPacket;
 import java.util.ArrayList;
-import java.util.Arrays; 
+import java.util.Arrays;
 
 public class InGamePacketProcessor extends UDPProcessor{
     private Match _owningMatch;
@@ -34,6 +34,14 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_OpCode_Receive.TeamMessage:
                 HandleTeamMessage();
                 break;
+            case InGame_OpCode_Receive.LeaveMatch:
+                HandleLeaveMatch();
+                break;
+        }
+    }
+    private void HandleLeaveMatch(){
+        if(IsVerified()){
+            _owningMatch.LeaveMatch(_decrypted[1], _decrypted[2]);
         }
     }
     private void HandleTeamMessage(){

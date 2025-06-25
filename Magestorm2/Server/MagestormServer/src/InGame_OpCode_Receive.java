@@ -8,4 +8,5 @@ public class InGame_OpCode_Receive {
     public static final byte DirectMessage = 5;
     public static final byte TeamMessage = 6;
     public static final byte BroadcastMessage = 7;
+    public static final byte LeaveMatch = 8;
 }
