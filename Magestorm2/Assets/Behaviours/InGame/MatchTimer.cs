@@ -6,6 +6,7 @@ public class MatchTimer : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private float _secondsRemaining;
+    private float _secondsElapsed = 0.0f;
     private float _elapsedSinceLastUpdate = 0.0f;
     private TMP_Text _timeText;
     void Start()
@@ -22,6 +23,7 @@ public class MatchTimer : MonoBehaviour
         if(_elapsedSinceLastUpdate >= 1.0f)
         {
             _secondsRemaining -= _elapsedSinceLastUpdate;
+            _secondsElapsed += _elapsedSinceLastUpdate;
             _elapsedSinceLastUpdate = 0.0f;
             int minutesLeft = (int)Math.Floor(_secondsRemaining / 60);
             int secondsRemaining = (int)(Math.Floor(_secondsRemaining) - (minutesLeft * 60));
@@ -47,8 +49,18 @@ public class MatchTimer : MonoBehaviour
         }
         
     }
-    public void SetSecondsRemaining(int secondsRemaining)
+    
+    public float SecondsRemaining{
+        get
+        {
+            return _secondsRemaining;
+        }
+    }
+    public float SecondsElapsed
     {
-        _secondsRemaining = secondsRemaining;
+        get
+        {
+            return _secondsElapsed;
+        }
     }
 }
