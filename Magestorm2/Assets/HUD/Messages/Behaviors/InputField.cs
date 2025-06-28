@@ -26,20 +26,26 @@ public class InputField : MonoBehaviour
         }
         if (InputControls.SendMessage)
         {
-            //ComponentRegister.Notifier.DisplayNotification(_tmpTextMessage.text);
-            if (!ProfanityChecker.ContainsProhibitedLanguage(_tmpTextMessage.text))
+            string message = _tmpTextMessage.text;
+            CancelChat();
+            MessageData md = new MessageData(message, "test");
+            if (!ProfanityChecker.ContainsProhibitedLanguage(message))
             {
-                if (_tmpTextMessage.text.StartsWith("/"))
+                if (message.StartsWith("/"))
                 {
 
                 }
                 else
                 {
-                    ComponentRegister.InGamePacketProcessor.SendBytes(Packets.BroadcastMessagePacket(_tmpTextMessage.text));
+                    ComponentRegister.InGamePacketProcessor.SendBytes(Packets.BroadcastMessagePacket(message));
                 }
                     
             }
-            CancelChat();
+            else
+            {
+                ComponentRegister.Notifier.DisplayNotification(Language.GetBaseString(29));
+            }
+            
         }    
         if (InputControls.CancelChat)
         {

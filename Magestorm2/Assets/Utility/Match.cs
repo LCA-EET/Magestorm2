@@ -27,6 +27,12 @@ public static class Match
     {
         _objects.Add(obj.ObjectKey, obj);
     }
+    public static bool GetAvatar(byte id, ref Avatar avatar)
+    {
+        bool toReturn = _matchPlayers.ContainsKey(id);
+        avatar = toReturn ? _matchPlayers[id] : null;
+        return toReturn;
+    }
     public static Dictionary<byte, Avatar> GetMatchPlayers()
     {
         return _matchPlayers;

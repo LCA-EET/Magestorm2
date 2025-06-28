@@ -50,10 +50,14 @@ public class InGamePacketProcessor : UDPProcessor
     private void ProcessBroadcastMessagePacket()
     {
         int messageLength = BitConverter.ToInt32(_decrypted, 2);
-        byte[] messageBytes = new byte[messageLength];
-        Array.Copy(_decrypted, 6, messageBytes, 0, messageLength);
-        string message = Encoding.UTF8.GetString(messageBytes);
-        ComponentRegister.Notifier.DisplayNotification(message);
+        Avatar sender = null;
+        if (Match.GetAvatar(_decrypted[1], ref sender))
+        {
+            byte[] messageBytes = new byte[messageLength];
+            Array.Copy(_decrypted, 6, messageBytes, 0, messageLength);
+            string message = Encoding.UTF8.GetString(messageBytes);
+            MessageData md = new MessageData(message, sender.Name);
+        }
     }
     private void ProcessAllShrineHealthPacket()
     {

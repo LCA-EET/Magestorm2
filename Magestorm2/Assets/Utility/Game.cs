@@ -47,6 +47,7 @@ public static class Game
         InputControls.Init();
         Teams.Init();
         ActiveMatches.Init();
+        ProfanityChecker.Init();
     }
     private static int ComputeChecksum(byte[] data)
     {

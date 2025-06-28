@@ -24,11 +24,11 @@ public static class ComponentRegister
     private static InGamePacketProcessor _inGamePacketProcessor;
     private static AudioPlayer _audioPlayer;
     private static ModelBuilder _modelBuilder;
-    private static PastMessages _pastMessages;
-    public static PastMessages PastMessages
+    private static MessageRecorder _messageRecorder;
+    public static MessageRecorder MessageRecorder
     {
-        get { return _pastMessages; }
-        set { _pastMessages = value; }
+        get { return _messageRecorder; }
+        set { _messageRecorder = value; }
     }
     public static InGamePacketProcessor InGamePacketProcessor
     {
