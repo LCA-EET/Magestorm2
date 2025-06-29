@@ -9,11 +9,16 @@ public class MatchTimer : MonoBehaviour
     private float _secondsElapsed = 0.0f;
     private float _elapsedSinceLastUpdate = 0.0f;
     private TMP_Text _timeText;
+
+    private void Awake()
+    {
+        ComponentRegister.MatchTimer = this;
+    }
     void Start()
     {
         _secondsRemaining = 3600.0f;
         _timeText = GetComponentInChildren<TMP_Text>();
-        ComponentRegister.MatchTimer = this;
+        
     }
 
     // Update is called once per frame

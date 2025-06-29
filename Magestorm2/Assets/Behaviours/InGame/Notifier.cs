@@ -10,6 +10,7 @@ public class Notifier : MonoBehaviour
     void Awake()
     {
         _notifierText = GetComponentInChildren<TMP_Text>();
+        _notifierText.text = "";
     }
     void Start()
     {

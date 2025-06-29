@@ -19,7 +19,14 @@ public enum InputControl
     SendMessage = 14,
     NextTrack = 15,
     PreviousTrack = 16,
-    ToggleMusic = 17
+    ToggleMusic = 17,
+    ChatScrollUp = 18,
+    ChatScrollDown = 19,
+    ChatScrollTop=20,
+    ChatScrollBottom = 21,
+    MiniMapZoomIn=22,
+    MiniMapZoomOut=23,
+    MiniMapZoomDefault=24
 }
 public static class InputControls
 {
@@ -48,7 +55,56 @@ public static class InputControls
             _controls.Add(InputControl.PreviousTrack, KeyCode.Minus);
             _controls.Add(InputControl.NextTrack, KeyCode.Plus);
             _controls.Add(InputControl.ToggleMusic, KeyCode.M);
+            _controls.Add(InputControl.ChatScrollUp, KeyCode.PageUp);
+            _controls.Add(InputControl.ChatScrollDown, KeyCode.PageDown);
+            _controls.Add(InputControl.ChatScrollTop, KeyCode.Home);
+            _controls.Add(InputControl.ChatScrollBottom, KeyCode.End);
+            _controls.Add(InputControl.MiniMapZoomIn, KeyCode.LeftBracket);
+            _controls.Add(InputControl.MiniMapZoomOut, KeyCode.RightBracket);
             _init = true;
+        }
+    }
+    public static bool MiniMapZoomIn
+    {
+        get
+        {
+            return (Input.GetKey(_controls[InputControl.MiniMapZoomIn])) && !Match.ChatMode;
+        }
+    }
+
+    public static bool MiniMapZoomOut
+    {
+        get
+        {
+            return (Input.GetKey(_controls[InputControl.MiniMapZoomOut])) && !Match.ChatMode;
+        }
+    }
+    public static bool ChatScrollTop
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.ChatScrollTop]));
+        }
+    }
+    public static bool ChatScrollBottom
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.ChatScrollBottom]));
+        }
+    }
+    public static bool ChatScrollUp
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.ChatScrollUp]));
+        }
+    }
+    public static bool ChatScrollDown
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.ChatScrollDown]));
         }
     }
     public static bool Run

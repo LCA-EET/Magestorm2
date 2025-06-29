@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class MessageRecorder : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class MessageRecorder : MonoBehaviour
     private float _opDenominator;
     private List<MessageData> _messagesReceived;
     private bool _hidden = false;
+    private int _messageIndex = 0;
+    private int _priorIndex = -1;
     public MessageDisplay[] Messages;
     private void Awake()
     {
@@ -20,7 +23,7 @@ public class MessageRecorder : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        MessageData md = new MessageData("Welcome to Magus.", "Server");
     }
 
     // Update is called once per frame
@@ -38,7 +41,33 @@ public class MessageRecorder : MonoBehaviour
                 ChangeOpacity();
             }
         }
-        
+        if (InputControls.ChatScrollTop)
+        {
+            _messageIndex = 0;
+        }
+        if (InputControls.ChatScrollBottom)
+        {
+            _messageIndex = _messagesReceived.Count - 1;
+        }
+        if (InputControls.ChatScrollUp)
+        {
+            if(_messageIndex > 0)
+            {
+                _messageIndex--;
+            }
+        }
+        if (InputControls.ChatScrollDown)
+        {
+            if( _messageIndex < (_messagesReceived.Count - 1))
+            {
+                _messageIndex++;
+            }
+        }
+        if(_priorIndex != _messageIndex)
+        {
+            _priorIndex = _messageIndex;
+            DisplayMessages();
+        }
     }
     private void HideMessages()
     {
@@ -52,17 +81,7 @@ public class MessageRecorder : MonoBehaviour
     {
         Debug.Log("Message Received.");
         _messagesReceived.Add(message);
-        int index = (_messagesReceived.Count - 1);
-        for (int i = 0; i < Messages.Length; i++)
-        {
-            if(_messagesReceived.Count > i)
-            {
-                Messages[i].gameObject.SetActive(true);
-                Messages[i].SetMessage(_messagesReceived[index - i]);
-            }
-        }
-        _timeElapsed = 0.0f;
-        _hidden = false;
+        _messageIndex = _messagesReceived.Count-1;
     }
     private void ChangeOpacity()
     {
@@ -72,5 +91,27 @@ public class MessageRecorder : MonoBehaviour
         {
             md.ChangeOpacity(percentOpacity);
         }
+    }
+    private void DisplayMessages()
+    {
+       
+        int index = _messageIndex;
+        int upperBound = _messagesReceived.Count;
+        //Debug.Log("Displaying messages. Index = " + index +", UB: " + upperBound);
+        for (int i = 0; i < Messages.Length; i++)
+        {
+            if (index >= 0 && (index < upperBound))
+            {
+                Messages[i].gameObject.SetActive(true);
+                Messages[i].SetMessage(_messagesReceived[index]);
+                index--;
+            }
+            else
+            {
+                Messages[i].gameObject.SetActive(false);
+            }
+        }
+        _timeElapsed = 0.0f;
+        _hidden = false;
     }
 }
