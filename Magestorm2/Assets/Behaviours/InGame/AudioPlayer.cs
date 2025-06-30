@@ -3,6 +3,7 @@ using UnityEngine;
 public class AudioPlayer : MonoBehaviour
 {
     public AudioClip SFXButtonPress;
+    public AudioClip SFXMessageNotification;
     private AudioSource _audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,7 +27,10 @@ public class AudioPlayer : MonoBehaviour
   
     public void PlayButtonPress()
     {
-        _audioSource.clip = SFXButtonPress;
-        _audioSource.Play();
+        PlayClip(SFXButtonPress);
+    }
+    public void PlayNotificationSound()
+    {
+        PlayClip(SFXMessageNotification);
     }
 }

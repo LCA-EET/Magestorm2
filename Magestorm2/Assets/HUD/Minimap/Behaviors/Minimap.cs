@@ -17,12 +17,10 @@ public class Minimap : MonoBehaviour
     {
         if (InputControls.MiniMapZoomIn)
         {
-            Debug.Log("Zoom In");
             ZoomIn();
         }
         if (InputControls.MiniMapZoomOut)
         {
-            Debug.Log("Zoom Out");
             ZoomOut();
         }
     }
