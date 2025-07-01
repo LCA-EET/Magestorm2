@@ -349,6 +349,7 @@ public class Database {
                 fetched[0] = sceneID;
                 fetched[1] = maxPlayers;
                 fetched[2] = (byte)nameBytes.length;
+                GameServer.RecordMaxPlayerData(sceneID, maxPlayers);
                 System.arraycopy(nameBytes, 0, fetched, 3, nameBytes.length);
                 bytesReturned.add(fetched);
                 totalLength += fetched.length;

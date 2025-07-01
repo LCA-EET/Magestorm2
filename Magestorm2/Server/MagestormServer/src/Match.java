@@ -83,6 +83,7 @@ public class Match {
         for(byte teamID : MatchTeam.TeamCodes){
             _matchTeams.put(teamID, new MatchTeam(teamID, this));
         }
+        Main.LogMessage("Teams initialized for match " + _matchID + ".");
     }
     public byte MatchID(){
         return _matchID;

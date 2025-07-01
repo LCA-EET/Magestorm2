@@ -1,20 +1,20 @@
 public class PlayerCharacter {
-    private String _characterName;
-    private int _characterID;
+    private final String _characterName;
+    private final int _characterID;
     private int _experience;
-    private byte _characterClass;
+    private final byte _characterClass;
     private byte _level;
-    private byte _strength;
-    private byte _dexterity;
-    private byte _constitution;
-    private byte _charisma;
-    private byte _wisdom;
-    private byte _intellect;
-    private byte[] _characterBytes;
+    private final byte _strength;
+    private final byte _dexterity;
+    private final byte _constitution;
+    private final byte _charisma;
+    private final byte _wisdom;
+    private final byte _intellect;
+    private final byte[] _characterBytes;
     private final byte[] _nameBytes;
     private final byte[] _nameLevelClass;
     private final byte[] _appearanceBytes;
-    private Vector3 _position;
+    private final Vector3 _position;
     private final int _indexExperience = 17;
     private final int _indexLevel = 16;
     private final int _accountID;
@@ -68,6 +68,9 @@ public class PlayerCharacter {
         System.arraycopy(_appearanceBytes, 0, _matchEntryBytes, index, 5);
         index += 5;
         System.arraycopy(_position.GetPosition(), 0, _matchEntryBytes, index, 12);
+    }
+    public String GetCharacterName(){
+        return _characterName;
     }
     public void UpdateExperience(int experience){
         _experience = experience;

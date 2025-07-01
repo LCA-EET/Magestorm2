@@ -8,6 +8,7 @@ public class CharacterManager {
     }
     public static void AddToCache(PlayerCharacter toAdd){
         _cachedCharacters.put(toAdd.GetCharacterID(), toAdd);
+        Main.LogMessage("Adding cached character " + toAdd.GetCharacterID() + ", " + toAdd.GetCharacterName());
     }
 
     public static PlayerCharacter GetCharacter(int id){
