@@ -12,9 +12,11 @@ public class PlayerStatusPanel : MonoBehaviour
     public Counter Deaths;
     private Dictionary<PlayerIndicator, BarIndicator> _indicators;
     private Dictionary<PlayerIndicator, Color> _indicatorColors;
+    private PlayerCharacter _pc;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _pc = PlayerAccount.SelectedCharacter;
         _indicators = new Dictionary<PlayerIndicator, BarIndicator>();
         _indicators.Add(PlayerIndicator.Health, PlayerIndicators[0]);
         _indicators.Add(PlayerIndicator.Mana, PlayerIndicators[1]);
@@ -31,8 +33,8 @@ public class PlayerStatusPanel : MonoBehaviour
         }
         ComponentRegister.PlayerStatusPanel = this;
         Teams.Init();
-        SetPlayerName("Blight");
-        SetLCT(30, PlayerClass.Arcanist, Team.Order);
+        SetPlayerName(_pc.CharacterName);
+        SetLCT(_pc.CharacterLevel, (PlayerClass)_pc.CharacterClass, (Team)MatchParams.MatchTeamID);
         SetIndicator(PlayerIndicator.Health, 0.9f);
     }
 

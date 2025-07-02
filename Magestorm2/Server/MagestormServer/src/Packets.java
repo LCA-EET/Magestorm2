@@ -99,6 +99,7 @@ public class Packets {
         toEncrypt[1] = sceneID;
         toEncrypt[2] = teamID;
         toEncrypt[3] = playerID;
+
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 4, 4);
         return Cryptographer.Encrypt(toEncrypt);
     }
