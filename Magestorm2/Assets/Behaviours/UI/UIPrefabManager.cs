@@ -38,6 +38,10 @@ public class UIPrefabManager : MonoBehaviour
             Destroy(_poppedObjects.Dequeue());
         }
     }
+    public void ClearStack()
+    {
+        _uiStack.Clear();
+    }
     public void InstantiateAppearanceChooser()
     {
         AddToStack(Instantiate(PrefabAppearanceChooser));
@@ -91,7 +95,13 @@ public class UIPrefabManager : MonoBehaviour
     {
         AddToStack(Instantiate(PrefabMatchCreator));
     }
-
+    public void ReturnToMatchSelector()
+    {
+        ComponentRegister.UIPrefabManager.ClearStack();
+        InstantiateLoginForm();
+        InstantiateCharacterSelector();
+        InstantiateMatchList();
+    }
     public GameObject AddToStack(GameObject go)
     {
         //go.transform.SetParent(ComponentRegister.UIParent);

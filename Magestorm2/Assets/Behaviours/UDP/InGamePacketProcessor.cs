@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InGamePacketProcessor : UDPProcessor
 {
@@ -30,22 +31,30 @@ public class InGamePacketProcessor : UDPProcessor
                     PreProcess(decryptedPayload);
                     switch (_opCode)
                     {
-                        case OpCode_Receive.ObjectStateChange:
+                        case InGame_Receive.ObjectStateChange:
                             ProcessObjectChangePacket();
                             break;
-                        case OpCode_Receive.ShrineHealth:
+                        case InGame_Receive.ShrineHealth:
                             ProcessShrineHealthPacket();
                             break;
-                        case OpCode_Receive.AllShrineHealth:
+                        case InGame_Receive.AllShrineHealth:
                             ProcessAllShrineHealthPacket();
                             break;
-                        case OpCode_Receive.BroadcastMessage:
+                        case InGame_Receive.BroadcastMessage:
                             ProcessBroadcastMessagePacket();
+                            break;
+                        case InGame_Receive.MatchEnded:
+
                             break;
                     }
                 }
             }
         }
+    }
+    private void HandleLeaveMatchPacket()
+    {
+        MatchParams.ReturningFromMatch = true;
+        SceneManager.LoadScene("Pregame");
     }
     private void ProcessBroadcastMessagePacket()
     {

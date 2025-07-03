@@ -46,10 +46,13 @@ public class RemoteClient {
     public boolean TimeOut(){
         return (System.currentTimeMillis() - _timeLastReceived) > GameServer.TimeOut;
     }
-    public void SubscribeToMatches(boolean subscribed,  int charID){
-        _subscribedToMatches = subscribed;
+    public void SubscribeToMatches(int charID){
+        _subscribedToMatches = true;
         _characterID = charID;
         _activeCharacter = CharacterManager.GetCharacter(charID);
+    }
+    public void UnsubscribeFromMatches(){
+        _subscribedToMatches = false;
     }
     public boolean IsSubscribedToMatches(){
         return _subscribedToMatches;

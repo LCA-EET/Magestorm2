@@ -37,7 +37,7 @@ public class InputField : MonoBehaviour
                 }
                 else
                 {
-                    ComponentRegister.InGamePacketProcessor.SendBytes(Packets.BroadcastMessagePacket(message));
+                    ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.BroadcastMessagePacket(message));
                 }
                     
             }

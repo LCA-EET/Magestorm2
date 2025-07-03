@@ -1,4 +1,4 @@
-public class InGame_OpCode_Send {
+public class InGame_Send {
     public static final byte PlayersInMatch = 0;
     public static final byte PlayerData = 1;
     public static final byte ShrineHealth = 2;
@@ -10,4 +10,5 @@ public class InGame_OpCode_Send {
     public static final byte BroadcastMessage = 8;
     public static final byte ProhibitedLanguage = 9;
     public static final byte PlayerLeftMatch = 10;
+    public static final byte MatchEnded = 11;
 }

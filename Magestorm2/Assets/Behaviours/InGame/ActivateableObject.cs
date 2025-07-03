@@ -24,7 +24,7 @@ public class ActivateableObject : MonoBehaviour
 
     public void PlayerChangedStatus()
     {
-        Match.Send(Packets.ChangedObjectStatePacket(ObjectKey, _objectStatus));
+        Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, _objectStatus));
     }
     public void StatusChanged(byte newStatus)
     {

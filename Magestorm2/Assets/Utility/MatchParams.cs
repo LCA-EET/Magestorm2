@@ -11,13 +11,14 @@ public static class MatchParams
     public static byte SceneID;
     public static int ListeningPort;
     public static long ExpirationTime;
+    public static bool ReturningFromMatch;
     public static void Init(byte[] decrypted)
     {
+        ReturningFromMatch = false;
         SceneID = decrypted[1];
         MatchTeamID = decrypted[2];
         IDinMatch = decrypted[3];
         ListeningPort = BitConverter.ToInt32(decrypted, 4);
-        
     }
 }
 

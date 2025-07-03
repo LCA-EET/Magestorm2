@@ -14,46 +14,46 @@ public class PregamePacketProcessor extends UDPProcessor
     protected void ProcessPacket(DatagramPacket received) {
         PreProcess(received);
         switch (_opCode) {
-            case Pregame_OpCode_Receive.LogIn:
+            case Pregame_Receive.LogIn:
                 HandleLogInPacket();
                 break;
-            case Pregame_OpCode_Receive.CreateAccount:
+            case Pregame_Receive.CreateAccount:
                 HandleCreateAccountPacket();
                 break;
-            case Pregame_OpCode_Receive.CreateCharacter:
+            case Pregame_Receive.CreateCharacter:
                 HandleCreateCharacterPacket();
                 break;
-            case Pregame_OpCode_Receive.LogOut:
+            case Pregame_Receive.LogOut:
                 HandleLogOutPacket();
                 break;
-            case Pregame_OpCode_Receive.DeleteCharacter:
+            case Pregame_Receive.DeleteCharacter:
                 HandleDeleteCharacterPacket();
                 break;
-            case Pregame_OpCode_Receive.SubscribeToMatches:
+            case Pregame_Receive.SubscribeToMatches:
                 HandleMatchSubscribePacket(true);
                 break;
-            case Pregame_OpCode_Receive.UnsubscribeFromMatches:
+            case Pregame_Receive.UnsubscribeFromMatches:
                 HandleMatchSubscribePacket(false);
                 break;
-            case Pregame_OpCode_Receive.CreateMatch:
+            case Pregame_Receive.CreateMatch:
                 HandleMatchCreatedPacket();
                 break;
-            case Pregame_OpCode_Receive.DeleteMatch:
+            case Pregame_Receive.DeleteMatch:
                 HandleDeleteMatchPacket();
                 break;
-            case Pregame_OpCode_Receive.RequestLevelsList:
+            case Pregame_Receive.RequestLevelsList:
                 HandleLevelListPacket();
                 break;
-            case Pregame_OpCode_Receive.RequestMatchDetails:
+            case Pregame_Receive.RequestMatchDetails:
                 HandleMatchDetailsPacket();
                 break;
-            case Pregame_OpCode_Receive.NameCheck:
+            case Pregame_Receive.NameCheck:
                 HandleNameCheckPacket();
                 break;
-            case Pregame_OpCode_Receive.UpdateAppearance:
+            case Pregame_Receive.UpdateAppearance:
                 HandleAppearanceUpdatePacket();
                 break;
-            case Pregame_OpCode_Receive.JoinMatch:
+            case Pregame_Receive.JoinMatch:
                 HandleJoinMatchPacket();
                 break;
         }
@@ -68,6 +68,8 @@ public class PregamePacketProcessor extends UDPProcessor
             Match toJoin = MatchManager.GetMatch(matchID);
             if(toJoin != null){
                 if(toJoin.HasRoomForAnotherPlayer()){
+                    RemoteClient remote = GameServer.GetClient(accountID);
+                    remote.UnsubscribeFromMatches();
                     toJoin.JoinMatch(GameServer.GetClient(accountID), teamID);
                 }
                 else{
@@ -169,7 +171,7 @@ public class PregamePacketProcessor extends UDPProcessor
             String characterName = new String(Packets.ExtractBytes(_decrypted, 18, nameLength),
                     StandardCharsets.UTF_8);
             if(ProfanityChecker.ContainsProhibitedLanguage(characterName)){
-                EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_OpCode_Send.ProhibitedLanguage), _remote);
+                EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_Send.ProhibitedLanguage), _remote);
             }
             else{
                 if(Database.SeeIfCharacterExists(characterName)){
@@ -249,7 +251,7 @@ public class PregamePacketProcessor extends UDPProcessor
             }
         }
         else{
-            EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_OpCode_Send.ProhibitedLanguage), _remote);
+            EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_Send.ProhibitedLanguage), _remote);
         }
 
     }

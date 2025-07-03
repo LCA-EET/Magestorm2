@@ -18,7 +18,7 @@ public class UICreateAccountForm : ValidatableForm
         string username = ((TextField)EntriesToValidate[0]).GetValue().ToString();
         string hashedPassword = Cryptography.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString());
         string email = ((TextField)EntriesToValidate[2]).GetValue().ToString();
-        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateAccountPacket(username, hashedPassword, email));
+        ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateAccountPacket(username, hashedPassword, email));
         CloseForm();
     }
 

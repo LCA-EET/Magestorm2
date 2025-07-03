@@ -170,6 +170,8 @@ public class Match {
     }
     public void MarkExpired(){
         MatchManager.RemoveMatch(_matchID);
+        Main.LogMessage("Match " + _matchID + " has ended. Notifying players...");
+        SendToAll(Packets.MatchEndedPacket());
         _processor.TerminateProcessor();
     }
     public boolean IsPlayerOnTeam(byte idInMatch, byte teamID){

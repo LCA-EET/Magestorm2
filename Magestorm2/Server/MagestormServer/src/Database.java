@@ -355,7 +355,7 @@ public class Database {
                 totalLength += fetched.length;
             }
             toReturn = new byte[totalLength + 2];
-            toReturn[0] = Pregame_OpCode_Send.LevelsList;
+            toReturn[0] = Pregame_Send.LevelsList;
             toReturn[1] = (byte)bytesReturned.size();
             int index = 2;
             for(byte[] sceneData : bytesReturned){

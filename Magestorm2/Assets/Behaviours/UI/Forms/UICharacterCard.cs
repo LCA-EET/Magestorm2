@@ -40,7 +40,7 @@ public class UICharacterCard : ValidatableForm
         if(_result == FormResult.Yes)
         {
             _result = FormResult.Pending;
-            ComponentRegister.PregamePacketProcessor.SendBytes(Packets.DeleteCharacterPacket(_character.CharacterID));
+            ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.DeleteCharacterPacket(_character.CharacterID));
         }
     }
     public void SetOwningForm(UICharacterSelectForm form, RenderTexture render)

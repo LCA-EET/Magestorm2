@@ -87,7 +87,7 @@ public class UICharacterSelectForm : ValidatableForm
     }
     public override void CloseForm()
     {
-        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.LogOutPacket());
+        ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.LogOutPacket());
         base.CloseForm();
     }
 }

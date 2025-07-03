@@ -1,4 +1,4 @@
-public class InGame_OpCode_Receive {
+public class InGame_Receive {
     public static final byte JoinedMatch = 1;
     public static final byte RequestPlayerData = 2;
 

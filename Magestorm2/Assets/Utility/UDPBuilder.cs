@@ -36,6 +36,10 @@ public static class UDPBuilder
     }
     public static UDPGameClient GetClient(int port)
     {
+        if (!_clients.ContainsKey(port))
+        {
+            CreateClient(port);
+        }
         return _clients[port];
     }
 }

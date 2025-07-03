@@ -10,7 +10,7 @@ public class UIMatchList : ValidatableForm
     private float _elapsed = 0.0f;
     private void Awake()
     {
-        Game.SendBytes(Packets.SubscribeToMatchesPacket());
+        Game.SendBytes(Pregame_Packets.SubscribeToMatchesPacket());
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     
@@ -24,7 +24,7 @@ public class UIMatchList : ValidatableForm
         switch (buttonType)
         {
             case ButtonType.CharacterSelect:
-                Game.SendBytes(Packets.UnsubscribeFromMatchesPacket());
+                Game.SendBytes(Pregame_Packets.UnsubscribeFromMatchesPacket());
                 ComponentRegister.UIPrefabManager.PopFromStack();
                 ActiveMatches.ClearMatches();
                 break;
@@ -44,7 +44,7 @@ public class UIMatchList : ValidatableForm
     }
     private void JoinMatch()
     {
-        MatchEntry selected = GetSelectedEntry();
+        MatchEntry selected = GetSelectedEntry();   
         if(selected == null)
         {
             Game.MessageBox(Language.GetBaseString(50));
@@ -52,7 +52,7 @@ public class UIMatchList : ValidatableForm
         else
         {
             Debug.Log("Requesting match details: " + selected.MatchID);
-            Game.SendBytes(Packets.MatchDetailsPacket(selected.MatchID));
+            Game.SendBytes(Pregame_Packets.MatchDetailsPacket(selected.MatchID));
             //SharedFunctions.Params = new object[] { selected.Match };
             //ComponentRegister.UIPrefabManager.InstantiateJoinMatch();
         }
@@ -101,7 +101,7 @@ public class UIMatchList : ValidatableForm
         {
             if (selected.CreatorAccountID == PlayerAccount.AccountID)
             {
-                Game.SendBytes(Packets.DeleteMatchPacket());
+                Game.SendBytes(Pregame_Packets.DeleteMatchPacket());
             }
             else
             {

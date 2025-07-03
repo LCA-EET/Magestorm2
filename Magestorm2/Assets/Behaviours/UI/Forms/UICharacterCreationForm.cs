@@ -28,7 +28,7 @@ public class UICharacterCreationForm : ValidatableForm
     {
         byte[] stats = _statPanel.GetStats();
         byte[] appearanceBytes = new byte[5];
-        ComponentRegister.PregamePacketProcessor.SendBytes(Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
+        ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
             ClassToggleGroup.GetSelectedIndex(),
             stats,
             appearanceBytes));
@@ -40,7 +40,7 @@ public class UICharacterCreationForm : ValidatableForm
 
         if (!ProfanityChecker.ContainsProhibitedLanguage(proposedName))
         {
-            ComponentRegister.PregamePacketProcessor.SendBytes(Packets.NameCheckPacket(proposedName));
+            ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.NameCheckPacket(proposedName));
         }
         else
         {

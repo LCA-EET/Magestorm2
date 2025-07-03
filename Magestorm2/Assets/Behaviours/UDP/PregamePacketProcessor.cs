@@ -36,74 +36,74 @@ public class PregamePacketProcessor : UDPProcessor
                     PreProcess(decryptedPayload);
                     switch (_opCode)
                     {
-                        case OpCode_Receive.CreationFailed:
+                        case Pregame_Receive.CreationFailed:
                             MessageBox(26);
                             break;
-                        case OpCode_Receive.AccountCreated:
+                        case Pregame_Receive.AccountCreated:
                             MessageBox(24);
                             break;
-                        case OpCode_Receive.AccountAlreadyExists:
+                        case Pregame_Receive.AccountAlreadyExists:
                             MessageBox(25);
                             break;
-                        case OpCode_Receive.LogInFailed:
+                        case Pregame_Receive.LogInFailed:
                             MessageBox(27);
                             break;
-                        case OpCode_Receive.LogInSucceeded:
+                        case Pregame_Receive.LogInSucceeded:
                             HandleLogInSuccessfulPacket();
                             break;
-                        case OpCode_Receive.ProhibitedLanguage:
+                        case Pregame_Receive.ProhibitedLanguage:
                             MessageBox(29);
                             break;
-                        case OpCode_Receive.AlreadyLoggedIn:
+                        case Pregame_Receive.AlreadyLoggedIn:
                             MessageBox(30);
                             break;
-                        case OpCode_Receive.RemovedFromServer:
-                        case OpCode_Receive.InactivityDisconnect:
+                        case Pregame_Receive.RemovedFromServer:
+                        case Pregame_Receive.InactivityDisconnect:
                             MessageBox(31);
                             Game.Quit();
                             break;
-                        case OpCode_Receive.CharacterExists:
+                        case Pregame_Receive.CharacterExists:
                             MessageBox(33);
                             break;
-                        case OpCode_Receive.CharacterCreated:
+                        case Pregame_Receive.CharacterCreated:
                             HandleCharacterCreatedPacket();
                             break;
-                        case OpCode_Receive.CharacterDeleted:
+                        case Pregame_Receive.CharacterDeleted:
                             HandleCharacterDeletedPacket();
                             break;
-                        case OpCode_Receive.MatchStillHasPlayers:
+                        case Pregame_Receive.MatchStillHasPlayers:
                             MessageBox(48);
                             break;
-                        case OpCode_Receive.MatchLimitReached:
+                        case Pregame_Receive.MatchLimitReached:
                             MessageBox(46);
                             break;
-                        case OpCode_Receive.MatchAlreadyCreated:
+                        case Pregame_Receive.MatchAlreadyCreated:
                             MessageBox(45);
                             break;
-                        case OpCode_Receive.MatchData:
+                        case Pregame_Receive.MatchData:
                             HandleMatchDataPacket();
                             break;
-                        case OpCode_Receive.LevelsList:
+                        case Pregame_Receive.LevelsList:
                             HandleLevelListPacket();
                             break;
-                        case OpCode_Receive.BannedForBehavior:
+                        case Pregame_Receive.BannedForBehavior:
                             MessageBox(70);
                             Game.Quit();
                             break;
-                        case OpCode_Receive.BannedForCheating:
+                        case Pregame_Receive.BannedForCheating:
                             MessageBox(69);
                             Game.Quit();
                             break;
-                        case OpCode_Receive.MatchDetails:
+                        case Pregame_Receive.MatchDetails:
                             HandleMatchDetailsPacket();
                             break;
-                        case OpCode_Receive.NameCheckResult:
+                        case Pregame_Receive.NameCheckResult:
                             HandleNameCheckResultPacket();
                             break;
-                        case OpCode_Receive.MatchIsFullPacket:
+                        case Pregame_Receive.MatchIsFullPacket:
                             HandleMatchIsFullPacket();
                             break;
-                        case OpCode_Receive.MatchEntryPacket:
+                        case Pregame_Receive.MatchEntryPacket:
                             HandleMatchEntryPacket();
                             break;
 
@@ -115,6 +115,8 @@ public class PregamePacketProcessor : UDPProcessor
     private void HandleMatchEntryPacket()
     {
         MatchParams.Init(_decrypted);
+        ComponentRegister.PregamePacketProcessor.StopListening();
+        ComponentRegister.UIPrefabManager.ClearStack();
         SceneManager.LoadScene(MatchParams.SceneID.ToString());
     }
     private void HandleMatchIsFullPacket()
@@ -291,7 +293,7 @@ public class PregamePacketProcessor : UDPProcessor
         }
         if(LevelData.LevelCount == 0)
         {
-            SendBytes(Packets.RequestLevelsListPacket());
+            SendBytes(Pregame_Packets.RequestLevelsListPacket());
         }
         ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
     }

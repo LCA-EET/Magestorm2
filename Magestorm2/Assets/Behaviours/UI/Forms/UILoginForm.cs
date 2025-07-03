@@ -24,6 +24,12 @@ public class UILoginForm : ValidatableForm
         {
             ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor(_udpPort);
             UDPBuilder.StartListening(_udpPort);
+            if (MatchParams.ReturningFromMatch)
+            {
+                MatchParams.ReturningFromMatch = false;
+                ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
+                ComponentRegister.UIPrefabManager.InstantiateMatchList();
+            }
         }
         else
         {
@@ -41,7 +47,7 @@ public class UILoginForm : ValidatableForm
         //Debug.Log("Passed validation.");
         string username = ((TextField)EntriesToValidate[0]).GetValue().ToString();
         string hashedPassword = Cryptography.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString());
-        Cryptography.EncryptAndSend(Packets.LogInPacket(username, hashedPassword), UDPBuilder.GetClient(_udpPort)); 
+        Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket(username, hashedPassword), UDPBuilder.GetClient(_udpPort)); 
     }
     public override void ButtonPressed(ButtonType buttonType)
     {

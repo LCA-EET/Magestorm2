@@ -47,6 +47,7 @@ public class UDPGameClient
     public void StopListening()
     {
         _listening = false;
+        _client.Close();
     }
     public void Send(byte[] toSend)
     {

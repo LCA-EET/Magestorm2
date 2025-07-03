@@ -18,7 +18,12 @@ public class MatchManager{
         Main.LogMessage("MatchManager.Subscribe: " + charID +", " + subscribe);
         RemoteClient rc = GameServer.GetClient(accountID);
         if(rc != null){
-            rc.SubscribeToMatches(subscribe, charID);
+            if(subscribe){
+                rc.SubscribeToMatches(charID);
+            }
+            else{
+                rc.UnsubscribeFromMatches();
+            }
             GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
         }
         else{

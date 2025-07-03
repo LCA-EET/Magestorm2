@@ -86,7 +86,7 @@ public class MessageRecorder : MonoBehaviour
     private void ChangeOpacity()
     {
         float percentOpacity =  ((_timeToShow - _timeElapsed) / _opDenominator);
-        Debug.Log(percentOpacity);
+        //Debug.Log(percentOpacity);
         foreach (MessageDisplay md in Messages)
         {
             md.ChangeOpacity(percentOpacity);

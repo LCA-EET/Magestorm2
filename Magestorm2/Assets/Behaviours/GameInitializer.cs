@@ -5,8 +5,11 @@ public class GameInitializer : MonoBehaviour
     
     private void Awake()
     {
-        LoadPrefs();
-        Game.Init();
+        if (!MatchParams.ReturningFromMatch)
+        {
+            LoadPrefs();
+            Game.Init();
+        }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

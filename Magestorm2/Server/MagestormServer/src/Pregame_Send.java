@@ -1,4 +1,4 @@
-public class Pregame_OpCode_Send {
+public class Pregame_Send {
     public static final byte LogInSucceeded = 1;
     public static final byte LogInFailed = 2;
     public static final byte AccountCreated = 3;
