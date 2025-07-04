@@ -63,6 +63,10 @@ public class GameServer extends Thread {
         RemoteClient toReturn = null;
         if(_loggedInClients.containsKey(accountID)){
             toReturn = _loggedInClients.get(accountID);
+            Main.LogMessage("RemoteClient returned for account " + accountID);
+        }
+        else{
+            Main.LogMessage("RemoteClient is null for account " + accountID);
         }
         return toReturn;
     }

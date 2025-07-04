@@ -19,7 +19,7 @@ public class PlayerCharacter {
     private final int _indexLevel = 16;
     private final int _accountID;
     private byte[] _matchEntryBytes;
-    private RemoteClient _remoteClient;
+    private final RemoteClient _remoteClient;
     public PlayerCharacter(byte[] fetched, int accountID){
         _position = new Vector3();
         _remoteClient = GameServer.GetClient(accountID);

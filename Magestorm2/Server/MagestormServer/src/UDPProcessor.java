@@ -55,5 +55,8 @@ public class UDPProcessor {
         _outgoingPackets.add(new OutgoingPacket(data, rc));
     }
 
-    protected void ProcessPacket(DatagramPacket received){}
+    protected void ProcessPacket(DatagramPacket received){
+        Main.LogError("Unimplemented packet handler.");
+
+    }
 }

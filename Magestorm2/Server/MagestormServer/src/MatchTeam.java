@@ -4,15 +4,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchTeam {
     public static byte Neutral = 0;
-    public static byte Balance = 1;
-    public static byte Chaos = 2;
+    public static byte Chaos = 1;
+    public static byte Balance = 2;
     public static byte Order = 3;
-    public static byte[] TeamCodes = new byte[]{Neutral, Balance, Chaos, Order};
+    public static byte[] TeamCodes = new byte[]{Neutral, Chaos, Balance, Order};
 
 
     private boolean _listChanged;
     private byte _shrineHealth;
-    private byte _teamID;
+    private final byte _teamID;
 
     private byte[] _playerListBytes;
     private final ConcurrentHashMap<Byte, MatchCharacter> _teamPlayers;

@@ -10,12 +10,14 @@ public class UDPProcessor : MonoBehaviour
 
     public void Init(int port)
     {
+        Debug.Log("Initializing UDP client, listening on port " + port);
         _listeningPort = port;
         _udp = UDPBuilder.GetClient(port);
     }
 
     public void SendBytes(byte[] unencrypted)
     {
+        //Debug.Log("Sending in-game packet on port " + _udp.RemoteEnd().ToString());
         Cryptography.EncryptAndSend(unencrypted, _udp);
     }
 

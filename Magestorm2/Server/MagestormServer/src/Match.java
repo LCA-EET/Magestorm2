@@ -6,14 +6,13 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Match {
-    private byte _matchID;
-    private int _creatorID;
-    private byte _sceneID;
-    private long _creationTime;
-    private long _expirationTime;
-    private byte[] _creatorName;
-    private byte[] _matchBytes;
-    private byte _lastIndex;
+    private final byte _matchID;
+    private final int _creatorID;
+    private final byte _sceneID;
+    private final long _expirationTime;
+    private final byte[] _creatorName;
+    private final byte[] _matchBytes;
+    private final byte _lastIndex;
     private ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
     private final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
     private final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
@@ -22,10 +21,9 @@ public class Match {
     private final InGamePacketProcessor _processor;
     private final byte _maxPlayers;
 
-    private ConcurrentHashMap<Byte, Byte> _objectStatus;
+    private final ConcurrentHashMap<Byte, Byte> _objectStatus;
 
     public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime){
-        InitTeams();
         _objectStatus = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
@@ -34,7 +32,6 @@ public class Match {
         _matchID = matchID;
         _creatorID = creatorID;
         _sceneID = sceneID;
-        _creationTime = creationTime;
         _expirationTime = creationTime + (3600000 / 60); // one hour
         _matchPort = GameServer.GetNextMatchPort();
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
@@ -56,6 +53,7 @@ public class Match {
         index++;
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
         _verifiedClients = new ConcurrentHashMap<>();
+        InitTeams();
         _processor = new InGamePacketProcessor(_matchPort, this);
     }
     public MatchTeam GetMatchTeam(byte teamID){
@@ -108,6 +106,7 @@ public class Match {
         matchTeam.AddPlayer(playerID, toAdd);
         _matchCharacters.put(playerID, toAdd);
 
+        Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID);
         GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort), rc);
     }
     public void LeaveMatch(byte id, byte team){
@@ -185,10 +184,22 @@ public class Match {
         return false;
     }
     public void MarkPlayerVerified(byte playerID, byte teamID){
+        Main.LogMessage("MarkPlayerVerified: Fetching player " + playerID);
+        Main.LogMessage("MC Size: " + _matchCharacters.size());
+        for(MatchCharacter mc : _matchCharacters.values()){
+            Main.LogMessage(mc.toString());
+        }
         MatchCharacter toVerify = _matchCharacters.get(playerID);
+        if(toVerify == null){
+            Main.LogMessage("MarkPlayerVerified: null for " + playerID + ", " + teamID);
+        }
+        Main.LogMessage("1");
         toVerify.MarkVerified();
+        Main.LogMessage("2");
         _verifiedClients.put(playerID, toVerify.GetRemoteClient());
+        Main.LogMessage("3");
         _matchTeams.get(teamID).RegisterVerifiedClient(playerID, toVerify.GetRemoteClient());
+        Main.LogMessage("4");
     }
     public void SendToAll(byte[] encrypted){
         _processor.EnqueueForSend(encrypted, _verifiedClients.values());

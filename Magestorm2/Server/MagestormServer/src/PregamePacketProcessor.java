@@ -70,7 +70,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 if(toJoin.HasRoomForAnotherPlayer()){
                     RemoteClient remote = GameServer.GetClient(accountID);
                     remote.UnsubscribeFromMatches();
-                    toJoin.JoinMatch(GameServer.GetClient(accountID), teamID);
+                    toJoin.JoinMatch(remote, teamID);
                 }
                 else{
                     EnqueueForSend(Packets.MatchIsFullPacket(), _remote);
@@ -208,9 +208,9 @@ public class PregamePacketProcessor extends UDPProcessor
                 }
             }
             else {
-                toSend = Packets.LoginSucceededPacket(accountID);
                 _remote.SetNameAndID(username, accountID);
                 GameServer.ClientLoggedIn(_remote);
+                toSend = Packets.LoginSucceededPacket(accountID);
             }
         }
         else{

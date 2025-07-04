@@ -25,6 +25,7 @@ public class InGamePacketProcessor : UDPProcessor
         {
             if (_udp.HasPacketsPending)
             {
+                Debug.Log("IGPP received, opcode " + _opCode);
                 List<byte[]> toProcess = _udp.PacketsReceived();
                 foreach (byte[] decryptedPayload in toProcess)
                 {
@@ -44,7 +45,7 @@ public class InGamePacketProcessor : UDPProcessor
                             ProcessBroadcastMessagePacket();
                             break;
                         case InGame_Receive.MatchEnded:
-
+                            HandleLeaveMatchPacket();
                             break;
                     }
                 }

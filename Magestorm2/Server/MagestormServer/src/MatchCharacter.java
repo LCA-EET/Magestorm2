@@ -34,6 +34,7 @@ public class MatchCharacter {
     }
 
     public void MarkVerified(){
+        Main.LogMessage("Player " + _idInMatch + " verified for team " + _teamID);
         _verified = true;
     }
 
@@ -43,5 +44,10 @@ public class MatchCharacter {
 
     public RemoteClient GetRemoteClient(){
         return _pc.GetRemoteClient();
+    }
+
+    @Override
+    public String toString(){
+        return "MCID: " + _idInMatch + ", TeamID: " + _teamID;
     }
 }

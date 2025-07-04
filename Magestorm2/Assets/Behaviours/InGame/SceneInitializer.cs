@@ -14,6 +14,8 @@ public class SceneInitializer : MonoBehaviour
         Language.Init();
         LayerManager.Init();
         InputControls.Init();
+        Debug.Log("Sending Match Joined Packet");
+        ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.MatchJoinedPacket());
     }
 
     // Update is called once per frame

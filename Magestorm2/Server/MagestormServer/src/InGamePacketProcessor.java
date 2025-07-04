@@ -9,10 +9,12 @@ public class InGamePacketProcessor extends UDPProcessor{
         super(port);
         _owningMatch = owningMatch;
     }
-
-    public void ProcessPacket(DatagramPacket received){
+    @Override
+    protected void ProcessPacket(DatagramPacket received){
         PreProcess(received);
+        Main.LogMessage("IGPP received packet with opcode: " + _opCode);
         switch(_opCode){
+
             case InGame_Receive.JoinedMatch:
                 HandleJoinMatchPacket();
                 break;
@@ -125,9 +127,14 @@ public class InGamePacketProcessor extends UDPProcessor{
         if(CheckAccountAndCharacter()){
             byte idInMatch = _decrypted[9];
             byte teamID = _decrypted[10];
+            Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.MatchID() + ", team " + teamID);
             if(_owningMatch.IsPlayerOnTeam(idInMatch, teamID)){
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID);
+                Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);
                 SendShrineHealthPacket();
+            }
+            else{
+                Main.LogMessage("Player " + idInMatch + " NOT verified for match " + _owningMatch.MatchID() + ", team " + teamID);
             }
         }
     }
@@ -136,9 +143,11 @@ public class InGamePacketProcessor extends UDPProcessor{
         int accountID = IsLoggedIn();
         if(accountID > 0){
             if(ByteUtils.ExtractInt(_decrypted, 5) == GameServer.GetClient(accountID).GetActiveCharacter().GetCharacterID()){
+                Main.LogMessage("Account check passed: " + accountID + ", match " + _owningMatch.MatchID());
                 return true;
             }
         }
+        Main.LogMessage("Account check failure: " + accountID + ", match " + _owningMatch.MatchID());
         return false;
     }
 

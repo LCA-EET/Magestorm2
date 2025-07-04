@@ -16,6 +16,7 @@ public class UDPGameClient
         _listening = false;
         _received = new ConcurrentQueue<byte[]>();
         _client = new UdpClient(remote.Port);
+        Debug.Log("UDPClient created on port " + remote.Port);
         _remote = remote;
     }
     public void Listen()
@@ -72,5 +73,9 @@ public class UDPGameClient
             }
         }
         return toReturn;
+    }
+    public IPEndPoint RemoteEnd()
+    {
+        return _remote;
     }
 }
