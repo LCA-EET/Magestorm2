@@ -12,6 +12,7 @@ public static class Game
 {
     public static bool Running;
     private static long _serverTime;
+    private static bool _init = false;
     public static void Quit()
     {
         if (!EditorApplication.isPlaying)
@@ -40,14 +41,18 @@ public static class Game
     }
     public static void Init()
     {
-        Colors.Init();
-        Language.Init();
-        LayerManager.Init();
-        LevelData.Init();
-        InputControls.Init();
-        Teams.Init();
-        ActiveMatches.Init();
-        ProfanityChecker.Init();
+        if (!_init)
+        {
+            Colors.Init();
+            Language.Init();
+            LayerManager.Init();
+            LevelData.Init();
+            InputControls.Init();
+            Teams.Init();
+            ActiveMatches.Init();
+            ProfanityChecker.Init();
+            _init = true;
+        }
     }
     private static int ComputeChecksum(byte[] data)
     {

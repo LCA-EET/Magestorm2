@@ -13,16 +13,35 @@ public class UICharacterSelectForm : ValidatableForm
             CharacterCards[i].SetOwningForm(this, RenderTextures[i]);
         }
         RefreshCards();
+        ReselectExisting();
+    }
+    private void ReselectExisting()
+    {
+        if (PlayerAccount.SelectedCharacter != null)
+        {
+            int charID = PlayerAccount.SelectedCharacter.CharacterID;
+            foreach (UICharacterCard card in CharacterCards)
+            {
+                if (card.Populated)
+                {
+                    if(charID == card.CharacterID())
+                    {
+                        card.MarkSelected(true);
+                        return;
+                    }
+                }
+            }
+            PlayerAccount.SelectedCharacter = null;
+        }
     }
     public void RefreshCards()
     {
-        DeselectCards();
+        
         List<PlayerCharacter> characterList = PlayerAccount.GetCharacterList();
         int cardIndex = 0;
         foreach (PlayerCharacter character in characterList)
         {
             CharacterCards[cardIndex].Populate(character);
-            
             cardIndex++;
         }
         while (cardIndex < CharacterCards.Length)
@@ -44,6 +63,7 @@ public class UICharacterSelectForm : ValidatableForm
         if (PlayerAccount.UpdatesMade)
         {
             RefreshCards();
+            DeselectCards();
         }
     }
     private void DeselectCards()

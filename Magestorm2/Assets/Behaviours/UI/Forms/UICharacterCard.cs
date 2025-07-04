@@ -98,5 +98,8 @@ public class UICharacterCard : ValidatableForm
         Destroy(_model);
         _model = ComponentRegister.ModelBuilder.ConstructModel(character.AppearanceBytes, (byte)Team.Neutral, character.CharacterLevel, ModelContainer);
     }
-  
+    public int CharacterID()
+    {
+        return _character.CharacterID;
+    }
 }

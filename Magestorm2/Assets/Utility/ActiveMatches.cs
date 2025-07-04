@@ -6,10 +6,15 @@ public static class ActiveMatches
 {
     private static Dictionary<byte, ListedMatch> _activeMatches;
     public static bool UpdatesMade;
+    private static bool _init = false;
 
     public static void Init()
     {
-        _activeMatches = new Dictionary<byte, ListedMatch>();
+        if (!_init)
+        {
+            _activeMatches = new Dictionary<byte, ListedMatch>();
+            _init = true;
+        }
     }
 
     public static List<ListedMatch> MatchListing()

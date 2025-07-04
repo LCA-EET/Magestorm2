@@ -28,6 +28,11 @@ public class UILoginForm : ValidatableForm
             {
                 MatchParams.ReturningFromMatch = false;
                 ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
+                if (PlayerAccount.SelectedCharacter != null)
+                {
+                    ComponentRegister.UIPrefabManager.InstantiateMatchList();
+                }
+                Cursor.lockState = CursorLockMode.None;
             }
         }
         else

@@ -8,13 +8,18 @@ public static class PlayerAccount
     private static int _accountID;
     private static byte[] _accountIDBytes;
     private static Dictionary<int, PlayerCharacter> _characterList;
+    private static bool _init = false;
     public static PlayerCharacter SelectedCharacter; 
     public static bool UpdatesMade;
     public static void Init(int accountID)
     {
-        _characterList = new Dictionary<int, PlayerCharacter>();
-        _accountID = accountID;
-        _accountIDBytes = BitConverter.GetBytes(_accountID);
+        if (!_init)
+        {
+            _characterList = new Dictionary<int, PlayerCharacter>();
+            _accountID = accountID;
+            _accountIDBytes = BitConverter.GetBytes(_accountID);
+            _init = true;
+        }
     }
     public static void DeleteCharacter(int characterID)
     {
