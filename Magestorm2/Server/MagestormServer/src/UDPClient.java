@@ -41,6 +41,7 @@ public class UDPClient extends Thread{
             }
             receivedBuffer = new byte[bufferSize];
         }
+        _udpSocket.close();
         Main.LogMessage("UDP client on port " + _localPort + " is no longer listening.");
     }
     public void StopListening() {

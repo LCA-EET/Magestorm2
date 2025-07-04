@@ -78,10 +78,9 @@ public class UIPrefabManager : MonoBehaviour
     {
         AddToStack(Instantiate(PrefabCreateAccount));
     }
-    public void InstantiatePregamePacketProcessor(int port)
+    public void InstantiatePregamePacketProcessor()
     {
         PregamePacketProcessor packetProcessor = Instantiate(PrefabPregamePacketProcessor).GetComponent<PregamePacketProcessor>();
-        packetProcessor.Init(port);
     }
     public void InstantiateCharacterCreator()
     {
@@ -94,13 +93,6 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateMatchCreator()
     {
         AddToStack(Instantiate(PrefabMatchCreator));
-    }
-    public void ReturnToMatchSelector()
-    {
-        ComponentRegister.UIPrefabManager.ClearStack();
-        InstantiateLoginForm();
-        InstantiateCharacterSelector();
-        InstantiateMatchList();
     }
     public GameObject AddToStack(GameObject go)
     {

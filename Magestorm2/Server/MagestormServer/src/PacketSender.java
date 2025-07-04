@@ -11,7 +11,7 @@ public class PacketSender extends Thread{
     }
 
     public void run(){
-        while(!_processor.IsTerminated()){
+        while(!_processor.IsTerminated() || _processor.HasOutgoingPackets()){
             try {
                 if(_processor.HasOutgoingPackets()){
                     ArrayList<OutgoingPacket> outgoing = _processor.OutgoingPackets();
@@ -27,5 +27,6 @@ public class PacketSender extends Thread{
                 throw new RuntimeException(e);
             }
         }
+        _udp.StopListening();
     }
 }

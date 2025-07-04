@@ -190,18 +190,15 @@ public class Match {
             Main.LogMessage(mc.toString());
         }
         MatchCharacter toVerify = _matchCharacters.get(playerID);
-        if(toVerify == null){
-            Main.LogMessage("MarkPlayerVerified: null for " + playerID + ", " + teamID);
-        }
-        Main.LogMessage("1");
         toVerify.MarkVerified();
-        Main.LogMessage("2");
         _verifiedClients.put(playerID, toVerify.GetRemoteClient());
-        Main.LogMessage("3");
         _matchTeams.get(teamID).RegisterVerifiedClient(playerID, toVerify.GetRemoteClient());
-        Main.LogMessage("4");
+    }
+    public void SendMatchEndPacket(){
+        
     }
     public void SendToAll(byte[] encrypted){
+        Main.LogMessage("Sending data to " + _verifiedClients.size() + " clients.");
         _processor.EnqueueForSend(encrypted, _verifiedClients.values());
     }
     public void SendToPlayer(byte[] encrypted, MatchCharacter recipient){

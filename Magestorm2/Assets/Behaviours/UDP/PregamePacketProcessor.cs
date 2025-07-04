@@ -16,6 +16,7 @@ public class PregamePacketProcessor : UDPProcessor
     private void Awake()
     {
         ComponentRegister.PregamePacketProcessor = this;
+        Init(SharedFunctions.GameServerPort);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

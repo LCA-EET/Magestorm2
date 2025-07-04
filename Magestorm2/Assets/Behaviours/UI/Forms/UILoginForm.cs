@@ -22,13 +22,12 @@ public class UILoginForm : ValidatableForm
         _udpPort = Game.FetchServerInfo();
         if(_udpPort > 0)
         {
-            ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor(_udpPort);
-            UDPBuilder.StartListening(_udpPort);
+            SharedFunctions.GameServerPort = _udpPort;
+            ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
             if (MatchParams.ReturningFromMatch)
             {
                 MatchParams.ReturningFromMatch = false;
                 ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
-                ComponentRegister.UIPrefabManager.InstantiateMatchList();
             }
         }
         else

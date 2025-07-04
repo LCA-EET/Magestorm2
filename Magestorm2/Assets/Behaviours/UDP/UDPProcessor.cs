@@ -13,6 +13,7 @@ public class UDPProcessor : MonoBehaviour
         Debug.Log("Initializing UDP client, listening on port " + port);
         _listeningPort = port;
         _udp = UDPBuilder.GetClient(port);
+        _udp.Listen();
     }
 
     public void SendBytes(byte[] unencrypted)

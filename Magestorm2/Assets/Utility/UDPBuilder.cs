@@ -25,15 +25,6 @@ public static class UDPBuilder
             client.StopListening();
         }
     }
-    public static bool StartListening(int port)
-    {
-        if (_clients.ContainsKey(port))
-        {
-            _clients[port].Listen();
-            return true;
-        }
-        return false;
-    }
     public static UDPGameClient GetClient(int port)
     {
         if (!_clients.ContainsKey(port))

@@ -10,6 +10,11 @@ public static class SharedFunctions
         set { _params = value; }
     }
 
+    public static int GameServerPort
+    {
+        get; set;
+    }
+
     public static bool CastDown(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
     {
         return Physics.Raycast(origin.position, origin.TransformDirection(Vector3.down), out hitInfo, distance);
