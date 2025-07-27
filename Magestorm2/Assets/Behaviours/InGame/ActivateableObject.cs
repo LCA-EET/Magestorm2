@@ -4,6 +4,8 @@ public class ActivateableObject : MonoBehaviour
 {
     public byte ObjectKey;
     protected byte _objectStatus;
+    private const float _activationInterval = 3000;
+    private float _timeRemainingBeforeCanReactivate = 0;
 
     private void Awake()
     {
@@ -18,7 +20,10 @@ public class ActivateableObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(_timeRemainingBeforeCanReactivate > 0)
+        {
+            _timeRemainingBeforeCanReactivate -= Time.deltaTime;
+        }
     }
 
     protected void RegisterObject()
@@ -28,7 +33,11 @@ public class ActivateableObject : MonoBehaviour
 
     public void PlayerChangedStatus()
     {
-        Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, _objectStatus));
+        if(_timeRemainingBeforeCanReactivate <= 0)
+        {
+            _timeRemainingBeforeCanReactivate = _activationInterval;
+            Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, _objectStatus));
+        }
     }
     public void StatusChanged(byte newStatus)
     {
