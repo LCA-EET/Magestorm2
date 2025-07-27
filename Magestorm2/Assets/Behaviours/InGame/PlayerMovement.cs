@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -95,7 +96,11 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Activate()
     {
-
+        RaycastHit hitInfo;
+        if(SharedFunctions.CastForward(gameObject.transform, LayerManager.InteractableMask, 2.0f, out hitInfo)){
+            Debug.Log(hitInfo.collider.name);
+            hitInfo.collider.gameObject.GetComponent<ActivateableObject>().PlayerChangedStatus();
+        }
     }
     private void PlayStepSound()
     {
@@ -104,13 +109,17 @@ public class PlayerMovement : MonoBehaviour
             _distanceTravelledSinceLastStep = _distanceTravelled;
             Debug.Log("Standing On: " + _hitInfo.collider.gameObject.name);
             Surface standingOn = _hitInfo.collider.gameObject.GetComponent<Surface>();
-            if (standingOn != null && InputControls.Run)
+            if (standingOn != null)
             {
-                ComponentRegister.Player.PlayAudioClip(standingOn.FootstepClip);
-            }
-            else
-            {
-                Debug.Log("Null Surface");
+                if (InputControls.Run)
+                {
+                    ComponentRegister.Player.PlayAudioClip(standingOn.FootstepClip);
+                    Debug.Log("Play Footstep");
+                }
+                else
+                {
+                    Debug.Log("Not Running");
+                }
             }
         }
     }

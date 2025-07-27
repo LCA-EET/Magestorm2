@@ -14,7 +14,7 @@ public class ActivateableObject : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-            
+        RegisterObject();
     }
 
     // Update is called once per frame
@@ -28,13 +28,14 @@ public class ActivateableObject : MonoBehaviour
 
     protected void RegisterObject()
     {
-
+        Match.RegisterActivateableObject(this);
     }
 
     public void PlayerChangedStatus()
     {
         if(_timeRemainingBeforeCanReactivate <= 0)
         {
+            Debug.Log("Object State Change Packet Sent");
             _timeRemainingBeforeCanReactivate = _activationInterval;
             Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, _objectStatus));
         }
