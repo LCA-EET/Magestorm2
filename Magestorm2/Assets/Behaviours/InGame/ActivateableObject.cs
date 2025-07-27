@@ -3,13 +3,13 @@ using UnityEngine;
 public class ActivateableObject : MonoBehaviour
 {
     public byte ObjectKey;
-    protected byte _objectStatus;
-    private const float _activationInterval = 3000;
+    public byte NumStates = 2;
+    private byte _currentState = 0;
+    private const float _activationInterval = 3;
     private float _timeRemainingBeforeCanReactivate = 0;
 
     private void Awake()
     {
-        _objectStatus = 0; // default
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,13 +35,21 @@ public class ActivateableObject : MonoBehaviour
     {
         if(_timeRemainingBeforeCanReactivate <= 0)
         {
+            if(_currentState == (NumStates - 1))
+            {
+                _currentState = 0;
+            }
+            else
+            {
+                _currentState++;
+            }
             Debug.Log("Object State Change Packet Sent");
             _timeRemainingBeforeCanReactivate = _activationInterval;
-            Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, _objectStatus));
+            Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, _currentState));
         }
     }
     public void StatusChanged(byte newStatus)
     {
-        _objectStatus = newStatus;
+        _currentState = newStatus;
     }
 }

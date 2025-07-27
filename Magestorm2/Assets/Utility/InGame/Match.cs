@@ -65,6 +65,7 @@ public static class Match
         if (_objects.ContainsKey(key))
         {
             _objects[key].StatusChanged(state);
+            Debug.Log("Object state change: " + key + ", " + state);
         }
     }
     public static void ChangeShrineHealth(byte shrineID, byte health)

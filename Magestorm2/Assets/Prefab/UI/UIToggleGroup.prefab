@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2725253556268997353}
   - component: {fileID: 7665054257152603671}
   m_Layer: 5
-  m_Name: ClassToggleGroup
+  m_Name: UIToggleGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
