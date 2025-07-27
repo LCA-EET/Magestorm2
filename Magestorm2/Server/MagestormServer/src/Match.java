@@ -16,12 +16,13 @@ public class Match {
     private ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
     private final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
     private final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
+    private final ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
     private byte _nextPlayerID;
     private final int _matchPort;
     private final InGamePacketProcessor _processor;
     private final byte _maxPlayers;
 
-    private final ConcurrentHashMap<Byte, Byte> _objectStatus;
+
 
     public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime){
         _objectStatus = new ConcurrentHashMap<>();
@@ -60,17 +61,24 @@ public class Match {
         return _matchTeams.get(teamID);
     }
     public void ChangeObjectState(byte objectID, byte status){
-        _objectStatus.put(objectID, status);
+        if(_objectStatus.containsKey(objectID)){
+            _objectStatus.get(objectID).ChangeState(status);
+        }
+        else{
+            _objectStatus.put(objectID, new ActivatableObject(objectID, status));
+        }
     }
 
+
     public byte[] GetObjectStatusBytes(){
+
         int length = _objectStatus.size() * 2;
         byte[] toReturn = new byte[length];
         int index = 0;
         for(byte k : _objectStatus.keySet()){
             toReturn[index] = k;
             index++;
-            toReturn[index] = _objectStatus.get(k);
+            //toReturn[index] = _objectStatus.get(k);
             index++;
         }
         return toReturn;
@@ -209,6 +217,29 @@ public class Match {
     }
     private void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
         _processor.EnqueueForSend(encrypted, recipients);
+    }
+    public void Tick(long msElapsed){
+        CountDownTimedObjects(msElapsed);
+    }
+    private void CountDownTimedObjects(long msElapsed){
+        ArrayList<Byte> expired = new ArrayList<>();
+        for(byte key : _objectStatus.keySet()){
+            ActivatableObject ao = _objectStatus.get(key);
+            if(ao.IsTimed()){
+                float timeRemaining =ao.TimeRemaining();
+                timeRemaining -= msElapsed;
+                if(timeRemaining <= 0){
+                    expired.add(key);
+                }
+                else{
+                    ao.SetTimeRemaining(timeRemaining);
+                }
+            }
+            if(!expired.isEmpty()){
+                SendToAll(Packets.TimedObjectExpirationPacket(expired));
+            }
+        }
+
     }
     public MatchCharacter GetMatchCharacter(byte id){
         return _matchCharacters.get(id);

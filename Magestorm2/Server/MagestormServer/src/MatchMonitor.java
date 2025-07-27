@@ -3,6 +3,8 @@ import java.util.Collection;
 
 public class MatchMonitor extends Thread{
 
+    private final long _tick = 500;
+
     public MatchMonitor(){
         new Thread(this).start();
     }
@@ -13,7 +15,7 @@ public class MatchMonitor extends Thread{
                 if(MatchManager.UpdatesNeeded){
                     MatchManager.NotifySubscribers();
                 }
-                Thread.sleep(1000);
+                Thread.sleep(_tick);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -26,6 +28,9 @@ public class MatchMonitor extends Thread{
         for(Match match : activeMatches){
             if(currentTime >= match.GetExpiration()){
                 match.MarkExpired();
+            }
+            else{
+                match.Tick(_tick);
             }
         }
     }

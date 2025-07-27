@@ -189,10 +189,18 @@ public class Packets {
 
     /////////////////////// IN-GAME PACKETS ////////////////////////
     public static byte[] PlayerDataPacket(byte[] dataForPlayer){
-        byte[] toReturn = new byte[dataForPlayer.length + 1];
-        toReturn[0] = InGame_Send.PlayerData;
-        System.arraycopy(dataForPlayer, 0, toReturn, 1, dataForPlayer.length);
-        return toReturn;
+        byte[] toEncrypt = new byte[dataForPlayer.length + 1];
+        toEncrypt[0] = InGame_Send.PlayerData;
+        System.arraycopy(dataForPlayer, 0, toEncrypt, 1, dataForPlayer.length);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] TimedObjectExpirationPacket(ArrayList<Byte> expired){
+        byte[] toEncrypt = new byte[1 + expired.size()];
+        toEncrypt[0] = InGame_Send.TimedObjectExpired;
+        Byte[] expiredArray = expired.toArray(new Byte[0]);
+        System.arraycopy(expiredArray, 0, toEncrypt, 1, expiredArray.length );
+        return Cryptographer.Encrypt(toEncrypt);
     }
 
     /////////////////////// SHARED //////////////////////

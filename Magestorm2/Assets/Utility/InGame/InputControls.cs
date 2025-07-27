@@ -64,6 +64,13 @@ public static class InputControls
             _init = true;
         }
     }
+    public static bool Action
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.Action]) ) && !Match.ChatMode; 
+        }
+    }
     public static bool MiniMapZoomIn
     {
         get

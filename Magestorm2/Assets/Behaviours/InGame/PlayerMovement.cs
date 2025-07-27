@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private float _verticalAcceleration = 0.0f;
     private float _distanceTravelled = 0.0f;
     private float _distanceTravelledSinceLastStep = 0.0f;
-
+    
     private bool _positionChanged = false;
     private bool _midJump = false;
 
@@ -64,6 +64,10 @@ public class PlayerMovement : MonoBehaviour
         MoveAlongAxis(ref _lateralSpeed, _maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, _lateralAcceleration, speedModifier);
         float forwardAcceleration = _forwardAcceleration;
         float maxForwardSpeed = _maxForwardSpeed;
+        if (InputControls.Action)
+        {
+            Activate();
+        }
         if (InputControls.Run)
         {
             forwardAcceleration *= 3;
@@ -88,6 +92,10 @@ public class PlayerMovement : MonoBehaviour
                 _midJump = false;
             }
         }
+    }
+    private void Activate()
+    {
+
     }
     private void PlayStepSound()
     {

@@ -5,6 +5,10 @@ public class ActivateableObject : MonoBehaviour
     public byte ObjectKey;
     protected byte _objectStatus;
 
+    private void Awake()
+    {
+        _objectStatus = 0; // default
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

@@ -11,4 +11,5 @@ public class InGame_Send {
     public static final byte ProhibitedLanguage = 9;
     public static final byte PlayerLeftMatch = 10;
     public static final byte MatchEnded = 11;
+    public static final byte TimedObjectExpired = 12;
 }

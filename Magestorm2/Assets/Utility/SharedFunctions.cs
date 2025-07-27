@@ -14,15 +14,22 @@ public static class SharedFunctions
     {
         get; set;
     }
-
+    public static bool DirectionalCast(Transform origin, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
+    {
+        return Physics.Raycast(origin.position, origin.TransformDirection(direction), out hitInfo, distance);
+    }
     public static bool CastDown(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
     {
-        return Physics.Raycast(origin.position, origin.TransformDirection(Vector3.down), out hitInfo, distance);
+        return DirectionalCast(origin, layerMask, distance, Vector3.down, out hitInfo);
     }
     public static bool CastDown(Transform origin, int layerMask, float distance)
     {
         RaycastHit hitInfo;
         return CastDown(origin, layerMask, distance, out hitInfo);
+    }
+    public static bool CastForward(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
+    {
+        return DirectionalCast(origin, layerMask, distance, Vector3.forward, out hitInfo);
     }
     public static string PlayerClassToString(PlayerClass playerClass)
     {
