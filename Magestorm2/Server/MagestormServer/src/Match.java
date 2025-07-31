@@ -24,7 +24,7 @@ public class Match {
 
 
 
-    public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime){
+    public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration){
         _objectStatus = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
@@ -33,7 +33,7 @@ public class Match {
         _matchID = matchID;
         _creatorID = creatorID;
         _sceneID = sceneID;
-        _expirationTime = creationTime + (3600000 / 60); // one hour
+        _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
         _matchPort = GameServer.GetNextMatchPort();
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte nameBytesLength = (byte)_creatorName.length;

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class BitwiseToggleGroup : ToggleGroup
 {
     public Toggle[] Options;
+    public byte DefaultSelection = 0;
 
     public byte GetSelectedIndex()
     {
@@ -23,6 +24,8 @@ public class BitwiseToggleGroup : ToggleGroup
         {
             toggle.group = this;
         }
+        Options[DefaultSelection].Select();
+        
     }
     public bool[] GetBits()
     {

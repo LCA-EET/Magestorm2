@@ -178,6 +178,7 @@ MonoBehaviour:
   - {fileID: 4365569539837247055}
   - {fileID: 6560477321052948161}
   LevelSelection: {fileID: 3392994926824532602}
+  DurationToggles: {fileID: 5598370889737721215}
 --- !u!114 &3392994926824532602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,6 +301,7 @@ MonoBehaviour:
   - {fileID: 1277452410463480922}
   - {fileID: 6577182844708143290}
   - {fileID: 7819767238790433809}
+  DefaultSelection: 0
 --- !u!1 &6484282060677525410
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,6 +313,7 @@ GameObject:
   - component: {fileID: 7990157984758252994}
   - component: {fileID: 4892725399163713074}
   - component: {fileID: 1388328126537328876}
+  - component: {fileID: 7997626799341104114}
   m_Layer: 2
   m_Name: LevelName (1)
   m_TagString: Untagged
@@ -436,6 +439,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7997626799341104114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6484282060677525410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e1f60de09878e49b7640dfa0b9d2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TextFields:
+  - {fileID: 1388328126537328876}
+  StringReferences: 66000000
 --- !u!1 &7582348078599011424
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,6 +544,7 @@ GameObject:
   - component: {fileID: 348238055612574131}
   - component: {fileID: 5388558462982022133}
   - component: {fileID: 6920584096826615250}
+  - component: {fileID: 7515329341681381994}
   m_Layer: 0
   m_Name: Header
   m_TagString: Untagged
@@ -651,6 +670,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7515329341681381994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7867968861090698144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e1f60de09878e49b7640dfa0b9d2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TextFields:
+  - {fileID: 6920584096826615250}
+  StringReferences: 65000000
 --- !u!1 &8249675810813094426
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,6 +1323,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5674843894098760623, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7335158228580298158, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
       propertyPath: m_Name
       value: 30Minutes
@@ -1297,7 +1335,8 @@ PrefabInstance:
       propertyPath: m_text
       value: 30
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2327270718316060474, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1406,6 +1445,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5674843894098760623, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7335158228580298158, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
       propertyPath: m_Name
       value: 60Minutes
@@ -1414,7 +1457,8 @@ PrefabInstance:
       propertyPath: m_text
       value: 60
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2327270718316060474, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1523,6 +1567,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5674843894098760623, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7335158228580298158, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
       propertyPath: m_Name
       value: 15Minutes
@@ -1531,7 +1579,8 @@ PrefabInstance:
       propertyPath: m_text
       value: 15
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2327270718316060474, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1732,6 +1781,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5674843894098760623, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7335158228580298158, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
       propertyPath: m_Name
       value: 45Minutes
@@ -1740,7 +1793,8 @@ PrefabInstance:
       propertyPath: m_text
       value: 45
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2327270718316060474, guid: 0409adfe954e18f47b87d1d6cbe77d73, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

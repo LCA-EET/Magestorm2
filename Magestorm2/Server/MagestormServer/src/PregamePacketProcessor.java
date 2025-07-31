@@ -119,7 +119,8 @@ public class PregamePacketProcessor extends UDPProcessor
         if(accountID > 0){
             Main.LogMessage("Account " + accountID + " is creating a match.");
             byte sceneID = _decrypted[5];
-            MatchManager.RequestMatchCreation(accountID, sceneID);
+            byte duration = _decrypted[6];
+            MatchManager.RequestMatchCreation(accountID, sceneID, duration);
         }
     }
 
