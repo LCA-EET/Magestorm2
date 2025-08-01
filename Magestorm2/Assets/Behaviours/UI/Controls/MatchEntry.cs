@@ -5,7 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 public class MatchEntry : ValidatableForm
 {
-    public TMP_Text ID, Arena, Creator, TimeLeft;
+    public TMP_Text ID, Arena, Creator, TimeLeft, MatchType;
     private ListedMatch _match;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,7 +18,7 @@ public class MatchEntry : ValidatableForm
     {
 
     }
-
+    
     public void RefreshTimeRemaining()
     {
         TimeLeft.text = TimeUtil.MinutesAndSecondsRemaining(_match.Expiration);
@@ -29,6 +29,7 @@ public class MatchEntry : ValidatableForm
         ID.text = _match.MatchID.ToString();
         Creator.text = _match.CreatorName.ToString();
         Arena.text = LevelData.GetLevel(_match.SceneID).LevelName;
+        SetMatchTypeText();
         RefreshTimeRemaining();
         gameObject.SetActive(true);
     }
@@ -43,5 +44,21 @@ public class MatchEntry : ValidatableForm
     public ListedMatch Match
     {
         get { return _match; }
+    }
+    private void SetMatchTypeText()
+    {
+        MatchTypes matchType = (MatchTypes)_match.MatchType;
+        switch (matchType)
+        {
+            case MatchTypes.Deathmatch:
+                MatchType.text = Language.GetBaseString(103);
+                break;
+            case MatchTypes.CaptureTheFlag:
+                MatchType.text = Language.GetBaseString(105);
+                break;
+            case MatchTypes.FreeForAll:
+                MatchType.text = Language.GetBaseString(104);
+                break;
+        }
     }
 }

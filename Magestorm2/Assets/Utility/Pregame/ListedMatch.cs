@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 public class ListedMatch
 {
-    private byte _matchID, _sceneID;
+    private byte _matchID, _sceneID, _matchType;
     private long _expiration;
     private int _creatorID;
     private string _sceneName;
     private String _creatorName;
-    public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration, int creatorID)
+    public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration, int creatorID, byte matchType)
     {
+        _matchType = matchType;
         _matchID = matchID;
         _sceneID = sceneID;
         _creatorName = creatorName;
@@ -26,6 +27,10 @@ public class ListedMatch
     public byte MatchID
     {
         get { return _matchID; }
+    }
+    public byte MatchType
+    {
+        get { return _matchType; }
     }
     public byte SceneID
     {

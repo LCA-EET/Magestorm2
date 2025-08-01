@@ -84,14 +84,15 @@ public static class Pregame_Packets
     {
         return OpCodePlusAccountIDBytes(Pregame_Send.DeleteMatch);
     }
-    public static byte[] CreateMatchPacket(byte sceneID, byte duration)
+    public static byte[] CreateMatchPacket(byte sceneID, byte duration, byte matchType)
     {
         byte[] idBytes = PlayerAccount.AccountIDBytes;
-        byte[] toSend = new byte[1 + 4 + 1 + 1];
+        byte[] toSend = new byte[1 + 4 + 1 + 1 + 1];
         toSend[0] = Pregame_Send.CreateMatch;
         idBytes.CopyTo(toSend, 1);
         toSend[5] = sceneID;
         toSend[6] = duration;
+        toSend[7] = matchType;
         return toSend;
     }
 

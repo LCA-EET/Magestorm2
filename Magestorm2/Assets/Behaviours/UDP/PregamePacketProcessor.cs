@@ -220,10 +220,12 @@ public class PregamePacketProcessor : UDPProcessor
             byte nameLength = _decrypted[index];
             byte[] nameBytes = new byte[nameLength];
             index++;
+            byte matchType = _decrypted[index];
+            index++;
             Array.Copy(_decrypted, index, nameBytes, 0, nameLength);
             string creatorName = Encoding.UTF8.GetString(nameBytes);
             index += nameLength;
-            ListedMatch toAdd = new ListedMatch(matchID, sceneID, creatorName, expirationTime, creatorAccountID);
+            ListedMatch toAdd = new ListedMatch(matchID, sceneID, creatorName, expirationTime, creatorAccountID, matchType);
             ActiveMatches.AddMatch(toAdd);
         }
     }

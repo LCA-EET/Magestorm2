@@ -6,7 +6,7 @@ public class UIMatchCreationForm : ValidatableForm
 {
     public LevelEntry[] LevelEntries;
     public SelectionGroup LevelSelection;
-    public BitwiseToggleGroup DurationToggles;
+    public BitwiseToggleGroup DurationToggles, MatchTypeToggles;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -47,7 +47,7 @@ public class UIMatchCreationForm : ValidatableForm
             else
             {
                 LevelEntry selected = LevelEntries[selectedIndex];
-                Game.SendBytes(Pregame_Packets.CreateMatchPacket(selected.LevelID, DurationToggles.GetSelectedIndex()));
+                Game.SendBytes(Pregame_Packets.CreateMatchPacket(selected.LevelID, DurationToggles.GetSelectedIndex(), MatchTypeToggles.GetSelectedIndex()));
                 CloseForm();
             }
         }

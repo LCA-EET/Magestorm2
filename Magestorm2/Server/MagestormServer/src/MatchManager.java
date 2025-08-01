@@ -41,7 +41,7 @@ public class MatchManager{
         GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), subscribedClients);
         UpdatesNeeded = false;
     }
-    public static void RequestMatchCreation(int accountID, byte sceneID, byte duration){
+    public static void RequestMatchCreation(int accountID, byte sceneID, byte duration, byte matchType){
         RemoteClient rc = GameServer.GetClient(accountID);
         if(rc != null){
             if(CheckOtherMatchesCreatedByAccount(accountID)){
@@ -55,7 +55,7 @@ public class MatchManager{
                     byte matchID = NextMatchID();
                     Main.LogMessage("Attempting to create match " + matchID + "...");
                     Match newlyCreated = new Match(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
-                            sceneID, System.currentTimeMillis(), duration);
+                            sceneID, System.currentTimeMillis(), duration, matchType);
                     Main.LogMessage("Match " + matchID + " created by account " + accountID );
                     AddMatch(matchID, newlyCreated);
                 }

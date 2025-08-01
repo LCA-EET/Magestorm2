@@ -21,10 +21,11 @@ public class Match {
     private final int _matchPort;
     private final InGamePacketProcessor _processor;
     private final byte _maxPlayers;
+    private final byte _matchType;
 
 
-
-    public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration){
+    public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType){
+        _matchType = matchType;
         _objectStatus = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
@@ -37,7 +38,7 @@ public class Match {
         _matchPort = GameServer.GetNextMatchPort();
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte nameBytesLength = (byte)_creatorName.length;
-        _matchBytes = new byte[1 + 1 + 8 + 4 + 1 +  nameBytesLength + 1];
+        _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + nameBytesLength + 1];
         _lastIndex = (byte)(_matchBytes.length-1);
         int index = 0;
         _matchBytes[index] = matchID;
@@ -51,6 +52,8 @@ public class Match {
         System.arraycopy(accountIDBytes, 0, _matchBytes, index, 4);
         index+=4;
         _matchBytes[index] = nameBytesLength;
+        index++;
+        _matchBytes[index] = _matchType;
         index++;
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
         _verifiedClients = new ConcurrentHashMap<>();
