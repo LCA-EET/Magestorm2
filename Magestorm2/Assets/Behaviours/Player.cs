@@ -13,7 +13,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (InputControls.InGameMenu && !Match.MenuMode)
+        {
+            Match.MenuMode = true;
+            ComponentRegister.UIPrefabManager.InstantiateInGameMenu();
+        }
     }
 
     public void PlayAudioClip(AudioClip toPlay)

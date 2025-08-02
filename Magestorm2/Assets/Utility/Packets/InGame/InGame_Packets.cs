@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 public static class InGame_Packets
 {
+    public static byte[] LeaveMatchPacket()
+    {
+        byte[] unencrypted = new byte[2];
+        unencrypted[0] = InGame_Send.LeaveMatch;
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = MatchParams.MatchTeamID;
+        return unencrypted;
+    }
     public static byte[] BroadcastMessagePacket(string messageText)
     {
         byte[] utf8 = Encoding.UTF8.GetBytes(messageText);

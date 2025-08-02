@@ -1,14 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public static class Match
 {
     private static Dictionary<byte, Avatar> _matchPlayers;
     private static Dictionary<byte, ActivateableObject> _objects;
 
-    public static bool ChatMode;
+    public static bool ChatMode, MenuMode;
     public static bool Running;
-
+    
+    public static bool GameMode
+    {
+        get
+        {
+            return !ChatMode && !MenuMode;
+        }
+    }
     public static void Init()
     {
         _matchPlayers = new Dictionary<byte, Avatar>();
@@ -33,6 +41,12 @@ public static class Match
         avatar = toReturn ? _matchPlayers[id] : null;
         return toReturn;
     }
+    public static void LeaveMatch()
+    {
+        MatchParams.ReturningFromMatch = true;
+        SceneManager.LoadScene("Pregame");
+    }
+
     public static Dictionary<byte, Avatar> GetMatchPlayers()
     {
         return _matchPlayers;

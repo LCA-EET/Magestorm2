@@ -15,7 +15,7 @@ public class InGamePacketProcessor : UDPProcessor
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        ComponentRegister.UIPrefabManager.ClearStack();
     }
 
     // Update is called once per frame
@@ -45,18 +45,14 @@ public class InGamePacketProcessor : UDPProcessor
                             ProcessBroadcastMessagePacket();
                             break;
                         case InGame_Receive.MatchEnded:
-                            HandleLeaveMatchPacket();
+                            Match.LeaveMatch();
                             break;
                     }
                 }
             }
         }
     }
-    private void HandleLeaveMatchPacket()
-    {
-        MatchParams.ReturningFromMatch = true;
-        SceneManager.LoadScene("Pregame");
-    }
+    
     private void ProcessBroadcastMessagePacket()
     {
         int messageLength = BitConverter.ToInt32(_decrypted, 2);

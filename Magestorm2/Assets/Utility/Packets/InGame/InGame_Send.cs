@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 public static class InGame_Send
 {
-    public const byte   JoinedMatch = 1,
+    public const byte JoinedMatch = 1,
                         RequestPlayerData = 2,
                         ChangedObjectState = 3,
                         FetchShrineHealth = 4,
                         DirectMessage = 5,
                         TeamMessage = 6,
-                        BroadcastMessage = 7;
+                        BroadcastMessage = 7,
+                        LeaveMatch = 8;
 }
