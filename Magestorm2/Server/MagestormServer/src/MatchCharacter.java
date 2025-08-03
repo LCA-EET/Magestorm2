@@ -7,6 +7,10 @@ public class MatchCharacter {
     private final byte[] _INLCTA;
     private boolean _verified;
 
+    private long _lastPacketReceived;
+    private final long _inactivityWarningThreshold = 60000;
+    private final long _inactivityMaximumThreshold = 70000;
+
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch){
         _verified = false;
         _pc = pc;
@@ -44,6 +48,18 @@ public class MatchCharacter {
 
     public RemoteClient GetRemoteClient(){
         return _pc.GetRemoteClient();
+    }
+
+    public void MarkPacketReceived(){
+        _lastPacketReceived = System.currentTimeMillis();
+    }
+
+    public boolean InactivityExceededWarningThreshold(){
+        return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityWarningThreshold;
+    }
+
+    public boolean InactivityExceededMaximumThreshold(){
+        return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityMaximumThreshold;
     }
 
     @Override

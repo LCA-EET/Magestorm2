@@ -29,7 +29,13 @@ public static class Match
     }
     public static void RemoveAvatar(byte ID)
     {
-        _matchPlayers.Remove(ID);
+        if (_matchPlayers.ContainsKey(ID))
+        {
+            Avatar toRemove = _matchPlayers[ID];
+            
+            _matchPlayers.Remove(ID);
+        }
+        
     }
     public static void RegisterActivateableObject(ActivateableObject obj)
     {

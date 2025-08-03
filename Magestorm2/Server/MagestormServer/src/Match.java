@@ -120,11 +120,13 @@ public class Match {
         Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID);
         GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort), rc);
     }
-    public void LeaveMatch(byte id, byte team){
+    public void LeaveMatch(byte id, byte team, boolean send){
         _matchCharacters.remove(id);
         _verifiedClients.remove(id);
         _matchTeams.get(team).RemovePlayer(id);
-        SendToAll(Packets.PlayerLeftMatchPacket(id, team));
+        if(send){
+            SendToAll(Packets.PlayerLeftMatchPacket(id));
+        }
     }
     public byte[] PlayersInMatch(byte opCode){
         ArrayList<byte[]> teamBytes = new ArrayList<>();
@@ -241,6 +243,31 @@ public class Match {
             if(!expired.isEmpty()){
                 SendToAll(Packets.TimedObjectExpirationPacket(expired));
             }
+        }
+
+    }
+    public void CheckForInactivity(){
+        ArrayList<RemoteClient> _inactiveClients = new ArrayList<>();
+        ArrayList<MatchCharacter> _departedCharacters = new ArrayList<>();
+        ArrayList<RemoteClient> _warningClients = new ArrayList<>();
+        for(MatchCharacter mc: _matchCharacters.values()){
+            if(mc.InactivityExceededMaximumThreshold()){
+                _inactiveClients.add(mc.GetRemoteClient());
+                _departedCharacters.add(mc);
+            }
+            else if (mc.InactivityExceededWarningThreshold()){
+                _warningClients.add(mc.GetRemoteClient());
+            }
+        }
+        if(!_warningClients.isEmpty()){
+            SendToCollection(Packets.InactivityWarningPacket(), _warningClients);
+        }
+        if(!_inactiveClients.isEmpty()){
+            SendToCollection(Packets.InactivityDisconnectPacket(), _inactiveClients);
+            for(MatchCharacter mc : _departedCharacters){
+                LeaveMatch(mc.GetIDinMatch(), mc.GetTeamID(), false);
+            }
+            SendToAll(Packets.PlayersLeftMatchPacket(_departedCharacters));
         }
 
     }

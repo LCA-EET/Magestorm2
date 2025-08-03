@@ -47,12 +47,25 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.MatchEnded:
                             Match.LeaveMatch();
                             break;
+                        case InGame_Receive.PlayerLeftMatch:
+                            ProcessPlayerLeftMatchPacket();
+                            break;
                     }
                 }
             }
         }
     }
-    
+    private void ProcessPlayerLeftMatchPacket()
+    {
+        byte numDeparted = _decrypted[1];
+        int index = 2;
+        for (int i = 0; i < numDeparted; i++)
+        {
+            byte playerID = _decrypted[index];
+            Match.RemoveAvatar(playerID);
+            index++;
+        }
+    }
     private void ProcessBroadcastMessagePacket()
     {
         int messageLength = BitConverter.ToInt32(_decrypted, 2);

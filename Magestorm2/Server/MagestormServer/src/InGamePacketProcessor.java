@@ -43,7 +43,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void HandleLeaveMatch(){
         if(IsVerified()){
-            _owningMatch.LeaveMatch(_decrypted[1], _decrypted[2]);
+            _owningMatch.LeaveMatch(_decrypted[1], _decrypted[2], true);
         }
     }
     private void HandleTeamMessage(){

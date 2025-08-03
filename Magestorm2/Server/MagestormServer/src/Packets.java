@@ -17,15 +17,26 @@ public class Packets {
     private static final byte[] BannedForCheating_Bytes = new byte[]{Pregame_Send.BannedForCheating};
     private static final byte[] BannedForBehavior_Bytes = new byte[]{Pregame_Send.BannedForBehavior};
     private static final byte[] MatchIsFull_Bytes = new byte[]{Pregame_Send.MatchIsFullPacket};
-    private static final byte[] MatchEnded_Bytes = new byte[]{InGame_Send.MatchEnded};
 
-    public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
 
-    public static byte[] PlayerLeftMatchPacket(byte playerID, byte teamID){
+    public static byte[] PlayersLeftMatchPacket(ArrayList<MatchCharacter> departed){
+        byte[] toEncrypt = new byte[2 + departed.size()];
+        toEncrypt[0] = InGame_Send.PlayerLeftMatch;
+        toEncrypt[1] = (byte)departed.size();
+        int index = 2;
+        for(MatchCharacter mc : departed){
+            toEncrypt[index] = mc.GetIDinMatch();
+            index++;
+        }
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] PlayerLeftMatchPacket(byte playerID){
         byte[] toEncrypt = new byte[3];
         toEncrypt[0] = InGame_Send.PlayerLeftMatch;
-        toEncrypt[1] = playerID;
-        toEncrypt[2] = teamID;
+        toEncrypt[1] = 1;
+        toEncrypt[2] = playerID;
+        //toEncrypt[3] = teamID;
         return Cryptographer.Encrypt(toEncrypt);
     }
 
@@ -188,6 +199,12 @@ public class Packets {
 
 
     /////////////////////// IN-GAME PACKETS ////////////////////////
+    private static final byte[] MatchEnded_Bytes = new byte[]{InGame_Send.MatchEnded};
+    private static final byte[] InactivityWarning_Bytes = new byte[]{InGame_Send.InactivityWarning};
+
+    public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
+    public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
+
     public static byte[] PlayerDataPacket(byte[] dataForPlayer){
         byte[] toEncrypt = new byte[dataForPlayer.length + 1];
         toEncrypt[0] = InGame_Send.PlayerData;

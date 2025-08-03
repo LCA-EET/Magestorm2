@@ -168,6 +168,9 @@ public class PregamePacketProcessor : UDPProcessor
             index++;
             byte teamID = _decrypted[index];
             index++;
+            byte[] appearanceBytes = new byte[5];
+            Array.Copy(_decrypted, index, appearanceBytes, 0, 5);
+            index += 5;
             byte playerClass = _decrypted[index];
             index++;
             byte playerLevel = _decrypted[index];
