@@ -32,7 +32,7 @@ public static class Match
         if (_matchPlayers.ContainsKey(ID))
         {
             Avatar toRemove = _matchPlayers[ID];
-            
+            MessageData md = new MessageData(toRemove.Name + " has left the match.", "Server");
             _matchPlayers.Remove(ID);
         }
         

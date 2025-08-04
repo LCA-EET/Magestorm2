@@ -14,5 +14,6 @@ public class InGame_Send {
     public static final byte TimedObjectExpired = 12;
     public static final byte RemovedFromMatch = 13;
     public static final byte InactivityWarning = 14;
+    public static final byte PlayerJoinedMatch = 15;
 
 }

@@ -98,7 +98,6 @@ public static class ComponentRegister
         get { return _effectsList; }
         set{ _effectsList = value; }
     }
-
     public static Notifier Notifier
     {
         get

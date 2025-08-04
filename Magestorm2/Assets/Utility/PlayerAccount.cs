@@ -13,13 +13,9 @@ public static class PlayerAccount
     public static bool UpdatesMade;
     public static void Init(int accountID)
     {
-        if (!_init)
-        {
-            _characterList = new Dictionary<int, PlayerCharacter>();
-            _accountID = accountID;
-            _accountIDBytes = BitConverter.GetBytes(_accountID);
-            _init = true;
-        }
+        _characterList = new Dictionary<int, PlayerCharacter>();
+        _accountID = accountID;
+        _accountIDBytes = BitConverter.GetBytes(_accountID);
     }
     public static void DeleteCharacter(int characterID)
     {

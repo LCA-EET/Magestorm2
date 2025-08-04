@@ -116,7 +116,7 @@ public class PregamePacketProcessor : UDPProcessor
     private void HandleMatchEntryPacket()
     {
         MatchParams.Init(_decrypted);
-        ComponentRegister.PregamePacketProcessor.StopListening();
+        UDPBuilder.TerminateClient(_listeningPort);
         ComponentRegister.UIPrefabManager.ClearStack();
         SceneManager.LoadScene(MatchParams.SceneID.ToString());
     }

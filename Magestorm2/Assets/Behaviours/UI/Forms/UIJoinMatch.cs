@@ -9,6 +9,7 @@ public class UIJoinMatch : ValidatableForm
     public TMP_Text MatchCreatorText;
     public TMP_Text MatchIDText;
     public TMP_Text MatchLevelText;
+    public TMP_Text MatchTypeText;
     private Team _selectedTeam;
     private ListedMatch _match;
 
@@ -30,6 +31,7 @@ public class UIJoinMatch : ValidatableForm
         MatchIDText.text = Language.BuildString(97,_match.MatchID.ToString());
         MatchLevelText.text = Language.BuildString(99,_match.SceneName);
         MatchCreatorText.text = Language.BuildString(98, _match.CreatorName);
+        MatchTypeText.text = Language.BuildString(111, _match.MatchTypeString);   
     }
 
     // Update is called once per frame

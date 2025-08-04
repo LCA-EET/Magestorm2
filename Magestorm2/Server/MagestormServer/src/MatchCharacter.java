@@ -1,5 +1,7 @@
 public class MatchCharacter {
-    private PlayerCharacter _pc;
+    private final Match _owningMatch;
+
+    private final PlayerCharacter _pc;
 
     private final byte _teamID;
     private final byte _idInMatch;
@@ -11,9 +13,11 @@ public class MatchCharacter {
     private final long _inactivityWarningThreshold = 60000;
     private final long _inactivityMaximumThreshold = 70000;
 
-    public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch){
+    public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match){
         _verified = false;
+        _owningMatch = match;
         _pc = pc;
+        _pc.SetMatchDetails(idInMatch, match.MatchID(), teamID);
         _teamID = teamID;
         _idInMatch = idInMatch;
         byte[] nameLevelClass = _pc.GetNameLevelClassBytes();
@@ -23,6 +27,10 @@ public class MatchCharacter {
         byte[] appearanceBytes = pc.GetAppearanceBytes();
         System.arraycopy(appearanceBytes, 0, _INLCTA, 2, appearanceBytes.length);
         System.arraycopy(nameLevelClass, 0, _INLCTA, 7, nameLevelClass.length);
+    }
+
+    public PlayerCharacter PC(){
+        return _pc;
     }
 
     public byte[] GetINLCTABytes(){

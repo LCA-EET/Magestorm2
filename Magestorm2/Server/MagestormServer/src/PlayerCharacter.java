@@ -21,7 +21,11 @@ public class PlayerCharacter {
     private byte[] _matchEntryBytes;
     private final RemoteClient _remoteClient;
 
+    private byte _currentMatchID, _idInCurrentMatch, _currentTeam;
+    private boolean _inMatch;
+
     public PlayerCharacter(byte[] fetched, int accountID){
+        _inMatch = false;
         _position = new Vector3();
         _remoteClient = GameServer.GetClient(accountID);
         _accountID = accountID;
@@ -108,5 +112,30 @@ public class PlayerCharacter {
     public RemoteClient GetRemoteClient(){
         return _remoteClient;
     }
-
+    public void SetMatchDetails(byte id, byte match, byte team){
+        _idInCurrentMatch = id;
+        _currentMatchID = match;
+        _currentTeam = team;
+        _inMatch = true;
+        GameServer.AddActiveCharacter(_accountID, this);
+    }
+    public byte GetIDinMatch(){
+        return _idInCurrentMatch;
+    }
+    public byte GetMatchID(){
+        return _currentMatchID;
+    }
+    public byte GetCurrentTeam(){
+        return _currentTeam;
+    }
+    public boolean IsInMatch(){
+        return _inMatch;
+    }
+    public void MarkRemovedFromMatch(){
+        _inMatch = false;
+        _idInCurrentMatch = 0;
+        _currentMatchID = 0;
+        _currentTeam = 0;
+        GameServer.RemoveActiveCharacter(_accountID);
+    }
 }

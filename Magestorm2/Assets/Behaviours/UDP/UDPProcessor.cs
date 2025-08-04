@@ -34,9 +34,9 @@ public class UDPProcessor : MonoBehaviour
         _decrypted = decrypted;
         _opCode = _decrypted[0];
     }
-    public void StopListening()
+    public UDPGameClient GameClient
     {
-        _udp.StopListening();
+        get { return _udp; }
     }
 }
 

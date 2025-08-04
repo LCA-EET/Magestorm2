@@ -129,6 +129,7 @@ public class InGamePacketProcessor extends UDPProcessor{
             byte teamID = _decrypted[10];
             Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.MatchID() + ", team " + teamID);
             if(_owningMatch.IsPlayerOnTeam(idInMatch, teamID)){
+                _owningMatch.SendToAll(Packets.PlayerJoinedMatchPacket(_owningMatch.PlayerData(idInMatch)));
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID);
                 Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);
                 SendShrineHealthPacket();

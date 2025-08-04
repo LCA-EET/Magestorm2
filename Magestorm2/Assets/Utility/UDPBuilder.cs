@@ -33,4 +33,12 @@ public static class UDPBuilder
         }
         return _clients[port];
     }
+    public static void TerminateClient(int port)
+    {
+        if (_clients.ContainsKey(port))
+        {
+            _clients[port].StopListening();
+            _clients.Remove(port);
+        }
+    }
 }

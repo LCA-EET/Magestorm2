@@ -11,6 +11,7 @@ public class GameServer extends Thread {
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     public static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
+    private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
@@ -20,12 +21,23 @@ public class GameServer extends Thread {
        CharacterManager.init();
         _loggedInClients = new ConcurrentHashMap<>();
         _maxPlayerData = new ConcurrentHashMap<>();
+        _activeCharacters = new ConcurrentHashMap<>();
        MatchManager.init();
        _rcMonitor = new RemoteClientMonitor();
        _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
        _levelData = Database.GetLevelsList((byte)1);
        _usedMatchPorts = new ConcurrentSkipListSet<>();
     }
+    public static void AddActiveCharacter(int accountID, PlayerCharacter active){
+        _activeCharacters.put(accountID, active);
+    }
+    public static PlayerCharacter GetActiveCharacter(int accountID){
+        return _activeCharacters.get(accountID);
+    }
+    public static PlayerCharacter RemoveActiveCharacter(int accountID){
+        return _activeCharacters.remove(accountID);
+    }
+
 
     public static boolean IsLoggedIn(int accountID){
         return _loggedInClients.containsKey(accountID);
@@ -55,6 +67,7 @@ public class GameServer extends Thread {
         RemoteClient toReturn = null;
         if(_loggedInClients.containsKey(accountID)){
             toReturn = _loggedInClients.remove(accountID);
+
         }
         return toReturn;
     }
@@ -81,9 +94,23 @@ public class GameServer extends Thread {
 
     }
 
-    public static void ClientLoggedOut(int accountID){
+    public static RemoteClient ClientLoggedOut(int accountID){
         Main.LogMessage("Client logged out: " + accountID);
-        _loggedInClients.remove(accountID);
+        RemoteClient removed = _loggedInClients.remove(accountID);
+        PlayerCharacter removedCharacter = _activeCharacters.remove(accountID);
+        if(removedCharacter != null){
+            byte idInMatch = removedCharacter.GetIDinMatch();
+            byte matchID = removedCharacter.GetMatchID();
+            byte teamID = removedCharacter.GetCurrentTeam();
+            Match match = MatchManager.GetMatch(matchID);
+            if(match != null){
+                if(match.IsPlayerOnTeam(idInMatch, teamID)){
+                    match.LeaveMatch(idInMatch, teamID, true);
+
+                }
+            }
+        }
+        return removed;
     }
     public static void EnqueueForSend(byte[] encrypted, RemoteClient recipient){
         _pgProcessor.EnqueueForSend(encrypted, recipient);

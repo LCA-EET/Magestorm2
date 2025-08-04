@@ -21,6 +21,7 @@ public class MessageDisplay : MonoBehaviour
     {
         
     }
+
     public void SetMessage(MessageData messageData)
     {
         _messageData = messageData;

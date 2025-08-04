@@ -203,7 +203,7 @@ public class PregamePacketProcessor extends UDPProcessor
         if(validCreds){
             if(GameServer.IsLoggedIn(accountID)){
                 toSend = Packets.AlreadyLoggedInPacket();
-                RemoteClient alreadyExisting = GameServer.RemoveClient(accountID);
+                RemoteClient alreadyExisting = GameServer.ClientLoggedOut(accountID);
                 if(alreadyExisting != null){
                     EnqueueForSend(Packets.RemovedFromServerPacket(RemovalReason.AlreadyLoggedIn),
                             alreadyExisting);

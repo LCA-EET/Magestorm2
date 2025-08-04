@@ -29,7 +29,7 @@ public class MatchEntry : ValidatableForm
         ID.text = _match.MatchID.ToString();
         Creator.text = _match.CreatorName.ToString();
         Arena.text = LevelData.GetLevel(_match.SceneID).LevelName;
-        SetMatchTypeText();
+        MatchType.text = _match.MatchTypeString;
         RefreshTimeRemaining();
         gameObject.SetActive(true);
     }
@@ -45,20 +45,5 @@ public class MatchEntry : ValidatableForm
     {
         get { return _match; }
     }
-    private void SetMatchTypeText()
-    {
-        MatchTypes matchType = (MatchTypes)_match.MatchType;
-        switch (matchType)
-        {
-            case MatchTypes.Deathmatch:
-                MatchType.text = Language.GetBaseString(103);
-                break;
-            case MatchTypes.CaptureTheFlag:
-                MatchType.text = Language.GetBaseString(105);
-                break;
-            case MatchTypes.FreeForAll:
-                MatchType.text = Language.GetBaseString(104);
-                break;
-        }
-    }
+    
 }

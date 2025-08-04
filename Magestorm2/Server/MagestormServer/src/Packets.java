@@ -205,6 +205,13 @@ public class Packets {
     public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
 
+
+    public static byte[] PlayerJoinedMatchPacket(byte[] INLCTA){
+        byte[] toEncrypt = new byte[1 + INLCTA.length];
+        toEncrypt[0] = InGame_Send.PlayerJoinedMatch;
+        System.arraycopy(INLCTA, 0, toEncrypt, 1, INLCTA.length);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] PlayerDataPacket(byte[] dataForPlayer){
         byte[] toEncrypt = new byte[dataForPlayer.length + 1];
         toEncrypt[0] = InGame_Send.PlayerData;

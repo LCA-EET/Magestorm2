@@ -113,7 +113,7 @@ public class Match {
     public void JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
         MatchTeam matchTeam = _matchTeams.get(teamID);
-        MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID);
+        MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this);
         matchTeam.AddPlayer(playerID, toAdd);
         _matchCharacters.put(playerID, toAdd);
 
@@ -121,7 +121,7 @@ public class Match {
         GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort), rc);
     }
     public void LeaveMatch(byte id, byte team, boolean send){
-        _matchCharacters.remove(id);
+        _matchCharacters.remove(id).PC().MarkRemovedFromMatch();
         _verifiedClients.remove(id);
         _matchTeams.get(team).RemovePlayer(id);
         if(send){

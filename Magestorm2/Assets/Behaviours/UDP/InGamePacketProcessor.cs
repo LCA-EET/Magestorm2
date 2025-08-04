@@ -45,15 +45,47 @@ public class InGamePacketProcessor : UDPProcessor
                             ProcessBroadcastMessagePacket();
                             break;
                         case InGame_Receive.MatchEnded:
-                            Match.LeaveMatch();
+                            ExitMatch();
                             break;
                         case InGame_Receive.PlayerLeftMatch:
                             ProcessPlayerLeftMatchPacket();
+                            break;
+                        case InGame_Receive.RemovedFromMatch:
+                            ExitMatch();
+                            break;
+                        case InGame_Receive.PlayerJoinedMatch:
+                            ProcessPlayerJoinedMatchPacket();
                             break;
                     }
                 }
             }
         }
+    }
+    private void ExitMatch()
+    {
+        UDPBuilder.TerminateClient(_listeningPort);
+        Match.LeaveMatch();
+    }
+    private void ProcessPlayerJoinedMatchPacket()
+    {
+        byte idInMatch = _decrypted[1];
+        if(idInMatch != MatchParams.IDinMatch)
+        {
+            byte teamID = _decrypted[2];
+            byte[] appearance = new byte[5];
+            int index = 3;
+            Array.Copy(_decrypted, index, appearance, 0, appearance.Length);
+            index += 5;
+            byte level = _decrypted[index];
+            index++;
+            byte characterClass = _decrypted[index];
+            index++;
+            byte nameLength = _decrypted[index];
+            index++;
+            string name = ByteUtils.BytesToUTF8(_decrypted, index, nameLength);
+            MessageData md = new MessageData(name + " has joined the match.", "Server");
+        }
+        
     }
     private void ProcessPlayerLeftMatchPacket()
     {
