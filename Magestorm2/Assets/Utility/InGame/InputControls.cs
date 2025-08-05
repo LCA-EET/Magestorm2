@@ -51,7 +51,7 @@ public static class InputControls
             _controls.Add(InputControl.Descend, KeyCode.PageDown);
             _controls.Add(InputControl.HUDToggle, KeyCode.H);
             _controls.Add(InputControl.ChatMode, KeyCode.Quote);
-            _controls.Add(InputControl.CancelChat, KeyCode.Escape);
+            _controls.Add(InputControl.CancelChat, KeyCode.Alpha0); //Escape
             _controls.Add(InputControl.SendMessage, KeyCode.Return);
             _controls.Add(InputControl.PreviousTrack, KeyCode.Minus);
             _controls.Add(InputControl.NextTrack, KeyCode.Plus);
@@ -62,7 +62,7 @@ public static class InputControls
             _controls.Add(InputControl.ChatScrollBottom, KeyCode.End);
             _controls.Add(InputControl.MiniMapZoomIn, KeyCode.LeftBracket);
             _controls.Add(InputControl.MiniMapZoomOut, KeyCode.RightBracket);
-            _controls.Add(InputControl.InGameMenu, KeyCode.Escape);
+            _controls.Add(InputControl.InGameMenu, KeyCode.Alpha0); //Escape
             _init = true;
         }
     }

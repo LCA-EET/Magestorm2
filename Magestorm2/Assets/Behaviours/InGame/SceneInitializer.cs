@@ -15,6 +15,8 @@ public class SceneInitializer : MonoBehaviour
         LayerManager.Init();
         InputControls.Init();
         Debug.Log("Sending Match Joined Packet");
+        Match.ChatMode = false;
+        Match.MenuMode = false;
         ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.MatchJoinedPacket());
     }
 

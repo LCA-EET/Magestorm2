@@ -14,6 +14,7 @@ public class MatchCharacter {
     private final long _inactivityMaximumThreshold = 70000;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match){
+        MarkPacketReceived();
         _verified = false;
         _owningMatch = match;
         _pc = pc;
@@ -47,6 +48,7 @@ public class MatchCharacter {
 
     public void MarkVerified(){
         Main.LogMessage("Player " + _idInMatch + " verified for team " + _teamID);
+        MarkPacketReceived();
         _verified = true;
     }
 
