@@ -102,13 +102,28 @@ public class InGamePacketProcessor : UDPProcessor
     {
         int messageLength = BitConverter.ToInt32(_decrypted, 2);
         Avatar sender = null;
-        if (Match.GetAvatar(_decrypted[1], ref sender))
+        byte playerID = _decrypted[1];
+        byte[] messageBytes = new byte[messageLength];
+        Array.Copy(_decrypted, 6, messageBytes, 0, messageLength);
+        string message = Encoding.UTF8.GetString(messageBytes);
+        string name;
+        if(playerID == MatchParams.IDinMatch)
         {
-            byte[] messageBytes = new byte[messageLength];
-            Array.Copy(_decrypted, 6, messageBytes, 0, messageLength);
-            string message = Encoding.UTF8.GetString(messageBytes);
-            MessageData md = new MessageData(message, sender.Name);
+            name = "You";
         }
+        else
+        {
+            if (Match.GetAvatar(playerID, ref sender))
+            {
+                name = sender.Name;
+            }
+            else
+            {
+                name = "Player " + playerID;
+            }
+        }
+        MessageData md = new MessageData(message, name);
+        
     }
     private void ProcessAllShrineHealthPacket()
     {

@@ -192,6 +192,7 @@ public class Match {
     public boolean IsPlayerVerified(byte playerID){
         MatchCharacter toCheck = _matchCharacters.get(playerID);
         if(toCheck != null){
+            toCheck.MarkPacketReceived();
             return toCheck.IsVerified();
         }
         return false;
@@ -252,6 +253,7 @@ public class Match {
         ArrayList<RemoteClient> _warningClients = new ArrayList<>();
         for(MatchCharacter mc: _matchCharacters.values()){
             if(mc.InactivityExceededMaximumThreshold()){
+                Main.LogMessage("Sending inactivity termination.");
                 _inactiveClients.add(mc.GetRemoteClient());
                 _departedCharacters.add(mc);
             }
@@ -260,6 +262,7 @@ public class Match {
             }
         }
         if(!_warningClients.isEmpty()){
+            Main.LogMessage("Sending inactivity warning.");
             SendToCollection(Packets.InactivityWarningPacket(), _warningClients);
         }
         if(!_inactiveClients.isEmpty()){

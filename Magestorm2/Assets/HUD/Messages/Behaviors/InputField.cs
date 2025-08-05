@@ -28,7 +28,6 @@ public class InputField : MonoBehaviour
         {
             string message = _tmpTextMessage.text;
             CancelChat();
-            MessageData md = new MessageData(message, "test");
             if (!ProfanityChecker.ContainsProhibitedLanguage(message))
             {
                 if (message.StartsWith("/"))
