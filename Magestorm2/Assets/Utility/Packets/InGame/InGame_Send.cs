@@ -13,5 +13,6 @@ public static class InGame_Send
                         DirectMessage = 5,
                         TeamMessage = 6,
                         BroadcastMessage = 7,
-                        LeaveMatch = 8;
+                        LeaveMatch = 8,
+                        InactivityCheckResponse = 9;
 }

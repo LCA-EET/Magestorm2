@@ -130,6 +130,10 @@ public static class Pregame_Packets
     {
         return OpCodePlusAccountIDBytes(Pregame_Send.UnsubscribeFromMatches);
     }
+    public static byte[] RequestMatchListPacket()
+    {
+        return OpCodePlusAccountIDBytes(Pregame_Send.RequestMatchList);
+    }
     public static byte[] SubscribeToMatchesPacket()
     {
         byte[] toSend = new byte[1 + 4 + 4];

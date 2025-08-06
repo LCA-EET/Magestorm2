@@ -17,7 +17,7 @@ public class Packets {
     private static final byte[] BannedForCheating_Bytes = new byte[]{Pregame_Send.BannedForCheating};
     private static final byte[] BannedForBehavior_Bytes = new byte[]{Pregame_Send.BannedForBehavior};
     private static final byte[] MatchIsFull_Bytes = new byte[]{Pregame_Send.MatchIsFullPacket};
-
+    private static final byte[] AcknowledgeSubscription_Bytes = new byte[]{Pregame_Send.AcknowledgeSubscription};
 
     public static byte[] PlayersLeftMatchPacket(ArrayList<MatchCharacter> departed){
         byte[] toEncrypt = new byte[2 + departed.size()];
@@ -39,7 +39,7 @@ public class Packets {
         //toEncrypt[3] = teamID;
         return Cryptographer.Encrypt(toEncrypt);
     }
-
+    public static byte[] AcknowledgeSubscriptionPacket(){return Cryptographer.Encrypt(AcknowledgeSubscription_Bytes);}
     public static byte[] MessagePacket(byte[] decrypted, byte opCode){
         decrypted[0] = opCode;
         return Cryptographer.Encrypt(decrypted);

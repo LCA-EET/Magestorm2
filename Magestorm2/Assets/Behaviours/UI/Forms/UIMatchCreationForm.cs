@@ -47,7 +47,7 @@ public class UIMatchCreationForm : ValidatableForm
             else
             {
                 LevelEntry selected = LevelEntries[selectedIndex];
-                Game.SendBytes(Pregame_Packets.CreateMatchPacket(selected.LevelID, DurationToggles.GetSelectedIndex(), MatchTypeToggles.GetSelectedIndex()));
+                Game.SendPregameBytes(Pregame_Packets.CreateMatchPacket(selected.LevelID, DurationToggles.GetSelectedIndex(), MatchTypeToggles.GetSelectedIndex()));
                 CloseForm();
             }
         }

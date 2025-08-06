@@ -30,7 +30,7 @@ public class UILoginForm : ValidatableForm
                 ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
                 if (PlayerAccount.SelectedCharacter != null)
                 {
-                    ComponentRegister.UIPrefabManager.InstantiateMatchList();
+                    Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket());
                 }
                 Cursor.lockState = CursorLockMode.None;
             }

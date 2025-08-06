@@ -56,9 +56,17 @@ public class PregamePacketProcessor extends UDPProcessor
             case Pregame_Receive.JoinMatch:
                 HandleJoinMatchPacket();
                 break;
+            case Pregame_Receive.RequestMatchList:
+                HandleMatchListRequest();
+                break;
         }
     }
-
+    private void HandleMatchListRequest(){
+        int accountID = IsLoggedIn();
+        if(accountID > 0){
+            MatchManager.SendMatchListToClient(_remote);
+        }
+    }
     private void HandleJoinMatchPacket()
     {
         int accountID = IsLoggedIn();

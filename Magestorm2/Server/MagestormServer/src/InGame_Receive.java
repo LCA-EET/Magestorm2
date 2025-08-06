@@ -9,4 +9,5 @@ public class InGame_Receive {
     public static final byte TeamMessage = 6;
     public static final byte BroadcastMessage = 7;
     public static final byte LeaveMatch = 8;
+    public static final byte InactivityCheckResponse = 9;
 }

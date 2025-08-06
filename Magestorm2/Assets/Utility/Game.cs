@@ -22,9 +22,13 @@ public static class Game
             Application.Quit();
         }
     }
-    public static void SendBytes(byte[] unencrypted)
+    public static void SendPregameBytes(byte[] unencrypted)
     {
         ComponentRegister.PregamePacketProcessor.SendBytes(unencrypted);
+    }
+    public static void SendInGameBytes(byte[] unencrypted)
+    {
+        ComponentRegister.InGamePacketProcessor.SendBytes(unencrypted);
     }
     public static void MessageBoxReference(int referenceID)
     {

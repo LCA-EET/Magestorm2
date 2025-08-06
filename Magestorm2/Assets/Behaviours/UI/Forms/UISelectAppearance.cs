@@ -26,7 +26,7 @@ public class UISelectAppearance : ValidatableForm
     public override void ButtonPressed(ButtonType buttonType)
     {
         byte[] appearanceBytes = _preview.AppearanceBytes();
-        Game.SendBytes(Pregame_Packets.UpdateAppearancePacket(appearanceBytes, _characterID));
+        Game.SendPregameBytes(Pregame_Packets.UpdateAppearancePacket(appearanceBytes, _characterID));
         PlayerAccount.GetCharacter(_characterID).AppearanceBytes = appearanceBytes;
         PlayerAccount.MarkUpdatesMade();
         CloseForm();

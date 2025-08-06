@@ -22,4 +22,6 @@ public class Pregame_Send {
     public static final byte NameCheckResult = 21;
     public static final byte MatchEntryPacket = 22;
     public static final byte MatchIsFullPacket = 23;
+    public static final byte AcknowledgeSubscription = 24;
+
 }

@@ -1,6 +1,6 @@
 ﻿public static class Pregame_Receive
 {
-    public const byte   LogInSucceeded = 1,
+    public const byte LogInSucceeded = 1,
                         LogInFailed = 2,
                         AccountCreated = 3,
                         CreationFailed = 4,
@@ -22,5 +22,6 @@
                         MatchDetails = 20,
                         NameCheckResult = 21,
                         MatchEntryPacket = 22,
-                        MatchIsFullPacket = 23;
+                        MatchIsFullPacket = 23,
+                        AcknowledgeSubscription = 24;
 }

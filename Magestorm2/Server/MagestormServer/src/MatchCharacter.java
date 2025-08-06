@@ -10,8 +10,8 @@ public class MatchCharacter {
     private boolean _verified;
 
     private long _lastPacketReceived;
-    private final long _inactivityWarningThreshold = 60000;
-    private final long _inactivityMaximumThreshold = 70000;
+    private final long _inactivityWarningThreshold = 30000;
+    private final long _inactivityMaximumThreshold = 61000;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match){
         MarkPacketReceived();
@@ -69,6 +69,7 @@ public class MatchCharacter {
     }
 
     public boolean InactivityExceededMaximumThreshold(){
+        Main.LogMessage("Inactivity check: " + _lastPacketReceived + ", " + _inactivityMaximumThreshold);
         return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityMaximumThreshold;
     }
 

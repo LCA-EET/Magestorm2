@@ -56,10 +56,17 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.PlayerJoinedMatch:
                             ProcessPlayerJoinedMatchPacket();
                             break;
+                        case InGame_Receive.InactivityWarning:
+                            ProcessInactivityWarning();
+                            break;
                     }
                 }
             }
         }
+    }
+    private void ProcessInactivityWarning()
+    {
+        Game.SendInGameBytes(InGame_Packets.InactivityResponsePacket());
     }
     private void ExitMatch()
     {

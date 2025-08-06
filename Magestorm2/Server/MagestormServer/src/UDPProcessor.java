@@ -28,7 +28,7 @@ public class UDPProcessor {
         _terminated = true;
     }
     protected void PreProcess(DatagramPacket received){
-        _remote = new RemoteClient(received, _listeningPort);
+        _remote = new RemoteClient(received);
         _decrypted = Cryptographer.Decrypt(received.getData());
         _opCode = _decrypted[0];
     }

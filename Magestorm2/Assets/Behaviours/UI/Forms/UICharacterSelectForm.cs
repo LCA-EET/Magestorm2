@@ -80,7 +80,7 @@ public class UICharacterSelectForm : ValidatableForm
     }
     protected override void PassedValidation()
     {
-        ComponentRegister.UIPrefabManager.InstantiateMatchList();
+        Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket());
     }
     protected override bool ValidateForm()
     {

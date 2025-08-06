@@ -14,17 +14,22 @@ public class MatchManager{
         _monitor = new MatchMonitor();
     }
 
+    public static void SendMatchListToClient(RemoteClient rc){
+        GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
+    }
+
     public static void Subscribe(int accountID, boolean subscribe, int charID){
         Main.LogMessage("MatchManager.Subscribe: " + charID +", " + subscribe);
         RemoteClient rc = GameServer.GetClient(accountID);
         if(rc != null){
             if(subscribe){
                 rc.SubscribeToMatches(charID);
+                GameServer.EnqueueForSend(Packets.AcknowledgeSubscriptionPacket(), rc);
             }
             else{
                 rc.UnsubscribeFromMatches();
             }
-            GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
+
         }
         else{
             Main.LogMessage("MatchManager.Subscribe: rc is null for account id: " + accountID);

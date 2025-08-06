@@ -44,7 +44,7 @@ public class UIJoinMatch : ValidatableForm
         if (ValidateForm())
         {
             MatchParams.ExpirationTime = _match.Expiration;
-            Game.SendBytes(Pregame_Packets.JoinMatchPacket(_match.MatchID, (byte)_selectedTeam));
+            Game.SendPregameBytes(Pregame_Packets.JoinMatchPacket(_match.MatchID, (byte)_selectedTeam));
         }
         else
         {

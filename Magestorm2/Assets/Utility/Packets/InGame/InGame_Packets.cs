@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 public static class InGame_Packets
 {
+    public static byte[] InactivityResponsePacket() { return OpCodePlusID(InGame_Send.InactivityCheckResponse); }
     public static byte[] LeaveMatchPacket()
     {
         byte[] unencrypted = new byte[2];
@@ -50,5 +51,13 @@ public static class InGame_Packets
         unencrypted[10] = MatchParams.MatchTeamID;
         return unencrypted;
 
+    }
+    
+    public static byte[] OpCodePlusID(byte opCode)
+    {
+        byte[] unencrypted = new byte[2];
+        unencrypted[0] = opCode;
+        unencrypted[1]= MatchParams.IDinMatch;
+        return unencrypted;
     }
 }

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class InGamePacketProcessor extends UDPProcessor{
-    private Match _owningMatch;
+    private final Match _owningMatch;
 
     public InGamePacketProcessor(int port, Match owningMatch){
         super(port);
@@ -12,7 +12,6 @@ public class InGamePacketProcessor extends UDPProcessor{
     @Override
     protected void ProcessPacket(DatagramPacket received){
         PreProcess(received);
-        Main.LogMessage("IGPP received packet with opcode: " + _opCode);
         switch(_opCode){
 
             case InGame_Receive.JoinedMatch:
@@ -39,6 +38,14 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_Receive.LeaveMatch:
                 HandleLeaveMatch();
                 break;
+            case InGame_Receive.InactivityCheckResponse:
+                InactivityCheckResponse();
+                break;
+        }
+    }
+    private void InactivityCheckResponse(){
+        if(IsVerified()){
+            _owningMatch.GetMatchCharacter(_decrypted[1]).MarkPacketReceived();
         }
     }
     private void HandleLeaveMatch(){

@@ -107,7 +107,9 @@ public class PregamePacketProcessor : UDPProcessor
                         case Pregame_Receive.MatchEntryPacket:
                             HandleMatchEntryPacket();
                             break;
-
+                        case Pregame_Receive.AcknowledgeSubscription:
+                            ComponentRegister.UIPrefabManager.InstantiateMatchList();
+                            break;
                     }
                 }
             }

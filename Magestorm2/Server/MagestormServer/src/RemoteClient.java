@@ -11,7 +11,7 @@ public class RemoteClient {
 
     private PlayerCharacter _activeCharacter;
 
-    public RemoteClient(DatagramPacket received, int receivingPort){
+    public RemoteClient(DatagramPacket received){
         _subscribedToMatches = false;
         _address = received.getAddress();
         //Main.LogMessage("Remote client IP: " + _address.getHostAddress() + ":" + _emanatingPort);

@@ -195,6 +195,9 @@ public class Match {
             toCheck.MarkPacketReceived();
             return toCheck.IsVerified();
         }
+        else{
+            Main.LogMessage("toCheck in IsPlayerVerified is null, for player: " + playerID);
+        }
         return false;
     }
     public void MarkPlayerVerified(byte playerID, byte teamID){
@@ -222,6 +225,7 @@ public class Match {
         SendToCollection(encrypted, _matchTeams.get(teamID).GetRemoteClients());
     }
     private void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
+        Main.LogMessage("Sending data to " + _verifiedClients.size() + " collection.");
         _processor.EnqueueForSend(encrypted, recipients);
     }
     public void Tick(long msElapsed){
