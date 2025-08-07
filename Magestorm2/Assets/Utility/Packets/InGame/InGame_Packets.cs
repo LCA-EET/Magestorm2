@@ -9,7 +9,7 @@ public static class InGame_Packets
     public static byte[] InactivityResponsePacket() { return OpCodePlusID(InGame_Send.InactivityCheckResponse); }
     public static byte[] LeaveMatchPacket()
     {
-        byte[] unencrypted = new byte[2];
+        byte[] unencrypted = new byte[3];
         unencrypted[0] = InGame_Send.LeaveMatch;
         unencrypted[1] = MatchParams.IDinMatch;
         unencrypted[2] = MatchParams.MatchTeamID;

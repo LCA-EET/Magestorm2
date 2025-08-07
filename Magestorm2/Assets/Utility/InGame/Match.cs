@@ -49,6 +49,7 @@ public static class Match
     }
     public static void LeaveMatch()
     {
+        UDPBuilder.TerminateClient(MatchParams.ListeningPort);
         MatchParams.ReturningFromMatch = true;
         SceneManager.LoadScene("Pregame");
     }

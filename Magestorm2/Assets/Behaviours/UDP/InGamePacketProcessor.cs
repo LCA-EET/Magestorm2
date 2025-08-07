@@ -45,13 +45,13 @@ public class InGamePacketProcessor : UDPProcessor
                             ProcessBroadcastMessagePacket();
                             break;
                         case InGame_Receive.MatchEnded:
-                            ExitMatch();
+                            Match.LeaveMatch();
                             break;
                         case InGame_Receive.PlayerLeftMatch:
                             ProcessPlayerLeftMatchPacket();
                             break;
                         case InGame_Receive.RemovedFromMatch:
-                            ExitMatch();
+                            Match.LeaveMatch();
                             break;
                         case InGame_Receive.PlayerJoinedMatch:
                             ProcessPlayerJoinedMatchPacket();
@@ -68,11 +68,7 @@ public class InGamePacketProcessor : UDPProcessor
     {
         Game.SendInGameBytes(InGame_Packets.InactivityResponsePacket());
     }
-    private void ExitMatch()
-    {
-        UDPBuilder.TerminateClient(_listeningPort);
-        Match.LeaveMatch();
-    }
+
     private void ProcessPlayerJoinedMatchPacket()
     {
         byte idInMatch = _decrypted[1];
