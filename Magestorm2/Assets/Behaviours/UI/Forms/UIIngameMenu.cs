@@ -7,6 +7,7 @@ public class UIIngameMenu : ValidatableForm
     {
         AssociateFormToButtons();
         Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     // Update is called once per frame

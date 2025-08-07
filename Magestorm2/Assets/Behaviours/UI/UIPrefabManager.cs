@@ -117,7 +117,10 @@ public class UIPrefabManager : MonoBehaviour
     public void PopFromStack()
     {
         GameObject popped = _uiStack.Pop();
-        _uiStack.Peek().SetActive(true);
+        if(_uiStack.Count > 0)
+        {
+            _uiStack.Peek().SetActive(true);
+        }
         _poppedObjects.Enqueue(popped);
     }
 }

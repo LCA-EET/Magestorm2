@@ -13,10 +13,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (InputControls.InGameMenu && !Match.MenuMode)
+        if (InputControls.InGameMenu)
         {
-            Match.MenuMode = true;
-            ComponentRegister.UIPrefabManager.InstantiateInGameMenu();
+            if (!Match.MenuMode)
+            {
+                ComponentRegister.UIPrefabManager.InstantiateInGameMenu();
+            }
+            else
+            {
+                ComponentRegister.UIPrefabManager.PopFromStack();
+            }
+            Match.MenuMode = !Match.MenuMode;
         }
     }
 

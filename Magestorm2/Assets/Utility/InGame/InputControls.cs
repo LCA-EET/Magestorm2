@@ -204,7 +204,7 @@ public static class InputControls
     {
         get
         {
-            return Input.GetKeyDown(_controls[InputControl.InGameMenu]) && Match.GameMode;
+            return Input.GetKeyDown(_controls[InputControl.InGameMenu]);
         }
     }
     public static bool CancelChat
