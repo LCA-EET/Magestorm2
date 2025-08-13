@@ -7,8 +7,10 @@ public class InputField : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private TMP_InputField _tmpTextMessage;
     public TMP_Text placeHolder;
+    public static Team ChatTarget;
     void Start()
     {
+        ChatTarget = Team.Neutral;
         _tmpTextMessage = GetComponent<TMP_InputField>();
         Language.Init();
         InputControls.Init();

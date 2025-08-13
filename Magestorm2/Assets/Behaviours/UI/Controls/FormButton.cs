@@ -46,6 +46,10 @@ public class FormButton : MonoBehaviour
     {
        
     }
+    public virtual void CallBack(ButtonType buttonType)
+    {
+
+    }
     private void NotifyForm()
     {
         UIAudio.PlayButtonPress();
