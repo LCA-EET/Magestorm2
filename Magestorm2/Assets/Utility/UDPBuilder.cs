@@ -8,7 +8,7 @@ public static class UDPBuilder
     public static void Init(string hostname)
     {
         //_serverAddress = Dns.GetHostAddresses(hostname)[0];
-        _serverAddress = IPAddress.Parse("192.168.1.93");
+        _serverAddress = IPAddress.Parse("192.168.2.10");
         Debug.Log("Server IP: " + _serverAddress.ToString());
         _clients = new Dictionary<int, UDPGameClient>();
     }
