@@ -20,8 +20,13 @@ public class Main {
             Database.UpdateServerInfo();
             GameServer.init();
         }
+        else{
+            Main.LogMessage("Exiting due to a failure to access the database.");
+            _serverLog.WriteNow();
+            System.exit(0);
+        }
     }
-    public static void InitLog(String logPath, String errorPath){
+    public static void InitLog(){
         _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath);
     }
     public static void LogMessage(String toLog){

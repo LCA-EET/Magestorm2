@@ -41,7 +41,10 @@ public class Log extends Thread{
             System.err.println(e.getMessage());
         }
     }
-
+    public void WriteNow(){
+        ProcessQueue(_messageQueue, _logFileWriter);
+        ProcessQueue(_errorQueue, _errorFileWriter);
+    }
     private void ProcessQueue(ConcurrentLinkedQueue toProcess, FileWriter writer){
         while(!toProcess.isEmpty()){
             String message = toProcess.remove().toString();

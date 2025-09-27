@@ -26,7 +26,6 @@ public class ProfanityChecker {
         LetterReplace("i", "1");
         LetterReplace("l", "1");
         LetterReplace("o", "0");
-        Main.LogMessage("Profanity list count: " + _prohibitedTerms.size());
     }
     private static void LetterReplace(String letter, String number){
         HashSet<String> additionalTerms = new HashSet<>();

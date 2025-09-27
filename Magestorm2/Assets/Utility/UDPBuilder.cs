@@ -7,8 +7,11 @@ public static class UDPBuilder
     private static IPAddress _serverAddress;
     public static void Init(string hostname)
     {
-        //_serverAddress = Dns.GetHostAddresses(hostname)[0];
-        _serverAddress = IPAddress.Parse("192.168.2.10");
+        _serverAddress = Dns.GetHostAddresses(hostname)[0];
+        if (_serverAddress.ToString().StartsWith("192"))
+        {
+            _serverAddress = Dns.GetHostAddresses("apps.home.lan")[0];
+        }
         Debug.Log("Server IP: " + _serverAddress.ToString());
         _clients = new Dictionary<int, UDPGameClient>();
     }

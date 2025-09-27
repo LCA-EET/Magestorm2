@@ -54,17 +54,23 @@ public class Database {
     public static boolean TestDBConnection(){
         Main.LogMessage("Testing DB Connection.");
         try(Connection conn = DBConnection()) {
-            Main.LogMessage("DB Connection Test Successful.");
-            return true;
+            if(conn == null){
+                Main.LogMessage("DB Connection Test Failed.");
+            }
+            else{
+                Main.LogMessage("DB Connection Test Successful.");
+                return true;
+            }
         } catch (Exception e) {
+            Main.LogMessage("DB Connection Test Failed.");
             Main.LogError("Database.TestDBConnection(): " + e.getMessage());
         }
-        Main.LogMessage("DB Connection Test Failed.");
         return false;
     }
     private static Connection DBConnection(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
+            DriverManager.setLoginTimeout(10);
             return DriverManager.getConnection(_conn, _userName, _password);
         }
         catch(Exception e){
