@@ -103,6 +103,9 @@ public class UICharacterSelectForm : ValidatableForm
                     Game.MessageBox(Language.GetBaseString(35));
                 }
                 break;
+            case ButtonType.Edit:
+                ComponentRegister.UIPrefabManager.InstantiateKeyMapper();
+                break;
         }
     }
     public override void CloseForm()

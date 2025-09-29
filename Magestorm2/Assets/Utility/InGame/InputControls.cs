@@ -255,4 +255,13 @@ public static class InputControls
             return _init;
         }
     }
+    public static Dictionary<InputControl, KeyCode> ControlTableCopy()
+    {
+        Dictionary<InputControl, KeyCode> copy = new Dictionary<InputControl, KeyCode>();
+        foreach (InputControl key in _controls.Keys)
+        {
+            copy.Add(key, _controls[key]);
+        }
+        return copy;
+    }
 }

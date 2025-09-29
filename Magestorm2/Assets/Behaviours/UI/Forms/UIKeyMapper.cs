@@ -1,28 +1,29 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class UIIngameMenu : ValidatableForm
+public class UIKeyMapper : ValidatableForm
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private Dictionary<InputControl, KeyCode> _controlTable;
+    private KeySelector[] _keySelectors;
     void Start()
     {
+        _controlTable = InputControls.ControlTableCopy();
         AssociateFormToButtons();
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.Confined;
+        _keySelectors = GetComponentsInChildren<KeySelector>();
+        foreach(KeySelector keySelector in _keySelectors)
+        {
+            keySelector.SetOwningForm(this);
+        }
     }
-
-    // Update is called once per frame
-    void Update()
+    public KeyCode GetKeyCode(InputControl control)
     {
-        
+        return _controlTable[control];
     }
-
     public override void ButtonPressed(ButtonType buttonType)
     {
         switch (buttonType)
         {
             case ButtonType.Misc0:
-                Match.MenuMode = false;
-                Cursor.visible = false;
                 CloseForm();
                 break;
             case ButtonType.Misc1:
@@ -32,10 +33,7 @@ public class UIIngameMenu : ValidatableForm
                 ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.LeaveMatchPacket());
                 Match.LeaveMatch();
                 break;
-            case ButtonType.Misc3:
-                ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.LeaveMatchPacket());
-                Game.Quit();
-                break;
         }
     }
 }
+

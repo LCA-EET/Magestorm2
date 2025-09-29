@@ -138,6 +138,7 @@ MonoBehaviour:
   PrefabLoginScreen: {fileID: 9190357501265961709, guid: f82a0e47a0b85ee488fb4c5adf5abeab, type: 3}
   PrefabAppearanceChooser: {fileID: 9190357501265961709, guid: a48e3a24a5845cf49be81af3d4801039, type: 3}
   PrefabUIIngameMenu: {fileID: 1593089919454309017, guid: b2f435c9797cbc44a92f4e16e6f9d25d, type: 3}
+  PrefabUIKeyMapper: {fileID: 9190357501265961709, guid: 7d006ff2b7fcd7543a4b0ea39f1d9d00, type: 3}
 --- !u!82 &7185910421088315080
 AudioSource:
   m_ObjectHideFlags: 0

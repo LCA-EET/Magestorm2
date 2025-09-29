@@ -16,6 +16,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabLoginScreen;
     public GameObject PrefabAppearanceChooser;
     public GameObject PrefabUIIngameMenu;
+    public GameObject PrefabUIKeyMapper;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -99,6 +100,10 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateMatchCreator()
     {
         AddToStack(Instantiate(PrefabMatchCreator));
+    }
+    public void InstantiateKeyMapper()
+    {
+        AddToStack(Instantiate(PrefabUIKeyMapper));
     }
     public GameObject AddToStack(GameObject go)
     {
