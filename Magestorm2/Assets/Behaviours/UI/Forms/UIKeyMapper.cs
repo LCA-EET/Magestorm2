@@ -5,19 +5,28 @@ public class UIKeyMapper : ValidatableForm
 {
     private Dictionary<InputControl, KeyCode> _controlTable;
     private KeySelector[] _keySelectors;
+    private int _indexToChange;
+    private InputControl _controlToChange;
+    private bool _listening;
     void Start()
     {
         _controlTable = InputControls.ControlTableCopy();
         AssociateFormToButtons();
         _keySelectors = GetComponentsInChildren<KeySelector>();
-        foreach(KeySelector keySelector in _keySelectors)
+        for(int i =0; i< _keySelectors.Length; i++)
         {
-            keySelector.SetOwningForm(this);
+            _keySelectors[i].SetOwningForm(this, i);
         }
     }
     public KeyCode GetKeyCode(InputControl control)
     {
         return _controlTable[control];
+    }
+    public void RemapControl(string desc, InputControl control, int index)
+    {
+        _controlToChange = control;
+        _indexToChange = index;
+        _listening = true;
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
@@ -27,12 +36,23 @@ public class UIKeyMapper : ValidatableForm
                 CloseForm();
                 break;
             case ButtonType.Misc1:
-                ComponentRegister.UIPrefabManager.InstantiateKeyMapper();
+                
                 break;
             case ButtonType.Misc2:
-                ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.LeaveMatchPacket());
-                Match.LeaveMatch();
                 break;
+        }
+    }
+    void Update()
+    {
+        if (_listening)
+        {
+            if (Input.anyKeyDown)
+            {
+                KeyCode pressed = InputControls.GetKeyCode();
+                _listening = false;
+                _controlTable[_controlToChange] = pressed;
+                _keySelectors[_indexToChange].SetKeyText();
+            }
         }
     }
 }

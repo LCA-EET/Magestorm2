@@ -27,7 +27,18 @@ public enum InputControl
     MiniMapZoomIn=22,
     MiniMapZoomOut=23,
     MiniMapZoomDefault=24,
-    InGameMenu = 25
+    InGameMenu = 25,
+    Tap = 26,
+    Slot1 = 28,
+    Slot2 = 29,
+    Slot3 = 30,
+    Slot4 = 31,
+    Slot5 = 32,
+    Slot6 = 33,
+    Slot7 = 34,
+    Slot8 = 35,
+    Slot9 = 36,
+    Slot10 = 37
 }
 public static class InputControls
 {
@@ -46,6 +57,7 @@ public static class InputControls
             _controls.Add(InputControl.Run, KeyCode.LeftShift);
             _controls.Add(InputControl.Jump, KeyCode.Space);
             _controls.Add(InputControl.ShootPrimary, KeyCode.LeftControl);
+            _controls.Add(InputControl.ShootSecondary, KeyCode.LeftAlt);
             _controls.Add(InputControl.Action, KeyCode.Return);
             _controls.Add(InputControl.Ascend, KeyCode.PageUp);
             _controls.Add(InputControl.Descend, KeyCode.PageDown);
@@ -62,7 +74,19 @@ public static class InputControls
             _controls.Add(InputControl.ChatScrollBottom, KeyCode.End);
             _controls.Add(InputControl.MiniMapZoomIn, KeyCode.LeftBracket);
             _controls.Add(InputControl.MiniMapZoomOut, KeyCode.RightBracket);
+            _controls.Add(InputControl.MiniMapZoomDefault, KeyCode.Backslash);
             _controls.Add(InputControl.InGameMenu, KeyCode.Alpha0); //Escape
+            _controls.Add(InputControl.Slot1, KeyCode.Alpha1);
+            _controls.Add(InputControl.Slot2, KeyCode.Alpha2);
+            _controls.Add(InputControl.Slot3, KeyCode.Alpha3);
+            _controls.Add(InputControl.Slot4, KeyCode.Alpha4);
+            _controls.Add(InputControl.Slot5, KeyCode.Alpha5);
+            _controls.Add(InputControl.Slot6, KeyCode.Alpha6);
+            _controls.Add(InputControl.Slot7, KeyCode.Alpha7);
+            _controls.Add(InputControl.Slot8, KeyCode.Alpha8);
+            _controls.Add(InputControl.Slot9, KeyCode.Alpha9);
+            _controls.Add(InputControl.Slot10, KeyCode.Alpha0);
+            _controls.Add(InputControl.Tap, KeyCode.D);
             _init = true;
         }
     }
@@ -263,5 +287,17 @@ public static class InputControls
             copy.Add(key, _controls[key]);
         }
         return copy;
+    }
+
+    public static KeyCode GetKeyCode()
+    {
+        foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+        {
+            if (Input.GetKeyDown(key))
+            {
+                return key;
+            }
+        }
+        return KeyCode.None;
     }
 }
