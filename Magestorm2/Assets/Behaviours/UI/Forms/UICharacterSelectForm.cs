@@ -55,6 +55,7 @@ public class UICharacterSelectForm : ValidatableForm
     void Start()
     {
         AssociateFormToButtons();
+        InputControls.Init();
     }
 
     // Update is called once per frame

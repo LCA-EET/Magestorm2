@@ -12,6 +12,7 @@ public class GameServer extends Thread {
     public static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
+    private static ConcurrentHashMap<Byte, String> _poolData;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
@@ -22,12 +23,14 @@ public class GameServer extends Thread {
         _loggedInClients = new ConcurrentHashMap<>();
         _maxPlayerData = new ConcurrentHashMap<>();
         _activeCharacters = new ConcurrentHashMap<>();
+        _poolData = new ConcurrentHashMap<>();
        MatchManager.init();
        _rcMonitor = new RemoteClientMonitor();
        _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
        _levelData = Database.GetLevelsList((byte)1);
        _usedMatchPorts = new ConcurrentSkipListSet<>();
     }
+    
     public static void AddActiveCharacter(int accountID, PlayerCharacter active){
         _activeCharacters.put(accountID, active);
     }

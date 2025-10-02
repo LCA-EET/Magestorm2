@@ -36,10 +36,29 @@ public class UIKeyMapper : ValidatableForm
                 CloseForm();
                 break;
             case ButtonType.Misc1:
-                
+                ApplyDefaults();
                 break;
             case ButtonType.Misc2:
+                SaveKeys();
+                CloseForm();
                 break;
+        }
+    }
+    private void SaveKeys()
+    {
+        foreach(KeySelector keySelector in _keySelectors)
+        {
+            PlayerPrefs.SetInt(PlayerAccount.AccountID + "key:" + keySelector.InputKey, (int)keySelector.KeyCode);
+            Debug.Log("Setting key preference: " + PlayerAccount.AccountID + "key:" + keySelector.InputKey + ", " + (int)keySelector.KeyCode);
+            InputControls.SetKey(keySelector.InputKey, keySelector.KeyCode);
+        }
+    }
+    private void ApplyDefaults()
+    {
+        _controlTable = InputControls.GetDefaultKeys();
+        foreach(KeySelector keySelector in _keySelectors)
+        {
+            keySelector.SetKeyText();
         }
     }
     void Update()

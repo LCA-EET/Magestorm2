@@ -339,7 +339,7 @@ public class Database {
 
     public static byte[] GetLevelsList(byte status){
         byte[] toReturn = null;
-        String sql = "SELECT id, scenename, maxplayers FROM levels WHERE status=?";
+        String sql = "SELECT id, scenename, maxplayers, pooldata FROM levels WHERE status=?";
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setByte(1, status);

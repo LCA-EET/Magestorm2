@@ -10,7 +10,7 @@ public class MatchManager{
 
     public static void init(){
         UpdatesNeeded = false;
-        _activeMatches = new ConcurrentHashMap<Byte, Match>();
+        _activeMatches = new ConcurrentHashMap();
         _monitor = new MatchMonitor();
     }
 

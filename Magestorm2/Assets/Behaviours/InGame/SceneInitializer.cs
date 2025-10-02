@@ -13,7 +13,6 @@ public class SceneInitializer : MonoBehaviour
         Game.Init();
         Language.Init();
         LayerManager.Init();
-        InputControls.Init();
         Debug.Log("Sending Match Joined Packet");
         Match.ChatMode = false;
         Match.MenuMode = false;

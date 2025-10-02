@@ -13,7 +13,6 @@ public class InputField : MonoBehaviour
         ChatTarget = Team.Neutral;
         _tmpTextMessage = GetComponent<TMP_InputField>();
         Language.Init();
-        InputControls.Init();
         placeHolder.text = Language.BuildString(Language.GetBaseString(0), InputControls.KeyToString(InputControl.ChatMode));
     }
 

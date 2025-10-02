@@ -13,6 +13,7 @@ public class KeySelector : ValidatableForm
     public InputControl InputKey;
     private KeyCode _selectedKey;
     private UIKeyMapper _owner;
+    private KeyCode _keyCode;
     private int _index;
 
     public TMP_Text Descriptor;
@@ -23,7 +24,8 @@ public class KeySelector : ValidatableForm
     }
     public void SetKeyText()
     {
-        Key.text = _owner.GetKeyCode(InputKey).ToString();
+        _keyCode = _owner.GetKeyCode(InputKey);
+        Key.text = _keyCode.ToString();
     }
     public void SetOwningForm(UIKeyMapper owner, int index)
     {
@@ -38,10 +40,15 @@ public class KeySelector : ValidatableForm
         switch (buttonType)
         {
             case ButtonType.Submit:
+                _keyCode = KeyCode.None;
                 Key.text = "[UNSET]";
                 _owner.RemapControl(Descriptor.text, InputKey, _index);
                 break;
         }
     }
 
+    public KeyCode KeyCode
+    {
+        get { return _keyCode; }
+    }
 }

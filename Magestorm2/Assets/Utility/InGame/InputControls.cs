@@ -44,52 +44,76 @@ public static class InputControls
 {
     private static Dictionary<InputControl, KeyCode> _controls;
 
-    private static bool _init = false;
     public static void Init()
     {
-        if (!_init)
+        _controls = new Dictionary<InputControl, KeyCode>();
+        Dictionary<InputControl, KeyCode> defaults = GetDefaultKeys();
+        foreach (InputControl control in defaults.Keys)
         {
-            _controls = new Dictionary<InputControl, KeyCode>();
-            _controls.Add(InputControl.Forward, KeyCode.W);
-            _controls.Add(InputControl.Backward, KeyCode.S);
-            _controls.Add(InputControl.StrafeLeft, KeyCode.Q);
-            _controls.Add(InputControl.StrafeRight, KeyCode.E);
-            _controls.Add(InputControl.Run, KeyCode.LeftShift);
-            _controls.Add(InputControl.Jump, KeyCode.Space);
-            _controls.Add(InputControl.ShootPrimary, KeyCode.LeftControl);
-            _controls.Add(InputControl.ShootSecondary, KeyCode.LeftAlt);
-            _controls.Add(InputControl.Action, KeyCode.Return);
-            _controls.Add(InputControl.Ascend, KeyCode.PageUp);
-            _controls.Add(InputControl.Descend, KeyCode.PageDown);
-            _controls.Add(InputControl.HUDToggle, KeyCode.H);
-            _controls.Add(InputControl.ChatMode, KeyCode.Quote);
-            _controls.Add(InputControl.CancelChat, KeyCode.Alpha0); //Escape
-            _controls.Add(InputControl.SendMessage, KeyCode.Return);
-            _controls.Add(InputControl.PreviousTrack, KeyCode.Minus);
-            _controls.Add(InputControl.NextTrack, KeyCode.Plus);
-            _controls.Add(InputControl.ToggleMusic, KeyCode.M);
-            _controls.Add(InputControl.ChatScrollUp, KeyCode.PageUp);
-            _controls.Add(InputControl.ChatScrollDown, KeyCode.PageDown);
-            _controls.Add(InputControl.ChatScrollTop, KeyCode.Home);
-            _controls.Add(InputControl.ChatScrollBottom, KeyCode.End);
-            _controls.Add(InputControl.MiniMapZoomIn, KeyCode.LeftBracket);
-            _controls.Add(InputControl.MiniMapZoomOut, KeyCode.RightBracket);
-            _controls.Add(InputControl.MiniMapZoomDefault, KeyCode.Backslash);
-            _controls.Add(InputControl.InGameMenu, KeyCode.Alpha0); //Escape
-            _controls.Add(InputControl.Slot1, KeyCode.Alpha1);
-            _controls.Add(InputControl.Slot2, KeyCode.Alpha2);
-            _controls.Add(InputControl.Slot3, KeyCode.Alpha3);
-            _controls.Add(InputControl.Slot4, KeyCode.Alpha4);
-            _controls.Add(InputControl.Slot5, KeyCode.Alpha5);
-            _controls.Add(InputControl.Slot6, KeyCode.Alpha6);
-            _controls.Add(InputControl.Slot7, KeyCode.Alpha7);
-            _controls.Add(InputControl.Slot8, KeyCode.Alpha8);
-            _controls.Add(InputControl.Slot9, KeyCode.Alpha9);
-            _controls.Add(InputControl.Slot10, KeyCode.Alpha0);
-            _controls.Add(InputControl.Tap, KeyCode.D);
-            _init = true;
+            _controls.Add(control, defaults[control]);
+        }
+        Dictionary<InputControl, KeyCode> keysToUpdate = new Dictionary<InputControl, KeyCode>();
+        foreach(InputControl playerfunction in _controls.Keys)
+        {
+            string stringKey = PlayerAccount.AccountID + "key:" + playerfunction;
+            if (PlayerPrefs.HasKey(stringKey))
+            {
+                Debug.Log("Loading preference " + stringKey + ", " + (KeyCode)PlayerPrefs.GetInt(stringKey));
+                keysToUpdate.Add(playerfunction, (KeyCode)PlayerPrefs.GetInt(stringKey));
+            }
+        }
+        foreach(InputControl control in keysToUpdate.Keys)
+        {
+            _controls[control] = keysToUpdate[control];
         }
     }
+    public static void SetKey(InputControl control, KeyCode key)
+    {
+        _controls[control] = key;
+    }
+    public static Dictionary<InputControl, KeyCode> GetDefaultKeys()
+    {
+        Dictionary<InputControl, KeyCode> defaults = new Dictionary<InputControl, KeyCode>();
+        defaults.Add(InputControl.Forward, KeyCode.W);
+        defaults.Add(InputControl.Backward, KeyCode.S);
+        defaults.Add(InputControl.StrafeLeft, KeyCode.Q);
+        defaults.Add(InputControl.StrafeRight, KeyCode.E);
+        defaults.Add(InputControl.Run, KeyCode.LeftShift);
+        defaults.Add(InputControl.Jump, KeyCode.Space);
+        defaults.Add(InputControl.ShootPrimary, KeyCode.Mouse0);
+        defaults.Add(InputControl.ShootSecondary, KeyCode.Mouse1);
+        defaults.Add(InputControl.Action, KeyCode.Return);
+        defaults.Add(InputControl.Ascend, KeyCode.PageUp);
+        defaults.Add(InputControl.Descend, KeyCode.PageDown);
+        defaults.Add(InputControl.HUDToggle, KeyCode.H);
+        defaults.Add(InputControl.ChatMode, KeyCode.Quote);
+        defaults.Add(InputControl.CancelChat, KeyCode.Escape); //Escape
+        defaults.Add(InputControl.SendMessage, KeyCode.Return);
+        defaults.Add(InputControl.PreviousTrack, KeyCode.Minus);
+        defaults.Add(InputControl.NextTrack, KeyCode.Plus);
+        defaults.Add(InputControl.ToggleMusic, KeyCode.M);
+        defaults.Add(InputControl.ChatScrollUp, KeyCode.PageUp);
+        defaults.Add(InputControl.ChatScrollDown, KeyCode.PageDown);
+        defaults.Add(InputControl.ChatScrollTop, KeyCode.Home);
+        defaults.Add(InputControl.ChatScrollBottom, KeyCode.End);
+        defaults.Add(InputControl.MiniMapZoomIn, KeyCode.LeftBracket);
+        defaults.Add(InputControl.MiniMapZoomOut, KeyCode.RightBracket);
+        defaults.Add(InputControl.MiniMapZoomDefault, KeyCode.Backslash);
+        defaults.Add(InputControl.InGameMenu, KeyCode.Escape); //Escape
+        defaults.Add(InputControl.Slot1, KeyCode.Alpha1);
+        defaults.Add(InputControl.Slot2, KeyCode.Alpha2);
+        defaults.Add(InputControl.Slot3, KeyCode.Alpha3);
+        defaults.Add(InputControl.Slot4, KeyCode.Alpha4);
+        defaults.Add(InputControl.Slot5, KeyCode.Alpha5);
+        defaults.Add(InputControl.Slot6, KeyCode.Alpha6);
+        defaults.Add(InputControl.Slot7, KeyCode.Alpha7);
+        defaults.Add(InputControl.Slot8, KeyCode.Alpha8);
+        defaults.Add(InputControl.Slot9, KeyCode.Alpha9);
+        defaults.Add(InputControl.Slot10, KeyCode.Alpha0);
+        defaults.Add(InputControl.Tap, KeyCode.D);
+        return defaults;
+    }
+   
     public static bool Action
     {
         get
@@ -271,13 +295,6 @@ public static class InputControls
     {
         KeyCode requested = _controls[key];
         return requested.ToString();
-    }
-    public static bool Initialized
-    {
-        get
-        {
-            return _init;
-        }
     }
     public static Dictionary<InputControl, KeyCode> ControlTableCopy()
     {

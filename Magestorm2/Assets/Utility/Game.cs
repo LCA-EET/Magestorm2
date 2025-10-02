@@ -51,7 +51,6 @@ public static class Game
             Language.Init();
             LayerManager.Init();
             LevelData.Init();
-            InputControls.Init();
             Teams.Init();
             ActiveMatches.Init();
             ProfanityChecker.Init();
