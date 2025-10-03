@@ -13,6 +13,19 @@ public static class Game
     public static bool Running;
     private static long _serverTime;
     private static bool _init = false;
+
+    public static bool MenuMode = false;
+    public static bool ChatMode = false;
+    public static bool ControlMode = false;
+
+    public static bool GameMode
+    {
+        get
+        {
+            return !ChatMode && !MenuMode && !ControlMode;
+        }
+    }
+
     public static void Quit()
     {
         if (!EditorApplication.isPlaying)

@@ -21,7 +21,7 @@ public class InputField : MonoBehaviour
     {
         if (InputControls.ChatMode)
         {
-            Match.ChatMode = true;
+            Game.ChatMode = true;
             _tmpTextMessage.ActivateInputField();
             placeHolder.text = Language.BuildString(Language.GetBaseString(1), InputControls.KeyToString(InputControl.SendMessage), InputControls.KeyToString(InputControl.CancelChat));
         }
@@ -54,7 +54,7 @@ public class InputField : MonoBehaviour
     }
     private void CancelChat()
     {
-        Match.ChatMode = false;
+        Game.ChatMode = false;
         placeHolder.text = Language.BuildString(Language.GetBaseString(0), InputControls.KeyToString(InputControl.ChatMode));
         _tmpTextMessage.text = "";
         _tmpTextMessage.DeactivateInputField();

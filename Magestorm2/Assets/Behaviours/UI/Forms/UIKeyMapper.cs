@@ -10,6 +10,7 @@ public class UIKeyMapper : ValidatableForm
     private bool _listening;
     void Start()
     {
+        Game.ControlMode = true;
         _controlTable = InputControls.ControlTableCopy();
         AssociateFormToButtons();
         _keySelectors = GetComponentsInChildren<KeySelector>();
@@ -17,6 +18,7 @@ public class UIKeyMapper : ValidatableForm
         {
             _keySelectors[i].SetOwningForm(this, i);
         }
+        
     }
     public KeyCode GetKeyCode(InputControl control)
     {
@@ -63,16 +65,28 @@ public class UIKeyMapper : ValidatableForm
     }
     void Update()
     {
-        if (_listening)
+        if (InputControls.InGameMenu)
         {
-            if (Input.anyKeyDown)
+            CloseForm();
+        }
+        else
+        {
+            if (_listening)
             {
-                KeyCode pressed = InputControls.GetKeyCode();
-                _listening = false;
-                _controlTable[_controlToChange] = pressed;
-                _keySelectors[_indexToChange].SetKeyText();
+                if (Input.anyKeyDown)
+                {
+                    KeyCode pressed = InputControls.GetKeyCode();
+                    _listening = false;
+                    _controlTable[_controlToChange] = pressed;
+                    _keySelectors[_indexToChange].SetKeyText();
+                }
             }
         }
+    }
+    public override void CloseForm()
+    {
+        Game.ControlMode = false;
+        base.CloseForm();
     }
 }
 

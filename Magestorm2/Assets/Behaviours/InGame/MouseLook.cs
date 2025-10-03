@@ -14,7 +14,7 @@ public class MouseLook : MonoBehaviour
 
     void Update()
     {
-        if (Match.GameMode)
+        if (Game.GameMode)
         {
             if (ComponentRegister.PlayerMovement.PositionChanged)
             {

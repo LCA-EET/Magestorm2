@@ -6,23 +6,24 @@ public static class Match
 {
     private static Dictionary<byte, Avatar> _matchPlayers;
     private static Dictionary<byte, ActivateableObject> _objects;
+    private static Dictionary<byte, ManaPool> _pools;
+    private static Level _level;
 
-    public static bool ChatMode, MenuMode;
     public static bool Running;
     
-    public static bool GameMode
-    {
-        get
-        {
-            return !ChatMode && !MenuMode;
-        }
-    }
+    
     public static void Init()
     {
+        _level = LevelData.GetLevel(MatchParams.SceneID);
         _matchPlayers = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>(); 
+        _pools = new Dictionary<byte, ManaPool>();
     }
-
+    public static byte RegisterPool(ManaPool toRegister)
+    {
+        _pools.Add(toRegister.PoolID, toRegister);
+        return _level.GetPoolPower(toRegister.PoolID);
+    }
     public static void AddAvatar(Avatar avatar)
     {
         _matchPlayers.Add(avatar.PlayerID, avatar);

@@ -12,7 +12,7 @@ public class GameServer extends Thread {
     public static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
-    private static ConcurrentHashMap<Byte, String> _poolData;
+    private static ConcurrentHashMap<Byte, byte[]> _poolData;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
@@ -40,10 +40,10 @@ public class GameServer extends Thread {
     public static PlayerCharacter RemoveActiveCharacter(int accountID){
         return _activeCharacters.remove(accountID);
     }
-    public static void SetPoolData(byte sceneID, String poolString){
-        _poolData.put(sceneID, poolString);
+    public static void SetPoolData(byte sceneID, byte[] poolBytes){
+        _poolData.put(sceneID, poolBytes);
     }
-    public static String GetPoolData(byte sceneID){
+    public static byte[] GetPoolData(byte sceneID){
         return _poolData.get(sceneID);
     }
 

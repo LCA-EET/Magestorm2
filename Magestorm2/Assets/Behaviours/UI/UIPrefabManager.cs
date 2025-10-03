@@ -116,13 +116,15 @@ public class UIPrefabManager : MonoBehaviour
             _uiStack.Peek().SetActive(false);
         }
         _uiStack.Push(go);
+        Debug.Log("Stack size: " + _uiStack.Count);
         return go;
     }
 
     public void PopFromStack()
     {
         GameObject popped = _uiStack.Pop();
-        if(_uiStack.Count > 0)
+        Debug.Log("Stack size: " + _uiStack.Count);
+        if (_uiStack.Count > 0)
         {
             _uiStack.Peek().SetActive(true);
         }

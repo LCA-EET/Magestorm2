@@ -75,11 +75,10 @@ public class Match {
     }
     private void InitializePools(){
         _matchPools= new ConcurrentHashMap<>();
-        String poolString = GameServer.GetPoolData(_sceneID);
-        String[] pools = poolString.split(":");
-        for(int i = 0; i < pools.length; i+=2){
-            byte poolID = Byte.parseByte(pools[i]);
-            byte poolPower = Byte.parseByte(pools[i+1]);
+        byte[] poolBytes = GameServer.GetPoolData(_sceneID);
+        for(int i = 0; i < poolBytes.length; i+=2){
+            byte poolID = poolBytes[i];
+            byte poolPower = poolBytes[i+1];
             Pool toAdd = new Pool(this, poolID, poolPower);
             _matchPools.put(poolID, toAdd);
         }

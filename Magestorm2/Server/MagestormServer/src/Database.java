@@ -350,13 +350,29 @@ public class Database {
                 byte sceneID = rs.getByte("id");
                 String sceneName = rs.getString("scenename");
                 byte maxPlayers = rs.getByte("maxplayers");
+                String poolString = rs.getString("pooldata");
+                String[] poolData = poolString.split(":");
+                byte[] poolBytes = new byte[poolData.length];
+                for(int i = 0; i < poolBytes.length; i++){
+                    poolBytes[i] = Byte.parseByte(poolData[i]);
+                }
+                GameServer.SetPoolData(sceneID, poolBytes);
                 byte[] nameBytes = sceneName.getBytes(UTF_8);
-                byte[] fetched = new byte[1 + 1 + 1 + nameBytes.length];
-                fetched[0] = sceneID;
-                fetched[1] = maxPlayers;
-                fetched[2] = (byte)nameBytes.length;
+                byte[] fetched = new byte[1 + 1 + 1 + poolBytes.length + 1 + nameBytes.length];
+                int fIdx = 0;
+                fetched[fIdx] = sceneID;
+                fetched[fIdx+1] = maxPlayers;
+                fetched[fIdx+2] = (byte)poolBytes.length;
+                fIdx = 3;
+                int poolIdx = 0;
+                while (poolIdx < poolBytes.length){
+                    fetched[fIdx] = poolBytes[poolIdx];
+                    poolIdx++;
+                    fIdx++;
+                }
+                fetched[fIdx] = (byte)nameBytes.length;
                 GameServer.RecordMaxPlayerData(sceneID, maxPlayers);
-                System.arraycopy(nameBytes, 0, fetched, 3, nameBytes.length);
+                System.arraycopy(nameBytes, 0, fetched, fIdx+1, nameBytes.length);
                 bytesReturned.add(fetched);
                 totalLength += fetched.length;
             }

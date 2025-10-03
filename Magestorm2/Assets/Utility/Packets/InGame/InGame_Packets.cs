@@ -25,6 +25,14 @@ public static class InGame_Packets
         utf8.CopyTo(unencrypted, 6);
         return unencrypted;
     }
+    public static byte[] BiasPoolPacket(byte poolID)
+    {
+        byte[] unencrypted = new byte[3];
+        unencrypted[0] = InGame_Send.BiasPool;
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = poolID;
+        return unencrypted;
+    }
     public static byte[] FetchShrineHealthPacket()
     {
         byte[] unencrypted = new byte[2];

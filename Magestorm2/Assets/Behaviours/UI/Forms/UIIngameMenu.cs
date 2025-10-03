@@ -21,7 +21,7 @@ public class UIIngameMenu : ValidatableForm
         switch (buttonType)
         {
             case ButtonType.Misc0:
-                Match.MenuMode = false;
+                Game.MenuMode = false;
                 Cursor.visible = false;
                 CloseForm();
                 break;

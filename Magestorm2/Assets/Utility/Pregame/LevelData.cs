@@ -15,9 +15,9 @@ public static class LevelData
     {
         get { return _levelTable.Count; }
     }
-    public static void AddLevel(byte id, byte maxPlayers, string levelName)
+    public static void AddLevel(byte id, byte maxPlayers, string levelName, byte[] poolData)
     {
-        Level toAdd = new Level(id, levelName, maxPlayers);
+        Level toAdd = new Level(id, levelName, maxPlayers, poolData);
         if (!_levelTable.ContainsKey(id))
         {
             _levelTable.Add(id, toAdd);
