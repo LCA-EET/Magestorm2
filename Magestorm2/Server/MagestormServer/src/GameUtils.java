@@ -7,11 +7,11 @@ public class GameUtils {
         _random = new Random();
     }
 
-    public static short DiceRoll(byte numSides, byte numRolls){
+    public static short DiceRoll(int numSides, int numRolls){
         int total = 0;
         byte roll = 0;
         while (roll < numRolls){
-            total += _random.nextInt(1, numSides);
+            total += _random.nextInt(1, numSides+1);
         }
         return (short)total;
     }

@@ -19,6 +19,15 @@ public class Packets {
     private static final byte[] MatchIsFull_Bytes = new byte[]{Pregame_Send.MatchIsFullPacket};
     private static final byte[] AcknowledgeSubscription_Bytes = new byte[]{Pregame_Send.AcknowledgeSubscription};
 
+    public static byte[] PoolBiasPacket(byte poolID, byte bias, byte teamID){
+        byte[] toEncrypt = new byte[4];
+        toEncrypt[0] = InGame_Send.PoolBiased;
+        toEncrypt[1] = poolID;
+        toEncrypt[2] = bias;
+        toEncrypt[3] = teamID;
+        return toEncrypt;
+    }
+
     public static byte[] PlayersLeftMatchPacket(ArrayList<MatchCharacter> departed){
         byte[] toEncrypt = new byte[2 + departed.size()];
         toEncrypt[0] = InGame_Send.PlayerLeftMatch;

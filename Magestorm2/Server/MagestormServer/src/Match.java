@@ -17,6 +17,7 @@ public class Match {
     private final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
     private final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     private final ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
+    private ConcurrentHashMap<Byte, Pool> _matchPools;
     private byte _nextPlayerID;
     private final int _matchPort;
     private final InGamePacketProcessor _processor;
@@ -34,6 +35,7 @@ public class Match {
         _matchID = matchID;
         _creatorID = creatorID;
         _sceneID = sceneID;
+        InitializePools();
         _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
         _matchPort = GameServer.GetNextMatchPort();
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
@@ -71,7 +73,23 @@ public class Match {
             _objectStatus.put(objectID, new ActivatableObject(objectID, status));
         }
     }
+    private void InitializePools(){
+        _matchPools= new ConcurrentHashMap<>();
+        String poolString = GameServer.GetPoolData(_sceneID);
+        String[] pools = poolString.split(":");
+        for(int i = 0; i < pools.length; i+=2){
+            byte poolID = Byte.parseByte(pools[i]);
+            byte poolPower = Byte.parseByte(pools[i+1]);
+            Pool toAdd = new Pool(this, poolID, poolPower);
+            _matchPools.put(poolID, toAdd);
+        }
+    }
 
+    public void BiasPool(byte biaserID, byte poolID) {
+        if(_matchPools.containsKey(poolID)){
+            _matchPools.get(poolID).Bias(_matchCharacters.get(biaserID));
+        }
+    }
 
     public byte[] GetObjectStatusBytes(){
 

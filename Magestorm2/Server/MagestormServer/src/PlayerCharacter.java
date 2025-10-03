@@ -2,7 +2,7 @@ public class PlayerCharacter {
     private final String _characterName;
     private final int _characterID;
     private int _experience;
-    private final byte _characterClass;
+    private final CharacterClass _characterClass;
     private byte _level;
     private final byte _strength;
     private final byte _dexterity;
@@ -31,7 +31,7 @@ public class PlayerCharacter {
         _accountID = accountID;
         _characterBytes = fetched;
         _characterID = ByteUtils.ExtractInt(fetched, 0);
-        _characterClass = fetched[4];
+        _characterClass = new CharacterClass(fetched[4]);
         _strength = fetched[5];
         _dexterity = fetched[6];
         _constitution = fetched[7];
@@ -52,7 +52,7 @@ public class PlayerCharacter {
         _characterName = ByteUtils.BytesToUTF8(_nameBytes);
         _nameLevelClass = new byte[1 + 1 + 1 + nameLength];
         _nameLevelClass[0] = _level;
-        _nameLevelClass[1] = _characterClass;
+        _nameLevelClass[1] = _characterClass.GetClass();
         _nameLevelClass[2] = nameLength;
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
         CharacterManager.AddToCache(this);
@@ -137,5 +137,8 @@ public class PlayerCharacter {
         _currentMatchID = 0;
         _currentTeam = 0;
         GameServer.RemoveActiveCharacter(_accountID);
+    }
+    public CharacterClass GetCharacterClass(){
+        return _characterClass;
     }
 }

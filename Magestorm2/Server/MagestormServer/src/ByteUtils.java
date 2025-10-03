@@ -3,6 +3,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ByteUtils {
     private static final ByteOrder _order = ByteOrder.LITTLE_ENDIAN;

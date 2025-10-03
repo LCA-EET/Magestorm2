@@ -34,6 +34,10 @@ public class MatchCharacter {
         return _pc;
     }
 
+    public CharacterClass GetClass(){
+        return _pc.GetCharacterClass();
+    }
+
     public byte[] GetINLCTABytes(){
         return _INLCTA;
     }

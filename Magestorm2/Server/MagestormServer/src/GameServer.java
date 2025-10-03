@@ -40,7 +40,12 @@ public class GameServer extends Thread {
     public static PlayerCharacter RemoveActiveCharacter(int accountID){
         return _activeCharacters.remove(accountID);
     }
-
+    public static void SetPoolData(byte sceneID, String poolString){
+        _poolData.put(sceneID, poolString);
+    }
+    public static String GetPoolData(byte sceneID){
+        return _poolData.get(sceneID);
+    }
 
     public static boolean IsLoggedIn(int accountID){
         return _loggedInClients.containsKey(accountID);

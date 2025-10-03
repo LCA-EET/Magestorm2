@@ -41,6 +41,14 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_Receive.InactivityCheckResponse:
                 InactivityCheckResponse();
                 break;
+            case InGame_Receive.BiasPool:
+                HandlePoolBias();
+                break;
+        }
+    }
+    private void HandlePoolBias(){
+        if(IsVerified()){
+            _owningMatch.BiasPool(_decrypted[1], _decrypted[2]);
         }
     }
     private void InactivityCheckResponse(){
