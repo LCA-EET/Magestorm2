@@ -14,8 +14,8 @@ TagManager:
   - Surface
   - Interactable
   - ManaPool
-  - 
-  - 
+  - Player
+  - MiniMapVisible
   - 
   - 
   - 

@@ -33,7 +33,7 @@ public class UIIngameMenu : ValidatableForm
                 Match.LeaveMatch();
                 break;
             case ButtonType.Misc3:
-                ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.LeaveMatchPacket());
+                ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.QuitGamePacket());
                 Game.Quit();
                 break;
         }

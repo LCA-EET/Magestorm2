@@ -2,9 +2,15 @@ using UnityEngine;
 
 public class SceneInitializer : MonoBehaviour
 {
+    public Material NeutralBiased;
+    public Material BalanceBiased;
+    public Material OrderBiased;
+    public Material ChaosBiased;
     private void Awake()
     {
+        ComponentRegister.SceneInitializer = this;
         Match.Init();
+        InputControls.Init();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

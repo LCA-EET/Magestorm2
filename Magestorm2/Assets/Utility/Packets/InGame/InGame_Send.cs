@@ -15,5 +15,6 @@ public static class InGame_Send
                         BroadcastMessage = 7,
                         LeaveMatch = 8,
                         InactivityCheckResponse = 9,
-                        BiasPool = 10;
+                        BiasPool = 10,
+                        QuitGame = 11;
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AudioPlayer : MonoBehaviour
+public class SFXPlayer : MonoBehaviour
 {
     public AudioClip SFXButtonPress;
     public AudioClip SFXMessageNotification;

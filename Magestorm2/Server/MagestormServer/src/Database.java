@@ -180,6 +180,7 @@ public class Database {
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 charID = rs.getInt(1);
+                CharacterManager.AddToCache(GetCharacter(accountID, charID, conn));
             }
         }
         catch(Exception e){

@@ -80,7 +80,9 @@ public class GameServer extends Thread {
         return toReturn;
     }
 
-
+    public static PregamePacketProcessor PregameProcessor(){
+        return _pgProcessor;
+    }
 
     public static RemoteClient GetClient(int accountID){
         RemoteClient toReturn = null;

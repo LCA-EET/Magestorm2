@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private CharacterController _controller;
+    public CharacterController Controller;
 
     private float _jumpSpeed = 6.0f;
     private float gravityValue = 9.81f;
@@ -33,10 +33,10 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         _priorPosition = transform.position;
-        _controller = GetComponent<CharacterController>();
+        Controller = GetComponent<CharacterController>();
         ComponentRegister.PlayerTransform = transform;
         ComponentRegister.PlayerMovement = this;
-        ComponentRegister.PlayerController = _controller;
+        ComponentRegister.PlayerController = Controller;
        
     }
     void Update()
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
         if (InputControls.Jump && grounded)
         {
             _verticalSpeed = _verticalSpeed + _jumpSpeed;
-            _controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+            Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
             _midJump = true;
         }
         else
@@ -86,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
             if (!grounded)
             {
                 Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
-                _controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+                Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
             }
             if (grounded)
             {
@@ -113,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (InputControls.Run)
                 {
-                    ComponentRegister.Player.PlayAudioClip(standingOn.FootstepClip);
+                    ComponentRegister.PC.PlaySFX(standingOn.FootstepClip);
                     Debug.Log("Play Footstep");
                 }
                 else
@@ -125,11 +125,11 @@ public class PlayerMovement : MonoBehaviour
     }
     private bool isGrounded()
     {
-        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 2.0f);
+        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 1.0f);
     }
     private bool isGrounded(out RaycastHit hitInfo)
     {
-        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 2.0f, out hitInfo);
+        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 1.0f, out hitInfo);
     }
     private void Accelerate(ref float speed, float maxSpeed, float directionFactor, float acceleration)
     {
@@ -161,7 +161,7 @@ public class PlayerMovement : MonoBehaviour
             directionFactor = InputControls.IsPressed(negative) ? -1.0f : 1.0f;
         }
         Accelerate(ref speed, maxSpeed, directionFactor, acceleration);
-        _controller.Move(directionVector * speed * Time.deltaTime * speedModifier);
+        Controller.Move(directionVector * speed * Time.deltaTime * speedModifier);
     }
 
     private bool MovingOnMultipleAxes

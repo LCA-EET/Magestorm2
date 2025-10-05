@@ -6,7 +6,7 @@ using UnityEngine;
 public class UILoginForm : ValidatableForm
 {
     private int _udpPort;
-
+    private bool _forceLogin = false;
     private void Awake()
     {
         ComponentRegister.UILoginForm = this;
@@ -44,7 +44,12 @@ public class UILoginForm : ValidatableForm
     // Update is called once per frame
     void Update()
     {
-        
+        if (!_forceLogin)
+        {
+            _forceLogin = true;
+            string hashedPassword = Cryptography.SHA256Hash("Superman123");
+            Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket("Superman", hashedPassword), UDPBuilder.GetClient(_udpPort));
+        }
     }
     protected override void PassedValidation()
     {

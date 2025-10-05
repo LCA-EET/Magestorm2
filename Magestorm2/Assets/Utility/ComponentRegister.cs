@@ -3,9 +3,10 @@ using UnityEngine;
 public static class ComponentRegister
 {
     private static Transform _playerTransform;
-    private static Player _player;
+    private static PC _PC;
     private static PlayerMovement _playerMovement;
     private static CharacterController _playerController;
+    private static Collider _playerCollider;
     private static Camera _mainCamera;
     private static AudioSource _playerAudioSource;
     private static HUD _hud;
@@ -22,9 +23,21 @@ public static class ComponentRegister
     private static Transform _uiParent;
     private static PregamePacketProcessor _pregamePacketProcessor;
     private static InGamePacketProcessor _inGamePacketProcessor;
-    private static AudioPlayer _audioPlayer;
+    private static SFXPlayer _audioPlayer;
     private static ModelBuilder _modelBuilder;
     private static MessageRecorder _messageRecorder;
+    private static SceneInitializer _sceneInitializer;
+    
+    public static SceneInitializer SceneInitializer
+    {
+        get { return _sceneInitializer; }
+        set { _sceneInitializer = value; }
+    }
+    public static Collider PCCollider
+    {
+        get { return _playerCollider; }
+        set { _playerCollider = value; }
+    }
     public static MessageRecorder MessageRecorder
     {
         get { return _messageRecorder; }
@@ -51,7 +64,7 @@ public static class ComponentRegister
         get { return _modelBuilder; }
         set { _modelBuilder = value; }
     }
-    public static AudioPlayer AudioPlayer
+    public static SFXPlayer AudioPlayer
     {
         get { return _audioPlayer; }
         set { _audioPlayer = value; }
@@ -178,15 +191,15 @@ public static class ComponentRegister
             _playerAudioSource = value;
         }
     }
-    public static Player Player
+    public static PC PC
     {
         get
         {
-            return _player;
+            return _PC;
         }
         set
         {
-            _player = value;
+            _PC = value;
         }
     }
     public static HUD HUD

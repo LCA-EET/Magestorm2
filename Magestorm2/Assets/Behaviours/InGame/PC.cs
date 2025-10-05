@@ -1,0 +1,58 @@
+﻿using UnityEngine;
+
+public class PC : MonoBehaviour
+{
+    public PlayerMovement PlayerMovement;
+    private BoxCollider _playerCollider;
+    public SFXPlayer SFXPlayer;
+    public MusicPlayer MusicPlayer;
+
+    private float _surfaceCheck = 0.1f;
+    private float _surfaceCheckElapsed = 0.0f;
+
+    private ManaPool _enteredPool;
+    public void Awake()
+    {
+        ComponentRegister.PC = this;
+        _playerCollider = GetComponent<BoxCollider>();
+        //ComponentRegister.PCCollider = _playerCollider;
+    }
+    public void Update()
+    {
+        MenuCheck();
+        _surfaceCheckElapsed += Time.deltaTime;
+        if(_surfaceCheckElapsed > _surfaceCheck)
+        {
+
+        }
+    }
+    private void MenuCheck()
+    {
+        if (InputControls.InGameMenu && !Game.ControlMode)
+        {
+            if (!Game.MenuMode)
+            {
+                ComponentRegister.UIPrefabManager.InstantiateInGameMenu();
+            }
+            else
+            {
+                ComponentRegister.UIPrefabManager.PopFromStack();
+            }
+            Game.MenuMode = !Game.MenuMode;
+            Debug.Log("Menu Mode? " + Game.MenuMode);
+        }
+    }
+    public void PlaySFX(AudioClip clip)
+    {
+        SFXPlayer.PlayClip(clip);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        other.GetComponent<Trigger>().EnterAction();
+    }
+    public void OnTriggerExit(Collider other)
+    {
+        other.GetComponent<Trigger>().ExitAction();
+    }
+}

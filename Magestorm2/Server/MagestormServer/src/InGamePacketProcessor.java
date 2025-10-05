@@ -44,6 +44,9 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_Receive.BiasPool:
                 HandlePoolBias();
                 break;
+            case InGame_Receive.QuitGame:
+                HandleQuitGame();
+                break;
         }
     }
     private void HandlePoolBias(){
@@ -54,6 +57,13 @@ public class InGamePacketProcessor extends UDPProcessor{
     private void InactivityCheckResponse(){
         if(IsVerified()){
             _owningMatch.GetMatchCharacter(_decrypted[1]).MarkPacketReceived();
+        }
+    }
+    private void HandleQuitGame(){
+        if(IsVerified()){
+            _owningMatch.LeaveMatch(_decrypted[1], _decrypted[2], true);
+            int accountID = ByteUtils.ExtractInt(_decrypted, 3);
+            GameServer.ClientLoggedOut(accountID);
         }
     }
     private void HandleLeaveMatch(){

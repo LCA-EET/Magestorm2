@@ -43,28 +43,32 @@ public enum InputControl
 public static class InputControls
 {
     private static Dictionary<InputControl, KeyCode> _controls;
-
+    private static bool _init = false;
     public static void Init()
     {
-        _controls = new Dictionary<InputControl, KeyCode>();
-        Dictionary<InputControl, KeyCode> defaults = GetDefaultKeys();
-        foreach (InputControl control in defaults.Keys)
+        if (!_init)
         {
-            _controls.Add(control, defaults[control]);
-        }
-        Dictionary<InputControl, KeyCode> keysToUpdate = new Dictionary<InputControl, KeyCode>();
-        foreach(InputControl playerfunction in _controls.Keys)
-        {
-            string stringKey = PlayerAccount.AccountID + "key:" + playerfunction;
-            if (PlayerPrefs.HasKey(stringKey))
+            _controls = new Dictionary<InputControl, KeyCode>();
+            Dictionary<InputControl, KeyCode> defaults = GetDefaultKeys();
+            foreach (InputControl control in defaults.Keys)
             {
-                Debug.Log("Loading preference " + stringKey + ", " + (KeyCode)PlayerPrefs.GetInt(stringKey));
-                keysToUpdate.Add(playerfunction, (KeyCode)PlayerPrefs.GetInt(stringKey));
+                _controls.Add(control, defaults[control]);
             }
-        }
-        foreach(InputControl control in keysToUpdate.Keys)
-        {
-            _controls[control] = keysToUpdate[control];
+            Dictionary<InputControl, KeyCode> keysToUpdate = new Dictionary<InputControl, KeyCode>();
+            foreach (InputControl playerfunction in _controls.Keys)
+            {
+                string stringKey = PlayerAccount.AccountID + "key:" + playerfunction;
+                if (PlayerPrefs.HasKey(stringKey))
+                {
+                    Debug.Log("Loading preference " + stringKey + ", " + (KeyCode)PlayerPrefs.GetInt(stringKey));
+                    keysToUpdate.Add(playerfunction, (KeyCode)PlayerPrefs.GetInt(stringKey));
+                }
+            }
+            foreach (InputControl control in keysToUpdate.Keys)
+            {
+                _controls[control] = keysToUpdate[control];
+            }
+            _init = true;
         }
     }
     public static void SetKey(InputControl control, KeyCode key)
