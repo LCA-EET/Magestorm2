@@ -21,5 +21,7 @@ public static class InGame_Receive
                         TimedObjectExpired = 12,
                         RemovedFromMatch = 13,
                         InactivityWarning = 14,
-                        PlayerJoinedMatch = 15;
+                        PlayerJoinedMatch = 15,
+                        PoolBiased = 16,
+                        PoolBiasFailure = 17;
 }

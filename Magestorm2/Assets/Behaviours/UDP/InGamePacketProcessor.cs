@@ -59,10 +59,28 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.InactivityWarning:
                             ProcessInactivityWarning();
                             break;
+                        case InGame_Receive.PoolBiased:
+                            ProcessPoolBias();                    
+                            break;
+                        case InGame_Receive.PoolBiasFailure:
+                            ProcessPoolBiasFailure();
+                            break;
                     }
                 }
             }
         }
+    }
+    private void ProcessPoolBiasFailure()
+    {
+        ComponentRegister.Notifier.DisplayNotification("Your bias attempt was unsuccessful.");
+    }
+    private void ProcessPoolBias()
+    {
+        byte poolID = _decrypted[1];
+        byte biasAmount = _decrypted[2];
+        byte teamID = _decrypted[3];
+        byte biaserID = _decrypted[4];
+        Match.PoolBiased(biaserID, poolID, teamID, biaserID);
     }
     private void ProcessInactivityWarning()
     {

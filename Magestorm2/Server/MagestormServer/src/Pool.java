@@ -28,9 +28,15 @@ public class Pool {
         if(_bias > 100){
             _bias = 100;
         }
-        _owningMatch.SendToAll(Packets.PoolBiasPacket(_id, _bias, _team));
+        _owningMatch.SendToAll(Packets.PoolBiasPacket(_id, _bias, _team, biaser.GetIDinMatch()));
     }
 
-
+    public static byte BiasChance(byte classCode) {
+        return switch (classCode) {
+            case CharacterClass.Arcanist -> 0;
+            case CharacterClass.Magician -> 50;
+            default -> 30;
+        };
+    }
 
 }

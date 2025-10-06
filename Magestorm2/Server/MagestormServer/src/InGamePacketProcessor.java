@@ -51,7 +51,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void HandlePoolBias(){
         if(IsVerified()){
-            _owningMatch.BiasPool(_decrypted[1], _decrypted[2]);
+            _owningMatch.BiasPool(_decrypted[1], _decrypted[2], _remote);
         }
     }
     private void InactivityCheckResponse(){

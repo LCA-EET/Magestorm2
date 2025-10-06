@@ -19,35 +19,8 @@ public class Packets {
     private static final byte[] MatchIsFull_Bytes = new byte[]{Pregame_Send.MatchIsFullPacket};
     private static final byte[] AcknowledgeSubscription_Bytes = new byte[]{Pregame_Send.AcknowledgeSubscription};
 
-    public static byte[] PoolBiasPacket(byte poolID, byte bias, byte teamID){
-        byte[] toEncrypt = new byte[4];
-        toEncrypt[0] = InGame_Send.PoolBiased;
-        toEncrypt[1] = poolID;
-        toEncrypt[2] = bias;
-        toEncrypt[3] = teamID;
-        return toEncrypt;
-    }
 
-    public static byte[] PlayersLeftMatchPacket(ArrayList<MatchCharacter> departed){
-        byte[] toEncrypt = new byte[2 + departed.size()];
-        toEncrypt[0] = InGame_Send.PlayerLeftMatch;
-        toEncrypt[1] = (byte)departed.size();
-        int index = 2;
-        for(MatchCharacter mc : departed){
-            toEncrypt[index] = mc.GetIDinMatch();
-            index++;
-        }
-        return Cryptographer.Encrypt(toEncrypt);
-    }
 
-    public static byte[] PlayerLeftMatchPacket(byte playerID){
-        byte[] toEncrypt = new byte[3];
-        toEncrypt[0] = InGame_Send.PlayerLeftMatch;
-        toEncrypt[1] = 1;
-        toEncrypt[2] = playerID;
-        //toEncrypt[3] = teamID;
-        return Cryptographer.Encrypt(toEncrypt);
-    }
     public static byte[] AcknowledgeSubscriptionPacket(){return Cryptographer.Encrypt(AcknowledgeSubscription_Bytes);}
     public static byte[] MessagePacket(byte[] decrypted, byte opCode){
         decrypted[0] = opCode;
@@ -210,10 +183,42 @@ public class Packets {
     /////////////////////// IN-GAME PACKETS ////////////////////////
     private static final byte[] MatchEnded_Bytes = new byte[]{InGame_Send.MatchEnded};
     private static final byte[] InactivityWarning_Bytes = new byte[]{InGame_Send.InactivityWarning};
+    private static final byte[] PoolBiasFailure_Bytes = new byte[]{InGame_Send.PoolBiasFailure};
 
     public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
+    public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] PoolBiasPacket(byte poolID, byte bias, byte teamID, byte biaserID){
+        byte[] toEncrypt = new byte[4];
+        toEncrypt[0] = InGame_Send.PoolBiased;
+        toEncrypt[1] = poolID;
+        toEncrypt[2] = bias;
+        toEncrypt[3] = teamID;
+        toEncrypt[4] = biaserID;
+        return toEncrypt;
+    }
+
+    public static byte[] PlayersLeftMatchPacket(ArrayList<MatchCharacter> departed){
+        byte[] toEncrypt = new byte[2 + departed.size()];
+        toEncrypt[0] = InGame_Send.PlayerLeftMatch;
+        toEncrypt[1] = (byte)departed.size();
+        int index = 2;
+        for(MatchCharacter mc : departed){
+            toEncrypt[index] = mc.GetIDinMatch();
+            index++;
+        }
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] PlayerLeftMatchPacket(byte playerID){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.PlayerLeftMatch;
+        toEncrypt[1] = 1;
+        toEncrypt[2] = playerID;
+        //toEncrypt[3] = teamID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
 
     public static byte[] PlayerJoinedMatchPacket(byte[] INLCTA){
         byte[] toEncrypt = new byte[1 + INLCTA.length];

@@ -33,11 +33,25 @@ public class ManaPool : Trigger
             }
         }
     }
-    public void BiasPool(byte amount, Team team)
+    public void BiasPool(byte amount, Team team, byte biaserID)
     {
         _biasAmount = amount;
         _biasedToward = team;
         Indicator.ChangeBias(team);
+        Avatar biaser = null;
+        if(Match.PlayerExists(biaserID, ref biaser))
+        {
+            if(_biasedToward == biaser.PlayerTeam)
+            {
+                // increased bias
+            }
+            else
+            {
+                // decreased bias
+                 
+            }
+            //ComponentRegister.Notifier.DisplayNotification()
+        }
     }
 
     public byte GetBiasAmount()

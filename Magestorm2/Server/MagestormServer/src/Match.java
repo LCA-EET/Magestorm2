@@ -84,9 +84,15 @@ public class Match {
         }
     }
 
-    public void BiasPool(byte biaserID, byte poolID) {
+    public void BiasPool(byte biaserID, byte poolID, RemoteClient rc) {
         if(_matchPools.containsKey(poolID)){
-            _matchPools.get(poolID).Bias(_matchCharacters.get(biaserID));
+            MatchCharacter biaser = _matchCharacters.get(biaserID);
+            if(Pool.BiasChance(biaser.GetClassCode()) > GameUtils.DiceRoll(100, 1)){
+                _matchPools.get(poolID).Bias(_matchCharacters.get(biaserID));
+            }
+            else{
+                GameServer.EnqueueForSend(Packets.PoolBiasFailurePacket(), rc);
+            }
         }
     }
 

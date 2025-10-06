@@ -19,6 +19,13 @@ public static class Match
         _objects = new Dictionary<byte, ActivateableObject>(); 
         _pools = new Dictionary<byte, ManaPool>();
     }
+    public static void PoolBiased(byte biaserID, byte poolID, byte teamID, byte biasAmount)
+    {
+        if (_pools.ContainsKey(poolID))
+        {
+            _pools[poolID].BiasPool(biasAmount, (Team)teamID, biaserID);
+        }
+    }
     public static byte RegisterPool(ManaPool toRegister)
     {
         _pools.Add(toRegister.PoolID, toRegister);
@@ -98,5 +105,15 @@ public static class Match
     public static void Send(byte[] packetBytes)
     {
         ComponentRegister.InGamePacketProcessor.SendBytes(packetBytes);
+    }
+
+    public static bool PlayerExists(byte playerID, ref Avatar avatar)
+    {
+        if (_matchPlayers.ContainsKey(playerID))
+        {
+            avatar = _matchPlayers[playerID];
+            return true;
+        }
+        return false;
     }
 }
