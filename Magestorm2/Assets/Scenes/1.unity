@@ -955,6 +955,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6762423067227231442, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
+      propertyPath: SFXBias
+      value: 
+      objectReference: {fileID: 8300000, guid: 921df314173d8f8449356a3576587fe0, type: 3}
     - target: {fileID: 8736013207565299092, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 1089

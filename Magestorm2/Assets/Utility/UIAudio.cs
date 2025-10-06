@@ -11,4 +11,9 @@ public static class UIAudio
     {
         ComponentRegister.AudioPlayer.PlayButtonPress();
     }
+
+    public static void PlayBiasSFX()
+    {
+        ComponentRegister.AudioPlayer.PlayBiasSound();
+    }
 }

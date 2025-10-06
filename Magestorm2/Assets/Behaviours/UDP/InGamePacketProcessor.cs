@@ -80,7 +80,7 @@ public class InGamePacketProcessor : UDPProcessor
         byte biasAmount = _decrypted[2];
         byte teamID = _decrypted[3];
         byte biaserID = _decrypted[4];
-        Match.PoolBiased(biaserID, poolID, teamID, biaserID);
+        Match.PoolBiased(biaserID, poolID, teamID, biasAmount);
     }
     private void ProcessInactivityWarning()
     {

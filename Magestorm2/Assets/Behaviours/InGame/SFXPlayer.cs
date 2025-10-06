@@ -4,6 +4,7 @@ public class SFXPlayer : MonoBehaviour
 {
     public AudioClip SFXButtonPress;
     public AudioClip SFXMessageNotification;
+    public AudioClip SFXBias;
     private AudioSource _audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,5 +33,10 @@ public class SFXPlayer : MonoBehaviour
     public void PlayNotificationSound()
     {
         PlayClip(SFXMessageNotification);
+    }
+
+    public void PlayBiasSound()
+    {
+        PlayClip(SFXBias);
     }
 }

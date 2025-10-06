@@ -38,6 +38,10 @@ public class ManaPool : Trigger
         _biasAmount = amount;
         _biasedToward = team;
         Indicator.ChangeBias(team);
+        if (_playerInPool)
+        {
+            ComponentRegister.BiasDisplay.Refresh(this);
+        }
     }
     public void BiasPool(byte amount, Team team, byte biaserID)
     {
@@ -114,7 +118,7 @@ public class ManaPool : Trigger
                 }
 
             }
-            ComponentRegister.Notifier.DisplayNotification(notificationText);
+            ComponentRegister.Notifier.DisplayNotification(notificationText, ComponentRegister.AudioPlayer.SFXBias );
         }
     }
 
@@ -128,17 +132,23 @@ public class ManaPool : Trigger
         return _biasedToward;
     }
 
+    public byte GetPoolPower()
+    {
+        return _poolPower;
+    }
     public override void EnterAction()
     {
         if(PlayerAccount.SelectedCharacter.CharacterClass != (byte)PlayerClass.Arcanist)
         {
             _playerInPool = true;
+            ComponentRegister.BiasDisplay.Refresh(this);
         }
         Debug.Log("Entered pool");
     }
     public override void ExitAction()
     {
         _playerInPool = false;
+        ComponentRegister.BiasDisplay.Toggle(false);
         Debug.Log("Exited pool");
     }
 }

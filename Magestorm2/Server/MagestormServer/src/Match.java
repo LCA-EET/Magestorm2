@@ -85,20 +85,14 @@ public class Match {
     }
 
     public void BiasPool(byte biaserID, byte poolID, RemoteClient rc) {
-        Main.LogMessage("Processing pool bias packet. Biaser ID = " + biaserID);
         if(_matchPools.containsKey(poolID)){
-            Main.LogMessage("Pool " + poolID + " exists.");
             MatchCharacter biaser = _matchCharacters.get(biaserID);
-            Main.LogMessage("Biaser name: " + biaser.GetCharacterName());
             short diceRoll = GameUtils.DiceRoll(100, 1);
-            Main.LogMessage("Bias roll: " + diceRoll);
             if(Pool.BiasChance(biaser.GetClassCode()) >= diceRoll){
-                Main.LogMessage("Bias success.");
                 _matchPools.get(poolID).Bias(_matchCharacters.get(biaserID));
             }
             else{
-                Main.LogMessage("Bias failure.");
-                GameServer.EnqueueForSend(Packets.PoolBiasFailurePacket(), rc);
+                SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
             }
         }
     }

@@ -27,7 +27,13 @@ public static class ComponentRegister
     private static ModelBuilder _modelBuilder;
     private static MessageRecorder _messageRecorder;
     private static SceneInitializer _sceneInitializer;
+    private static BiasDisplay _biasDisplay;
     
+    public static BiasDisplay BiasDisplay
+    {
+        get { return _biasDisplay; }
+        set { _biasDisplay = value; }
+    }
     public static SceneInitializer SceneInitializer
     {
         get { return _sceneInitializer; }

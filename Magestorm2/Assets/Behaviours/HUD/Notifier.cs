@@ -38,4 +38,9 @@ public class Notifier : MonoBehaviour
         _notifierText.color = _color;
         _secondsRemaining = 10.0f;
     }
+    public void DisplayNotification(string text, AudioClip toPlay)
+    {
+        DisplayNotification(text);
+        ComponentRegister.AudioPlayer.PlayClip(toPlay);
+    }
 }
