@@ -10,7 +10,7 @@ public class SFXPlayer : MonoBehaviour
     {
         ComponentRegister.AudioPlayer = this;
         _audioSource = GetComponent<AudioSource>();
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame

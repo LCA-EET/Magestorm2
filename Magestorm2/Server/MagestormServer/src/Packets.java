@@ -89,14 +89,15 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] MatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port){
-        byte[] toEncrypt = new byte[8];
+    public static byte[] MatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port, byte matchID){
+        byte[] poolData = MatchManager.GetMatch(matchID).GetPoolBiasData();
+        byte[] toEncrypt = new byte[8 + poolData.length];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
         toEncrypt[1] = sceneID;
         toEncrypt[2] = teamID;
         toEncrypt[3] = playerID;
-
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 4, 4);
+        System.arraycopy(poolData, 0, toEncrypt, 8, poolData.length);
         return Cryptographer.Encrypt(toEncrypt);
     }
 
@@ -190,13 +191,13 @@ public class Packets {
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
     public static byte[] PoolBiasPacket(byte poolID, byte bias, byte teamID, byte biaserID){
-        byte[] toEncrypt = new byte[4];
+        byte[] toEncrypt = new byte[5];
         toEncrypt[0] = InGame_Send.PoolBiased;
         toEncrypt[1] = poolID;
         toEncrypt[2] = bias;
         toEncrypt[3] = teamID;
         toEncrypt[4] = biaserID;
-        return toEncrypt;
+        return Cryptographer.Encrypt(toEncrypt);
     }
 
     public static byte[] PlayersLeftMatchPacket(ArrayList<MatchCharacter> departed){

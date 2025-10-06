@@ -12,6 +12,7 @@ public class GameUtils {
         byte roll = 0;
         while (roll < numRolls){
             total += _random.nextInt(1, numSides+1);
+            roll++;
         }
         return (short)total;
     }

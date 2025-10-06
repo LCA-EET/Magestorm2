@@ -54,6 +54,10 @@ public class MatchCharacter {
         return _idInMatch;
     }
 
+    public String GetCharacterName(){
+        return _pc.GetCharacterName();
+    }
+
     public void MarkVerified(){
         Main.LogMessage("Player " + _idInMatch + " verified for team " + _teamID);
         MarkPacketReceived();

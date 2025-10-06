@@ -4,8 +4,10 @@ public class PC : MonoBehaviour
 {
     public PlayerMovement PlayerMovement;
     private BoxCollider _playerCollider;
+
     public SFXPlayer SFXPlayer;
     public MusicPlayer MusicPlayer;
+    public Avatar PCAvatar;
 
     private float _surfaceCheck = 0.1f;
     private float _surfaceCheckElapsed = 0.0f;
@@ -15,7 +17,12 @@ public class PC : MonoBehaviour
     {
         ComponentRegister.PC = this;
         _playerCollider = GetComponent<BoxCollider>();
+        PCAvatar.SetAttributes(MatchParams.IDinMatch, PlayerAccount.SelectedCharacter.CharacterName, PlayerAccount.SelectedCharacter.CharacterLevel, PlayerAccount.SelectedCharacter.CharacterClass, MatchParams.MatchTeam);
         //ComponentRegister.PCCollider = _playerCollider;
+    }
+    public void Start()
+    {
+        Match.AddAvatar(PCAvatar);
     }
     public void Update()
     {

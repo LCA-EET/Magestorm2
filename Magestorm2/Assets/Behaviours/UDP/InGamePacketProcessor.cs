@@ -72,7 +72,7 @@ public class InGamePacketProcessor : UDPProcessor
     }
     private void ProcessPoolBiasFailure()
     {
-        ComponentRegister.Notifier.DisplayNotification("Your bias attempt was unsuccessful.");
+        ComponentRegister.Notifier.DisplayNotification(Language.GetBaseString(169));
     }
     private void ProcessPoolBias()
     {

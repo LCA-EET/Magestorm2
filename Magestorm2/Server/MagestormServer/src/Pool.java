@@ -5,8 +5,10 @@ public class Pool {
     private byte _poolPower;
     private final Match _owningMatch;
 
-    public Pool(Match owningMatch, byte _id, byte _poolPower){
+    public Pool(Match owningMatch, byte id, byte poolPower){
         _team = MatchTeam.Neutral;
+        _id = id;
+        _poolPower = poolPower;
         _owningMatch = owningMatch;
     }
 
@@ -31,6 +33,22 @@ public class Pool {
         _owningMatch.SendToAll(Packets.PoolBiasPacket(_id, _bias, _team, biaser.GetIDinMatch()));
     }
 
+    public byte GetPoolID(){
+        return _id;
+    }
+
+    public byte GetPoolTeam(){
+        return _team;
+    }
+
+    public byte GetPoolBiasAmount(){
+        return _bias;
+    }
+
+    public byte GetPoolPower(){
+        return _poolPower;
+    }
+
     public static byte BiasChance(byte classCode) {
         return switch (classCode) {
             case CharacterClass.Arcanist -> 0;
@@ -38,5 +56,7 @@ public class Pool {
             default -> 30;
         };
     }
+
+
 
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 public class Avatar : MonoBehaviour, IComparable<Avatar>
 {
     private string _name;
-    private byte _level;
-    private string _playerClass;
+    private byte _level, _class;
+    private string _playerClassString;
     private Team _team;
     private bool _isAlive;
     private bool _updatedNeeded;
@@ -21,12 +21,13 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     {
         
     }
-
-    public void SetAttributes(byte id, string name, byte level, string playerClass, Team team)
+    
+    public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team)
     {
         _name = name;
+        _class = playerClass;
         _level = level;
-        _playerClass = playerClass;
+        _playerClassString = PlayerCharacter.ClassToString((PlayerClass)playerClass);
         _team = team;
         _playerID = id;
     }
@@ -47,22 +48,22 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     public Team PlayerTeam
     {
         get { return _team; }
-        set { _team = value; }
     }
     public string Name
     {
         get { return _name; }
-        set { _name = value; }
     }
     public byte Level
     {
         get { return _level; }
-        set { _level = value; }
     }
-    public string PlayerClass
+    public string PlayerClassString
     {
-        get { return _playerClass; }
-        set { _playerClass = value; }
+        get { return _playerClassString; }
+    }
+    public PlayerClass PlayerClass
+    {
+        get { return (PlayerClass)_class; }
     }
     public int CompareTo(Avatar other)
     {

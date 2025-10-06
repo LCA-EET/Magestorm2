@@ -85,12 +85,19 @@ public class Match {
     }
 
     public void BiasPool(byte biaserID, byte poolID, RemoteClient rc) {
+        Main.LogMessage("Processing pool bias packet. Biaser ID = " + biaserID);
         if(_matchPools.containsKey(poolID)){
+            Main.LogMessage("Pool " + poolID + " exists.");
             MatchCharacter biaser = _matchCharacters.get(biaserID);
-            if(Pool.BiasChance(biaser.GetClassCode()) > GameUtils.DiceRoll(100, 1)){
+            Main.LogMessage("Biaser name: " + biaser.GetCharacterName());
+            short diceRoll = GameUtils.DiceRoll(100, 1);
+            Main.LogMessage("Bias roll: " + diceRoll);
+            if(Pool.BiasChance(biaser.GetClassCode()) >= diceRoll){
+                Main.LogMessage("Bias success.");
                 _matchPools.get(poolID).Bias(_matchCharacters.get(biaserID));
             }
             else{
+                Main.LogMessage("Bias failure.");
                 GameServer.EnqueueForSend(Packets.PoolBiasFailurePacket(), rc);
             }
         }
@@ -141,7 +148,7 @@ public class Match {
         _matchCharacters.put(playerID, toAdd);
 
         Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID);
-        GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort), rc);
+        GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort, _matchID), rc);
     }
     public void LeaveMatch(byte id, byte team, boolean send){
         _matchCharacters.remove(id).PC().MarkRemovedFromMatch();
@@ -306,5 +313,18 @@ public class Match {
     }
     public Collection<RemoteClient> GetVerifiedClients(){
         return _verifiedClients.values();
+    }
+
+    public byte[] GetPoolBiasData(){
+        byte[] toReturn = new byte[1 + (_matchPools.size() * 3)];
+        toReturn[0] = (byte)_matchPools.size();
+        int trIndex = 1;
+        for(Pool pool : _matchPools.values() ){
+            toReturn[trIndex] = pool.GetPoolID();
+            toReturn[trIndex + 1] = pool.GetPoolTeam();
+            toReturn[trIndex + 2] = pool.GetPoolBiasAmount();
+            trIndex += 3;
+        }
+        return toReturn;
     }
 }

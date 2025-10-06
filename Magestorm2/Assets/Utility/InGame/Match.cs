@@ -7,6 +7,7 @@ public static class Match
     private static Dictionary<byte, Avatar> _matchPlayers;
     private static Dictionary<byte, ActivateableObject> _objects;
     private static Dictionary<byte, ManaPool> _pools;
+    private static Dictionary<byte, InitialPoolData> _initialPoolData;
     private static Level _level;
 
     public static bool Running;
@@ -18,6 +19,14 @@ public static class Match
         _matchPlayers = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>(); 
         _pools = new Dictionary<byte, ManaPool>();
+        byte[] poolData = MatchParams.GetPoolData();
+        _initialPoolData = new Dictionary<byte, InitialPoolData>();
+        for (int i = 0; i < poolData.Length; i += 3)
+        {
+            _initialPoolData.Add(poolData[i], new InitialPoolData(poolData[i + 1], poolData[i + 2]));
+            Debug.Log("Pool ID: " + poolData[i] + ", Team: " + poolData[i + 1] + ", Amount: " + poolData[i+2]);
+        }
+        
     }
     public static void PoolBiased(byte biaserID, byte poolID, byte teamID, byte biasAmount)
     {
@@ -29,6 +38,8 @@ public static class Match
     public static byte RegisterPool(ManaPool toRegister)
     {
         _pools.Add(toRegister.PoolID, toRegister);
+        InitialPoolData poolData = _initialPoolData[toRegister.PoolID];
+        toRegister.SetBiasAmount(poolData.BiasAmount, poolData.BiasedToward);
         return _level.GetPoolPower(toRegister.PoolID);
     }
     public static void AddAvatar(Avatar avatar)

@@ -24,7 +24,7 @@ public class AvatarStatus : MonoBehaviour
         DeathIcon.SetActive(!updated.IsAlive);
         Name.text = updated.Name;
         Level.text = updated.Level.ToString();
-        PlayerClass.text = updated.PlayerClass;
+        PlayerClass.text = updated.PlayerClassString;
         if (_isShown)
         {
             Show(true);

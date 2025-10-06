@@ -33,24 +33,88 @@ public class ManaPool : Trigger
             }
         }
     }
-    public void BiasPool(byte amount, Team team, byte biaserID)
+    public void SetBiasAmount(byte amount, Team team)
     {
         _biasAmount = amount;
         _biasedToward = team;
         Indicator.ChangeBias(team);
+    }
+    public void BiasPool(byte amount, Team team, byte biaserID)
+    {
+        SetBiasAmount(amount, team);
         Avatar biaser = null;
         if(Match.PlayerExists(biaserID, ref biaser))
         {
+            string notificationText = "";
             if(_biasedToward == biaser.PlayerTeam)
             {
-                // increased bias
+                //increased bias
+                if(biaserID == MatchParams.IDinMatch)
+                {
+                    switch (team)
+                    {
+                        case Team.Order:
+                            notificationText = Language.GetBaseString(157);
+                            break;
+                        case Team.Chaos:
+                            notificationText = Language.GetBaseString(161);
+                            break;
+                        case Team.Balance:
+                            notificationText = Language.GetBaseString(159);
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (team)
+                    {
+                        case Team.Order:
+                            notificationText = Language.BuildString(163, biaser.Name);
+                            break;
+                        case Team.Chaos:
+                            notificationText = Language.BuildString(167, biaser.Name);
+                            break;
+                        case Team.Balance:
+                            notificationText = Language.BuildString(165, biaser.Name);
+                            break;
+                    }
+                }
             }
             else
             {
-                // decreased bias
-                 
+                if (biaserID == MatchParams.IDinMatch)
+                {
+                    switch (team)
+                    {
+                        case Team.Order:
+                            notificationText = Language.GetBaseString(158);
+                            break;
+                        case Team.Chaos:
+                            notificationText = Language.GetBaseString(162);
+                            break;
+                        case Team.Balance:
+                            notificationText = Language.GetBaseString(160);
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (team)
+                    {
+                        case Team.Order:
+                            notificationText = Language.BuildString(164, biaser.Name);
+                            break;
+                        case Team.Chaos:
+                            notificationText = Language.BuildString(168, biaser.Name);
+                            break;
+                        case Team.Balance:
+                            notificationText = Language.BuildString(166, biaser.Name);
+                            break;
+                    }
+                }
+
             }
-            //ComponentRegister.Notifier.DisplayNotification()
+            ComponentRegister.Notifier.DisplayNotification(notificationText);
         }
     }
 
