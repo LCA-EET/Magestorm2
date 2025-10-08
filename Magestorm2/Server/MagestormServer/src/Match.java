@@ -1,32 +1,27 @@
-import java.awt.color.ICC_ProfileGray;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Match {
-    private final byte _matchID;
-    private final int _creatorID;
-    private final byte _sceneID;
-    private final long _expirationTime;
-    private final byte[] _creatorName;
-    private final byte[] _matchBytes;
-    private final byte _lastIndex;
-    private ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
-    private final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
-    private final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
-    private final ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
-    private ConcurrentHashMap<Byte, Pool> _matchPools;
-    private byte _nextPlayerID;
-    private final int _matchPort;
-    private final InGamePacketProcessor _processor;
-    private final byte _maxPlayers;
-    private final byte _matchType;
+    protected final byte _matchID;
+    protected final int _creatorID;
+    protected final byte _sceneID;
+    protected final long _expirationTime;
+    protected final byte[] _creatorName;
+    protected final byte[] _matchBytes;
+    protected final byte _lastIndex;
+    protected ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
+    protected final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
+    protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
+    protected final ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
 
+    protected byte _nextPlayerID;
+    protected final int _matchPort;
+    protected InGamePacketProcessor _processor;
+    protected final byte _maxPlayers;
 
-    public Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType){
-        _matchType = matchType;
+    protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType){
+        _matchPort = GameServer.GetNextMatchPort();
         _objectStatus = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
@@ -35,9 +30,7 @@ public class Match {
         _matchID = matchID;
         _creatorID = creatorID;
         _sceneID = sceneID;
-        InitializePools();
         _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
-        _matchPort = GameServer.GetNextMatchPort();
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + nameBytesLength + 1];
@@ -55,12 +48,11 @@ public class Match {
         index+=4;
         _matchBytes[index] = nameBytesLength;
         index++;
-        _matchBytes[index] = _matchType;
+        _matchBytes[index] = matchType;
         index++;
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
-        _processor = new InGamePacketProcessor(_matchPort, this);
     }
     public MatchTeam GetMatchTeam(byte teamID){
         return _matchTeams.get(teamID);
@@ -71,29 +63,6 @@ public class Match {
         }
         else{
             _objectStatus.put(objectID, new ActivatableObject(objectID, status));
-        }
-    }
-    private void InitializePools(){
-        _matchPools= new ConcurrentHashMap<>();
-        byte[] poolBytes = GameServer.GetPoolData(_sceneID);
-        for(int i = 0; i < poolBytes.length; i+=2){
-            byte poolID = poolBytes[i];
-            byte poolPower = poolBytes[i+1];
-            Pool toAdd = new Pool(this, poolID, poolPower);
-            _matchPools.put(poolID, toAdd);
-        }
-    }
-
-    public void BiasPool(byte biaserID, byte poolID, RemoteClient rc) {
-        if(_matchPools.containsKey(poolID)){
-            MatchCharacter biaser = _matchCharacters.get(biaserID);
-            short diceRoll = GameUtils.DiceRoll(100, 1);
-            if(Pool.BiasChance(biaser.GetClassCode()) >= diceRoll){
-                _matchPools.get(poolID).Bias(_matchCharacters.get(biaserID));
-            }
-            else{
-                SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
-            }
         }
     }
 
@@ -134,15 +103,14 @@ public class Match {
     public boolean HasRoomForAnotherPlayer(){
         return NumPlayersInMatch() < _maxPlayers;
     }
-    public void JoinMatch(RemoteClient rc, byte teamID){
+    public byte JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
         MatchTeam matchTeam = _matchTeams.get(teamID);
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this);
         matchTeam.AddPlayer(playerID, toAdd);
         _matchCharacters.put(playerID, toAdd);
-
         Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID);
-        GameServer.EnqueueForSend(Packets.MatchEntryPacket(_sceneID, teamID, playerID, _matchPort, _matchID), rc);
+        return playerID;
     }
     public void LeaveMatch(byte id, byte team, boolean send){
         _matchCharacters.remove(id).PC().MarkRemovedFromMatch();
@@ -165,16 +133,7 @@ public class Match {
         toReturn[1] = _matchID;
         return toReturn;
     }
-    private byte ShrineHealth(byte teamID){
-        return _matchTeams.get(teamID).ShrineHealth();
-    }
-    public byte[] ReportAllShrineHealth(){
-        return new byte[]{
-                ShrineHealth(MatchTeam.Chaos) ,
-                ShrineHealth(MatchTeam.Balance),
-                ShrineHealth(MatchTeam.Order)
-        };
-    }
+
     public byte[] PlayerData(byte idInMatch){
         return _matchCharacters.get(idInMatch).GetINLCTABytes();
     }
@@ -308,17 +267,8 @@ public class Match {
     public Collection<RemoteClient> GetVerifiedClients(){
         return _verifiedClients.values();
     }
-
-    public byte[] GetPoolBiasData(){
-        byte[] toReturn = new byte[1 + (_matchPools.size() * 3)];
-        toReturn[0] = (byte)_matchPools.size();
-        int trIndex = 1;
-        for(Pool pool : _matchPools.values() ){
-            toReturn[trIndex] = pool.GetPoolID();
-            toReturn[trIndex + 1] = pool.GetPoolTeam();
-            toReturn[trIndex + 2] = pool.GetPoolBiasAmount();
-            trIndex += 3;
-        }
-        return toReturn;
+    public byte GetSceneID(){
+        return _sceneID;
     }
+
 }

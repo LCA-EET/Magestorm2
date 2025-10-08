@@ -89,15 +89,16 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] MatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port, byte matchID){
-        byte[] poolData = MatchManager.GetMatch(matchID).GetPoolBiasData();
-        byte[] toEncrypt = new byte[8 + poolData.length];
+    public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port, byte matchID, byte matchType){
+        byte[] poolData = ((DeathMatch)MatchManager.GetMatch(matchID)).GetPoolManager().GetPoolBiasData();
+        byte[] toEncrypt = new byte[9 + poolData.length];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
         toEncrypt[1] = sceneID;
         toEncrypt[2] = teamID;
         toEncrypt[3] = playerID;
-        System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 4, 4);
-        System.arraycopy(poolData, 0, toEncrypt, 8, poolData.length);
+        toEncrypt[4] = matchType;
+        System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 5, 4);
+        System.arraycopy(poolData, 0, toEncrypt, 9, poolData.length);
         return Cryptographer.Encrypt(toEncrypt);
     }
 

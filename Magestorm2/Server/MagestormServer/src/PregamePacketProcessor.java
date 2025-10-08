@@ -11,7 +11,7 @@ public class PregamePacketProcessor extends UDPProcessor
     }
 
     @Override
-    protected void ProcessPacket(DatagramPacket received) {
+    protected boolean ProcessPacket(DatagramPacket received) {
         PreProcess(received);
         switch (_opCode) {
             case Pregame_Receive.LogIn:
@@ -60,6 +60,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 HandleMatchListRequest();
                 break;
         }
+        return true;
     }
     private void HandleMatchListRequest(){
         int accountID = IsLoggedIn();

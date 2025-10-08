@@ -59,8 +59,17 @@ public class MatchManager{
                 else{
                     byte matchID = NextMatchID();
                     Main.LogMessage("Attempting to create match " + matchID + "...");
-                    Match newlyCreated = new Match(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
-                            sceneID, System.currentTimeMillis(), duration, matchType);
+                    Match newlyCreated = null;
+                    switch(matchType){
+                        case MatchType.DeathMatch:
+                            newlyCreated = new DeathMatch(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
+                                    sceneID, System.currentTimeMillis(), duration);
+                            break;
+                        case MatchType.FreeForAll:
+                            break;
+                        case MatchType.CaptureTheFlag:
+                            break;
+                    }
                     Main.LogMessage("Match " + matchID + " created by account " + accountID );
                     AddMatch(matchID, newlyCreated);
                 }

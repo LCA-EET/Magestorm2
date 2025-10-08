@@ -1,5 +1,4 @@
 import java.net.DatagramPacket;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class InGamePacketProcessor extends UDPProcessor{
@@ -10,50 +9,37 @@ public class InGamePacketProcessor extends UDPProcessor{
         _owningMatch = owningMatch;
     }
     @Override
-    protected void ProcessPacket(DatagramPacket received){
+    protected boolean ProcessPacket(DatagramPacket received){
         PreProcess(received);
         switch(_opCode){
-
             case InGame_Receive.JoinedMatch:
                 HandleJoinMatchPacket();
-                break;
+                return true;
             case InGame_Receive.RequestPlayerData:
                 HandlePlayerDataRequest();
-                break;
+                return true;
             case InGame_Receive.ChangedObjectState:
                 HandleObjectStateChange();
-                break;
-            case InGame_Receive.FetchShrineHealth:
-                HandleShrineHealthRequest();
-                break;
+                return true;
             case InGame_Receive.DirectMessage:
                 HandleDirectMessage();
-                break;
+                return true;
             case InGame_Receive.BroadcastMessage:
                 HandleBroadcastMessage();
-                break;
-            case InGame_Receive.TeamMessage:
-                HandleTeamMessage();
-                break;
+                return true;
             case InGame_Receive.LeaveMatch:
                 HandleLeaveMatch();
-                break;
+                return true;
             case InGame_Receive.InactivityCheckResponse:
                 InactivityCheckResponse();
-                break;
-            case InGame_Receive.BiasPool:
-                HandlePoolBias();
-                break;
+                return true;
             case InGame_Receive.QuitGame:
                 HandleQuitGame();
-                break;
+                return true;
         }
+        return false;
     }
-    private void HandlePoolBias(){
-        if(IsVerified()){
-            _owningMatch.BiasPool(_decrypted[1], _decrypted[2], _remote);
-        }
-    }
+
     private void InactivityCheckResponse(){
         if(IsVerified()){
             _owningMatch.GetMatchCharacter(_decrypted[1]).MarkPacketReceived();
@@ -71,30 +57,7 @@ public class InGamePacketProcessor extends UDPProcessor{
             _owningMatch.LeaveMatch(_decrypted[1], _decrypted[2], true);
         }
     }
-    private void HandleTeamMessage(){
-        if(IsVerified()){
-            byte teamID = _decrypted[2];
-            int messageLength = ByteUtils.ExtractInt(_decrypted, 3);
-            String messageString = ByteUtils.BytesToUTF8(_decrypted, 7, messageLength);
-            if(ProfanityChecker.ContainsProhibitedLanguage(messageString)){
-                EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage),
-                        _remote);
-            }
-            else{
-                if(_owningMatch.GetMatchCharacter(_decrypted[1]).GetTeamID() == teamID){
-                    EnqueueForSend(Packets.MessagePacket(_decrypted, InGame_Send.TeamMessage),
-                            _owningMatch.GetMatchTeam(teamID).GetRemoteClients());
-                }
-                else{
-                    ArrayList<RemoteClient> recipients = new ArrayList<RemoteClient>();
-                    recipients.add(_remote);
-                    recipients.addAll(_owningMatch.GetMatchTeam(teamID).GetRemoteClients());
-                    EnqueueForSend(Packets.MessagePacket(_decrypted, InGame_Send.TeamMessage),
-                            recipients);
-                }
-            }
-        }
-    }
+
     private void HandleBroadcastMessage(){
         if(IsVerified()){
             int messageLength = ByteUtils.ExtractInt(_decrypted,2);
@@ -128,12 +91,6 @@ public class InGamePacketProcessor extends UDPProcessor{
             }
         }
     }
-    private void HandleShrineHealthRequest(){
-        if(IsVerified()){
-            SendShrineHealthPacket();
-        }
-    }
-
     private void HandleObjectStateChange(){
         if(IsVerified()) {
             byte objectID = _decrypted[2];
@@ -148,7 +105,7 @@ public class InGamePacketProcessor extends UDPProcessor{
             EnqueueForSend(Packets.PlayerDataPacket(_owningMatch.PlayerData(requestedPlayer)), _remote);
         }
     }
-    private void HandleJoinMatchPacket(){
+    protected boolean HandleJoinMatchPacket(){
         if(CheckAccountAndCharacter()){
             byte idInMatch = _decrypted[9];
             byte teamID = _decrypted[10];
@@ -157,14 +114,14 @@ public class InGamePacketProcessor extends UDPProcessor{
                 _owningMatch.SendToAll(Packets.PlayerJoinedMatchPacket(_owningMatch.PlayerData(idInMatch)));
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID);
                 Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);
-                SendShrineHealthPacket();
+                return true;
             }
             else{
                 Main.LogMessage("Player " + idInMatch + " NOT verified for match " + _owningMatch.MatchID() + ", team " + teamID);
             }
         }
+        return false;
     }
-
     private boolean CheckAccountAndCharacter(){
         int accountID = IsLoggedIn();
         if(accountID > 0){
@@ -176,18 +133,10 @@ public class InGamePacketProcessor extends UDPProcessor{
         Main.LogMessage("Account check failure: " + accountID + ", match " + _owningMatch.MatchID());
         return false;
     }
-
-    private boolean IsVerified(){
+    protected boolean IsVerified(){
         return _owningMatch.IsPlayerVerified(_decrypted[1]);
     }
     private boolean IsVerified(byte playerID){
         return _owningMatch.IsPlayerVerified(playerID);
     }
-
-    private void SendShrineHealthPacket(){
-        byte[] health = _owningMatch.ReportAllShrineHealth();
-        EnqueueForSend(Packets.AllShrineHealthPacket(health[0], health[1], health[2]), _remote);
-    }
-
-    
 }

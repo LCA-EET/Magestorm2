@@ -14,18 +14,46 @@ public static class MatchParams
     public static long ExpirationTime;
     public static bool ReturningFromMatch;
 
+    private static byte[] _decrypted;
     private static byte[] _poolData;
     public static void Init(byte[] decrypted)
     {
+        _decrypted = decrypted;
+        MatchTypes type = (MatchTypes)decrypted[4];
+        switch (type)
+        {
+            case MatchTypes.Deathmatch:
+                InitDM();
+                break;
+            case MatchTypes.FreeForAll:
+                InitFFA();
+                break;
+            case MatchTypes.CaptureTheFlag:
+                InitCTF();
+                break;
+        }
+    }
+    public static void InitDM()
+    {
         ReturningFromMatch = false;
-        SceneID = decrypted[1];
-        MatchTeamID = decrypted[2];
-        IDinMatch = decrypted[3];
-        ListeningPort = BitConverter.ToInt32(decrypted, 4);
+        SceneID = _decrypted[1];
+        MatchTeamID = _decrypted[2];
+        IDinMatch = _decrypted[3];
+        ListeningPort = BitConverter.ToInt32(_decrypted, 4);
         MatchTeam = (Team)MatchTeamID;
-        byte numPools = decrypted[8];
+        byte numPools = _decrypted[8];
         _poolData = new byte[numPools * 3];
-        Array.Copy(decrypted, 9, _poolData, 0, _poolData.Length);
+        Array.Copy(_decrypted, 9, _poolData, 0, _poolData.Length);
+    }
+
+    public static void InitCTF()
+    {
+
+    }
+
+    public static void InitFFA()
+    {
+
     }
 
     public static byte[] GetPoolData()
