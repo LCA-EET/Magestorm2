@@ -12,9 +12,11 @@ public class MatchCharacter {
     private long _lastPacketReceived;
     private final long _inactivityWarningThreshold = 30000;
     private final long _inactivityMaximumThreshold = 61000;
+    private short _currentHealth;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match){
         MarkPacketReceived();
+        _currentHealth = 1;
         _verified = false;
         _owningMatch = match;
         _pc = pc;
@@ -28,6 +30,10 @@ public class MatchCharacter {
         byte[] appearanceBytes = pc.GetAppearanceBytes();
         System.arraycopy(appearanceBytes, 0, _INLCTA, 2, appearanceBytes.length);
         System.arraycopy(nameLevelClass, 0, _INLCTA, 7, nameLevelClass.length);
+    }
+
+    public boolean IsAlive(){
+        return _currentHealth > 0;
     }
 
     public PlayerCharacter PC(){

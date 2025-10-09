@@ -74,11 +74,12 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] ShrineHealthPacket(byte health, byte teamID){
-        byte[] toEncrypt = new byte[3];
+    public static byte[] ShrineAdjustmentPacket(byte health, byte teamID, byte adjusterID){
+        byte[] toEncrypt = new byte[4];
         toEncrypt[0] = InGame_Send.ShrineHealth;
         toEncrypt[1] = teamID;
         toEncrypt[2] = health;
+        toEncrypt[3] = adjusterID;
         return Cryptographer.Encrypt(toEncrypt);
     }
     public static byte[] ObjectStateChangePacket(byte objectID, byte state){
@@ -190,6 +191,13 @@ public class Packets {
     public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
+
+    public static byte[] ShrineFailurePacket(byte shrineID){
+        byte[] toEncrypt = new byte[2];
+        toEncrypt[0] = InGame_Send.ShrineFailure;
+        toEncrypt[1] = shrineID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
 
     public static byte[] PoolBiasPacket(byte poolID, byte bias, byte teamID, byte biaserID){
         byte[] toEncrypt = new byte[5];

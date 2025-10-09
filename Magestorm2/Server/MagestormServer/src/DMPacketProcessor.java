@@ -17,10 +17,18 @@ public class DMPacketProcessor extends InGamePacketProcessor{
                     return HandleShrineHealthRequest();
                 case InGame_Receive.TeamMessage:
                     return HandleTeamMessage();
+                case InGame_Receive.AdjustShrineHealth:
+                    return HandleShrineAdjustment();
             }
 
         }
         return false;
+    }
+    private boolean HandleShrineAdjustment(){
+        if(IsVerified()){
+            _owningDM.AdjustShrineHealth(_decrypted[1], _decrypted[2]);
+        }
+        return true;
     }
     private boolean HandlePoolBias(){
         if(IsVerified()){

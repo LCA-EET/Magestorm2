@@ -9,9 +9,7 @@ public class MatchTeam {
     public static byte Order = 3;
     public static byte[] TeamCodes = new byte[]{Neutral, Chaos, Balance, Order};
 
-
     private boolean _listChanged;
-    private byte _shrineHealth;
     private final byte _teamID;
 
     private byte[] _playerListBytes;
@@ -21,7 +19,6 @@ public class MatchTeam {
 
     public MatchTeam(byte teamID, Match owningMatch)
     {
-        _shrineHealth = 100;
         _teamID = teamID;
         _listChanged = true;
         _teamPlayers = new ConcurrentHashMap<>();
@@ -50,15 +47,6 @@ public class MatchTeam {
 
     public byte NumPlayers(){
         return (byte)_teamPlayers.size();
-    }
-
-    public byte ShrineHealth(){
-        return _shrineHealth;
-    }
-
-    public void AdjustShrineHealth(byte adjustment){
-        _shrineHealth += adjustment;
-        _owningMatch.SendToAll(Packets.ShrineHealthPacket(_shrineHealth, _teamID));
     }
 
     public byte[] GetPlayerBytes(){

@@ -23,12 +23,14 @@ public class PoolManager {
     public void BiasPool(byte biaserID, byte poolID, RemoteClient rc) {
         if(_matchPools.containsKey(poolID)){
             MatchCharacter biaser = _owningMatch.GetMatchCharacter(biaserID);
-            short diceRoll = GameUtils.DiceRoll(100, 1);
-            if(Pool.BiasChance(biaser.GetClassCode()) >= diceRoll){
-                _matchPools.get(poolID).Bias(biaser);
-            }
-            else{
-                _owningMatch.SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
+            if(biaser.IsAlive()){
+                short diceRoll = GameUtils.DiceRoll(100, 1);
+                if(Pool.BiasChance(biaser.GetClassCode()) >= diceRoll){
+                    _matchPools.get(poolID).Bias(biaser);
+                }
+                else{
+                    _owningMatch.SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
+                }
             }
         }
     }
