@@ -9,13 +9,13 @@ public class Notifier : MonoBehaviour
     private Color _color;
     void Awake()
     {
+        ComponentRegister.Notifier = this;
         _notifierText = GetComponentInChildren<TMP_Text>();
         _notifierText.text = "";
     }
     void Start()
     {
         _color = Color.white;
-        ComponentRegister.Notifier = this;
     }
 
     // Update is called once per frame

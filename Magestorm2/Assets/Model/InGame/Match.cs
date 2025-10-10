@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,7 @@ public static class Match
     private static Dictionary<byte, ActivateableObject> _objects;
     private static Dictionary<byte, ManaPool> _pools;
     private static Dictionary<byte, InitialPoolData> _initialPoolData;
+    private static Dictionary<byte, Shrine> _shrines;
     private static Level _level;
 
     public static bool Running;
@@ -19,6 +21,7 @@ public static class Match
         _matchPlayers = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>(); 
         _pools = new Dictionary<byte, ManaPool>();
+        _shrines = new Dictionary<byte, Shrine>();
         byte[] poolData = MatchParams.GetPoolData();
         _initialPoolData = new Dictionary<byte, InitialPoolData>();
         for (int i = 0; i < poolData.Length; i += 3)
@@ -34,6 +37,11 @@ public static class Match
         {
             _pools[poolID].BiasPool(biasAmount, (Team)teamID, biaserID);
         }
+    }
+    public static void RegisterShrine(Shrine toRegister)
+    {
+        _shrines.Add((byte)toRegister.Team, toRegister);
+        toRegister.SetHealth(MatchParams.GetShrineHealth((byte)toRegister.Team));
     }
     public static byte RegisterPool(ManaPool toRegister)
     {
@@ -108,11 +116,19 @@ public static class Match
             Debug.Log("Object state change: " + key + ", " + state);
         }
     }
+    /*
     public static void ChangeShrineHealth(byte shrineID, byte health)
     {
         ComponentRegister.ShrinePanel.SetFill((Team)shrineID, health);
     }
-
+    */
+    public static void ProcessShrineAdjustment(byte shrineID, byte newHealth, byte adjuster)
+    {
+        if (_shrines.ContainsKey(shrineID))
+        {
+            _shrines[shrineID].AdjustHealth(newHealth, adjuster);
+        }
+    }
     public static void Send(byte[] packetBytes)
     {
         ComponentRegister.InGamePacketProcessor.SendBytes(packetBytes);

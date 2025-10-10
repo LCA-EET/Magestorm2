@@ -10,20 +10,27 @@ public class Shrine : Trigger
     public Team Team;
     public BiasIndicator Indicator;
     private byte _health = 100;
-    private bool _playerInPool = false;
+    private bool _playerInShrine = false;
+
+    public void Start()
+    {
+        Match.RegisterShrine(this);
+        Indicator.ChangeBias(Team);
+        _health = MatchParams.GetShrineData()[(byte)Team - 1];
+    }
     public override void EnterAction()
     {
         if (PlayerAccount.SelectedCharacter.CharacterClass != (byte)PlayerClass.Arcanist)
         {
-            _playerInPool = true;
+            _playerInShrine = true;
             ComponentRegister.ShrineDisplay.Refresh(this);
         }
         Debug.Log("Entered shrine");
     }
     public override void ExitAction()
     {
-        _playerInPool = false;
-        ComponentRegister.BiasDisplay.Toggle(false);
+        _playerInShrine = false;
+        ComponentRegister.ShrineDisplay.Toggle(false);
         Debug.Log("Exited shrine");
     }
     public Team GetTeam()
@@ -34,6 +41,12 @@ public class Shrine : Trigger
     {
         _health = amount;
         Indicator.gameObject.SetActive(_health > 0);
+        ComponentRegister.ShrinePanel.SetFill(Team, _health);
+    }
+    public void AdjustHealth(byte newHealth, byte adjusterID)
+    {
+        SetHealth(newHealth);
+        Avatar adjuster = null;
         if (_health == 100)
         {
             ComponentRegister.Notifier.DisplayNotification(Language.BuildString(179, Teams.GetTeamName(Team)));
@@ -42,12 +55,11 @@ public class Shrine : Trigger
         {
             ComponentRegister.Notifier.DisplayNotification(Language.BuildString(178, Teams.GetTeamName(Team)));
         }
-    }
-    public void AdjustHealth(byte newHealth, byte adjusterID)
-    {
-        SetHealth(newHealth);
-        Avatar adjuster = null;
-        if(Match.PlayerExists(adjusterID, ref adjuster))
+        if (_playerInShrine)
+        {
+            ComponentRegister.ShrineDisplay.Refresh(this);
+        }
+        if (Match.PlayerExists(adjusterID, ref adjuster))
         {
             string notificationText = "";
             if(adjuster.PlayerID == MatchParams.IDinMatch)
@@ -60,6 +72,7 @@ public class Shrine : Trigger
                 {
                     notificationText = Language.BuildString(174, Language.GetBaseString(177), Teams.GetTeamName(Team));
                 }
+                ComponentRegister.AudioPlayer.PlayBiasSound();
             }
             else
             {
@@ -81,7 +94,7 @@ public class Shrine : Trigger
     }
     public void Update()
     {
-        if (_playerInPool)
+        if (_playerInShrine)
         {
             _elapsed += Time.deltaTime;
             if (_elapsed > _interval)
@@ -91,7 +104,6 @@ public class Shrine : Trigger
                     || (MatchParams.MatchTeamID != (byte)Team && _health > 0))
                 {
                     Game.SendInGameBytes(InGame_Packets.AdjustShrinePacket((byte)Team));
-                    Debug.Log("Shrine adjustment packet sent.");
                 }
             }
         }

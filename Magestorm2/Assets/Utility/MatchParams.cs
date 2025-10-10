@@ -10,12 +10,14 @@ public static class MatchParams
     public static byte MatchTeamID;
     public static byte IDinMatch;
     public static byte SceneID;
+    public static byte MatchType;
     public static int ListeningPort;
     public static long ExpirationTime;
     public static bool ReturningFromMatch;
 
     private static byte[] _decrypted;
     private static byte[] _poolData;
+    private static byte[] _shrineData;
     public static void Init(byte[] decrypted)
     {
         _decrypted = decrypted;
@@ -38,12 +40,17 @@ public static class MatchParams
         ReturningFromMatch = false;
         SceneID = _decrypted[1];
         MatchTeamID = _decrypted[2];
-        IDinMatch = _decrypted[3];
-        ListeningPort = BitConverter.ToInt32(_decrypted, 4);
         MatchTeam = (Team)MatchTeamID;
-        byte numPools = _decrypted[8];
+        IDinMatch = _decrypted[3];
+        MatchType = _decrypted[4];
+        ListeningPort = BitConverter.ToInt32(_decrypted, 5);
+        _shrineData = new byte[3];
+        _shrineData[0] = _decrypted[9];
+        _shrineData[1] = _decrypted[10];
+        _shrineData[2] = _decrypted[11];
+        byte numPools = _decrypted[12];
         _poolData = new byte[numPools * 3];
-        Array.Copy(_decrypted, 9, _poolData, 0, _poolData.Length);
+        Array.Copy(_decrypted, 13, _poolData, 0, _poolData.Length);
     }
 
     public static void InitCTF()
@@ -59,6 +66,16 @@ public static class MatchParams
     public static byte[] GetPoolData()
     {
         return _poolData;
+    }
+
+    public static byte[] GetShrineData()
+    {
+        return _shrineData;
+    }
+
+    public static byte GetShrineHealth(byte teamID)
+    {
+        return _shrineData[teamID-1];
     }
 }
 

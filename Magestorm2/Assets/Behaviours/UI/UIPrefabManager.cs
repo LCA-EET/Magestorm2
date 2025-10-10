@@ -21,9 +21,13 @@ public class UIPrefabManager : MonoBehaviour
     private Queue<GameObject> _poppedObjects;
     private void Awake()
     {
+        if(ComponentRegister.UIPrefabManager != null)
+        {
+            Destroy((ComponentRegister.UIPrefabManager.gameObject));
+        }
+        ComponentRegister.UIPrefabManager = this;
         _uiStack = new Stack<GameObject>();
         _poppedObjects = new Queue<GameObject>();
-        ComponentRegister.UIPrefabManager = this;
         DontDestroyOnLoad(gameObject);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created

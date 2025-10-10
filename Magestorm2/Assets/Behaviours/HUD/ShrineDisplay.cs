@@ -21,7 +21,6 @@ public class ShrineDisplay : MonoBehaviour
         Title.gameObject.SetActive(show);
         Health.gameObject.SetActive(show);
     }
-
     public void Refresh(Shrine shrine)
     {
         Color toApply = Teams.GetTeamColor(shrine.GetTeam());

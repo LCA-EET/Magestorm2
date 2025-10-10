@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SFXPlayer : MonoBehaviour
@@ -7,11 +8,19 @@ public class SFXPlayer : MonoBehaviour
     public AudioClip SFXBias;
     private AudioSource _audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
+        if(ComponentRegister.AudioPlayer != null)
+        {
+            Destroy(ComponentRegister.AudioPlayer.gameObject);
+        }
         ComponentRegister.AudioPlayer = this;
         _audioSource = GetComponent<AudioSource>();
-        //DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -22,8 +31,11 @@ public class SFXPlayer : MonoBehaviour
 
     public void PlayClip(AudioClip clip)
     {
-        _audioSource.clip = clip;
-        _audioSource.Play();
+        if (!_audioSource.IsDestroyed())
+        {
+            _audioSource.clip = clip;
+            _audioSource.Play();
+        }
     }
   
     public void PlayButtonPress()

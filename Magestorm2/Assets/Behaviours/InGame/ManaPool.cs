@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor.Build;
+using UnityEngine;
 
 public class ManaPool : Trigger
 {
@@ -67,6 +68,7 @@ public class ManaPool : Trigger
                             notificationText = Language.GetBaseString(159);
                             break;
                     }
+                    ComponentRegister.AudioPlayer.PlayBiasSound();
                 }
                 else
                 {
@@ -100,6 +102,7 @@ public class ManaPool : Trigger
                             notificationText = Language.GetBaseString(160);
                             break;
                     }
+                    ComponentRegister.AudioPlayer.PlayBiasSound();
                 }
                 else
                 {
@@ -118,7 +121,7 @@ public class ManaPool : Trigger
                 }
 
             }
-            ComponentRegister.Notifier.DisplayNotification(notificationText, ComponentRegister.AudioPlayer.SFXBias );
+            ComponentRegister.Notifier.DisplayNotification(notificationText);
         }
     }
 

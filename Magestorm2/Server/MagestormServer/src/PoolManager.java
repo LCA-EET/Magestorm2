@@ -5,8 +5,8 @@ public class PoolManager {
     private final Match _owningMatch;
     public PoolManager(Match owningMatch){
         _matchPools = new ConcurrentHashMap<>();
-        InitializePools();
         _owningMatch = owningMatch;
+        InitializePools();
     }
 
     private void InitializePools(){

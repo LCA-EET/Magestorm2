@@ -71,23 +71,31 @@ public class ModelBuilder : MonoBehaviour
     private int[] _componentIndices;
     private void Awake()
     {
-        DontDestroyOnLoad(this);
-        _componentIndices = new int[4];
-        _maleLightBodies = new GameObject[12];
-        _femaleLightBodies = new GameObject[12];
+        if(ComponentRegister.ModelBuilder == null)
+        {
+            ComponentRegister.ModelBuilder = this;
+            DontDestroyOnLoad(this);
+            _componentIndices = new int[4];
+            _maleLightBodies = new GameObject[12];
+            _femaleLightBodies = new GameObject[12];
 
-        _maleDarkBodies = new GameObject[12];
-        _femaleDarkBodies = new GameObject[12];
+            _maleDarkBodies = new GameObject[12];
+            _femaleDarkBodies = new GameObject[12];
 
-        FillBodyArray(ref _maleLightBodies, new GameObject[][] { MaleLightNeutralBody, MaleLightChaosBody, MaleLightBalanceBody, MaleLightOrderBody });
-        FillBodyArray(ref _maleDarkBodies, new GameObject[][] { MaleDarkNeutralBody, MaleDarkChaosBody, MaleDarkBalanceBody, MaleDarkOrderBody });
-        FillBodyArray(ref _femaleLightBodies, new GameObject[][] { FemaleLightNeutralBody, FemaleLightChaosBody, FemaleLightBalanceBody, FemaleLightOrderBody });
-        FillBodyArray(ref _femaleDarkBodies, new GameObject[][] { FemaleDarkNeutralBody, FemaleDarkChaosBody, FemaleDarkBalanceBody, FemaleDarkOrderBody });
-        FillDictionary(ref _maleDarkParts, _maleDarkBodies, MaleHair, MaleDarkHeads, MaleFaces);
-        FillDictionary(ref _maleLightParts, _maleLightBodies, MaleHair, MaleLightHeads, MaleFaces);
-        FillDictionary(ref _femaleDarkParts, _femaleDarkBodies, FemaleHair, FemaleDarkHeads, FemaleFaces);
-        FillDictionary(ref _femaleLightParts, _femaleLightBodies, FemaleHair, FemaleLightHeads, FemaleFaces);
-        ComponentRegister.ModelBuilder = this;
+            FillBodyArray(ref _maleLightBodies, new GameObject[][] { MaleLightNeutralBody, MaleLightChaosBody, MaleLightBalanceBody, MaleLightOrderBody });
+            FillBodyArray(ref _maleDarkBodies, new GameObject[][] { MaleDarkNeutralBody, MaleDarkChaosBody, MaleDarkBalanceBody, MaleDarkOrderBody });
+            FillBodyArray(ref _femaleLightBodies, new GameObject[][] { FemaleLightNeutralBody, FemaleLightChaosBody, FemaleLightBalanceBody, FemaleLightOrderBody });
+            FillBodyArray(ref _femaleDarkBodies, new GameObject[][] { FemaleDarkNeutralBody, FemaleDarkChaosBody, FemaleDarkBalanceBody, FemaleDarkOrderBody });
+            FillDictionary(ref _maleDarkParts, _maleDarkBodies, MaleHair, MaleDarkHeads, MaleFaces);
+            FillDictionary(ref _maleLightParts, _maleLightBodies, MaleHair, MaleLightHeads, MaleFaces);
+            FillDictionary(ref _femaleDarkParts, _femaleDarkBodies, FemaleHair, FemaleDarkHeads, FemaleFaces);
+            FillDictionary(ref _femaleLightParts, _femaleLightBodies, FemaleHair, FemaleLightHeads, FemaleFaces);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
     }
     private void FillBodyArray(ref GameObject[] array, GameObject[][] bodies)
     {

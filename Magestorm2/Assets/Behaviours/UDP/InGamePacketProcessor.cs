@@ -35,12 +35,14 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.ObjectStateChange:
                             ProcessObjectChangePacket();
                             break;
+                            /*
                         case InGame_Receive.ShrineHealth:
                             ProcessShrineHealthPacket();
                             break;
                         case InGame_Receive.AllShrineHealth:
                             ProcessAllShrineHealthPacket();
                             break;
+                            */
                         case InGame_Receive.BroadcastMessage:
                             ProcessBroadcastMessagePacket();
                             break;
@@ -65,10 +67,30 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.PoolBiasFailure:
                             ProcessPoolBiasFailure();
                             break;
+                        case InGame_Receive.ShrineAdjusted:
+                            Match.ProcessShrineAdjustment(_decrypted[1], _decrypted[2], _decrypted[3]);
+                            break;
+                        case InGame_Receive.ShrineFailure:
+                            ProcessShrineFailure();
+                            break;
                     }
                 }
             }
         }
+    }
+    private void ProcessShrineFailure()
+    {
+        byte shrineID = _decrypted[1];
+        string notificationText = "";
+        if(shrineID == MatchParams.MatchTeamID)
+        {
+            notificationText = Language.BuildString(181, Language.GetBaseString(182), Teams.GetTeamName((Team)shrineID));
+        }
+        else
+        {
+            notificationText = Language.BuildString(181, Language.GetBaseString(183), Teams.GetTeamName((Team)shrineID));
+        }
+        ComponentRegister.Notifier.DisplayNotification(notificationText);
     }
     private void ProcessPoolBiasFailure()
     {
@@ -146,6 +168,7 @@ public class InGamePacketProcessor : UDPProcessor
         MessageData md = new MessageData(message, name);
         
     }
+    /*
     private void ProcessAllShrineHealthPacket()
     {
         Match.ChangeShrineHealth((byte)Team.Chaos, _decrypted[1]);
@@ -156,6 +179,7 @@ public class InGamePacketProcessor : UDPProcessor
     {
         Match.ChangeShrineHealth(_decrypted[1], _decrypted[2]);
     }
+    */
     private void ProcessObjectChangePacket()
     {
         Match.ChangeObjectState(_decrypted[1], _decrypted[2]);

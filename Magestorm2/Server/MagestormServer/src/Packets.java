@@ -74,10 +74,10 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] ShrineAdjustmentPacket(byte health, byte teamID, byte adjusterID){
+    public static byte[] ShrineAdjustmentPacket(byte health, byte shrineID, byte adjusterID){
         byte[] toEncrypt = new byte[4];
-        toEncrypt[0] = InGame_Send.ShrineHealth;
-        toEncrypt[1] = teamID;
+        toEncrypt[0] = InGame_Send.ShrineAdjusted;
+        toEncrypt[1] = shrineID;
         toEncrypt[2] = health;
         toEncrypt[3] = adjusterID;
         return Cryptographer.Encrypt(toEncrypt);
@@ -91,15 +91,19 @@ public class Packets {
     }
 
     public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port, byte matchID, byte matchType){
-        byte[] poolData = ((DeathMatch)MatchManager.GetMatch(matchID)).GetPoolManager().GetPoolBiasData();
-        byte[] toEncrypt = new byte[9 + poolData.length];
+        DeathMatch dm = (DeathMatch)MatchManager.GetMatch(matchID);
+        byte[] poolData = dm.GetPoolManager().GetPoolBiasData();
+        byte[] shrineData = dm.ReportAllShrineHealth();
+        byte[] toEncrypt = new byte[9 + shrineData.length + poolData.length];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
         toEncrypt[1] = sceneID;
         toEncrypt[2] = teamID;
         toEncrypt[3] = playerID;
         toEncrypt[4] = matchType;
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 5, 4);
-        System.arraycopy(poolData, 0, toEncrypt, 9, poolData.length);
+        System.arraycopy(shrineData, 0, toEncrypt, 9, shrineData.length);
+        System.arraycopy(poolData, 0, toEncrypt, 12, poolData.length);
+
         return Cryptographer.Encrypt(toEncrypt);
     }
 

@@ -23,5 +23,7 @@ public static class InGame_Receive
                         InactivityWarning = 14,
                         PlayerJoinedMatch = 15,
                         PoolBiased = 16,
-                        PoolBiasFailure = 17;
+                        PoolBiasFailure = 17,
+                        ShrineAdjusted = 18,
+                        ShrineFailure = 19;
 }
