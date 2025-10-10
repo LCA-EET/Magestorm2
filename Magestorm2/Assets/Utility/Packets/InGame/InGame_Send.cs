@@ -16,5 +16,6 @@ public static class InGame_Send
                         LeaveMatch = 8,
                         InactivityCheckResponse = 9,
                         BiasPool = 10,
-                        QuitGame = 11;
+                        QuitGame = 11,
+                        AdjustShrine = 12;
 }

@@ -28,7 +28,13 @@ public static class ComponentRegister
     private static MessageRecorder _messageRecorder;
     private static SceneInitializer _sceneInitializer;
     private static BiasDisplay _biasDisplay;
-    
+    private static ShrineDisplay _shrineDisplay;
+
+    public static ShrineDisplay ShrineDisplay
+    {
+        get { return _shrineDisplay; }
+        set { _shrineDisplay = value; }
+    }
     public static BiasDisplay BiasDisplay
     {
         get { return _biasDisplay; }

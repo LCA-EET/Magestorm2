@@ -170,5 +170,12 @@ You have decreased the Chaos bias of the pool.
 Your bias attempt was unsuccessful.
 Shrine
 Manapool
-Power
-Bias
+Power:
+Bias:
+You've {0} the {1} shrine.
+{0} has {1} the {2} shrine.
+restored
+damaged
+The {0} shrine has been destroyed.
+The {0} shrine has been fully restored.
+Health:

@@ -67,6 +67,10 @@ public static class Language
     {
         return BuildString(GetBaseString(stringReference), param, param2);
     }
+    public static string BuildString(int stringReference, object param, object param2, object param3)
+    {
+        return BuildString(GetBaseString(stringReference), param, param2, param3);
+    }
     public static string BuildString(string baseString, object param)
     {
         _builder.AppendFormat(baseString, param);
@@ -77,6 +81,13 @@ public static class Language
     public static string BuildString(string baseString, object param1, object param2)
     {
         _builder.AppendFormat(baseString, param1, param2);
+        string toReturn = _builder.ToString();
+        _builder.Clear();
+        return toReturn;
+    }
+    public static string BuildString(string baseString, object param1, object param2, object param3)
+    {
+        _builder.AppendFormat(baseString, param1, param2, param3);
         string toReturn = _builder.ToString();
         _builder.Clear();
         return toReturn;
