@@ -12,8 +12,15 @@ public class ShrineDisplay : MonoBehaviour
 
     public void Awake()
     {
-        ComponentRegister.ShrineDisplay = this;
-        Toggle(false);
+        if (!MatchParams.IncludeShrines)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            ComponentRegister.ShrineDisplay = this;
+            Toggle(false);
+        }
     }
 
     public void Toggle(bool show)

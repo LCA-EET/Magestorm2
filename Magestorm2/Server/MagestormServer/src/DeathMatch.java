@@ -17,7 +17,9 @@ public class DeathMatch extends Match{
     public PoolManager GetPoolManager(){
         return _poolManager;
     }
-
+    public void SendToTeam(byte[] encrypted, byte teamID){
+        SendToCollection(encrypted, _matchTeams.get(teamID).GetRemoteClients());
+    }
     private byte ShrineHealth(byte teamID){
         return _shrines.get(teamID).ShrineHealth();
     }

@@ -66,6 +66,8 @@ public class MatchManager{
                                     sceneID, System.currentTimeMillis(), duration);
                             break;
                         case MatchType.FreeForAll:
+                            newlyCreated = new FreeForAll(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
+                                    sceneID, System.currentTimeMillis(), duration);
                             break;
                         case MatchType.CaptureTheFlag:
                             break;

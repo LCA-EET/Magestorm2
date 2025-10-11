@@ -18,6 +18,7 @@ public static class Game
     public static bool ChatMode = false;
     public static bool ControlMode = false;
 
+    
     public static bool GameMode
     {
         get

@@ -2,8 +2,15 @@ using UnityEngine;
 
 public class TeamChatControl : ValidatableForm
 {
-    
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private void Awake()
+    {
+        if (!MatchParams.IncludeTeams)
+        {
+            Destroy(gameObject);
+        }
+    }
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         AssociateFormToButtons();

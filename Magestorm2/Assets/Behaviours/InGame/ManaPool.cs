@@ -11,7 +11,10 @@ public class ManaPool : Trigger
     private byte _biasAmount;
     public void Awake()
     {
-        
+        if (!MatchParams.IncludePools)
+        {
+            Destroy(this);
+        }
     }
     public void Start()
     {

@@ -29,12 +29,18 @@ public static class ComponentRegister
     private static SceneInitializer _sceneInitializer;
     private static BiasDisplay _biasDisplay;
     private static ShrineDisplay _shrineDisplay;
-
+    private static TeamChatControl _teamChatControl;
     public static ShrineDisplay ShrineDisplay
     {
         get { return _shrineDisplay; }
         set { _shrineDisplay = value; }
     }
+    public static TeamChatControl TeamChatControl
+    {
+        get { return _teamChatControl; }
+        set { _teamChatControl = value; }
+    }
+
     public static BiasDisplay BiasDisplay
     {
         get { return _biasDisplay; }

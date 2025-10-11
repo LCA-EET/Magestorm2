@@ -18,6 +18,24 @@ public static class MatchParams
     private static byte[] _decrypted;
     private static byte[] _poolData;
     private static byte[] _shrineData;
+    private static bool _includePools;
+    private static bool _includeShrines;
+    private static bool _includeTeams;
+    public static bool IncludePools
+    {
+        get { return _includePools; }
+        set { _includePools = value; }
+    }
+    public static bool IncludeTeams
+    {
+        get { return _includeTeams; }
+        set { _includeTeams = value; }
+    }
+    public static bool IncludeShrines
+    {
+        get { return _includeShrines; }
+        set { _includeShrines = value; }
+    }
     public static void Init(byte[] decrypted)
     {
         _decrypted = decrypted;
@@ -51,6 +69,8 @@ public static class MatchParams
         byte numPools = _decrypted[12];
         _poolData = new byte[numPools * 3];
         Array.Copy(_decrypted, 13, _poolData, 0, _poolData.Length);
+        IncludePools = true;
+        IncludeShrines = true;
     }
 
     public static void InitCTF()

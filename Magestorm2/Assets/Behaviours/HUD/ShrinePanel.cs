@@ -8,11 +8,18 @@ public class ShrinePanel : MonoBehaviour
 
     private void Awake()
     {
-        ComponentRegister.ShrinePanel = this;
-        _indicators = new Dictionary<Team, BarIndicator>();
-        _indicators.Add(Team.Chaos, ShrineIndicators[0]);
-        _indicators.Add(Team.Balance, ShrineIndicators[1]);
-        _indicators.Add(Team.Order, ShrineIndicators[2]);
+        if (!MatchParams.IncludeShrines)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            ComponentRegister.ShrinePanel = this;
+            _indicators = new Dictionary<Team, BarIndicator>();
+            _indicators.Add(Team.Chaos, ShrineIndicators[0]);
+            _indicators.Add(Team.Balance, ShrineIndicators[1]);
+            _indicators.Add(Team.Order, ShrineIndicators[2]);
+        }
     }
     void Start()
     {

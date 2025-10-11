@@ -15,8 +15,15 @@ public class BiasDisplay : MonoBehaviour
 
     public void Awake()
     {
-        ComponentRegister.BiasDisplay = this;
-        Toggle(false);
+        if (!MatchParams.IncludePools)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            ComponentRegister.BiasDisplay = this;
+            Toggle(false);
+        }
     }
 
     public void Refresh(ManaPool pool)

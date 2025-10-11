@@ -204,10 +204,8 @@ public class Match {
     public void SendToPlayer(byte[] encrypted, MatchCharacter recipient){
         _processor.EnqueueForSend(encrypted, recipient.GetRemoteClient());
     }
-    public void SendToTeam(byte[] encrypted, byte teamID){
-        SendToCollection(encrypted, _matchTeams.get(teamID).GetRemoteClients());
-    }
-    private void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
+
+    protected void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
         Main.LogMessage("Sending data to " + _verifiedClients.size() + " collection.");
         _processor.EnqueueForSend(encrypted, recipients);
     }
