@@ -48,26 +48,7 @@ public class DMPacketProcessor extends InGamePacketProcessor{
     }
     private boolean HandleTeamMessage(){
         if(IsVerified()){
-            byte teamID = _decrypted[2];
-            int messageLength = ByteUtils.ExtractInt(_decrypted, 3);
-            String messageString = ByteUtils.BytesToUTF8(_decrypted, 7, messageLength);
-            if(ProfanityChecker.ContainsProhibitedLanguage(messageString)){
-                EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage),
-                        _remote);
-            }
-            else{
-                if(_owningDM.GetMatchCharacter(_decrypted[1]).GetTeamID() == teamID){
-                    EnqueueForSend(Packets.MessagePacket(_decrypted, InGame_Send.TeamMessage),
-                            _owningDM.GetMatchTeam(teamID).GetRemoteClients());
-                }
-                else {
-                    ArrayList<RemoteClient> recipients = new ArrayList<RemoteClient>();
-                    recipients.add(_remote);
-                    recipients.addAll(_owningDM.GetMatchTeam(teamID).GetRemoteClients());
-                    EnqueueForSend(Packets.MessagePacket(_decrypted, InGame_Send.TeamMessage),
-                            recipients);
-                }
-            }
+            SharedHandlers.HandleTeamMessage(_decrypted, this, _owningDM, _remote);
         }
         return true;
     }

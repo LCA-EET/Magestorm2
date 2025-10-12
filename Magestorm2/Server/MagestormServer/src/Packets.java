@@ -65,30 +65,7 @@ public class Packets {
         return Cryptographer.Encrypt(MatchIsFull_Bytes);
     }
 
-    public static byte[] AllShrineHealthPacket(byte chaos, byte balance, byte order){
-        byte[] toEncrypt = new byte[4];
-        toEncrypt[0] = InGame_Send.AllShrineHealth;
-        toEncrypt[1] = chaos;
-        toEncrypt[2] = balance;
-        toEncrypt[3] = order;
-        return Cryptographer.Encrypt(toEncrypt);
-    }
 
-    public static byte[] ShrineAdjustmentPacket(byte health, byte shrineID, byte adjusterID){
-        byte[] toEncrypt = new byte[4];
-        toEncrypt[0] = InGame_Send.ShrineAdjusted;
-        toEncrypt[1] = shrineID;
-        toEncrypt[2] = health;
-        toEncrypt[3] = adjusterID;
-        return Cryptographer.Encrypt(toEncrypt);
-    }
-    public static byte[] ObjectStateChangePacket(byte objectID, byte state){
-        byte[] toEncrypt = new byte[3];
-        toEncrypt[0] = InGame_Send.ObjectStateChange;
-        toEncrypt[1] = objectID;
-        toEncrypt[2] = state;
-        return Cryptographer.Encrypt(toEncrypt);
-    }
 
     public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port, byte matchID, byte matchType){
         DeathMatch dm = (DeathMatch)MatchManager.GetMatch(matchID);
@@ -195,6 +172,44 @@ public class Packets {
     public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
+
+    public static byte[] FlagCapturedPacket(byte capturingTeam, byte flagCaptured, byte capturedBy, byte scoreCapturer,
+                                            byte scoreCaptured)
+    {
+        byte[] toEncrypt = new byte[6];
+        toEncrypt[0] = InGame_Send.FlagCaptured;
+        toEncrypt[1] = capturingTeam;
+        toEncrypt[2] = flagCaptured;
+        toEncrypt[3] = capturedBy;
+        toEncrypt[4] = scoreCapturer;
+        toEncrypt[5] = scoreCaptured;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] AllShrineHealthPacket(byte chaos, byte balance, byte order){
+        byte[] toEncrypt = new byte[4];
+        toEncrypt[0] = InGame_Send.AllShrineHealth;
+        toEncrypt[1] = chaos;
+        toEncrypt[2] = balance;
+        toEncrypt[3] = order;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] ShrineAdjustmentPacket(byte health, byte shrineID, byte adjusterID){
+        byte[] toEncrypt = new byte[4];
+        toEncrypt[0] = InGame_Send.ShrineAdjusted;
+        toEncrypt[1] = shrineID;
+        toEncrypt[2] = health;
+        toEncrypt[3] = adjusterID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+    public static byte[] ObjectStateChangePacket(byte objectID, byte state){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.ObjectStateChange;
+        toEncrypt[1] = objectID;
+        toEncrypt[2] = state;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
 
     public static byte[] ShrineFailurePacket(byte shrineID){
         byte[] toEncrypt = new byte[2];

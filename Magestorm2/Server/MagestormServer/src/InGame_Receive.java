@@ -13,4 +13,7 @@ public class InGame_Receive {
     public static final byte BiasPool = 10;
     public static final byte QuitGame = 11;
     public static final byte AdjustShrineHealth = 12;
+    public static final byte FlagCaptured = 13;
+    public static final byte FlagReturned = 14;
+    public static final byte FlagTaken = 15;
 }

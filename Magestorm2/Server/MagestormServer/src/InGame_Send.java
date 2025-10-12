@@ -19,5 +19,6 @@ public class InGame_Send {
     public static final byte PoolBiasFailure = 17;
     public static final byte ShrineAdjusted = 18;
     public static final byte ShrineFailure = 19;
+    public static final byte FlagCaptured = 20;
 
 }

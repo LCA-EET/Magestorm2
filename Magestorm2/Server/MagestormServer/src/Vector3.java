@@ -6,10 +6,8 @@ public class Vector3 {
         _position = new byte[12];
     }
 
-    public void SetCoordinate(byte[] decrypted, int index, byte offset){
-        for(int i = 0; i < 4; i++){
-            _position[i + offset] = decrypted[index + i];
-        }
+    public void SetCoordinates(byte[] decrypted, int index){
+        System.arraycopy(decrypted, index, _position, 0, _position.length);
     }
 
     public byte[] GetPosition(){
