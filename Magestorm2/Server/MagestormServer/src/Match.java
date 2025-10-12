@@ -26,7 +26,7 @@ public class Match {
         _matchCharacters = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
         _creatorName = creatorName;
-        _nextPlayerID = 0;
+        _nextPlayerID = 1;
         _matchID = matchID;
         _creatorID = creatorID;
         _sceneID = sceneID;
@@ -146,8 +146,8 @@ public class Match {
             }
         }
         if(idUsed){
-            if(_nextPlayerID >= 100){
-                _nextPlayerID = 0;
+            if(_nextPlayerID > 100){
+                _nextPlayerID = 1;
             }
             else{
                 _nextPlayerID++;

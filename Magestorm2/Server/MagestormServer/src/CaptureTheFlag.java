@@ -14,7 +14,7 @@ public class CaptureTheFlag extends Match{
             _flags.put(teamID, new Flag(teamID));
             _score.put(teamID, (byte)0);
         }
-        _processor = new InGamePacketProcessor(_matchPort, this);
+        _processor = new CTFPacketProcessor(_matchPort, this);
     }
 
     public PoolManager GetPoolManager(){
@@ -24,18 +24,25 @@ public class CaptureTheFlag extends Match{
     public void FlagCaptured(byte capturedBy, byte flagCaptured){
         byte capturingTeam = _matchCharacters.get(capturedBy).GetTeamID();
         if(!_flags.get(capturingTeam).IsHeld()){
-            if(_flags.get(flagCaptured).IsHeld()){
-                AdjustScore(capturingTeam, (byte)1);
-                AdjustScore(flagCaptured, (byte)-1);
-                _flags.get(flagCaptured).FlagCaptured();
-                SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, capturedBy,
-                        _score.get(capturingTeam), _score.get(flagCaptured)));
+            Flag captured = _flags.get(flagCaptured);
+            if(captured != null){
+                if(captured.IsHeld()){
+                    AdjustScore(capturingTeam, (byte)1);
+                    AdjustScore(flagCaptured, (byte)-1);
+                    captured.FlagReturned();
+                    SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, capturedBy,
+                            _score.get(capturingTeam), _score.get(flagCaptured)));
+                }
             }
         }
     }
 
-    public void FlagReturned(byte flag, byte returner){
-
+    public void FlagReturned(byte returner, byte flag){
+        Flag returned = _flags.get(flag);
+        if(returned.IsHeld()){
+            returned.FlagReturned();
+            SendToAll(Packets.FlagReturnedPacket(flag, returner));
+        }
     }
     private void AdjustScore(byte team, byte adjustment){
         byte currentScore = _score.get(team);

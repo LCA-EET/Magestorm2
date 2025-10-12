@@ -5,12 +5,12 @@ public class Flag {
 
     public Flag(byte teamID){
         _teamID = teamID;
-        _holderID = -1;
+        _holderID = 0;
         _location = new Vector3();
     }
 
     public boolean IsHeld(){
-        return _holderID >= 0;
+        return _holderID > 0;
     }
 
     public byte[] GetLocation(){
@@ -21,13 +21,12 @@ public class Flag {
         _holderID = takerID;
     }
 
-    public void FlagCaptured(){
-        _holderID = -1;
+    public void FlagReturned(){
+        _holderID = 0;
     }
 
     public void FlagDropped(byte[] positionBytes){
         _location.SetCoordinates(positionBytes, 0);
     }
-
 
 }

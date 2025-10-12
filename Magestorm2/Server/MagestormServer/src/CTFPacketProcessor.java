@@ -13,16 +13,16 @@ public class CTFPacketProcessor extends InGamePacketProcessor{
             if(IsVerified()){
                 switch(_opCode){
                     case InGame_Receive.BiasPool:
-                        HandlePoolBias();
+                        _owningCTF.GetPoolManager().BiasPool(_decrypted[1], _decrypted[2], _remote);
                         break;
                     case InGame_Receive.TeamMessage:
-                        HandleTeamMessage();
+                        SharedHandlers.HandleTeamMessage(_decrypted, this, _owningCTF, _remote);
                         break;
                     case InGame_Receive.FlagCaptured:
-                        HandleFlagCapture();
+                        _owningCTF.FlagCaptured(_decrypted[1], _decrypted[2]);
                         break;
                     case InGame_Receive.FlagReturned:
-                        HandleFlagReturn();
+                        _owningCTF.FlagReturned(_decrypted[1], _decrypted[2]);
                         break;
                     case InGame_Receive.FlagTaken:
                         break;
@@ -32,28 +32,6 @@ public class CTFPacketProcessor extends InGamePacketProcessor{
 
         }
         return false;
-    }
-    private void HandleFlagReturn(){
-
-
-    }
-
-    private void HandleFlagCapture(){
-        _owningCTF.FlagCaptured(_decrypted[1], _decrypted[2]);
-    }
-
-    private boolean HandlePoolBias(){
-        if(IsVerified()){
-            _owningCTF.GetPoolManager().BiasPool(_decrypted[1], _decrypted[2], _remote);
-        }
-        return true;
-    }
-
-    private boolean HandleTeamMessage(){
-        if(IsVerified()){
-            SharedHandlers.HandleTeamMessage(_decrypted, this, _owningCTF, _remote);
-        }
-        return true;
     }
 
 }

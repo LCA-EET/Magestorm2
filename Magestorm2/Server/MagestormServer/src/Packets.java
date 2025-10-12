@@ -173,6 +173,14 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] FlagReturnedPacket(byte flagReturned, byte returner){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.FlagReturned;
+        toEncrypt[1] = flagReturned;
+        toEncrypt[2] = returner;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] FlagCapturedPacket(byte capturingTeam, byte flagCaptured, byte capturedBy, byte scoreCapturer,
                                             byte scoreCaptured)
     {
