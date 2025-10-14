@@ -19,9 +19,11 @@ public class Match {
     protected final int _matchPort;
     protected InGamePacketProcessor _processor;
     protected final byte _maxPlayers;
+    protected byte _matchType;
 
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType){
         _matchPort = GameServer.GetNextMatchPort();
+        _matchType = matchType;
         _objectStatus = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
@@ -109,7 +111,7 @@ public class Match {
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this);
         matchTeam.AddPlayer(playerID, toAdd);
         _matchCharacters.put(playerID, toAdd);
-        Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID);
+        Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return playerID;
     }
     public void LeaveMatch(byte id, byte team, boolean send){

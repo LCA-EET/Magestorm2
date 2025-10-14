@@ -12,6 +12,13 @@ public class Shrine : Trigger
     private byte _health = 100;
     private bool _playerInShrine = false;
 
+    public void Awake()
+    {
+        if (!MatchParams.IncludeShrines)
+        {
+            Destroy(this);
+        }
+    }
     public void Start()
     {
         Match.RegisterShrine(this);

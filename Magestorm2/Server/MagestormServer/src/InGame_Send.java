@@ -21,4 +21,5 @@ public class InGame_Send {
     public static final byte ShrineFailure = 19;
     public static final byte FlagCaptured = 20;
     public static final byte FlagReturned = 21;
+    public static final byte FlagDropped = 22;
 }

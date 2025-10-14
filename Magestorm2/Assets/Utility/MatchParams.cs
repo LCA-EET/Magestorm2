@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ public static class MatchParams
     public static void Init(byte[] decrypted)
     {
         _decrypted = decrypted;
-        MatchTypes type = (MatchTypes)decrypted[4];
+        MatchTypes type = (MatchTypes)decrypted[1];
         switch (type)
         {
             case MatchTypes.Deathmatch:
@@ -55,12 +56,15 @@ public static class MatchParams
     }
     public static void InitDM()
     {
+        UnityEngine.Debug.Log("InitDM");
         ReturningFromMatch = false;
-        SceneID = _decrypted[1];
-        MatchTeamID = _decrypted[2];
-        MatchTeam = (Team)MatchTeamID;
+        MatchType = _decrypted[1];
+        SceneID = _decrypted[2];
         IDinMatch = _decrypted[3];
-        MatchType = _decrypted[4];
+        MatchTeamID = _decrypted[4];
+        MatchTeam = (Team)MatchTeamID;
+        
+        
         ListeningPort = BitConverter.ToInt32(_decrypted, 5);
         _shrineData = new byte[3];
         _shrineData[0] = _decrypted[9];
@@ -75,12 +79,20 @@ public static class MatchParams
 
     public static void InitCTF()
     {
-
+        UnityEngine.Debug.Log("InitCTF");
     }
 
     public static void InitFFA()
     {
-
+        UnityEngine.Debug.Log("InitFFA");
+        ReturningFromMatch = false;
+        MatchType = _decrypted[1];
+        SceneID = _decrypted[2];
+        IDinMatch = _decrypted[3];
+        
+        ListeningPort = BitConverter.ToInt32(_decrypted, 4);
+        IncludePools = false;
+        IncludeShrines = false;
     }
 
     public static byte[] GetPoolData()

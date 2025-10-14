@@ -26,6 +26,9 @@ public class CTFPacketProcessor extends InGamePacketProcessor{
                         break;
                     case InGame_Receive.FlagTaken:
                         break;
+                    case InGame_Receive.FlagDropped:
+                        _owningCTF.FlagDropped(_decrypted);
+                        break;
                 }
             }
 
@@ -33,5 +36,7 @@ public class CTFPacketProcessor extends InGamePacketProcessor{
         }
         return false;
     }
+
+
 
 }

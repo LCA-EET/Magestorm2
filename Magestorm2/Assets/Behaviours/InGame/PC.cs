@@ -56,10 +56,23 @@ public class PC : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        other.GetComponent<Trigger>().EnterAction();
+        Trigger toProcess = null;
+        if (ObtainTrigger(other, ref toProcess))
+        {
+            toProcess.EnterAction();
+        }
     }
     public void OnTriggerExit(Collider other)
     {
-        other.GetComponent<Trigger>().ExitAction();
+        Trigger toProcess = null;
+        if (ObtainTrigger(other, ref toProcess))
+        {
+            toProcess.ExitAction();
+        }
+    }
+    private bool ObtainTrigger(Collider other, ref Trigger trigger)
+    {
+        trigger = other.GetComponent<Trigger>();
+        return trigger != null;
     }
 }

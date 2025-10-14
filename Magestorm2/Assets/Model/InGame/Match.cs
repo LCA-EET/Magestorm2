@@ -19,17 +19,22 @@ public static class Match
     {
         _level = LevelData.GetLevel(MatchParams.SceneID);
         _matchPlayers = new Dictionary<byte, Avatar>();
-        _objects = new Dictionary<byte, ActivateableObject>(); 
-        _pools = new Dictionary<byte, ManaPool>();
-        _shrines = new Dictionary<byte, Shrine>();
-        byte[] poolData = MatchParams.GetPoolData();
-        _initialPoolData = new Dictionary<byte, InitialPoolData>();
-        for (int i = 0; i < poolData.Length; i += 3)
+        _objects = new Dictionary<byte, ActivateableObject>();
+        if (MatchParams.IncludePools)
         {
-            _initialPoolData.Add(poolData[i], new InitialPoolData(poolData[i + 1], poolData[i + 2]));
-            Debug.Log("Pool ID: " + poolData[i] + ", Team: " + poolData[i + 1] + ", Amount: " + poolData[i+2]);
+            _pools = new Dictionary<byte, ManaPool>();
+            byte[] poolData = MatchParams.GetPoolData();
+            _initialPoolData = new Dictionary<byte, InitialPoolData>();
+            for (int i = 0; i < poolData.Length; i += 3)
+            {
+                _initialPoolData.Add(poolData[i], new InitialPoolData(poolData[i + 1], poolData[i + 2]));
+                Debug.Log("Pool ID: " + poolData[i] + ", Team: " + poolData[i + 1] + ", Amount: " + poolData[i + 2]);
+            }
         }
-        
+        if (MatchParams.IncludeShrines)
+        {
+            _shrines = new Dictionary<byte, Shrine>();
+        }
     }
     public static void PoolBiased(byte biaserID, byte poolID, byte teamID, byte biasAmount)
     {

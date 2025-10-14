@@ -3,7 +3,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PoolManager {
     private ConcurrentHashMap<Byte, Pool> _matchPools;
     private final Match _owningMatch;
+    private byte[] _biasData;
+    private boolean _biasChange;
+
     public PoolManager(Match owningMatch){
+        _biasChange = true;
         _matchPools = new ConcurrentHashMap<>();
         _owningMatch = owningMatch;
         InitializePools();
@@ -27,6 +31,7 @@ public class PoolManager {
                 short diceRoll = GameUtils.DiceRoll(100, 1);
                 if(Pool.BiasChance(biaser.GetClassCode()) >= diceRoll){
                     _matchPools.get(poolID).Bias(biaser);
+                    _biasChange = true;
                 }
                 else{
                     _owningMatch.SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
@@ -36,15 +41,18 @@ public class PoolManager {
     }
 
     public byte[] GetPoolBiasData(){
-        byte[] toReturn = new byte[1 + (_matchPools.size() * 3)];
-        toReturn[0] = (byte)_matchPools.size();
-        int trIndex = 1;
-        for(Pool pool : _matchPools.values() ){
-            toReturn[trIndex] = pool.GetPoolID();
-            toReturn[trIndex + 1] = pool.GetPoolTeam();
-            toReturn[trIndex + 2] = pool.GetPoolBiasAmount();
-            trIndex += 3;
+        if(_biasChange){
+            _biasData = new byte[1 + (_matchPools.size() * 3)];
+            _biasData[0] = (byte)_matchPools.size();
+            int trIndex = 1;
+            for(Pool pool : _matchPools.values() ){
+                _biasData[trIndex] = pool.GetPoolID();
+                _biasData[trIndex + 1] = pool.GetPoolTeam();
+                _biasData[trIndex + 2] = pool.GetPoolBiasAmount();
+                trIndex += 3;
+            }
+            _biasChange = false;
         }
-        return toReturn;
+        return _biasData;
     }
 }

@@ -65,22 +65,52 @@ public class Packets {
         return Cryptographer.Encrypt(MatchIsFull_Bytes);
     }
 
-
-
     public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port, byte matchID, byte matchType){
         DeathMatch dm = (DeathMatch)MatchManager.GetMatch(matchID);
         byte[] poolData = dm.GetPoolManager().GetPoolBiasData();
         byte[] shrineData = dm.ReportAllShrineHealth();
         byte[] toEncrypt = new byte[9 + shrineData.length + poolData.length];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
-        toEncrypt[1] = sceneID;
-        toEncrypt[2] = teamID;
+        toEncrypt[1] = matchType;
+        toEncrypt[2] = sceneID;
         toEncrypt[3] = playerID;
-        toEncrypt[4] = matchType;
+        toEncrypt[4] = teamID;
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 5, 4);
         System.arraycopy(shrineData, 0, toEncrypt, 9, shrineData.length);
         System.arraycopy(poolData, 0, toEncrypt, 12, poolData.length);
 
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] CTFEntryPacket(byte sceneID, byte playerID, byte teamID, int port, byte matchID, byte matchType){
+        CaptureTheFlag ctf = (CaptureTheFlag) MatchManager.GetMatch(matchID);
+        byte[] flagBytes = ctf.FlagsStatus();
+        byte[] scores = ctf.GetScores();
+        byte[] poolBytes = ctf.GetPoolManager().GetPoolBiasData();
+        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 1 + scores.length + 4 + flagBytes.length + poolBytes.length];
+        toEncrypt[0] = Pregame_Send.MatchEntryPacket;
+        toEncrypt[1] = matchType;
+        toEncrypt[2] = sceneID;
+        toEncrypt[3] = playerID;
+        toEncrypt[4] = teamID;
+        int index = 5;
+        System.arraycopy(scores, 0, toEncrypt, index, 3);
+        index += 3;
+        System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, index, 4);
+        index += 4;
+        System.arraycopy(flagBytes, 0, toEncrypt, index, flagBytes.length);
+        index += flagBytes.length;
+        System.arraycopy(poolBytes, 0, toEncrypt, index, poolBytes.length);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] FFAEntryPacket(byte sceneID, byte playerID, int port, byte matchType){
+        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 4];
+        toEncrypt[0] = Pregame_Send.MatchEntryPacket;
+        toEncrypt[1] = matchType;
+        toEncrypt[2] = sceneID;
+        toEncrypt[3] = playerID;
+        System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 4, 4);
         return Cryptographer.Encrypt(toEncrypt);
     }
 
@@ -172,6 +202,14 @@ public class Packets {
     public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
+
+    public static byte[] FlagDroppedPacket(byte playerID, byte[] flagBytes){
+        byte[] toEncrypt = new byte[1 + 1 + flagBytes.length];
+        toEncrypt[0] = InGame_Send.FlagDropped;
+        toEncrypt[1] = playerID;
+        System.arraycopy(flagBytes, 0, toEncrypt, 2, flagBytes.length);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
 
     public static byte[] FlagReturnedPacket(byte flagReturned, byte returner){
         byte[] toEncrypt = new byte[3];

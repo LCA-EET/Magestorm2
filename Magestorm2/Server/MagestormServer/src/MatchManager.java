@@ -58,7 +58,7 @@ public class MatchManager{
                 }
                 else{
                     byte matchID = NextMatchID();
-                    Main.LogMessage("Attempting to create match " + matchID + "...");
+                    Main.LogMessage("Attempting to create match " + matchID + ", scene " + sceneID + "...");
                     Match newlyCreated = null;
                     switch(matchType){
                         case MatchType.DeathMatch:
