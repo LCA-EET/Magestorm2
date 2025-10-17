@@ -38,6 +38,14 @@ public class CharacterClass {
         return (byte)(_classID == Cleric?2:1);
     }
 
+    public byte HPMultiplier(){
+        return switch(_classID){
+            case Cleric -> 6;
+            case Magician -> 4;
+            default -> 5;
+        };
+    }
+
     public String ToString(){
         return switch (_classID) {
             case Arcanist -> "Arcanist";

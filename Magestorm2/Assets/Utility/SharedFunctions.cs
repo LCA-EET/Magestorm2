@@ -1,3 +1,4 @@
+using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -59,6 +60,20 @@ public static class SharedFunctions
                 return "Ma";
             case PlayerClass.Mentalist:
                 return "Me";
+        }
+        return "";
+    }
+    public static string MatchTypeString(MatchTypes matchType)
+    {
+        
+        switch (matchType)
+        {
+            case MatchTypes.Deathmatch:
+                return Language.GetBaseString(103);
+            case MatchTypes.CaptureTheFlag:
+                return Language.GetBaseString(105);
+            case MatchTypes.FreeForAll:
+                return Language.GetBaseString(104);
         }
         return "";
     }

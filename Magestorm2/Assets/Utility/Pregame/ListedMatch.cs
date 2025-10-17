@@ -25,17 +25,7 @@ public class ListedMatch
     {
         get
         {
-            MatchTypes matchType = (MatchTypes)MatchType;
-            switch (matchType)
-            {
-                case MatchTypes.Deathmatch:
-                    return Language.GetBaseString(103);
-                case MatchTypes.CaptureTheFlag:
-                    return Language.GetBaseString(105);
-                case MatchTypes.FreeForAll:
-                    return Language.GetBaseString(104);
-            }
-            return "";
+            return SharedFunctions.MatchTypeString((MatchTypes)MatchType);
         }
     }
     public int CreatorID

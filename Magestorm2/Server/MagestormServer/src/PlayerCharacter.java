@@ -58,6 +58,11 @@ public class PlayerCharacter {
         CharacterManager.AddToCache(this);
         BuildMatchEntryBytes();
     }
+    public short GetMaxHP(){
+        short multiplier = _characterClass.HPMultiplier();
+        float toReturn = (_level * (_constitution / 20.0f) * multiplier * 1.579f) + 10;
+        return (short)Math.round(toReturn);
+    }
     private void BuildMatchEntryBytes(){
         int totalLength = 0;
         totalLength += 4;

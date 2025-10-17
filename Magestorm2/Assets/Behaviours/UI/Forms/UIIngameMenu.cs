@@ -1,13 +1,18 @@
+using TMPro;
 using UnityEngine;
 
 public class UIIngameMenu : ValidatableForm
 {
+    public TMP_Text MatchID;
+    public TMP_Text MatchType;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         AssociateFormToButtons();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
+        MatchID.text = Language.BuildString(97, MatchParams.IDinMatch);
+        MatchType.text = Language.BuildString(111, SharedFunctions.MatchTypeString((MatchTypes)MatchParams.MatchType));
     }
 
     // Update is called once per frame

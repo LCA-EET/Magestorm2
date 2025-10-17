@@ -14,6 +14,7 @@ public class Match {
     protected final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
     protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     protected final ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
+    protected final ConcurrentHashMap<Byte, Integer> _playerScores;
 
     protected byte _nextPlayerID;
     protected final int _matchPort;
@@ -26,6 +27,7 @@ public class Match {
         _matchType = matchType;
         _objectStatus = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
+        _playerScores = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
         _creatorName = creatorName;
         _nextPlayerID = 1;
@@ -56,6 +58,17 @@ public class Match {
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
     }
+    protected void AdjustScore(byte playerID, int adjustment)
+    {
+        if(!_playerScores.containsKey(playerID)){
+            _playerScores.put(playerID, adjustment);
+        }
+        else{
+            int newScore = _playerScores.get(playerID) + adjustment;
+            _playerScores.put(playerID, newScore);
+        }
+    }
+
     public MatchTeam GetMatchTeam(byte teamID){
         return _matchTeams.get(teamID);
     }
