@@ -203,6 +203,31 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] HMLPacket(short health, short mana, byte ley){
+        byte[] toEncrypt = new byte[6];
+        toEncrypt[0] = InGame_Send.HMLUpdate;
+        System.arraycopy(ByteUtils.ShortToByteArray(health),0,toEncrypt,1,2);
+        System.arraycopy(ByteUtils.ShortToByteArray(mana),0,toEncrypt,3,2);
+        toEncrypt[5] = ley;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] SpellCastPacket(byte[] toEncrypt){
+        toEncrypt[0] = InGame_Send.SpellCast;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+    public static byte[] PlayerDamagedPacket(byte playerID, byte damageSourceID, short newHP){
+        return null;
+    }
+
+    public static byte[] PlayerKilledPacket(byte playerKilled, byte killerID){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.PlayerKilled;
+        toEncrypt[1] = playerKilled;
+        toEncrypt[2] = killerID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] FlagDroppedPacket(byte playerID, byte[] flagBytes){
         byte[] toEncrypt = new byte[1 + 1 + flagBytes.length];
         toEncrypt[0] = InGame_Send.FlagDropped;

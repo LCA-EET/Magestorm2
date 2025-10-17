@@ -17,18 +17,19 @@ public class GameServer extends Thread {
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
     public static void init(){
-       ByteUtils.init();
-       GameUtils.init();
-       CharacterManager.init();
+        ByteUtils.init();
+        GameUtils.init();
+        CharacterManager.init();
         _loggedInClients = new ConcurrentHashMap<>();
         _maxPlayerData = new ConcurrentHashMap<>();
         _activeCharacters = new ConcurrentHashMap<>();
         _poolData = new ConcurrentHashMap<>();
-       MatchManager.init();
-       _rcMonitor = new RemoteClientMonitor();
-       _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
-       _levelData = Database.GetLevelsList((byte)1);
-       _usedMatchPorts = new ConcurrentSkipListSet<>();
+        SpellManager.init();
+        MatchManager.init();
+        _rcMonitor = new RemoteClientMonitor();
+        _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
+        _levelData = Database.GetLevelsList((byte)1);
+        _usedMatchPorts = new ConcurrentSkipListSet<>();
     }
     
     public static void AddActiveCharacter(int accountID, PlayerCharacter active){

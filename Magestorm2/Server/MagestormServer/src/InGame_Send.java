@@ -22,4 +22,8 @@ public class InGame_Send {
     public static final byte FlagCaptured = 20;
     public static final byte FlagReturned = 21;
     public static final byte FlagDropped = 22;
+    public static final byte PlayerDamaged = 23;
+    public static final byte PlayerKilled = 24;
+    public static final byte SpellCast = 25;
+    public static final byte HMLUpdate = 26;
 }

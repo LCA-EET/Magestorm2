@@ -14,11 +14,9 @@ public class PlayerCharacter {
     private final byte[] _nameBytes;
     private final byte[] _nameLevelClass;
     private final byte[] _appearanceBytes;
-    private final Vector3 _position;
     private final int _indexExperience = 17;
     private final int _indexLevel = 16;
     private final int _accountID;
-    private byte[] _matchEntryBytes;
     private final RemoteClient _remoteClient;
 
     private byte _currentMatchID, _idInCurrentMatch, _currentTeam;
@@ -26,7 +24,6 @@ public class PlayerCharacter {
 
     public PlayerCharacter(byte[] fetched, int accountID){
         _inMatch = false;
-        _position = new Vector3();
         _remoteClient = GameServer.GetClient(accountID);
         _accountID = accountID;
         _characterBytes = fetched;
@@ -56,29 +53,13 @@ public class PlayerCharacter {
         _nameLevelClass[2] = nameLength;
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
         CharacterManager.AddToCache(this);
-        BuildMatchEntryBytes();
     }
     public short GetMaxHP(){
         short multiplier = _characterClass.HPMultiplier();
         float toReturn = (_level * (_constitution / 20.0f) * multiplier * 1.579f) + 10;
         return (short)Math.round(toReturn);
     }
-    private void BuildMatchEntryBytes(){
-        int totalLength = 0;
-        totalLength += 4;
-        totalLength += _nameLevelClass.length;
-        totalLength += 5; // appearance
-        totalLength += 12; // position;
-        _matchEntryBytes = new byte[totalLength];
-        int index = 0;
-        System.arraycopy(ByteUtils.IntToByteArray(_characterID), 0, _matchEntryBytes, index, 4);
-        index+=4;
-        System.arraycopy(_nameLevelClass, 0, _matchEntryBytes, index, _nameLevelClass.length);
-        index+= _nameLevelClass.length;
-        System.arraycopy(_appearanceBytes, 0, _matchEntryBytes, index, 5);
-        index += 5;
-        System.arraycopy(_position.GetPosition(), 0, _matchEntryBytes, index, 12);
-    }
+
     public String GetCharacterName(){
         return _characterName;
     }
@@ -107,9 +88,6 @@ public class PlayerCharacter {
     }
     public byte[] GetAppearanceBytes(){
         return _appearanceBytes;
-    }
-    public byte[] GetMatchEntryBytes(){
-        return _matchEntryBytes;
     }
     public int GetAccountID(){
         return _accountID;

@@ -8,14 +8,16 @@ public class GameUtils {
     }
 
     public static short DiceRoll(int numSides, int numRolls){
+        return DiceRoll(1, numSides, numRolls);
+    }
+
+    public static short DiceRoll(int minRoll, int maxRoll, int numRolls){
         int total = 0;
         byte roll = 0;
         while (roll < numRolls){
-            total += _random.nextInt(1, numSides+1);
+            total += _random.nextInt(minRoll, maxRoll+1);
             roll++;
         }
         return (short)total;
     }
-
-
 }

@@ -36,11 +36,25 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_Receive.QuitGame:
                 HandleQuitGame();
                 return true;
+            case InGame_Receive.HitPlayer:
+                HandleHitPlayer();
+                return true;
+            case InGame_Receive.CastSpell:
+                HandleSpellCast();
+                return true;
         }
         return false;
     }
-
-
+    private void HandleSpellCast(){
+        if(IsVerified()){
+            _owningMatch.ProcessSpellCast(_decrypted);
+        }
+    }
+    private void HandleHitPlayer(){
+        if(IsVerified()){
+            _owningMatch.PlayerHit(_decrypted[1], _decrypted[2], ByteUtils.ExtractInt(_decrypted, 3));
+        }
+    }
     private void InactivityCheckResponse(){
         if(IsVerified()){
             _owningMatch.GetMatchCharacter(_decrypted[1]).MarkPacketReceived();

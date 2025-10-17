@@ -73,10 +73,77 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.ShrineFailure:
                             ProcessShrineFailure();
                             break;
+                        case InGame_Receive.HMLUpdate:
+                            ProcessHMLUpdate();
+                            break;
+                        case InGame_Receive.PlayerKilled:
+                            ProcessKilledPlayer();
+                            break;
+                        case InGame_Receive.FlagReturned:
+                            HandleFlagReturn();
+                            break;
+                        case InGame_Receive.FlagCaptured:
+                            HandleFlagCapture();
+                            break;
+                        case InGame_Receive.FlagDropped:
+                            HandleFlagDrop();
+                            break;
                     }
                 }
             }
         }
+    }
+    private void HandleFlagReturn()
+    {
+
+    }
+    private void HandleFlagCapture()
+    {
+
+    }
+    private void HandleFlagDrop()
+    {
+
+    }
+    private void ProcessKilledPlayer()
+    {
+        byte killedPlayerID = _decrypted[1];
+        byte killerID = _decrypted[2];
+        MessageData data = null;
+        if (killedPlayerID == MatchParams.IDinMatch) // player was killed
+        {
+            ComponentRegister.PC.HMLUpdate(0, 0);
+            Avatar playerKiller = null;
+            if(Match.GetAvatar(killerID, ref playerKiller))
+            {
+                data = new MessageData(Language.BuildString(185, playerKiller.Name), "Server");
+            }
+        }
+        else
+        {
+            Avatar killedPlayer = null;
+            if(Match.GetAvatar(killedPlayerID, ref killedPlayer))
+            {
+                if (killerID == MatchParams.IDinMatch) // player killed someone
+                {
+                    data = new MessageData(Language.BuildString(184, killedPlayer.Name), "Server");
+                }
+                else // someone else killed someone
+                {
+                    Avatar killer = null;
+                    if(Match.GetAvatar(killerID, ref killer))
+                    {
+                        data = new MessageData(Language.BuildString(186, killedPlayer.Name), "Server");
+                    }
+                }
+            }
+            
+        }
+        ComponentRegister.MessageRecorder.MessageReceived(data);
+    }
+    private void ProcessHMLUpdate()
+    {
+        ComponentRegister.PC.HMLUpdate(_decrypted);
     }
     private void ProcessShrineFailure()
     {

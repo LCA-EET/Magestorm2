@@ -17,5 +17,11 @@ public static class InGame_Send
                         InactivityCheckResponse = 9,
                         BiasPool = 10,
                         QuitGame = 11,
-                        AdjustShrine = 12;
+                        AdjustShrine = 12,
+                        FlagCaptured = 13,
+                        FlagReturned = 14,
+                        FlagTaken = 15,
+                        FlagDropped = 16,
+                        HitPlayer = 17,
+                        CastSpell = 18;
 }

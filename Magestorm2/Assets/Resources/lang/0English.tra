@@ -182,3 +182,6 @@ Health:
 You failed to {0} the {1} shrine.
 restore
 damage
+You killed {0}.
+You were killed by {0}.
+{0} was killed by {1}.

@@ -74,4 +74,5 @@ public class PlayerStatusPanel : MonoBehaviour
     {
         Deaths.SetCount(deathCount);   
     }
+
 }

@@ -79,9 +79,12 @@ public class MessageRecorder : MonoBehaviour
     }
     public void MessageReceived(MessageData message)
     {
-        _messagesReceived.Add(message);
-        _messageIndex = _messagesReceived.Count-1;
-        ComponentRegister.AudioPlayer.PlayNotificationSound();
+        if (message != null)
+        {
+            _messagesReceived.Add(message);
+            _messageIndex = _messagesReceived.Count - 1;
+            ComponentRegister.AudioPlayer.PlayNotificationSound();
+        }
     }
     private void ChangeOpacity()
     {

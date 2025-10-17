@@ -15,6 +15,7 @@ public class Match {
     protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     protected final ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
     protected final ConcurrentHashMap<Byte, Integer> _playerScores;
+    protected final ConcurrentHashMap<Integer, CastSpell> _castSpells;
 
     protected byte _nextPlayerID;
     protected final int _matchPort;
@@ -22,12 +23,15 @@ public class Match {
     protected final byte _maxPlayers;
     protected byte _matchType;
 
+    private int _nextSpellID = 0;
+
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType){
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
         _objectStatus = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _playerScores = new ConcurrentHashMap<>();
+        _castSpells = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
         _creatorName = creatorName;
         _nextPlayerID = 1;
@@ -274,6 +278,10 @@ public class Match {
         }
 
     }
+    public CastSpell GetCastSpell(int id)
+    {
+        return _castSpells.get(id);
+    }
     public MatchCharacter GetMatchCharacter(byte id){
         return _matchCharacters.get(id);
     }
@@ -284,4 +292,30 @@ public class Match {
         return _sceneID;
     }
 
+    public void PlayerHit(byte hitterID, byte hitPlayerID, int spellID){
+        MatchCharacter hitPlayer = GetMatchCharacter(hitPlayerID);
+        if(hitPlayer != null){
+            CastSpell spell = GetCastSpell(spellID);
+            if(spell != null){
+                short damageAmount = ((DamagingSpell)spell).GetDamage();
+                hitPlayer.TakeDamage(damageAmount, hitterID);
+            }
+        }
+    }
+
+    public void ProcessSpellCast(byte[] decrypted){
+        byte casterID = decrypted[1];
+        byte spellID = decrypted[2];
+        MatchCharacter caster = _matchCharacters.get(casterID);
+        if(caster != null){
+            Spell toCast = SpellManager.GetSpell(spellID);
+            if(toCast != null){
+                byte spellCost = toCast.SpellCost();
+                if(caster.GetRemainingMana() >= spellCost){
+                    caster.AdjustMana(-spellCost, true);
+                    SendToAll(Packets.SpellCastPacket(decrypted));
+                }
+            }
+        }
+    }
 }

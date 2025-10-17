@@ -12,11 +12,12 @@ public class MatchCharacter {
     private long _lastPacketReceived;
     private final long _inactivityWarningThreshold = 30000;
     private final long _inactivityMaximumThreshold = 61000;
-    private short _currentHealth;
+    private short _currentHP, _currentMana;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match){
         MarkPacketReceived();
-        _currentHealth = 1;
+        _currentHP = 1;
+        _currentMana = 1;
         _verified = false;
         _owningMatch = match;
         _pc = pc;
@@ -32,8 +33,23 @@ public class MatchCharacter {
         System.arraycopy(nameLevelClass, 0, _INLCTA, 7, nameLevelClass.length);
     }
 
+    public void TakeDamage(short damageAmount, byte damageSource){
+        _currentHP -= damageAmount;
+        if(_currentHP <= 0){
+            _owningMatch.SendToAll(Packets.PlayerKilledPacket(_idInMatch, damageSource));
+            _owningMatch.AdjustScore(_idInMatch, -1);
+            _owningMatch.AdjustScore(damageSource, 1);
+        }
+        else{
+            _owningMatch.SendToPlayer(Packets.PlayerDamagedPacket(_idInMatch, damageSource, _currentHP), this);
+        }
+    }
+
+    public short GetRemainingMana(){
+        return _currentMana;
+    }
     public boolean IsAlive(){
-        return _currentHealth > 0;
+        return _currentHP > 0;
     }
 
     public PlayerCharacter PC(){
@@ -89,6 +105,13 @@ public class MatchCharacter {
     public boolean InactivityExceededMaximumThreshold(){
         Main.LogMessage("Inactivity check: " + _lastPacketReceived + ", " + _inactivityMaximumThreshold);
         return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityMaximumThreshold;
+    }
+
+    public void AdjustMana(int adjustment, boolean notify){
+        _currentMana += adjustment;
+        if(notify){
+            _owningMatch.SendToPlayer(Packets.HMLPacket(_currentHP, _currentMana, (byte)0), this);
+        }
     }
 
     @Override

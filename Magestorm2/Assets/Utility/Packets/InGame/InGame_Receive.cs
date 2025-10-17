@@ -25,5 +25,12 @@ public static class InGame_Receive
                         PoolBiased = 16,
                         PoolBiasFailure = 17,
                         ShrineAdjusted = 18,
-                        ShrineFailure = 19;
+                        ShrineFailure = 19,
+                        FlagCaptured = 20,
+                        FlagReturned = 21,
+                        FlagDropped = 22,
+                        PlayerDamaged = 23,
+                        PlayerKilled = 24,
+                        SpellCast = 25,
+                        HMLUpdate = 26;
 }

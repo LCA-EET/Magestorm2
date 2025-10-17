@@ -11,6 +11,8 @@ public class ByteUtils {
     private static ByteBuffer _intBuffer;
     private static ByteBuffer _longBuffer;
     private static ByteBuffer _floatBuffer;
+    private static ByteBuffer _shortBuffer;
+
     public static void init(){
         _intBuffer = ByteBuffer.allocate(4);
         _intBuffer.order(_order);
@@ -18,6 +20,8 @@ public class ByteUtils {
         _longBuffer.order(_order);
         _floatBuffer = ByteBuffer.allocate(4);
         _floatBuffer.order(_order);
+        _shortBuffer = ByteBuffer.allocate(2);
+        _shortBuffer.order(_order);
     }
 
     public static int ExtractInt(byte[] decrypted, int index){
@@ -31,6 +35,8 @@ public class ByteUtils {
     public static byte[] FloatToByteArray(float value){
         return  _floatBuffer.putFloat(value).array();
     }
+
+    public static byte[] ShortToByteArray(short value){return _shortBuffer.putShort(0, value).array();}
 
     public static byte[] LongToByteArray(long value){
         return _longBuffer.putLong(0, value).array();

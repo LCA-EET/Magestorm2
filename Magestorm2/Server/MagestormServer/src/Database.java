@@ -19,12 +19,36 @@ public class Database {
         _password = pass;
         _psk = psk;
     }
+    public static void LoadSpellData(){
+        String sql = "SELECT * FROM SPELLS";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int colIdx = 0;
+                int spellID = rs.getInt(1);
+                String spellName = rs.getString(2);
+                int columnCount = rs.getMetaData().getColumnCount();
+                byte[] attrib = new byte[columnCount - 2];
+                while (colIdx <= columnCount){
+                    attrib[colIdx - 2] = rs.getByte(colIdx);
+                    colIdx++;
+                }
+                Spell toAdd = new Spell(spellID, spellName, attrib);
+                SpellManager.AddSpell(toAdd);
+           }
+        }
+        catch(Exception e){
+            Main.LogError("Database.LoadSpellData(): " + e.getMessage());
+        }
+    }
     public static void BanAccount(int accountID){
         String sql = "UPDATE accounts SET accountstatus = 2 WHERE (accoundID = ?)";
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, accountID);
             ps.execute();
+
         }
         catch(Exception e){
             Main.LogError("Database.BanAccount(): " + e.getMessage());

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PC : MonoBehaviour
 {
@@ -9,8 +10,15 @@ public class PC : MonoBehaviour
     public MusicPlayer MusicPlayer;
     public Avatar PCAvatar;
 
+    private float _hmlCheckInterval = 0.1f;
+    private float _hmlCheckElapsed = 0.0f;
+
     private float _surfaceCheck = 0.1f;
     private float _surfaceCheckElapsed = 0.0f;
+    
+    private float _maxHP, _maxMana;
+    private float _currentHP, _currentMana;  
+    private float _priorHP, _priorMana;
 
     private ManaPool _enteredPool;
     public void Awake()
@@ -27,10 +35,37 @@ public class PC : MonoBehaviour
     public void Update()
     {
         MenuCheck();
+        if (_hmlCheckElapsed >= _hmlCheckInterval)
+        {
+            _hmlCheckElapsed = 0.0f;
+            HMLCheck();
+        }
+        else
+        {
+            _hmlCheckElapsed += Time.deltaTime;
+        }
+
         _surfaceCheckElapsed += Time.deltaTime;
         if(_surfaceCheckElapsed > _surfaceCheck)
         {
 
+        }
+    }
+    private void HMLCheck()
+    {
+
+        bool updateNeeded = false;
+        if (_priorHP != _currentHP || _priorMana != _currentMana)
+        {
+            updateNeeded = true;
+        }
+        if (updateNeeded)
+        {
+            _priorHP = _currentHP;
+            _priorMana = _currentMana;
+            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP * 1.0f);
+            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Mana, _currentMana / _maxMana * 1.0f);
+            updateNeeded = false;
         }
     }
     private void MenuCheck()
@@ -74,5 +109,17 @@ public class PC : MonoBehaviour
     {
         trigger = other.GetComponent<Trigger>();
         return trigger != null;
+    }
+
+    public void HMLUpdate(byte[] decrypted)
+    {
+        HMLUpdate(BitConverter.ToInt16(decrypted, 1), BitConverter.ToInt16(decrypted, 3));
+        
+    }
+
+    public void HMLUpdate(short hp, short mana)
+    {
+        _currentHP = hp;
+        _currentMana = mana;
     }
 }
