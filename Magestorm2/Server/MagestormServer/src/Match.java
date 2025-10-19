@@ -318,4 +318,12 @@ public class Match {
             }
         }
     }
+
+    public boolean IsCharacterAlive(byte idInMatch){
+        MatchCharacter toCheck = _matchCharacters.get(idInMatch);
+        if(toCheck != null){
+            return toCheck.IsAlive();
+        }
+        return false;
+    }
 }

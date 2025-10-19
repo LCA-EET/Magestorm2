@@ -25,6 +25,7 @@ public class CTFPacketProcessor extends InGamePacketProcessor{
                         _owningCTF.FlagReturned(_decrypted[1], _decrypted[2]);
                         break;
                     case InGame_Receive.FlagTaken:
+                        _owningCTF.FlagTaken(_decrypted[2], _decrypted[1]);
                         break;
                     case InGame_Receive.FlagDropped:
                         _owningCTF.FlagDropped(_decrypted);

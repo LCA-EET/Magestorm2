@@ -33,13 +33,24 @@ public class CaptureTheFlag extends Match{
             Flag captured = _flags.get(flagCaptured);
             if(captured != null){
                 if(captured.IsHeld()){
-                    AdjustScore(capturingTeam, (byte)1);
-                    AdjustScore(flagCaptured, (byte)-1);
-                    captured.FlagReturned();
-                    _flagsChanged = true;
-                    SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, capturedBy,
-                            _score.get(capturingTeam), _score.get(flagCaptured)));
+                    if(IsCharacterAlive(capturedBy)){
+                        AdjustScore(capturingTeam, (byte)1);
+                        AdjustScore(flagCaptured, (byte)-1);
+                        captured.FlagReturned();
+                        _flagsChanged = true;
+                        SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, capturedBy,
+                                _score.get(capturingTeam), _score.get(flagCaptured)));
+                    }
                 }
+            }
+        }
+    }
+
+    public void FlagTaken(byte flagTaken, byte takenBy){
+        Flag taken = _flags.get(flagTaken);
+        if(!taken.IsHeld()){
+            if(IsCharacterAlive(takenBy)){
+                SendToAll(Packets.FlagTakenPacket(flagTaken, takenBy));
             }
         }
     }
@@ -60,9 +71,11 @@ public class CaptureTheFlag extends Match{
     public void FlagReturned(byte returner, byte flag){
         Flag returned = _flags.get(flag);
         if(returned.IsHeld()){
-            returned.FlagReturned();
-            _flagsChanged = true;
-            SendToAll(Packets.FlagReturnedPacket(flag, returner));
+            if(IsCharacterAlive(returner)){
+                returned.FlagReturned();
+                _flagsChanged = true;
+                SendToAll(Packets.FlagReturnedPacket(flag, returner));
+            }
         }
     }
     private void AdjustScore(byte team, byte adjustment){

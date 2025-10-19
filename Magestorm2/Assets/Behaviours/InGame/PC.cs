@@ -122,4 +122,12 @@ public class PC : MonoBehaviour
         _currentHP = hp;
         _currentMana = mana;
     }
+
+    public bool IsAlive
+    {
+        get
+        {
+            return _currentHP > 0;
+        }
+    }
 }

@@ -228,6 +228,14 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
+    public static byte[] FlagTakenPacket(byte flagID, byte playerID){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.FlagTaken;
+        toEncrypt[1] = flagID;
+        toEncrypt[2] = playerID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] FlagDroppedPacket(byte playerID, byte[] flagBytes){
         byte[] toEncrypt = new byte[1 + 1 + flagBytes.length];
         toEncrypt[0] = InGame_Send.FlagDropped;

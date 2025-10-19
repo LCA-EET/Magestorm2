@@ -32,14 +32,16 @@ public class Flag : Trigger
 
     public override void EnterAction()
     {
-        if(IsTaken() && Team == MatchParams.MatchTeam)
+        if (ComponentRegister.PC.IsAlive)
         {
-            Game.SendInGameBytes(InGame_Packets.FlagReturnedPacket((byte)Team));
+            if (IsTaken() && Team == MatchParams.MatchTeam)
+            {
+                Game.SendInGameBytes(InGame_Packets.FlagReturnedPacket((byte)Team));
+            }
+            if (!IsTaken() && Team != MatchParams.MatchTeam)
+            {
+                Game.SendInGameBytes(InGame_Packets.FlagTakenPacket((byte)Team));
+            }
         }
-        if (!IsTaken() && Team != MatchParams.MatchTeam) 
-        {
-            Game.Send
-        }
-        base.EnterAction()
     }
 }
