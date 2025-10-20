@@ -12,10 +12,12 @@ public class MatchCharacter {
     private long _lastPacketReceived;
     private final long _inactivityWarningThreshold = 30000;
     private final long _inactivityMaximumThreshold = 61000;
+    private Vector3 _position;
     private short _currentHP, _currentMana;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match){
         MarkPacketReceived();
+        _position = null;
         _currentHP = 1;
         _currentMana = 1;
         _verified = false;
@@ -36,9 +38,8 @@ public class MatchCharacter {
     public void TakeDamage(short damageAmount, byte damageSource){
         _currentHP -= damageAmount;
         if(_currentHP <= 0){
-            _owningMatch.SendToAll(Packets.PlayerKilledPacket(_idInMatch, damageSource));
-            _owningMatch.AdjustScore(_idInMatch, -1);
-            _owningMatch.AdjustScore(damageSource, 1);
+            _owningMatch.PlayerKilled(_idInMatch, damageSource);
+            _owningMatch.AdjustPlayerScore(damageSource, 1);
         }
         else{
             _owningMatch.SendToPlayer(Packets.PlayerDamagedPacket(_idInMatch, damageSource, _currentHP), this);
@@ -114,6 +115,13 @@ public class MatchCharacter {
         }
     }
 
+    public Vector3 GetPosition(){
+        return _position;
+    }
+
+    protected void PlayerDied(MatchCharacter deadPlayer){
+
+    }
     @Override
     public String toString(){
         return "MCID: " + _idInMatch + ", TeamID: " + _teamID;

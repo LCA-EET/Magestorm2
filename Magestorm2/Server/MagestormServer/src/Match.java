@@ -62,7 +62,7 @@ public class Match {
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
     }
-    protected void AdjustScore(byte playerID, int adjustment)
+    protected void AdjustPlayerScore(byte playerID, int adjustment)
     {
         if(!_playerScores.containsKey(playerID)){
             _playerScores.put(playerID, adjustment);
@@ -325,5 +325,10 @@ public class Match {
             return toCheck.IsAlive();
         }
         return false;
+    }
+
+    protected void PlayerKilled(byte idInMatch, byte damageSource){
+        SendToAll(Packets.PlayerKilledPacket(idInMatch, damageSource));
+        AdjustPlayerScore(idInMatch, -1);
     }
 }

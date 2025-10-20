@@ -9,6 +9,7 @@ public class CaptureTheFlag extends Match{
     private final byte[] _scores;
     private boolean _flagsChanged;
 
+
     public CaptureTheFlag(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration) {
         super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.CaptureTheFlag);
         _flagsChanged = true;
@@ -34,8 +35,8 @@ public class CaptureTheFlag extends Match{
             if(captured != null){
                 if(captured.IsHeld()){
                     if(IsCharacterAlive(capturedBy)){
-                        AdjustScore(capturingTeam, (byte)1);
-                        AdjustScore(flagCaptured, (byte)-1);
+                        AdjustTeamScore(capturingTeam, (byte)1);
+                        AdjustTeamScore(flagCaptured, (byte)-1);
                         captured.FlagReturned();
                         _flagsChanged = true;
                         SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, capturedBy,
@@ -50,27 +51,24 @@ public class CaptureTheFlag extends Match{
         Flag taken = _flags.get(flagTaken);
         if(!taken.IsHeld()){
             if(IsCharacterAlive(takenBy)){
+                taken.FlagTaken(takenBy);
                 SendToAll(Packets.FlagTakenPacket(flagTaken, takenBy));
             }
         }
     }
 
-    public void FlagDropped(byte[] decrypted){
-        byte flagID = decrypted[1];
-        Flag dropped = _flags.get(flagID);
-        if(dropped.IsHeld()){
-            byte holderID = decrypted[2];
-            byte[] positionBytes = new byte[12];
-            System.arraycopy(decrypted, 3, positionBytes, 0, positionBytes.length);
-            dropped.FlagDropped(positionBytes);
+    private void FlagDropped(Flag droppedFlag, MatchCharacter killedPlayer, byte killerID){
+        if(droppedFlag.IsHeld()){
+            AdjustPlayerScore(killedPlayer.GetIDinMatch(), -1);
+            droppedFlag.FlagDropped(killedPlayer.GetPosition());
             _flagsChanged = true;
-            SendToAll(Packets.FlagDroppedPacket(holderID, dropped.GetFlagBytes()));
+            SendToAll(Packets.FlagDroppedPacket(killedPlayer.GetIDinMatch(), droppedFlag.GetFlagBytes(), killerID));
         }
     }
 
     public void FlagReturned(byte returner, byte flag){
         Flag returned = _flags.get(flag);
-        if(returned.IsHeld()){
+        if(!returned.IsHeld()){
             if(IsCharacterAlive(returner)){
                 returned.FlagReturned();
                 _flagsChanged = true;
@@ -78,7 +76,7 @@ public class CaptureTheFlag extends Match{
             }
         }
     }
-    private void AdjustScore(byte team, byte adjustment){
+    private void AdjustTeamScore(byte team, byte adjustment){
         byte currentScore = _score.get(team);
         currentScore += adjustment;
         _score.put(team, currentScore);
@@ -114,10 +112,39 @@ public class CaptureTheFlag extends Match{
         return _scores;
     }
 
+    private boolean SeeIfFlagDropped(byte characterID, byte killerID){
+        if(_matchCharacters.containsKey(characterID)){
+            return SeeIfFlagDropped(_matchCharacters.get(characterID), killerID);
+        }
+        return false;
+    }
+    private boolean SeeIfFlagDropped(MatchCharacter character, byte killerID){
+        for(Flag flag : _flags.values()){
+            if(flag.GetHolderID() == character.GetIDinMatch()){
+                FlagDropped(flag, character, killerID);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public byte JoinMatch(RemoteClient rc, byte teamID) {
         byte playerID = super.JoinMatch(rc, teamID);
         GameServer.EnqueueForSend(Packets.CTFEntryPacket(_sceneID, playerID, teamID, _matchPort, _matchID, _matchType), rc);
         return playerID;
+    }
+
+    @Override
+    protected void PlayerKilled(byte idInMatch, byte damageSource){
+        if(!SeeIfFlagDropped(idInMatch, damageSource)){
+            super.PlayerKilled(idInMatch, damageSource);
+        };
+    }
+
+    @Override
+    public void LeaveMatch(byte id, byte team, boolean send){
+        SeeIfFlagDropped(id, (byte)0);
+        super.LeaveMatch(id, team, send);
     }
 }

@@ -22,14 +22,16 @@ public class Flag {
         _flagBytes[_idxHolder] = NOT_HELD;
     }
 
-    public void FlagDropped(byte[] positionBytes){
-        byte formerHolder = _flagBytes[_idxHolder];
+    public void FlagDropped(Vector3 position){
         _flagBytes[_idxHolder] = DROPPED;
-        System.arraycopy(positionBytes,0, _flagBytes, 2, 12);
+        System.arraycopy(position.GetPositionBytes(),0, _flagBytes, 2, 12);
     }
 
     public byte[] GetFlagBytes(){
         return _flagBytes;
     }
 
+    public byte GetHolderID(){
+        return _flagBytes[_idxHolder];
+    }
 }

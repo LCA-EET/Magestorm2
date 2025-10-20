@@ -236,11 +236,12 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] FlagDroppedPacket(byte playerID, byte[] flagBytes){
-        byte[] toEncrypt = new byte[1 + 1 + flagBytes.length];
+    public static byte[] FlagDroppedPacket(byte playerID, byte[] flagBytes, byte killer){
+        byte[] toEncrypt = new byte[1 + 1 + 1 + flagBytes.length];
         toEncrypt[0] = InGame_Send.FlagDropped;
         toEncrypt[1] = playerID;
-        System.arraycopy(flagBytes, 0, toEncrypt, 2, flagBytes.length);
+        toEncrypt[2] = killer;
+        System.arraycopy(flagBytes, 0, toEncrypt, 3, flagBytes.length);
         return Cryptographer.Encrypt(toEncrypt);
     }
 

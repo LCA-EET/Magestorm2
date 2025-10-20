@@ -11,7 +11,7 @@ public class Vector3 {
         System.arraycopy(decrypted, index, _position, 0, _position.length);
     }
 
-    public byte[] GetPosition(){
+    public byte[] GetPositionBytes(){
         return _position;
     }
 
