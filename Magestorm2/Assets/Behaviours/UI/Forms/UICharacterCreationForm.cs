@@ -44,7 +44,7 @@ public class UICharacterCreationForm : ValidatableForm
         }
         else
         {
-            Game.MessageBoxReference(29);
+            Game.MessageBoxReference(30);
         }
     }
     public override void ButtonPressed(ButtonType buttonType)

@@ -28,10 +28,10 @@ public class UIJoinMatch : ValidatableForm
         BalancePlayerList.FillTeam((RemotePlayerData[])matchParams[1]);
         OrderPlayerList.FillTeam((RemotePlayerData[])matchParams[3]);
 
-        MatchIDText.text = Language.BuildString(97,_match.MatchID.ToString());
-        MatchLevelText.text = Language.BuildString(99,_match.SceneName);
-        MatchCreatorText.text = Language.BuildString(98, _match.CreatorName);
-        MatchTypeText.text = Language.BuildString(111, _match.MatchTypeString);   
+        MatchIDText.text = Language.BuildString(98,_match.MatchID.ToString());  //
+        MatchLevelText.text = Language.BuildString(100,_match.SceneName);       //
+        MatchCreatorText.text = Language.BuildString(99, _match.CreatorName);   //
+        MatchTypeText.text = Language.BuildString(112, _match.MatchTypeString); //   
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class UIJoinMatch : ValidatableForm
         }
         else
         {
-            Game.MessageBoxReference(82);
+            Game.MessageBoxReference(83);
         }
     }
     protected override bool ValidateForm()

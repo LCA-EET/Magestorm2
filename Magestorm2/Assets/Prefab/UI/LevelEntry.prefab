@@ -69,7 +69,7 @@ MonoBehaviour:
   TextFields:
   - {fileID: 547851506737562903}
   - {fileID: 2439133724093738325}
-  StringReferences: 3800000039000000
+  StringReferences: 390000003a000000
 --- !u!1 &5304110328082294183
 GameObject:
   m_ObjectHideFlags: 0

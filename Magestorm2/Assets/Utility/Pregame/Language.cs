@@ -116,9 +116,9 @@ public static class Language
             _languageIndices.Add(i, language);
             Dictionary<int, string> indexedStrings = new Dictionary<int, string>();
             string[] lines = File.ReadAllLines(filePath);
-            for (int j = 0; j < lines.Length; j++)
+            for (int j = 1; j <= lines.Length; j++)
             {
-                indexedStrings.Add(j, lines[j]);
+                indexedStrings.Add(j, lines[j-1]);
             }
             _languageStrings.Add(i, indexedStrings);
         }

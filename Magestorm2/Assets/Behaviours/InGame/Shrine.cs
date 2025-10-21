@@ -56,11 +56,11 @@ public class Shrine : Trigger
         Avatar adjuster = null;
         if (_health == 100)
         {
-            ComponentRegister.Notifier.DisplayNotification(Language.BuildString(179, Teams.GetTeamName(Team)));
+            ComponentRegister.Notifier.DisplayNotification(Language.BuildString(180, Teams.GetTeamName(Team))); //
         }
         else if (_health == 0)
         {
-            ComponentRegister.Notifier.DisplayNotification(Language.BuildString(178, Teams.GetTeamName(Team)));
+            ComponentRegister.Notifier.DisplayNotification(Language.BuildString(179, Teams.GetTeamName(Team))); //
         }
         if (_playerInShrine)
         {
@@ -73,11 +73,11 @@ public class Shrine : Trigger
             {
                 if(MatchParams.MatchTeam == Team)
                 {
-                    notificationText = Language.BuildString(174, Language.GetBaseString(176), Teams.GetTeamName(Team));
+                    notificationText = Language.BuildString(175, Language.GetBaseString(177), Teams.GetTeamName(Team)); //
                 }
                 else
                 {
-                    notificationText = Language.BuildString(174, Language.GetBaseString(177), Teams.GetTeamName(Team));
+                    notificationText = Language.BuildString(175, Language.GetBaseString(178), Teams.GetTeamName(Team)); //
                 }
                 ComponentRegister.AudioPlayer.PlayBiasSound();
             }
@@ -85,11 +85,11 @@ public class Shrine : Trigger
             {
                 if(adjuster.PlayerTeam == Team)
                 {
-                    notificationText = Language.BuildString(175, adjuster.Name, Language.GetBaseString(176), Teams.GetTeamName(Team));
+                    notificationText = Language.BuildString(176, adjuster.Name, Language.GetBaseString(177), Teams.GetTeamName(Team)); //
                 }
                 else
                 {
-                    notificationText = Language.BuildString(175, adjuster.Name, Language.GetBaseString(177), Teams.GetTeamName(Team));
+                    notificationText = Language.BuildString(177, adjuster.Name, Language.GetBaseString(178), Teams.GetTeamName(Team)); //
                 }
             }
             ComponentRegister.Notifier.DisplayNotification(notificationText);

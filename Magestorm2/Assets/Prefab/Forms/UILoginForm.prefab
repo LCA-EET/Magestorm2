@@ -151,7 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TextFields:
   - {fileID: 6912778964625488793}
-  StringReferences: 16000000
+  StringReferences: 17000000
 --- !u!1 &781446161248539697
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,7 +830,7 @@ MonoBehaviour:
   TextFields:
   - {fileID: 7938394159144918130}
   - {fileID: 5327453966004937795}
-  StringReferences: 100000000f000000
+  StringReferences: 1100000010000000
 --- !u!1 &4728280225306853972
 GameObject:
   m_ObjectHideFlags: 0
@@ -1156,7 +1156,7 @@ MonoBehaviour:
   - {fileID: 4782272792944483536}
   - {fileID: 6125534954672161748}
   - {fileID: 8343272680703152770}
-  StringReferences: 140000005400000029000000
+  StringReferences: 15000000550000002a000000
 --- !u!1 &9220133925041380703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1301,6 +1301,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8731486055918855099}
     m_Modifications:
+    - target: {fileID: 152772246678483634, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
+      propertyPath: 'StringReferences.Array.data[0]'
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 152772246678483634, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
+      propertyPath: 'StringReferences.Array.data[1]'
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 2304074668684741220, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
       propertyPath: m_Name
       value: PasswordField

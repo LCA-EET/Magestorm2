@@ -30,6 +30,13 @@ public static class ComponentRegister
     private static BiasDisplay _biasDisplay;
     private static ShrineDisplay _shrineDisplay;
     private static TeamChatControl _teamChatControl;
+    private static CTFScorePanel _ctfscorePanel;
+    
+    public static CTFScorePanel CTFScorePanel
+    {
+        get { return _ctfscorePanel; }
+        set { _ctfscorePanel = value;}
+    }
     public static ShrineDisplay ShrineDisplay
     {
         get { return _shrineDisplay; }

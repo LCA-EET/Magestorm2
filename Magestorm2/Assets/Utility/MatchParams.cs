@@ -22,6 +22,12 @@ public static class MatchParams
     private static bool _includePools;
     private static bool _includeShrines;
     private static bool _includeTeams;
+    private static bool _includeFlags;
+
+    public static bool IncludeFlags{
+        get { return _includeFlags;}
+        set { _includeFlags = value; }
+    }
     public static bool IncludePools
     {
         get { return _includePools; }
@@ -73,13 +79,17 @@ public static class MatchParams
         byte numPools = _decrypted[12];
         _poolData = new byte[numPools * 3];
         Array.Copy(_decrypted, 13, _poolData, 0, _poolData.Length);
-        IncludePools = true;
         IncludeShrines = true;
+        IncludeFlags = false;
+        IncludePools = true;
     }
 
     public static void InitCTF()
     {
         UnityEngine.Debug.Log("InitCTF");
+        IncludeShrines = false;
+        IncludeFlags = true;
+        IncludePools = true;
     }
 
     public static void InitFFA()
@@ -89,10 +99,12 @@ public static class MatchParams
         MatchType = _decrypted[1];
         SceneID = _decrypted[2];
         IDinMatch = _decrypted[3];
+        MatchTeamID = 0;
         
         ListeningPort = BitConverter.ToInt32(_decrypted, 4);
-        IncludePools = false;
         IncludeShrines = false;
+        IncludeFlags = false;
+        IncludePools = false;
     }
 
     public static byte[] GetPoolData()

@@ -48,7 +48,7 @@ public class StatLine : ValidatableForm
         {
             if(_stat >= 20)
             {
-                Game.MessageBox(Language.GetBaseString(66));
+                Game.MessageBox(Language.GetBaseString(67)); //
             }
             else
             {
@@ -59,7 +59,7 @@ public class StatLine : ValidatableForm
         {
             if(_stat <= 10)
             {
-                Game.MessageBox(Language.GetBaseString(66));
+                Game.MessageBox(Language.GetBaseString(67)); //
             }
             else
             {
@@ -75,7 +75,7 @@ public class StatLine : ValidatableForm
             case ButtonType.Increase:
                 if(_owningPanel.StatTotal() >= 90)
                 {
-                    Game.MessageBoxReference(67);
+                    Game.MessageBoxReference(68);
                 }
                 else
                 {

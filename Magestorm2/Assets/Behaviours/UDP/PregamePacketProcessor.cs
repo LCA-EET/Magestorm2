@@ -38,33 +38,33 @@ public class PregamePacketProcessor : UDPProcessor
                     switch (_opCode)
                     {
                         case Pregame_Receive.CreationFailed:
-                            MessageBox(26);
+                            MessageBox(27);
                             break;
                         case Pregame_Receive.AccountCreated:
-                            MessageBox(24);
-                            break;
-                        case Pregame_Receive.AccountAlreadyExists:
                             MessageBox(25);
                             break;
+                        case Pregame_Receive.AccountAlreadyExists:
+                            MessageBox(26);
+                            break;
                         case Pregame_Receive.LogInFailed:
-                            MessageBox(27);
+                            MessageBox(28);
                             break;
                         case Pregame_Receive.LogInSucceeded:
                             HandleLogInSuccessfulPacket();
                             break;
                         case Pregame_Receive.ProhibitedLanguage:
-                            MessageBox(29);
+                            MessageBox(30);
                             break;
                         case Pregame_Receive.AlreadyLoggedIn:
-                            MessageBox(30);
+                            MessageBox(31);
                             break;
                         case Pregame_Receive.RemovedFromServer:
                         case Pregame_Receive.InactivityDisconnect:
-                            MessageBox(31);
+                            MessageBox(32);
                             Game.Quit();
                             break;
                         case Pregame_Receive.CharacterExists:
-                            MessageBox(33);
+                            MessageBox(34);
                             break;
                         case Pregame_Receive.CharacterCreated:
                             HandleCharacterCreatedPacket();
@@ -73,13 +73,13 @@ public class PregamePacketProcessor : UDPProcessor
                             HandleCharacterDeletedPacket();
                             break;
                         case Pregame_Receive.MatchStillHasPlayers:
-                            MessageBox(48);
+                            MessageBox(49);
                             break;
                         case Pregame_Receive.MatchLimitReached:
-                            MessageBox(46);
+                            MessageBox(47);
                             break;
                         case Pregame_Receive.MatchAlreadyCreated:
-                            MessageBox(45);
+                            MessageBox(46);
                             break;
                         case Pregame_Receive.MatchData:
                             HandleMatchDataPacket();
@@ -88,11 +88,11 @@ public class PregamePacketProcessor : UDPProcessor
                             HandleLevelListPacket();
                             break;
                         case Pregame_Receive.BannedForBehavior:
-                            MessageBox(70);
+                            MessageBox(71);
                             Game.Quit();
                             break;
                         case Pregame_Receive.BannedForCheating:
-                            MessageBox(69);
+                            MessageBox(70);
                             Game.Quit();
                             break;
                         case Pregame_Receive.MatchDetails:
@@ -129,7 +129,7 @@ public class PregamePacketProcessor : UDPProcessor
     }
     private void HandleMatchIsFullPacket()
     {
-        Game.MessageBoxReference(100);
+        Game.MessageBoxReference(101);
     }
     private void HandleNameCheckResultPacket()
     {
@@ -140,10 +140,10 @@ public class PregamePacketProcessor : UDPProcessor
                 ComponentRegister.UICharacterCreationForm.NameCheckPassed();
                 break;
             case 1:
-                Game.MessageBoxReference(95);
+                Game.MessageBoxReference(96);
                 break;
             case 2:
-                Game.MessageBoxReference(96);
+                Game.MessageBoxReference(97);
                 break;
         }
     }

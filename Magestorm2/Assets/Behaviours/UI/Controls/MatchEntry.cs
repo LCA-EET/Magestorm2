@@ -45,5 +45,10 @@ public class MatchEntry : ValidatableForm
     {
         get { return _match; }
     }
+
+    public byte GetMatchType()
+    {
+        return _match.MatchType;
+    }
     
 }

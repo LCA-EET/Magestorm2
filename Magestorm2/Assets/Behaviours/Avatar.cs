@@ -30,6 +30,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _playerClassString = PlayerCharacter.ClassToString((PlayerClass)playerClass);
         _team = team;
         _playerID = id;
+        Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
+
     }
     public bool IsAlive 
     {

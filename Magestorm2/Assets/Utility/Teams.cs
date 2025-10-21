@@ -25,10 +25,10 @@ public static class Teams
             
 
             _teamNames = new Dictionary<Team, int>();
-            _teamNames.Add(Team.Neutral, 9);
-            _teamNames.Add(Team.Chaos, 10);
-            _teamNames.Add(Team.Balance, 11);
-            _teamNames.Add(Team.Order, 12);
+            _teamNames.Add(Team.Neutral, 10);
+            _teamNames.Add(Team.Chaos, 11);
+            _teamNames.Add(Team.Balance, 12);
+            _teamNames.Add(Team.Order, 13);
             
             _init = true;
         }

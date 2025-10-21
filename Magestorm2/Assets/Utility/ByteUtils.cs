@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-
+using UnityEngine;
 public static class ByteUtils
 {
     public static byte BitArrayToByte(BitArray toConvert)
@@ -21,6 +18,14 @@ public static class ByteUtils
     {
         return Encoding.UTF8.GetBytes(utf8String);
     }
+    public static Vector3 BytesToVector3(byte[] decrypted, int index)
+    {
+        return new Vector3(BitConverter.ToSingle(decrypted, index), 
+            BitConverter.ToSingle(decrypted, index + 4),
+            BitConverter.ToSingle(decrypted, index + 8));
+
+    }
+   
 
 }
 

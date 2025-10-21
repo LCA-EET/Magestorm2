@@ -29,7 +29,7 @@ public class StatPanel : MonoBehaviour
     }
     public void RefreshTotal()
     {
-        TotalText.text = Language.BuildString(68, StatTotal());
+        TotalText.text = Language.BuildString(69, StatTotal()); //
     }
     public void FillStat(PlayerStats stat, byte value)
     {

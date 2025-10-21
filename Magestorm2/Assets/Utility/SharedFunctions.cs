@@ -37,13 +37,13 @@ public static class SharedFunctions
         switch (playerClass)
         {
             case PlayerClass.Arcanist:
-                return Language.GetBaseString(6);
+                return Language.GetBaseString(7); //
             case PlayerClass.Cleric:
-                return Language.GetBaseString(5);
+                return Language.GetBaseString(6); //
             case PlayerClass.Magician:
-                return Language.GetBaseString(7);
+                return Language.GetBaseString(8); // 
             case PlayerClass.Mentalist:
-                return Language.GetBaseString(8);
+                return Language.GetBaseString(9); //
         }
         return "Undefined";
     }
@@ -69,12 +69,13 @@ public static class SharedFunctions
         switch (matchType)
         {
             case MatchTypes.Deathmatch:
-                return Language.GetBaseString(103);
+                return Language.GetBaseString(104); //
             case MatchTypes.CaptureTheFlag:
-                return Language.GetBaseString(105);
+                return Language.GetBaseString(106); //
             case MatchTypes.FreeForAll:
-                return Language.GetBaseString(104);
+                return Language.GetBaseString(105); //
         }
         return "";
     }
+
 }

@@ -21,7 +21,6 @@ public static class InGame_Send
                         FlagCaptured = 13,
                         FlagReturned = 14,
                         FlagTaken = 15,
-                        FlagDropped = 16,
-                        HitPlayer = 17,
-                        CastSpell = 18;
+                        HitPlayer = 16,
+                        CastSpell = 17;
 }

@@ -16,7 +16,6 @@ public class InGame_Receive {
     public static final byte FlagCaptured = 13;
     public static final byte FlagReturned = 14;
     public static final byte FlagTaken = 15;
-
-    public static final byte HitPlayer = 17;
-    public static final byte CastSpell = 18;
+    public static final byte HitPlayer = 16;
+    public static final byte CastSpell = 17;
 }

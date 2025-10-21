@@ -378,7 +378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TextFields:
   - {fileID: 5658812381638998525}
-  StringReferences: 57000000
+  StringReferences: 58000000
 --- !u!1001 &8225338514746651348
 PrefabInstance:
   m_ObjectHideFlags: 0

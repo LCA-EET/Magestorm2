@@ -185,3 +185,10 @@ damage
 You killed {0}.
 You were killed by {0}.
 {0} was killed by {1}.
+The {0} flag has been dropped!
+The {0} flag was captured by {1}!
+The {0} flag has been returned.
+The {0} flag was taken!
+The {0} flag was taken by {1}!
+You've taken the {0} flag!
+Controls

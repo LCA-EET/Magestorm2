@@ -13,7 +13,7 @@ public class MatchTimer : MonoBehaviour
     private void Awake()
     {
         ComponentRegister.MatchTimer = this;
-        _timeString = Language.GetBaseString(2);
+        _timeString = Language.GetBaseString(3); //
     }
     void Start()
     {

@@ -890,6 +890,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1378209265679141613, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: ChaosEntry
+      value: 
+      objectReference: {fileID: 4674388103406667885}
+    - target: {fileID: 1378209265679141613, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: OrderEntry
+      value: 
+      objectReference: {fileID: 4674388103406667883}
+    - target: {fileID: 1378209265679141613, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: BalanceEntry
+      value: 
+      objectReference: {fileID: 4674388103406667884}
     - target: {fileID: 1821093368075263854, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1003,6 +1015,39 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+--- !u!114 &4674388103406667883 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9158276809771858843, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+  m_PrefabInstance: {fileID: 4674388103406667882}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bb1f7b048496fc468b3aa4d337502cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CTFTeamScore
+--- !u!114 &4674388103406667884 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5470359107301428417, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+  m_PrefabInstance: {fileID: 4674388103406667882}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bb1f7b048496fc468b3aa4d337502cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CTFTeamScore
+--- !u!114 &4674388103406667885 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5284109916538488636, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+  m_PrefabInstance: {fileID: 4674388103406667882}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bb1f7b048496fc468b3aa4d337502cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CTFTeamScore
 --- !u!1001 &5752987671723915669
 PrefabInstance:
   m_ObjectHideFlags: 0

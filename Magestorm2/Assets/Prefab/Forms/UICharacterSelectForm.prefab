@@ -395,7 +395,8 @@ MonoBehaviour:
   - {fileID: 2592958524336723715}
   - {fileID: 4476937123450714922}
   - {fileID: 663185457878688687}
-  StringReferences: 230000002500000058000000
+  - {fileID: 5050123495305363600}
+  StringReferences: 240000002600000059000000c2000000
 --- !u!1 &7026220767438930279
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,7 +1274,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6733148289291613919, guid: 409efad0966963246af7e49a2d9dc6df, type: 3}
       propertyPath: m_Name
-      value: BackText (TMP)
+      value: ControlsText
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1285,6 +1286,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6308149396278105835, guid: 409efad0966963246af7e49a2d9dc6df, type: 3}
   m_PrefabInstance: {fileID: 8843876296384269241}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5050123495305363600 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4372544634014698281, guid: 409efad0966963246af7e49a2d9dc6df, type: 3}
+  m_PrefabInstance: {fileID: 8843876296384269241}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5292809613575179102 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3731255309810827495, guid: 409efad0966963246af7e49a2d9dc6df, type: 3}

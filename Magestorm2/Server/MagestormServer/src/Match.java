@@ -113,7 +113,7 @@ public class Match {
         return _creatorID;
     }
     public byte NumPlayersInMatch(){
-        return (byte)_matchCharacters.size();
+        return (byte)_verifiedClients.size();
     }
     public byte[] ToByteArray(){
         _matchBytes[_lastIndex] = NumPlayersInMatch();
@@ -128,11 +128,13 @@ public class Match {
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this);
         matchTeam.AddPlayer(playerID, toAdd);
         _matchCharacters.put(playerID, toAdd);
+        Main.LogMessage("Join Match MCSIZE: " + _matchCharacters.size());
         Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return playerID;
     }
     public void LeaveMatch(byte id, byte team, boolean send){
         _matchCharacters.remove(id).PC().MarkRemovedFromMatch();
+        Main.LogMessage("Leave Match MCSIZE: " + _matchCharacters.size());
         _verifiedClients.remove(id);
         _matchTeams.get(team).RemovePlayer(id);
         if(send){

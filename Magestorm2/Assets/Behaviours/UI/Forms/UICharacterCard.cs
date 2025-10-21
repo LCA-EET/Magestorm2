@@ -63,7 +63,7 @@ public class UICharacterCard : ValidatableForm
         switch (buttonType)
         {
             case ButtonType.Delete:
-                Game.YesNo(Language.BuildString(49, _character.CharacterName), this);
+                Game.YesNo(Language.BuildString(50, _character.CharacterName), this); //
                 break;
             case ButtonType.Submit:
                 ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();
@@ -94,7 +94,7 @@ public class UICharacterCard : ValidatableForm
         _character = character;
         CharacterName.text = character.CharacterName;
         CharacterClass.text = character.CharacterClassString;
-        CharacterLevel.text = Language.BuildString(81, character.CharacterLevel.ToString());
+        CharacterLevel.text = Language.BuildString(82, character.CharacterLevel.ToString()); //
         Destroy(_model);
         _model = ComponentRegister.ModelBuilder.ConstructModel(character.AppearanceBytes, (byte)Team.Neutral, character.CharacterLevel, ModelContainer);
     }

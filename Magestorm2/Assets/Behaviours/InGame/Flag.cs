@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Flag : Trigger
 {
@@ -12,20 +7,28 @@ public class Flag : Trigger
 
     private void Awake()
     {
-        _worldLocation = transform.position;
+        if (!MatchParams.IncludeFlags)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _worldLocation = transform.position;
+        }
+    }
+
+    private void Start()
+    {
+        FlagManager.Register(this);
     }
 
     public void FlagReturned()
     {
+        gameObject.SetActive(true);
         transform.position = _worldLocation;
     }
 
-    public void FlagDropped(Vector3 position)
-    {
-        transform.position = position;
-    }
-
-    public bool IsTaken()
+    public bool IsSafe()
     {
         return transform.position == _worldLocation;
     }
@@ -34,14 +37,24 @@ public class Flag : Trigger
     {
         if (ComponentRegister.PC.IsAlive)
         {
-            if (IsTaken() && Team == MatchParams.MatchTeam)
+            if (!IsSafe() && (Team == MatchParams.MatchTeam))
             {
                 Game.SendInGameBytes(InGame_Packets.FlagReturnedPacket((byte)Team));
             }
-            if (!IsTaken() && Team != MatchParams.MatchTeam)
+            if (Team != MatchParams.MatchTeam)
             {
                 Game.SendInGameBytes(InGame_Packets.FlagTakenPacket((byte)Team));
             }
+            if(IsSafe() && (Team == MatchParams.MatchTeam))
+            {
+
+            }
         }
+    }
+
+    public void Reposition(Vector3 worldPosition)
+    {
+        gameObject.SetActive(true);
+        transform.position = worldPosition;
     }
 }

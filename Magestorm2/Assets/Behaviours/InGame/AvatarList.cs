@@ -16,7 +16,7 @@ public class AvatarList : MonoBehaviour
     void Update()
     {
         _elapsed += Time.deltaTime;
-        if(_elapsed > 3.0f)
+        if(_elapsed > 1.0f)
         {
             _elapsed = 0.0f;
             int index;
@@ -26,6 +26,7 @@ public class AvatarList : MonoBehaviour
                 if(index < 20)
                 {
                     StatusList[index].UpdateStatus(toDisplay[index]);
+                    Debug.Log("Updating PL for " + toDisplay[index].Name);
                 }
                 else
                 {
@@ -34,7 +35,7 @@ public class AvatarList : MonoBehaviour
             }
             while(index < 20)
             {
-                StatusList[index].Show(false);
+                StatusList[index].Deactivate();
                 index++;
             }
         }

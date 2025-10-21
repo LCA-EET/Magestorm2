@@ -47,14 +47,20 @@ public class UIMatchList : ValidatableForm
         MatchEntry selected = GetSelectedEntry();   
         if(selected == null)
         {
-            Game.MessageBox(Language.GetBaseString(50));
+            Game.MessageBox(Language.GetBaseString(51)); //
         }
         else
         {
-            Debug.Log("Requesting match details: " + selected.MatchID);
-            Game.SendPregameBytes(Pregame_Packets.MatchDetailsPacket(selected.MatchID));
-            //SharedFunctions.Params = new object[] { selected.Match };
-            //ComponentRegister.UIPrefabManager.InstantiateJoinMatch();
+            if(selected.GetMatchType() == (byte)MatchTypes.FreeForAll)
+            {
+                MatchParams.ExpirationTime = selected.Match.Expiration;
+                Game.SendPregameBytes(Pregame_Packets.JoinMatchPacket(selected.MatchID, 0));
+            }
+            else
+            {
+                Debug.Log("Requesting match details: " + selected.MatchID);
+                Game.SendPregameBytes(Pregame_Packets.MatchDetailsPacket(selected.MatchID));
+            }
         }
     }
     private void CreateMatch()
@@ -73,7 +79,7 @@ public class UIMatchList : ValidatableForm
         }
         if (matchAlreadyCreated)
         {
-            Game.MessageBox(Language.GetBaseString(45));
+            Game.MessageBox(Language.GetBaseString(46)); //
         }
         else
         {
@@ -95,7 +101,7 @@ public class UIMatchList : ValidatableForm
         MatchEntry selected = GetSelectedEntry();
         if(selected == null)
         {
-            Game.MessageBox(Language.GetBaseString(50));
+            Game.MessageBox(Language.GetBaseString(51)); //
         }
         else
         {
@@ -105,7 +111,7 @@ public class UIMatchList : ValidatableForm
             }
             else
             {
-                Game.MessageBox(Language.GetBaseString(51));
+                Game.MessageBox(Language.GetBaseString(52)); //
             }
         }
     }
@@ -137,6 +143,10 @@ public class UIMatchList : ValidatableForm
                         entry.RefreshTimeRemaining();
                     }
                 }
+            }
+            if (LevelData.LevelCount == 0)
+            {
+                ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.RequestLevelsListPacket());
             }
         }
     }

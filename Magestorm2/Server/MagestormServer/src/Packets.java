@@ -203,6 +203,13 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] RemovedFromMatchPacket(byte reasonCode){
+        byte[] toEncrypt = new byte[2];
+        toEncrypt[0] = InGame_Send.RemovedFromMatch;
+        toEncrypt[1] = reasonCode;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] HMLPacket(short health, short mana, byte ley){
         byte[] toEncrypt = new byte[6];
         toEncrypt[0] = InGame_Send.HMLUpdate;
@@ -245,11 +252,10 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] FlagReturnedPacket(byte flagReturned, byte returner){
+    public static byte[] FlagReturnedPacket(byte flagReturned){
         byte[] toEncrypt = new byte[3];
         toEncrypt[0] = InGame_Send.FlagReturned;
         toEncrypt[1] = flagReturned;
-        toEncrypt[2] = returner;
         return Cryptographer.Encrypt(toEncrypt);
     }
 

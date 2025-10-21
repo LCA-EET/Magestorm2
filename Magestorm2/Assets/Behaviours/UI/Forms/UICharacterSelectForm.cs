@@ -101,7 +101,7 @@ public class UICharacterSelectForm : ValidatableForm
                 }
                 else
                 {
-                    Game.MessageBox(Language.GetBaseString(35));
+                    Game.MessageBox(Language.GetBaseString(36)); //
                 }
                 break;
             case ButtonType.Edit:

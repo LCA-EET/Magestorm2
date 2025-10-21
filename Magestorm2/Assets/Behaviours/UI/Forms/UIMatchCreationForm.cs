@@ -42,7 +42,7 @@ public class UIMatchCreationForm : ValidatableForm
             int selectedIndex = LevelSelection.SelectedIndex;
             if (selectedIndex == -1)
             {
-                Game.MessageBox(Language.GetBaseString(59));
+                Game.MessageBox(Language.GetBaseString(60)); //
             }
             else
             {

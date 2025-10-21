@@ -11,7 +11,7 @@ public class AvatarStatus : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Show(false);
+        Deactivate();
     }
 
     // Update is called once per frame
@@ -25,18 +25,19 @@ public class AvatarStatus : MonoBehaviour
         Name.text = updated.Name;
         Level.text = updated.Level.ToString();
         PlayerClass.text = updated.PlayerClassString;
-        if (_isShown)
-        {
-            Show(true);
-        }
+        Show(true);
     }
-    public void Show(bool showStatus)
+    private void Show(bool showStatus)
     {
-        DeathIcon.SetActive(showStatus);
         Name.gameObject.SetActive(showStatus);
         Level.gameObject.SetActive(showStatus);
         PlayerClass.gameObject.SetActive(showStatus);  
         _isShown = showStatus;
+    }
+    public void Deactivate()
+    {
+        Show(false);
+        DeathIcon.SetActive(false);
     }
     public void SetID(byte playerID)
     {

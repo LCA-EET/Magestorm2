@@ -53,7 +53,7 @@ public class ValidatableForm : InstantiatableForm
         }
         if (!passValidation)
         {
-            Game.MessageBox(Language.GetBaseString(19));
+            Game.MessageBox(Language.GetBaseString(20)); //
         }
         return passValidation;
     }

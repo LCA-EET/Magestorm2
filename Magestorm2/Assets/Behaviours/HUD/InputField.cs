@@ -13,7 +13,7 @@ public class InputField : MonoBehaviour
         ChatTarget = Team.Neutral;
         _tmpTextMessage = GetComponent<TMP_InputField>();
         Language.Init();
-        placeHolder.text = Language.BuildString(Language.GetBaseString(0), InputControls.KeyToString(InputControl.ChatMode));
+        placeHolder.text = Language.BuildString(Language.GetBaseString(1), InputControls.KeyToString(InputControl.ChatMode));   //
     }
 
     // Update is called once per frame
@@ -23,7 +23,7 @@ public class InputField : MonoBehaviour
         {
             Game.ChatMode = true;
             _tmpTextMessage.ActivateInputField();
-            placeHolder.text = Language.BuildString(Language.GetBaseString(1), InputControls.KeyToString(InputControl.SendMessage), InputControls.KeyToString(InputControl.CancelChat));
+            placeHolder.text = Language.BuildString(Language.GetBaseString(2), InputControls.KeyToString(InputControl.SendMessage), InputControls.KeyToString(InputControl.CancelChat));    //
         }
         if (InputControls.SendMessage)
         {
@@ -43,7 +43,7 @@ public class InputField : MonoBehaviour
             }
             else
             {
-                ComponentRegister.Notifier.DisplayNotification(Language.GetBaseString(29));
+                ComponentRegister.Notifier.DisplayNotification(Language.GetBaseString(30)); //
             }
             
         }    
@@ -55,7 +55,7 @@ public class InputField : MonoBehaviour
     private void CancelChat()
     {
         Game.ChatMode = false;
-        placeHolder.text = Language.BuildString(Language.GetBaseString(0), InputControls.KeyToString(InputControl.ChatMode));
+        placeHolder.text = Language.BuildString(Language.GetBaseString(1), InputControls.KeyToString(InputControl.ChatMode)); //
         _tmpTextMessage.text = "";
         _tmpTextMessage.DeactivateInputField();
     }

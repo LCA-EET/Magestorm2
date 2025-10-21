@@ -72,7 +72,7 @@ public class CaptureTheFlag extends Match{
             if(IsCharacterAlive(returner)){
                 returned.FlagReturned();
                 _flagsChanged = true;
-                SendToAll(Packets.FlagReturnedPacket(flag, returner));
+                SendToAll(Packets.FlagReturnedPacket(flag));
             }
         }
     }

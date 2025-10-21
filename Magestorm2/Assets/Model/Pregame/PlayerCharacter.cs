@@ -32,13 +32,13 @@ public class PlayerCharacter
         switch (playerClass)
         {
             case PlayerClass.Arcanist:
-                return Language.GetBaseString(6);
+                return Language.GetBaseString(7); //
             case PlayerClass.Magician:
-                return Language.GetBaseString(7);
-            case PlayerClass.Cleric:
-                return Language.GetBaseString(5);
+                return Language.GetBaseString(8); //
+            case PlayerClass.Cleric: 
+                return Language.GetBaseString(6); //
             case PlayerClass.Mentalist:
-                return Language.GetBaseString(8);
+                return Language.GetBaseString(9); //
         }
         return "";
     }

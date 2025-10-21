@@ -53,8 +53,8 @@ public class PlayerStatusPanel : MonoBehaviour
     }
     public void SetLCT(byte level, PlayerClass playerClass, Team team)
     {
-        string levelString = Language.GetBaseString(13);
-        string ofString = Language.GetBaseString(14);
+        string levelString = Language.GetBaseString(14); //
+        string ofString = Language.GetBaseString(15); //
         string baseString = team == Team.Neutral ? levelString + " {0} {1}" : levelString + " {0} {1} " + ofString + " {2}";
         if (team == Team.Neutral)
         {

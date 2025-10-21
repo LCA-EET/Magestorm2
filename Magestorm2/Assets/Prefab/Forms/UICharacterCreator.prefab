@@ -613,7 +613,7 @@ MonoBehaviour:
   TextFields:
   - {fileID: 2316667006593123936}
   - {fileID: 1643875427592723499}
-  StringReferences: 550000002b000000
+  StringReferences: 560000002c000000
 --- !u!1 &8134717474711002867
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +923,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6780015381766843188, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 60
+      value: 61
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1173,7 +1173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6780015381766843188, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 61
+      value: 62
       objectReference: {fileID: 0}
     - target: {fileID: 7334072613002878272, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: Statistic
@@ -1423,7 +1423,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6780015381766843188, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 63
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 7334072613002878272, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: Statistic
@@ -1533,7 +1533,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6780015381766843188, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 64
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 7334072613002878272, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: Statistic
@@ -1643,7 +1643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6780015381766843188, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 65
+      value: 66
       objectReference: {fileID: 0}
     - target: {fileID: 7334072613002878272, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: Statistic
@@ -1721,11 +1721,11 @@ PrefabInstance:
       objectReference: {fileID: 1336690793771135881}
     - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 34
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: 'StringReferences.Array.data[1]'
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4356297596424314138, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1990,7 +1990,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6780015381766843188, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 62
+      value: 63
       objectReference: {fileID: 0}
     - target: {fileID: 7334072613002878272, guid: 47821a35393334a4da453eb85c0d5987, type: 3}
       propertyPath: Statistic

@@ -194,7 +194,6 @@ GameObject:
   - component: {fileID: 1616265414066151302}
   - component: {fileID: 5280765277843684233}
   - component: {fileID: 5123134706126972181}
-  - component: {fileID: 2196081729998868327}
   m_Layer: 5
   m_Name: Header
   m_TagString: Untagged
@@ -320,21 +319,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &2196081729998868327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1089117988976679138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85e1f60de09878e49b7640dfa0b9d2e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TextFields:
-  - {fileID: 5123134706126972181}
-  StringReferences: 15000000
 --- !u!1 &4208800765276099659
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,7 +406,8 @@ MonoBehaviour:
   TextFields:
   - {fileID: 6008902690068609864}
   - {fileID: 4291139016833103353}
-  StringReferences: 5500000056000000
+  - {fileID: 5123134706126972181}
+  StringReferences: 560000005700000016000000
 --- !u!1001 &514349472635649744
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -588,11 +573,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: 'StringReferences.Array.data[1]'
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4396828659250135313, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: m_Pivot.x
@@ -736,11 +721,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 18
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: 'StringReferences.Array.data[1]'
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4396828659250135313, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: m_Pivot.x
@@ -866,6 +851,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3629129048618377322}
     m_Modifications:
+    - target: {fileID: 152772246678483634, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
+      propertyPath: 'StringReferences.Array.data[0]'
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 152772246678483634, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
+      propertyPath: 'StringReferences.Array.data[1]'
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 2304074668684741220, guid: 4f6d809e199492948ab7d32d62d1bc59, type: 3}
       propertyPath: m_Name
       value: PasswordField
