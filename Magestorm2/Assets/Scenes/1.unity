@@ -427,6 +427,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Surface
       objectReference: {fileID: 0}
+    - target: {fileID: 2452695723067056218, guid: 20836dbdd82306d4caddf27b315a9579, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7456529763860407808, guid: 20836dbdd82306d4caddf27b315a9579, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -1163,6 +1167,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5791623128732518125, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
       propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6420716833901105419, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8736013207565299092, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}

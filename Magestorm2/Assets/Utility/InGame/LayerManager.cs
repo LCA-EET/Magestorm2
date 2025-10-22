@@ -9,8 +9,8 @@ public static class LayerManager
     {
         if (!_init)
         {
-            _surfaceMask = LayerMask.GetMask(new string[] { "Surface" });
-            _interactableMask = LayerMask.GetMask(new string[] { "Interactable" });
+            _surfaceMask = LayerMask.GetMask("Surface");
+            _interactableMask = LayerMask.GetMask("Interactable");
             _init = true;
         }
     }

@@ -17,7 +17,7 @@ public static class SharedFunctions
     }
     public static bool DirectionalCast(Transform origin, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
     {
-        return Physics.Raycast(origin.position, origin.TransformDirection(direction), out hitInfo, distance);
+        return Physics.Raycast(origin.position, origin.TransformDirection(direction), out hitInfo, distance, layerMask);
     }
     public static bool CastDown(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
     {

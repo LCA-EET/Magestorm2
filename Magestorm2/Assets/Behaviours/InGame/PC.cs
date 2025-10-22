@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PC : MonoBehaviour
 {
@@ -23,10 +24,17 @@ public class PC : MonoBehaviour
     private ManaPool _enteredPool;
     public void Awake()
     {
-        ComponentRegister.PC = this;
-        _playerCollider = GetComponent<BoxCollider>();
-        PCAvatar.SetAttributes(MatchParams.IDinMatch, PlayerAccount.SelectedCharacter.CharacterName, PlayerAccount.SelectedCharacter.CharacterLevel, PlayerAccount.SelectedCharacter.CharacterClass, MatchParams.MatchTeam);
-        PCAvatar.IsAlive = true;
+        if (!Game.Running)
+        {
+            SceneManager.LoadScene("Pregame");
+        }
+        else
+        {
+            ComponentRegister.PC = this;
+            _playerCollider = GetComponent<BoxCollider>();
+            PCAvatar.SetAttributes(MatchParams.IDinMatch, PlayerAccount.SelectedCharacter.CharacterName, PlayerAccount.SelectedCharacter.CharacterLevel, PlayerAccount.SelectedCharacter.CharacterClass, MatchParams.MatchTeam);
+            PCAvatar.IsAlive = true;
+        }
         //ComponentRegister.PCCollider = _playerCollider;
     }
     public void Start()

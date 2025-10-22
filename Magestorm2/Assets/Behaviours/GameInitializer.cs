@@ -5,6 +5,7 @@ public class GameInitializer : MonoBehaviour
     
     private void Awake()
     {
+        Game.Running = true;
         if (!MatchParams.ReturningFromMatch)
         {
             LoadPrefs();
