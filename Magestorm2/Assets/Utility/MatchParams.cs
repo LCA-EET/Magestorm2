@@ -82,6 +82,8 @@ public static class MatchParams
         IncludeShrines = true;
         IncludeFlags = false;
         IncludePools = true;
+        ShrineManager.Init();
+        PoolManager.Init();
     }
 
     public static void InitCTF()
@@ -90,6 +92,8 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = true;
         IncludePools = true;
+        FlagManager.Init();
+        PoolManager.Init();
     }
 
     public static void InitFFA()

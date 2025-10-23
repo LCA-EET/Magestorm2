@@ -32,6 +32,9 @@ public class InGamePacketProcessor : UDPProcessor
                     PreProcess(decryptedPayload);
                     switch (_opCode)
                     {
+                        case InGame_Receive.ObjectData:
+                            Match.ProcessObjectStates(_decrypted);
+                            break;
                         case InGame_Receive.ObjectStateChange:
                             ProcessObjectChangePacket();
                             break;
@@ -68,7 +71,7 @@ public class InGamePacketProcessor : UDPProcessor
                             ProcessPoolBiasFailure();
                             break;
                         case InGame_Receive.ShrineAdjusted:
-                            Match.ProcessShrineAdjustment(_decrypted[1], _decrypted[2], _decrypted[3]);
+                            ShrineManager.ProcessShrineAdjustment(_decrypted[1], _decrypted[2], _decrypted[3]);
                             break;
                         case InGame_Receive.ShrineFailure:
                             ProcessShrineFailure();
@@ -218,7 +221,7 @@ public class InGamePacketProcessor : UDPProcessor
         byte biasAmount = _decrypted[2];
         byte teamID = _decrypted[3];
         byte biaserID = _decrypted[4];
-        Match.PoolBiased(biaserID, poolID, teamID, biasAmount);
+        PoolManager.PoolBiased(biaserID, poolID, teamID, biasAmount);
     }
     private void ProcessInactivityWarning()
     {

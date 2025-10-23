@@ -18,7 +18,7 @@ public class ManaPool : Trigger
     }
     public void Start()
     {
-        _poolPower = Match.RegisterPool(this);
+        _poolPower = PoolManager.RegisterPool(this);
         Debug.Log("Pool ID: " + PoolID + ", Power: " + _poolPower);
     }
     public void Update()

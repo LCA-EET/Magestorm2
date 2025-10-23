@@ -29,4 +29,7 @@ public class ActivatableObject {
     public void SetTimeRemaining(float timeRemaining){
         _timeRemaining = timeRemaining;
     }
+    public byte GetStatus(){
+        return _status;
+    }
 }

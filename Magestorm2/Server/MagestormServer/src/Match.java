@@ -85,18 +85,17 @@ public class Match {
         }
     }
 
-    public byte[] GetObjectStatusBytes(){
-
-        int length = _objectStatus.size() * 2;
-        byte[] toReturn = new byte[length];
-        int index = 0;
-        for(byte k : _objectStatus.keySet()){
-            toReturn[index] = k;
-            index++;
-            //toReturn[index] = _objectStatus.get(k);
-            index++;
+    public void ProcessObjectStatusPacket(byte requesterID){
+        ArrayList<Byte> toReturn = new ArrayList<>();
+        for(byte objectID : _objectStatus.keySet()){
+            byte state = _objectStatus.get(objectID).GetStatus();
+            if(state > 0){
+                toReturn.add(objectID);
+                toReturn.add(state);
+            }
         }
-        return toReturn;
+        byte[] toSend = Packets.ObjectStatusBytes(toReturn);
+        SendToPlayer(toSend, requesterID);
     }
 
     private void InitTeams(){
@@ -224,6 +223,10 @@ public class Match {
     }
     public void SendToPlayer(byte[] encrypted, MatchCharacter recipient){
         _processor.EnqueueForSend(encrypted, recipient.GetRemoteClient());
+    }
+
+    public void SendToPlayer(byte[] encrypted, byte playerID){
+        SendToPlayer(encrypted, _matchCharacters.get(playerID));
     }
 
     protected void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){

@@ -31,10 +31,6 @@ public class SceneInitializer : MonoBehaviour
         Debug.Log("Sending Match Joined Packet");
         Game.ChatMode = false;
         Game.MenuMode = false;
-        if(MatchParams.MatchType == (byte)MatchTypes.CaptureTheFlag)
-        {
-            FlagManager.Init();
-        }
         ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.MatchJoinedPacket());
     }
 

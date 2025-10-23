@@ -7,54 +7,15 @@ public static class Match
 {
     private static Dictionary<byte, Avatar> _matchPlayers;
     private static Dictionary<byte, ActivateableObject> _objects;
-    private static Dictionary<byte, ManaPool> _pools;
-    private static Dictionary<byte, InitialPoolData> _initialPoolData;
-    private static Dictionary<byte, Shrine> _shrines;
-    private static Level _level;
-
     public static bool Running;
-    
     
     public static void Init()
     {
-        _level = LevelData.GetLevel(MatchParams.SceneID);
         _matchPlayers = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>();
-        if (MatchParams.IncludePools)
-        {
-            _pools = new Dictionary<byte, ManaPool>();
-            byte[] poolData = MatchParams.GetPoolData();
-            _initialPoolData = new Dictionary<byte, InitialPoolData>();
-            for (int i = 0; i < poolData.Length; i += 3)
-            {
-                _initialPoolData.Add(poolData[i], new InitialPoolData(poolData[i + 1], poolData[i + 2]));
-                Debug.Log("Pool ID: " + poolData[i] + ", Team: " + poolData[i + 1] + ", Amount: " + poolData[i + 2]);
-            }
-        }
-        if (MatchParams.IncludeShrines)
-        {
-            _shrines = new Dictionary<byte, Shrine>();
-        }
     }
-    public static void PoolBiased(byte biaserID, byte poolID, byte teamID, byte biasAmount)
-    {
-        if (_pools.ContainsKey(poolID))
-        {
-            _pools[poolID].BiasPool(biasAmount, (Team)teamID, biaserID);
-        }
-    }
-    public static void RegisterShrine(Shrine toRegister)
-    {
-        _shrines.Add((byte)toRegister.Team, toRegister);
-        toRegister.SetHealth(MatchParams.GetShrineHealth((byte)toRegister.Team));
-    }
-    public static byte RegisterPool(ManaPool toRegister)
-    {
-        _pools.Add(toRegister.PoolID, toRegister);
-        InitialPoolData poolData = _initialPoolData[toRegister.PoolID];
-        toRegister.SetBiasAmount(poolData.BiasAmount, poolData.BiasedToward);
-        return _level.GetPoolPower(toRegister.PoolID);
-    }
+    
+    
     public static void AddAvatar(Avatar avatar)
     {
         _matchPlayers.Add(avatar.PlayerID, avatar);
@@ -113,26 +74,19 @@ public static class Match
         Debug.Log("AL Count: " +  toReturn.Count); 
         return toReturn;
     }
-
+    public static void ProcessObjectStates(byte[] decrypted)
+    {
+        for(int i = 1; i < decrypted.Length; i+=2)
+        {
+            ChangeObjectState(decrypted[i], decrypted[i+1]);
+        }
+    }
     public static void ChangeObjectState(byte key, byte state)
     {
         if (_objects.ContainsKey(key))
         {
             _objects[key].StatusChanged(state);
             Debug.Log("Object state change: " + key + ", " + state);
-        }
-    }
-    /*
-    public static void ChangeShrineHealth(byte shrineID, byte health)
-    {
-        ComponentRegister.ShrinePanel.SetFill((Team)shrineID, health);
-    }
-    */
-    public static void ProcessShrineAdjustment(byte shrineID, byte newHealth, byte adjuster)
-    {
-        if (_shrines.ContainsKey(shrineID))
-        {
-            _shrines[shrineID].AdjustHealth(newHealth, adjuster);
         }
     }
     public static void Send(byte[] packetBytes)

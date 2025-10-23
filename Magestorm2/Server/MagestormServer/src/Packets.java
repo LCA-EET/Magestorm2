@@ -203,6 +203,15 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] ObjectStatusBytes(ArrayList<Byte> status){
+        byte[] toEncrypt = new byte[1 + status.size()];
+        toEncrypt[0] = InGame_Send.ObjectData;
+        for(int i = 0; i < status.size(); i++){
+            toEncrypt[i+1] = status.get(i);
+        }
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] RemovedFromMatchPacket(byte reasonCode){
         byte[] toEncrypt = new byte[2];
         toEncrypt[0] = InGame_Send.RemovedFromMatch;

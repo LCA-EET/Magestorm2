@@ -42,8 +42,16 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_Receive.CastSpell:
                 HandleSpellCast();
                 return true;
+            case InGame_Receive.ObjectStatus:
+                HandleObjectStatusRequest();
+                return true;
         }
         return false;
+    }
+    private void HandleObjectStatusRequest(){
+        if(IsVerified()){
+            _owningMatch.ProcessObjectStatusPacket(_decrypted[1]);
+        }
     }
     private void HandleSpellCast(){
         if(IsVerified()){
@@ -128,6 +136,7 @@ public class InGamePacketProcessor extends UDPProcessor{
             if(_owningMatch.IsPlayerOnTeam(idInMatch, teamID)){
                 _owningMatch.SendToAll(Packets.PlayerJoinedMatchPacket(_owningMatch.PlayerData(idInMatch)));
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID);
+                _owningMatch.ProcessObjectStatusPacket(_decrypted[1]);
                 Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);
                 return true;
             }

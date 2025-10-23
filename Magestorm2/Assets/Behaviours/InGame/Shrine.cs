@@ -21,7 +21,7 @@ public class Shrine : Trigger
     }
     public void Start()
     {
-        Match.RegisterShrine(this);
+        ShrineManager.RegisterShrine(this);
         Indicator.ChangeBias(Team);
         _health = MatchParams.GetShrineData()[(byte)Team - 1];
     }
