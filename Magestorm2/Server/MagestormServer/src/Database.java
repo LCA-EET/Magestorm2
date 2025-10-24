@@ -361,7 +361,21 @@ public class Database {
         toReturn[1] = accountid;
         return toReturn;
     }
+    private static byte[] GetDelimitedBytes(ResultSet rs, String columnName){
+        try{
+            String unsplit = rs.getString("columnName");
+            String[] data = unsplit.split(":");
+            byte[] toReturn = new byte[data.length];
+            for(int i = 0; i < toReturn.length; i++){
+                toReturn[i] = Byte.parseByte(data[i]);
+            }
+            return toReturn;
+        }
+        catch(Exception ex){
+            return null;
+        }
 
+    }
     public static byte[] GetLevelsList(byte status){
         byte[] toReturn = null;
         String sql = "SELECT id, scenename, maxplayers, pooldata FROM levels WHERE status=?";
@@ -375,13 +389,9 @@ public class Database {
                 byte sceneID = rs.getByte("id");
                 String sceneName = rs.getString("scenename");
                 byte maxPlayers = rs.getByte("maxplayers");
-                String poolString = rs.getString("pooldata");
-                String[] poolData = poolString.split(":");
-                byte[] poolBytes = new byte[poolData.length];
-                for(int i = 0; i < poolBytes.length; i++){
-                    poolBytes[i] = Byte.parseByte(poolData[i]);
-                }
+                byte[] poolBytes = GetDelimitedBytes(rs, "pooldata");
                 GameServer.SetPoolData(sceneID, poolBytes);
+                GameServer.SetActivatables(sceneID, GetDelimitedBytes(rs, "activatables"));
                 byte[] nameBytes = sceneName.getBytes(UTF_8);
                 byte[] fetched = new byte[1 + 1 + 1 + poolBytes.length + 1 + nameBytes.length];
                 int fIdx = 0;

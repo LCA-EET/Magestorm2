@@ -13,7 +13,7 @@ public class Match {
     protected ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
     protected final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
     protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
-    protected final ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
+    protected ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
     protected final ConcurrentHashMap<Byte, Integer> _playerScores;
     protected final ConcurrentHashMap<Integer, CastSpell> _castSpells;
 
@@ -28,7 +28,7 @@ public class Match {
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType){
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
-        _objectStatus = new ConcurrentHashMap<>();
+        InitializeActivatables();
         _matchCharacters = new ConcurrentHashMap<>();
         _playerScores = new ConcurrentHashMap<>();
         _castSpells = new ConcurrentHashMap<>();
@@ -62,6 +62,14 @@ public class Match {
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
     }
+    private void InitializeActivatables(){
+        _objectStatus = new ConcurrentHashMap<>();
+        byte[] objectData = GameServer.GetActivatablesData(_sceneID);
+        for(int i = 0; i < objectData.length; i+=2){
+            byte objectKey = objectData[i];
+            _objectStatus.put(objectKey, new ActivatableObject(this,objectKey, objectData[i+1]));
+        }
+    }
     protected void AdjustPlayerScore(byte playerID, int adjustment)
     {
         if(!_playerScores.containsKey(playerID)){
@@ -76,13 +84,14 @@ public class Match {
     public MatchTeam GetMatchTeam(byte teamID){
         return _matchTeams.get(teamID);
     }
+    
     public void ChangeObjectState(byte objectID, byte status){
-        if(_objectStatus.containsKey(objectID)){
-            _objectStatus.get(objectID).ChangeState(status);
+        if(!_objectStatus.containsKey(objectID)){
+            _objectStatus.put(objectID, new ActivatableObject(this, objectID, 5));
+            // by default objects will hold their state for 5 seconds. This can be overridden by
+            // adding the appropriate entry to the activatables field in the levels table
         }
-        else{
-            _objectStatus.put(objectID, new ActivatableObject(objectID, status));
-        }
+        _objectStatus.get(objectID).ChangeState(status);
     }
 
     public void ProcessObjectStatusPacket(byte requesterID){
@@ -237,24 +246,11 @@ public class Match {
         CountDownTimedObjects(msElapsed);
     }
     private void CountDownTimedObjects(long msElapsed){
-        ArrayList<Byte> expired = new ArrayList<>();
-        for(byte key : _objectStatus.keySet()){
-            ActivatableObject ao = _objectStatus.get(key);
-            if(ao.IsTimed()){
-                float timeRemaining =ao.TimeRemaining();
-                timeRemaining -= msElapsed;
-                if(timeRemaining <= 0){
-                    expired.add(key);
-                }
-                else{
-                    ao.SetTimeRemaining(timeRemaining);
-                }
-            }
-            if(!expired.isEmpty()){
-                SendToAll(Packets.TimedObjectExpirationPacket(expired));
+        for(ActivatableObject ao : _objectStatus.values()){
+            if(ao.TimeRemaining() > 0){
+                ao.Tick(msElapsed);
             }
         }
-
     }
     public void CheckForInactivity(){
         ArrayList<RemoteClient> _inactiveClients = new ArrayList<>();

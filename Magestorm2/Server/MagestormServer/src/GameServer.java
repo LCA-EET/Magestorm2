@@ -13,6 +13,7 @@ public class GameServer extends Thread {
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
     private static ConcurrentHashMap<Byte, byte[]> _poolData;
+    private static ConcurrentHashMap<Byte, byte[]> _objectData;
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
@@ -24,6 +25,7 @@ public class GameServer extends Thread {
         _maxPlayerData = new ConcurrentHashMap<>();
         _activeCharacters = new ConcurrentHashMap<>();
         _poolData = new ConcurrentHashMap<>();
+        _objectData = new ConcurrentHashMap<>();
         SpellManager.init();
         MatchManager.init();
         _rcMonitor = new RemoteClientMonitor();
@@ -41,12 +43,19 @@ public class GameServer extends Thread {
     public static PlayerCharacter RemoveActiveCharacter(int accountID){
         return _activeCharacters.remove(accountID);
     }
+    public static void SetActivatables(byte sceneID, byte[] aoBytes){
+        _objectData.put(sceneID, aoBytes);
+    }
+    public static byte[] GetActivatablesData(byte sceneID){
+        return _objectData.get(sceneID);
+    }
     public static void SetPoolData(byte sceneID, byte[] poolBytes){
         _poolData.put(sceneID, poolBytes);
     }
     public static byte[] GetPoolData(byte sceneID){
         return _poolData.get(sceneID);
     }
+
 
     public static boolean IsLoggedIn(int accountID){
         return _loggedInClients.containsKey(accountID);
