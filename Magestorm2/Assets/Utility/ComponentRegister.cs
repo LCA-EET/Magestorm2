@@ -31,7 +31,13 @@ public static class ComponentRegister
     private static ShrineDisplay _shrineDisplay;
     private static TeamChatControl _teamChatControl;
     private static CTFScorePanel _ctfscorePanel;
-    
+    private static Spawner _spawner;
+
+    public static Spawner Spawner
+    {
+        get { return _spawner; }
+        set { _spawner = value; }
+    }
     public static CTFScorePanel CTFScorePanel
     {
         get { return _ctfscorePanel; }

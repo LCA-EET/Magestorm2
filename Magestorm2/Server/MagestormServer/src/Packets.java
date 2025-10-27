@@ -203,6 +203,11 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] PlayerLocationBytes(byte[] decrypted){
+        decrypted[0] = InGame_Send.UpdateLocation;
+        return Cryptographer.Encrypt(decrypted);
+    }
+
     public static byte[] ObjectStatusBytes(ArrayList<Byte> status){
         byte[] toEncrypt = new byte[1 + status.size()];
         toEncrypt[0] = InGame_Send.ObjectData;
@@ -344,16 +349,10 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] PlayerJoinedMatchPacket(byte[] INLCTA){
-        byte[] toEncrypt = new byte[1 + INLCTA.length];
-        toEncrypt[0] = InGame_Send.PlayerJoinedMatch;
-        System.arraycopy(INLCTA, 0, toEncrypt, 1, INLCTA.length);
-        return Cryptographer.Encrypt(toEncrypt);
-    }
-    public static byte[] PlayerDataPacket(byte[] dataForPlayer){
-        byte[] toEncrypt = new byte[dataForPlayer.length + 1];
+    public static byte[] PlayerDataPacket(byte[] INCTLA){
+        byte[] toEncrypt = new byte[INCTLA.length + 1];
         toEncrypt[0] = InGame_Send.PlayerData;
-        System.arraycopy(dataForPlayer, 0, toEncrypt, 1, dataForPlayer.length);
+        System.arraycopy(INCTLA, 0, toEncrypt, 1, INCTLA.length);
         return Cryptographer.Encrypt(toEncrypt);
     }
 

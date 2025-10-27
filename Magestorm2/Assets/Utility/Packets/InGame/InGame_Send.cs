@@ -23,5 +23,7 @@ public static class InGame_Send
                         FlagTaken = 15,
                         HitPlayer = 16,
                         CastSpell = 17,
-                        ObjectStatus = 18;
+                        ObjectStatus = 18,
+                        PlayerMoved = 19,
+                        FetchPlayer = 20;
 }

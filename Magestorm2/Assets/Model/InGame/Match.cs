@@ -81,6 +81,50 @@ public static class Match
             ChangeObjectState(decrypted[i], decrypted[i+1]);
         }
     }
+    public static void ProcessPlayerJoinedPacket(byte[] decrypted)
+    {
+        byte playerID = decrypted[1];
+        byte teamID = decrypted[2];
+        byte[] appearance = new byte[5];
+        System.Array.Copy(decrypted, 3, appearance, 0, appearance.Length);
+        byte level = decrypted[8];
+        byte characterClass = decrypted[9];
+        byte[] nameBytes = new byte[decrypted[10]];
+        System.Array.Copy(decrypted, 11, nameBytes, 0, nameBytes.Length);
+        string name = ByteUtils.BytesToUTF8(nameBytes, 0, nameBytes.Length);
+        Avatar added = ComponentRegister.Spawner.SpawnAvatar();
+        added.SetAttributes(playerID, name, level, characterClass, (Team)teamID, appearance);
+        AddAvatar(added);
+    }
+    public static void UpdatePlayerLocation(byte[] decrypted)
+    {
+        byte playerID = decrypted[1];
+        if(playerID != MatchParams.IDinMatch)
+        {
+            byte controlCode = decrypted[2];
+            if (_matchPlayers.ContainsKey(playerID))
+            {
+                Avatar toUpdate = _matchPlayers[playerID];
+                switch (controlCode)
+                {
+                    case 0: // position only
+                        _matchPlayers[playerID].UpdatePosition(decrypted);
+                        break;
+                    case 1: // direction only
+                        _matchPlayers[playerID].UpdateDirection(decrypted, 3);
+                        break;
+                    case 2: // position and direction
+                        _matchPlayers[playerID].UpdatePosition(decrypted);
+                        _matchPlayers[playerID].UpdateDirection(decrypted, 15);
+                        break;
+                }
+            }
+            else
+            {
+                Game.SendInGameBytes(InGame_Packets.FetchPlayerPacket(playerID));
+            }
+        }
+    }
     public static void ChangeObjectState(byte key, byte state)
     {
         if (_objects.ContainsKey(key))

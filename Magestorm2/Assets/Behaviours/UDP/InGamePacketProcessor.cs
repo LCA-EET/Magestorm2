@@ -94,7 +94,12 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.FlagTaken:
                             HandleFlagTaken();
                             break;
-                        
+                        case InGame_Receive.UpdateLocation:
+                            Match.UpdatePlayerLocation(_decrypted);
+                            break;
+                        case InGame_Receive.PlayerData:
+                            Match.ProcessPlayerJoinedPacket(_decrypted);
+                            break;
                     }
                 }
             }
@@ -107,7 +112,6 @@ public class InGamePacketProcessor : UDPProcessor
         byte takerID = _decrypted[2];
         if(takerID == MatchParams.IDinMatch)
         {
-
             ComponentRegister.MessageRecorder.MessageReceived(new MessageData(Language.BuildString(193, teamName), "Server")); //
         }
         else

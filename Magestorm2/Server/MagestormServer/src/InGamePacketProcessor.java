@@ -15,9 +15,6 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_Receive.JoinedMatch:
                 HandleJoinMatchPacket();
                 return true;
-            case InGame_Receive.RequestPlayerData:
-                HandlePlayerDataRequest();
-                return true;
             case InGame_Receive.ChangedObjectState:
                 HandleObjectStateChange();
                 return true;
@@ -45,8 +42,24 @@ public class InGamePacketProcessor extends UDPProcessor{
             case InGame_Receive.ObjectStatus:
                 HandleObjectStatusRequest();
                 return true;
+            case InGame_Receive.PlayerMoved:
+                HandlePlayerMoved();
+                return true;
+            case InGame_Receive.FetchPlayer:
+                HandleFetchPlayer();
+                return true;
         }
         return false;
+    }
+    private void HandleFetchPlayer(){
+        if(IsVerified()){
+            _owningMatch.SendPlayerData( _decrypted[1], _decrypted[2]);
+        }
+    }
+    private void HandlePlayerMoved(){
+        if(IsVerified()){
+            _owningMatch.UpdatePlayerLocation(_decrypted);
+        }
     }
     private void HandleObjectStatusRequest(){
         if(IsVerified()){
@@ -122,19 +135,13 @@ public class InGamePacketProcessor extends UDPProcessor{
             _owningMatch.SendToAll(Packets.ObjectStateChangePacket(objectID, state));
         }
     }
-    private void HandlePlayerDataRequest(){
-        if(IsVerified()){
-            byte requestedPlayer = _decrypted[3];
-            EnqueueForSend(Packets.PlayerDataPacket(_owningMatch.PlayerData(requestedPlayer)), _remote);
-        }
-    }
     protected boolean HandleJoinMatchPacket(){
         if(CheckAccountAndCharacter()){
             byte idInMatch = _decrypted[9];
             byte teamID = _decrypted[10];
             Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.MatchID() + ", team " + teamID);
             if(_owningMatch.IsPlayerOnTeam(idInMatch, teamID)){
-                _owningMatch.SendToAll(Packets.PlayerJoinedMatchPacket(_owningMatch.PlayerData(idInMatch)));
+                _owningMatch.SendToAll(Packets.PlayerDataPacket(_owningMatch.GetMatchCharacter(idInMatch).GetINLCTABytes()));
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID);
                 _owningMatch.ProcessObjectStatusPacket(_decrypted[1]);
                 Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);

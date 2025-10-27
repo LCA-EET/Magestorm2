@@ -12,12 +12,13 @@ public class MatchCharacter {
     private long _lastPacketReceived;
     private final long _inactivityWarningThreshold = 30000;
     private final long _inactivityMaximumThreshold = 61000;
-    private Vector3 _position;
+    private Vector3 _position, _direction;
     private short _currentHP, _currentMana;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match){
         MarkPacketReceived();
         _position = null;
+        _direction = null;
         _currentHP = 1;
         _currentMana = 1;
         _verified = false;
@@ -117,6 +118,14 @@ public class MatchCharacter {
 
     public Vector3 GetPosition(){
         return _position;
+    }
+
+    protected void UpdatePosition(byte[] decrypted){
+        _position = new Vector3(decrypted, 3);
+    }
+
+    protected void UpdateDirection(byte[] decrypted, int index){
+        _direction = new Vector3(decrypted, index);
     }
 
     protected void PlayerDied(MatchCharacter deadPlayer){

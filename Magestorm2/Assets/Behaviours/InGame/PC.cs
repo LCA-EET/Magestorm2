@@ -32,7 +32,7 @@ public class PC : MonoBehaviour
         {
             ComponentRegister.PC = this;
             _playerCollider = GetComponent<BoxCollider>();
-            PCAvatar.SetAttributes(MatchParams.IDinMatch, PlayerAccount.SelectedCharacter.CharacterName, PlayerAccount.SelectedCharacter.CharacterLevel, PlayerAccount.SelectedCharacter.CharacterClass, MatchParams.MatchTeam);
+            PCAvatar.SetAttributes(MatchParams.IDinMatch, PlayerAccount.SelectedCharacter.CharacterName, PlayerAccount.SelectedCharacter.CharacterLevel, PlayerAccount.SelectedCharacter.CharacterClass, MatchParams.MatchTeam, null);
             PCAvatar.IsAlive = true;
         }
         //ComponentRegister.PCCollider = _playerCollider;

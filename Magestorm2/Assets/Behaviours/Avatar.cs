@@ -10,10 +10,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private bool _isAlive;
     private bool _updatedNeeded;
     private byte _playerID;
+    private GameObject _model;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+                
     }
 
     // Update is called once per frame
@@ -22,7 +23,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         
     }
     
-    public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team)
+    public void SetModel(GameObject model)
+    {
+        _model = model;
+    }
+    public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
     {
         _name = name;
         _class = playerClass;
@@ -31,7 +36,26 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _team = team;
         _playerID = id;
         Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
+        if (appearance != null)
+        {
+            ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
+        }
+        
+    }
+    public void UpdatePosition(byte[] decrypted)
+    {
+        float x = BitConverter.ToSingle(decrypted, 3);
+        float y = BitConverter.ToSingle(decrypted, 7);
+        float z = BitConverter.ToSingle(decrypted, 11);
+        gameObject.transform.position = new Vector3(x, y, z);
+    }
 
+    public void UpdateDirection(byte[] decrypted, int index)
+    {
+        float x = BitConverter.ToSingle(decrypted, index);
+        float y = BitConverter.ToSingle(decrypted, index + 4);
+        float z = BitConverter.ToSingle(decrypted, index + 8);
+        gameObject.transform.TransformDirection(new Vector3(x, y, z));
     }
     public bool IsAlive 
     {

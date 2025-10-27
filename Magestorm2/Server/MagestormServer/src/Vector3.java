@@ -1,19 +1,22 @@
 public class Vector3 {
 
-    private final byte[] _position;
+    private final byte[] _bytes;
 
     public Vector3(){
-        _position = new byte[12];
+        _bytes = new byte[12];
     }
 
     public Vector3(byte[] decrypted, int index){
-        _position = new byte[12];
-        System.arraycopy(decrypted, index, _position, 0, _position.length);
+        _bytes = new byte[12];
+        Update(decrypted, index);
     }
 
-    public byte[] GetPositionBytes(){
-        return _position;
+    public byte[] GetBytes(){
+        return _bytes;
     }
 
+    public void Update(byte[] decrypted, int index){
+        System.arraycopy(decrypted, index, _bytes, 0, _bytes.length);
+    }
 
 }

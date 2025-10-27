@@ -140,6 +140,26 @@ public class Match {
         Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return playerID;
     }
+    public void UpdatePlayerLocation(byte[] decrypted){
+        byte playerID = decrypted[1];
+        if(_matchCharacters.containsKey(playerID)){
+            MatchCharacter toUpdate = _matchCharacters.get(playerID);
+            byte controlCode = decrypted[2];
+            switch(controlCode){
+                case 0: // position only
+                    toUpdate.UpdatePosition(decrypted);
+                    break;
+                case 1: // direction only
+                    toUpdate.UpdateDirection(decrypted, 3);
+                    break;
+                case 2: // position and direction
+                    toUpdate.UpdatePosition(decrypted);
+                    toUpdate.UpdateDirection(decrypted, 15);
+                    break;
+            }
+            SendToAll(Packets.PlayerLocationBytes(decrypted));
+        }
+    }
     public void LeaveMatch(byte id, byte team, boolean send){
         _matchCharacters.remove(id).PC().MarkRemovedFromMatch();
         Main.LogMessage("Leave Match MCSIZE: " + _matchCharacters.size());
@@ -163,8 +183,10 @@ public class Match {
         return toReturn;
     }
 
-    public byte[] PlayerData(byte idInMatch){
-        return _matchCharacters.get(idInMatch).GetINLCTABytes();
+    public void SendPlayerData(byte requestorID, byte idInMatch){
+        if(_matchCharacters.containsKey(requestorID)){
+            SendToPlayer(Packets.PlayerDataPacket(_matchCharacters.get(idInMatch).GetINLCTABytes()), requestorID);
+        }
     }
     public byte ObtainNextPlayerID(){
         boolean idUsed = false;

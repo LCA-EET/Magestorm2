@@ -24,7 +24,7 @@ public class Flag {
 
     public void FlagDropped(Vector3 position){
         _flagBytes[_idxHolder] = DROPPED;
-        System.arraycopy(position.GetPositionBytes(),0, _flagBytes, 2, 12);
+        System.arraycopy(position.GetBytes(),0, _flagBytes, 2, 12);
     }
 
     public byte[] GetFlagBytes(){

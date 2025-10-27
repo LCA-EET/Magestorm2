@@ -33,5 +33,6 @@ public static class InGame_Receive
                         PlayerKilled = 24,
                         SpellCast = 25,
                         HMLUpdate = 26,
-                        FlagTaken = 27;
+                        FlagTaken = 27,
+                        UpdateLocation = 28;
 }
