@@ -10,7 +10,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private bool _isAlive;
     private bool _updatedNeeded;
     private byte _playerID;
-    private GameObject _model;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -23,10 +22,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         
     }
     
-    public void SetModel(GameObject model)
-    {
-        _model = model;
-    }
+
     public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
     {
         _name = name;
@@ -36,11 +32,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _team = team;
         _playerID = id;
         Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
-        if (appearance != null)
-        {
-            ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
-        }
-        
+        ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
+        gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
     }
     public void UpdatePosition(byte[] decrypted)
     {

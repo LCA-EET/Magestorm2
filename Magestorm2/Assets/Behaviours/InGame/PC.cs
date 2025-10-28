@@ -9,7 +9,7 @@ public class PC : MonoBehaviour
 
     public SFXPlayer SFXPlayer;
     public MusicPlayer MusicPlayer;
-    public Avatar PCAvatar;
+    public bool JoinedMatch;
 
     private float _hmlCheckInterval = 0.1f;
     private float _hmlCheckElapsed = 0.0f;
@@ -32,14 +32,10 @@ public class PC : MonoBehaviour
         {
             ComponentRegister.PC = this;
             _playerCollider = GetComponent<BoxCollider>();
-            PCAvatar.SetAttributes(MatchParams.IDinMatch, PlayerAccount.SelectedCharacter.CharacterName, PlayerAccount.SelectedCharacter.CharacterLevel, PlayerAccount.SelectedCharacter.CharacterClass, MatchParams.MatchTeam, null);
-            PCAvatar.IsAlive = true;
         }
-        //ComponentRegister.PCCollider = _playerCollider;
     }
     public void Start()
     {
-        Match.AddAvatar(PCAvatar);
     }
     public void Update()
     {

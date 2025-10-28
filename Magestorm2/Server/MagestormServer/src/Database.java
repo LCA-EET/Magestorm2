@@ -363,11 +363,12 @@ public class Database {
     }
     private static byte[] GetDelimitedBytes(ResultSet rs, String columnName){
         try{
-            String unsplit = rs.getString("columnName");
+            String unsplit = rs.getString(columnName);
             String[] data = unsplit.split(":");
             byte[] toReturn = new byte[data.length];
             for(int i = 0; i < toReturn.length; i++){
                 toReturn[i] = Byte.parseByte(data[i]);
+                //Main.LogMessage("i: " + toReturn[i] + "\n");
             }
             return toReturn;
         }
@@ -378,7 +379,7 @@ public class Database {
     }
     public static byte[] GetLevelsList(byte status){
         byte[] toReturn = null;
-        String sql = "SELECT id, scenename, maxplayers, pooldata FROM levels WHERE status=?";
+        String sql = "SELECT id, scenename, maxplayers, pooldata, activatables FROM levels WHERE status=?";
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setByte(1, status);

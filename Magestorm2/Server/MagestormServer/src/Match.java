@@ -28,7 +28,7 @@ public class Match {
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType){
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
-        InitializeActivatables();
+        _sceneID = sceneID;
         _matchCharacters = new ConcurrentHashMap<>();
         _playerScores = new ConcurrentHashMap<>();
         _castSpells = new ConcurrentHashMap<>();
@@ -37,7 +37,6 @@ public class Match {
         _nextPlayerID = 1;
         _matchID = matchID;
         _creatorID = creatorID;
-        _sceneID = sceneID;
         _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte nameBytesLength = (byte)_creatorName.length;
@@ -61,14 +60,17 @@ public class Match {
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
+        InitializeActivatables();
     }
     private void InitializeActivatables(){
         _objectStatus = new ConcurrentHashMap<>();
+        Main.LogMessage("Initializing AO");
         byte[] objectData = GameServer.GetActivatablesData(_sceneID);
         for(int i = 0; i < objectData.length; i+=2){
             byte objectKey = objectData[i];
             _objectStatus.put(objectKey, new ActivatableObject(this,objectKey, objectData[i+1]));
         }
+        Main.LogMessage("AO Initialized");
     }
     protected void AdjustPlayerScore(byte playerID, int adjustment)
     {

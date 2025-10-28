@@ -94,7 +94,12 @@ public static class Match
         string name = ByteUtils.BytesToUTF8(nameBytes, 0, nameBytes.Length);
         Avatar added = ComponentRegister.Spawner.SpawnAvatar();
         added.SetAttributes(playerID, name, level, characterClass, (Team)teamID, appearance);
+        MessageData md = new MessageData(name + " has joined the match.", "Server");
         AddAvatar(added);
+        if (playerID == MatchParams.IDinMatch)
+        {
+            ComponentRegister.PC.JoinedMatch = true;
+        }
     }
     public static void UpdatePlayerLocation(byte[] decrypted)
     {

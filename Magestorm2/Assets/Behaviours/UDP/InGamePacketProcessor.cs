@@ -59,7 +59,7 @@ public class InGamePacketProcessor : UDPProcessor
                             Match.LeaveMatch();
                             break;
                         case InGame_Receive.PlayerJoinedMatch:
-                            ProcessPlayerJoinedMatchPacket();
+                            Match.ProcessPlayerJoinedPacket(_decrypted);
                             break;
                         case InGame_Receive.InactivityWarning:
                             ProcessInactivityWarning();
@@ -236,22 +236,19 @@ public class InGamePacketProcessor : UDPProcessor
     private void ProcessPlayerJoinedMatchPacket()
     {
         byte idInMatch = _decrypted[1];
-        if(idInMatch != MatchParams.IDinMatch)
-        {
-            byte teamID = _decrypted[2];
-            byte[] appearance = new byte[5];
-            int index = 3;
-            Array.Copy(_decrypted, index, appearance, 0, appearance.Length);
-            index += 5;
-            byte level = _decrypted[index];
-            index++;
-            byte characterClass = _decrypted[index];
-            index++;
-            byte nameLength = _decrypted[index];
-            index++;
-            string name = ByteUtils.BytesToUTF8(_decrypted, index, nameLength);
-            MessageData md = new MessageData(name + " has joined the match.", "Server");
-        }
+        byte teamID = _decrypted[2];
+        byte[] appearance = new byte[5];
+        int index = 3;
+        Array.Copy(_decrypted, index, appearance, 0, appearance.Length);
+        index += 5;
+        byte level = _decrypted[index];
+        index++;
+        byte characterClass = _decrypted[index];
+        index++;
+        byte nameLength = _decrypted[index];
+        index++;
+        string name = ByteUtils.BytesToUTF8(_decrypted, index, nameLength);
+        
         
     }
     private void ProcessPlayerLeftMatchPacket()

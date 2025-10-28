@@ -41,6 +41,10 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
+        if (!ComponentRegister.PC.JoinedMatch)
+        {
+            return;
+        }
         bool grounded = isGrounded(out _hitInfo);
         if (_priorPosition != transform.position)
         {
