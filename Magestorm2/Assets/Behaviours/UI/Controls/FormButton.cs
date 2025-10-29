@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public enum ButtonType : byte
 {
@@ -25,20 +26,22 @@ public enum ButtonType : byte
     Misc2 = 19,
     Misc3 = 20
 }
-public class FormButton : MonoBehaviour
+public class FormButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public ButtonType buttonType;
+    private ColorBlock _originalColor, _highlighted;
     private ValidatableForm _associatedForm;
     private Button _button;
-    void Awake()
-    {
-        
-    }
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
         _button = GetComponent<Button>();
         _button.onClick.AddListener(NotifyForm);
+        _originalColor = _button.colors;
+        _highlighted = new ColorBlock();
+        _highlighted.highlightedColor = Color.yellow;
     }
 
     // Update is called once per frame
@@ -58,5 +61,16 @@ public class FormButton : MonoBehaviour
     public void SetForm(ValidatableForm associatedForm)
     {
         _associatedForm = associatedForm;
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //_button.colors = _highlighted;
+        Debug.Log("Enter");
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        //_button.colors = _originalColor;
+        Debug.Log("Exit");
     }
 }

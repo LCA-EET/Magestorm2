@@ -20,7 +20,7 @@ public class Database {
         _psk = psk;
     }
     public static void LoadSpellData(){
-        String sql = "SELECT * FROM SPELLS";
+        String sql = "SELECT * FROM spells";
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();

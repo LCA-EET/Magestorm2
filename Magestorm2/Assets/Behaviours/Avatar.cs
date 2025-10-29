@@ -33,7 +33,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _playerID = id;
         Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
         ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
-        gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
+        if(MatchParams.IDinMatch == id)
+        {
+            gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
+            gameObject.layer = LayerManager.PlayerLayer;
+        }
     }
     public void UpdatePosition(byte[] decrypted)
     {

@@ -133,7 +133,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private bool isGrounded(out RaycastHit hitInfo)
     {
-        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 1.0f, out hitInfo);
+        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 0.05f, out hitInfo);
     }
     private void Accelerate(ref float speed, float maxSpeed, float directionFactor, float acceleration)
     {
