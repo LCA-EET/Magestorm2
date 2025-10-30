@@ -18,7 +18,7 @@ public class MouseLook : MonoBehaviour
         {
             if (ComponentRegister.PlayerMovement.PositionChanged)
             {
-                transform.localPosition = new Vector3(transform.localPosition.x, 1.0f + Mathf.Sin(ComponentRegister.PlayerMovement.DistanceTravelled) * 0.1f, transform.localPosition.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, 1.5f + Mathf.Sin(ComponentRegister.PlayerMovement.DistanceTravelled) * 0.1f, transform.localPosition.z);
             }
 
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;

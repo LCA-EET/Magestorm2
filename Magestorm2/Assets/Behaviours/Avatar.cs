@@ -36,7 +36,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         if(MatchParams.IDinMatch == id)
         {
             gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
-            gameObject.layer = LayerManager.PlayerLayer;
+            SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
         }
     }
     public void UpdatePosition(byte[] decrypted)

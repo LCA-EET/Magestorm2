@@ -77,5 +77,12 @@ public static class SharedFunctions
         }
         return "";
     }
-
+    public static void SetLayerRecursive(GameObject obj, int layer)
+    {
+        obj.layer = layer; // Set the layer for the current object
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursive(child.gameObject, layer); // Recursively set the layer for children
+        }
+    }
 }
