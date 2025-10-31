@@ -71,7 +71,7 @@ public static class Match
             toReturn.AddRange(GetPlayersOfTeam((Team)b));
         }
         toReturn.Sort();
-        Debug.Log("AL Count: " +  toReturn.Count); 
+        //Debug.Log("AL Count: " +  toReturn.Count); 
         return toReturn;
     }
     public static void ProcessObjectStates(byte[] decrypted)

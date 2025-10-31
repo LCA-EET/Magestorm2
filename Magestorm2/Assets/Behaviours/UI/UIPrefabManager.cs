@@ -111,23 +111,21 @@ public class UIPrefabManager : MonoBehaviour
     }
     public GameObject AddToStack(GameObject go)
     {
-        //go.transform.SetParent(ComponentRegister.UIParent);
         go.transform.localPosition = Vector3.zero;
-        //go.transform.localScale = ComponentRegister.UIParent.localScale;
         go.SetActive(true);
         if (_uiStack.Count > 0)
         {
             _uiStack.Peek().SetActive(false);
         }
         _uiStack.Push(go);
-        Debug.Log("Stack size: " + _uiStack.Count);
+        //Debug.Log("Stack size: " + _uiStack.Count);
         return go;
     }
 
     public void PopFromStack()
     {
         GameObject popped = _uiStack.Pop();
-        Debug.Log("Stack size: " + _uiStack.Count);
+        //Debug.Log("Stack size: " + _uiStack.Count);
         if (_uiStack.Count > 0)
         {
             _uiStack.Peek().SetActive(true);

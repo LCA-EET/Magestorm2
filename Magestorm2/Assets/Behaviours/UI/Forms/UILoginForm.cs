@@ -9,6 +9,7 @@ public class UILoginForm : ValidatableForm
     private bool _forceLogin = false;
     private void Awake()
     {
+        _udpPort = Game.FetchServerInfo();
         ComponentRegister.UILoginForm = this;
     }
    
@@ -19,7 +20,7 @@ public class UILoginForm : ValidatableForm
   
         Debug.Log("Time since epoch: " + TimeUtil.CurrentTime());
         AssociateFormToButtons();
-        _udpPort = Game.FetchServerInfo();
+        
         if(_udpPort > 0)
         {
             SharedFunctions.GameServerPort = _udpPort;

@@ -26,7 +26,7 @@ public class AvatarList : MonoBehaviour
                 if(index < 20)
                 {
                     StatusList[index].UpdateStatus(toDisplay[index]);
-                    Debug.Log("Updating PL for " + toDisplay[index].Name);
+                    //Debug.Log("Updating PL for " + toDisplay[index].Name);
                 }
                 else
                 {

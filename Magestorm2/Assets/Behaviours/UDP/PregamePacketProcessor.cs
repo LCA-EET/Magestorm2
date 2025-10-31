@@ -120,10 +120,6 @@ public class PregamePacketProcessor : UDPProcessor
         MatchParams.Init(_decrypted);
         UDPBuilder.TerminateClient(_listeningPort);
         ComponentRegister.UIPrefabManager.ClearStack();
-        for(int i = 0; i < _decrypted.Length; i++)
-        {
-            Debug.Log(i + ": " + _decrypted[i]);
-        }
         Debug.Log("SceneID: " + MatchParams.SceneID);
         SceneManager.LoadScene(MatchParams.SceneID.ToString());
     }

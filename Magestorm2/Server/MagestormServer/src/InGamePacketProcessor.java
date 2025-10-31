@@ -136,16 +136,20 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
     }
     protected boolean HandleJoinMatchPacket(){
-        if(CheckAccountAndCharacter()){
+        int accountID = CheckAccountAndCharacter();
+        if(accountID >= 0){
             byte idInMatch = _decrypted[9];
             byte teamID = _decrypted[10];
             Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.MatchID() + ", team " + teamID);
-            if(_owningMatch.IsPlayerOnTeam(idInMatch, teamID)){
+            if(_owningMatch.IsAwaitingVerification(idInMatch)){
+                _owningMatch.MarkPlayerVerified(idInMatch, teamID, accountID);
                 _owningMatch.SendToAll(Packets.PlayerDataPacket(_owningMatch.GetMatchCharacter(idInMatch).GetINLCTABytes()));
-                _owningMatch.MarkPlayerVerified(idInMatch, teamID);
-                _owningMatch.ProcessObjectStatusPacket(_decrypted[1]);
+                _owningMatch.ProcessObjectStatusPacket(_decrypted[9]);
                 Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);
                 return true;
+            }
+            if(_owningMatch.IsPlayerOnTeam(idInMatch, teamID)){
+
             }
             else{
                 Main.LogMessage("Player " + idInMatch + " NOT verified for match " + _owningMatch.MatchID() + ", team " + teamID);
@@ -153,16 +157,16 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
         return false;
     }
-    private boolean CheckAccountAndCharacter(){
+    private int CheckAccountAndCharacter(){
         int accountID = IsLoggedIn();
         if(accountID > 0){
             if(ByteUtils.ExtractInt(_decrypted, 5) == GameServer.GetClient(accountID).GetActiveCharacter().GetCharacterID()){
                 Main.LogMessage("Account check passed: " + accountID + ", match " + _owningMatch.MatchID());
-                return true;
+                return accountID;
             }
         }
         Main.LogMessage("Account check failure: " + accountID + ", match " + _owningMatch.MatchID());
-        return false;
+        return -1;
     }
     protected boolean IsVerified(){
         return _owningMatch.IsPlayerVerified(_decrypted[1]);

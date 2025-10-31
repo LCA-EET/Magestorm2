@@ -12,6 +12,7 @@ public class Match {
     protected final byte _lastIndex;
     protected ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
     protected final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
+    protected final ConcurrentHashMap<Integer, MatchCharacter> _unverifiedCharacters;
     protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     protected ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
     protected final ConcurrentHashMap<Byte, Integer> _playerScores;
@@ -30,6 +31,7 @@ public class Match {
         _matchType = matchType;
         _sceneID = sceneID;
         _matchCharacters = new ConcurrentHashMap<>();
+        _unverifiedCharacters = new ConcurrentHashMap<>();
         _playerScores = new ConcurrentHashMap<>();
         _castSpells = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
@@ -134,13 +136,14 @@ public class Match {
     }
     public byte JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
-        MatchTeam matchTeam = _matchTeams.get(teamID);
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this);
-        matchTeam.AddPlayer(playerID, toAdd);
-        _matchCharacters.put(playerID, toAdd);
+        _unverifiedCharacters.put(rc.AccountID(), toAdd);
         Main.LogMessage("Join Match MCSIZE: " + _matchCharacters.size());
         Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return playerID;
+    }
+    public boolean IsAwaitingVerification(byte playerID){
+        return _unverifiedCharacters.containsKey(playerID);
     }
     public void UpdatePlayerLocation(byte[] decrypted){
         byte playerID = decrypted[1];
@@ -236,16 +239,19 @@ public class Match {
         }
         return false;
     }
-    public void MarkPlayerVerified(byte playerID, byte teamID){
+    public void MarkPlayerVerified(byte playerID, byte teamID, int accountID){
         Main.LogMessage("MarkPlayerVerified: Fetching player " + playerID);
-        Main.LogMessage("MC Size: " + _matchCharacters.size());
-        for(MatchCharacter mc : _matchCharacters.values()){
-            Main.LogMessage(mc.toString());
+        MatchCharacter toVerify = _unverifiedCharacters.get(accountID);
+        if(toVerify != null){
+            toVerify.MarkVerified();
+            _matchCharacters.put(playerID, toVerify);
+            MatchTeam team = _matchTeams.get(teamID);
+            _unverifiedCharacters.remove(accountID);
+            _verifiedClients.put(playerID, toVerify.GetRemoteClient());
+            team.AddPlayer(playerID, toVerify);
+            team.RegisterVerifiedClient(playerID, toVerify.GetRemoteClient());
         }
-        MatchCharacter toVerify = _matchCharacters.get(playerID);
-        toVerify.MarkVerified();
-        _verifiedClients.put(playerID, toVerify.GetRemoteClient());
-        _matchTeams.get(teamID).RegisterVerifiedClient(playerID, toVerify.GetRemoteClient());
+
     }
     public void SendMatchEndPacket(){
         

@@ -18,7 +18,9 @@ public class PacketSender extends Thread{
                     for(OutgoingPacket packet : outgoing){
                         Iterable<RemoteClient> recipients = packet.Recipients();
                         for(RemoteClient rc : recipients){
-                            _udp.Send(packet.Bytes(), rc);
+                            if(rc != null){
+                                _udp.Send(packet.Bytes(), rc);
+                            }
                         }
                     }
                 }

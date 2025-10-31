@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private float _jumpSpeed = 6.0f;
     private float gravityValue = 9.81f;
     private float _lateralSpeed = 0.0f;
-    private float _maxLateralSpeed = 4.0f;
+    private float _maxLateralSpeed = 3.0f;
     private float _lateralAcceleration = 6.0f;
     private float _forwardSpeed = 0.0f;
     private float _maxForwardSpeed = 2.0f;
@@ -21,13 +21,16 @@ public class PlayerMovement : MonoBehaviour
     private float _verticalAcceleration = 0.0f;
     private float _distanceTravelled = 0.0f;
     private float _distanceTravelledSinceLastStep = 0.0f;
-    
+    private float _groundCheckInterval = 5.0f;
+    private float _groundCheckElapsed = 0.0f;
+
     private bool _positionChanged = false;
     private bool _midJump = false;
+    private bool _grounded = false;
 
     private Vector3 _priorPosition;
     private RaycastHit _hitInfo;
-    
+    private PC _pc;
    // private float _maxVerticalSpeed = 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -39,69 +42,58 @@ public class PlayerMovement : MonoBehaviour
         ComponentRegister.PlayerController = Controller;
        
     }
+    public void SetPC(PC pc)
+    {
+        _pc = pc;
+    }
     void Update()
     {
         if (!ComponentRegister.PC.JoinedMatch)
         {
             return;
         }
-        bool grounded = isGrounded(out _hitInfo);
-        if (_priorPosition != transform.position)
-        {
-            _distanceTravelled += Vector3.Distance(transform.position, _priorPosition);
-            _priorPosition = transform.position;
-            _positionChanged = true;
-            if (grounded)
-            {
-                PlayStepSound();
-            }
-        }
-        else
-        {
-            _positionChanged = false;
-        }
-        if (grounded)
-        {
-            _verticalAcceleration = 0.0f;
-            _verticalSpeed = 0.0f;
-        }
-        float speedModifier = SpeedModifier;
-        MoveAlongAxis(ref _lateralSpeed, _maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, _lateralAcceleration, speedModifier);
         float forwardAcceleration = _forwardAcceleration;
         float maxForwardSpeed = _maxForwardSpeed;
-        if (InputControls.Action)
-        {
-            Activate();
-        }
         if (InputControls.Run)
         {
             forwardAcceleration *= 3;
             maxForwardSpeed *= 3;
         }
-        MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, speedModifier);
-        if (InputControls.Jump && grounded)
+        MoveAlongAxis(ref _lateralSpeed, _maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, _lateralAcceleration, SpeedModifier);
+        MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, _forwardAcceleration, SpeedModifier);
+        if (!_grounded)
+        {
+            Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
+            Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+        }
+        else if(InputControls.Jump && _grounded)
         {
             _verticalSpeed = _verticalSpeed + _jumpSpeed;
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
             _midJump = true;
         }
-        else
+        UpdateGroundedStatus();
+    }
+    private void UpdateGroundedStatus()
+    {
+        bool priorState = _grounded;
+        _grounded = isGrounded(out _hitInfo);
+        if (_grounded)
         {
-            if (!grounded)
-            {
-                Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
-                Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
-            }
-            if (grounded)
-            {
-                _midJump = false;
-            }
+            _midJump = false;
+            _verticalAcceleration = 0.0f;
+            _verticalSpeed = 0.0f;
+        }
+        if (priorState != _grounded)
+        {
+            Debug.Log("Grounded: " + _grounded);
         }
     }
     private void Activate()
     {
         RaycastHit hitInfo;
-        if(SharedFunctions.CastForward(gameObject.transform, LayerManager.InteractableMask, 2.0f, out hitInfo)){
+        if (SharedFunctions.CastForward(gameObject.transform, LayerManager.InteractableMask, 2.0f, out hitInfo))
+        {
             Debug.Log(hitInfo.collider.name);
             hitInfo.collider.gameObject.GetComponent<ActivateableObject>().PlayerChangedStatus();
         }
@@ -133,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private bool isGrounded(out RaycastHit hitInfo)
     {
-        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 0.05f, out hitInfo);
+        return _pc.DownwardCaster.CastForward(LayerManager.SurfaceMask, 0.1f, out hitInfo);
     }
     private void Accelerate(ref float speed, float maxSpeed, float directionFactor, float acceleration)
     {

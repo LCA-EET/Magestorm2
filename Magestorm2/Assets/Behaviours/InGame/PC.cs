@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class PC : MonoBehaviour
 {
     public PlayerMovement PlayerMovement;
+    public RayCaster DownwardCaster;
     private BoxCollider _playerCollider;
 
     public SFXPlayer SFXPlayer;
@@ -31,6 +32,7 @@ public class PC : MonoBehaviour
         else
         {
             ComponentRegister.PC = this;
+            PlayerMovement.SetPC(this);
             _playerCollider = GetComponent<BoxCollider>();
         }
     }

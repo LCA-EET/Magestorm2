@@ -137,7 +137,9 @@ public class ModelBuilder : MonoBehaviour
         GameObject head = components[IndexHead][appearance[IndexModelHead]];
         GameObject face = components[IndexFace][appearance[IndexModelFace]];
         GameObject hair = components[IndexHair][appearance[IndexModelHair]];
-        GameObject body = components[IndexBody][team + (int)(Mathf.Floor(level / 8))];
+        int bodyIndex = (team * 3) + (int)Mathf.Floor(level / 8);
+        //Debug.Log("Team: " + team + ", BI: " + bodyIndex);
+        GameObject body = components[IndexBody][bodyIndex];
         return InstantiateModel(body, head, face, hair, parent);
     }
     public static GameObject InstantiateModel(GameObject bodyPrefab, GameObject headPrefab, GameObject facePrefab, GameObject hairPrefab, GameObject parent)

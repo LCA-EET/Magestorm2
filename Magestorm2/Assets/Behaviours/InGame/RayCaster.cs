@@ -1,0 +1,11 @@
+﻿using UnityEditor.PackageManager;
+using UnityEngine;
+
+public class RayCaster : MonoBehaviour
+{
+    public bool CastForward(int mask, float distance, out RaycastHit hitInfo)
+    {
+        return SharedFunctions.CastForward(transform, mask, distance, out hitInfo);
+    }
+
+}
