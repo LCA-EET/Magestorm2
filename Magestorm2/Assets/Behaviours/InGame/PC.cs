@@ -6,6 +6,7 @@ public class PC : MonoBehaviour
 {
     public PlayerMovement PlayerMovement;
     public RayCaster DownwardCaster;
+    public RayCaster ForwardCaster;
     private BoxCollider _playerCollider;
 
     public SFXPlayer SFXPlayer;
@@ -15,9 +16,6 @@ public class PC : MonoBehaviour
     private float _hmlCheckInterval = 0.1f;
     private float _hmlCheckElapsed = 0.0f;
 
-    private float _surfaceCheck = 0.1f;
-    private float _surfaceCheckElapsed = 0.0f;
-    
     private float _maxHP, _maxMana;
     private float _currentHP, _currentMana;  
     private float _priorHP, _priorMana;
@@ -51,11 +49,9 @@ public class PC : MonoBehaviour
         {
             _hmlCheckElapsed += Time.deltaTime;
         }
-
-        _surfaceCheckElapsed += Time.deltaTime;
-        if(_surfaceCheckElapsed > _surfaceCheck)
+        if (IsAlive && InputControls.Action)
         {
-
+            Activate();
         }
     }
     private void HMLCheck()
@@ -135,6 +131,16 @@ public class PC : MonoBehaviour
         get
         {
             return _currentHP > 0;
+        }
+    }
+
+    private void Activate()
+    {
+        RaycastHit hitInfo;
+        if (ForwardCaster.CastForward(LayerManager.InteractableMask, 1.0f, out hitInfo))
+        {
+            Debug.Log(hitInfo.collider.name);
+            hitInfo.collider.gameObject.GetComponent<ActivateableObject>().StateChangeRequest();
         }
     }
 }

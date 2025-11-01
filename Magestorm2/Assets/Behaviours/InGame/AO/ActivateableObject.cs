@@ -4,8 +4,8 @@ public class ActivateableObject : MonoBehaviour
 {
     public byte ObjectKey;
     public byte NumStates = 2;
-    private byte _currentState = 0;
-    private const float _activationInterval = 3;
+    protected byte _currentState = 0;
+    private const float _activationInterval = 1;
     private float _timeRemainingBeforeCanReactivate = 0;
 
     private void Awake()
@@ -31,25 +31,27 @@ public class ActivateableObject : MonoBehaviour
         Match.RegisterActivateableObject(this);
     }
 
-    public void PlayerChangedStatus()
+    public void StateChangeRequest()
     {
         if(_timeRemainingBeforeCanReactivate <= 0)
         {
-            if(_currentState == (NumStates - 1))
+            byte newState = 0;
+            if (_currentState < NumStates)
             {
-                _currentState = 0;
-            }
-            else
-            {
-                _currentState++;
+                newState = (byte)(_currentState + 1);
             }
             Debug.Log("Object State Change Packet Sent");
             _timeRemainingBeforeCanReactivate = _activationInterval;
-            Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, _currentState));
+            Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, newState));
         }
+    }
+    protected virtual void ApplyStateChange()
+    {
+
     }
     public void StatusChanged(byte newStatus)
     {
         _currentState = newStatus;
+        ApplyStateChange();
     }
 }

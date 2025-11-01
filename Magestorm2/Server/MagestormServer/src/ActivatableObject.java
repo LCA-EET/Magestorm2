@@ -1,7 +1,7 @@
 public class ActivatableObject {
     private final byte _key;
     private byte _status;
-    private float _timeToHold;
+    private final float _timeToHold;
     private float _timeRemaining;
     private final Match _owningMatch;
 
@@ -16,8 +16,13 @@ public class ActivatableObject {
     public void ChangeState(byte newState)
     {
         _status = newState;
-        if(_timeToHold > 0 && newState > 0){
-            _timeRemaining = _timeToHold;
+        if(_timeRemaining > 0){ // the object was triggered prior to its normal expiration
+            _timeRemaining = 0;
+        }
+        else{
+            if(_timeToHold > 0 && newState > 0){
+                _timeRemaining = _timeToHold;
+            }
         }
     }
     public float TimeRemaining(){
@@ -29,7 +34,7 @@ public class ActivatableObject {
     public void Tick(float elapsed){
         _timeRemaining -= elapsed;
         if(_timeRemaining <= 0){
-            ChangeState((byte)0);
+            ChangeState((byte)0); // revert to default state
             _owningMatch.SendToAll(Packets.ObjectStateChangePacket(_key, _status));
         }
     }

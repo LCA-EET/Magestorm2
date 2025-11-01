@@ -1,8 +1,4 @@
-using TMPro;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -21,12 +17,11 @@ public class PlayerMovement : MonoBehaviour
     private float _verticalAcceleration = 0.0f;
     private float _distanceTravelled = 0.0f;
     private float _distanceTravelledSinceLastStep = 0.0f;
-    private float _groundCheckInterval = 5.0f;
-    private float _groundCheckElapsed = 0.0f;
 
     private bool _positionChanged = false;
     private bool _midJump = false;
     private bool _grounded = false;
+    private bool _running = false;
 
     private Vector3 _priorPosition;
     private RaycastHit _hitInfo;
@@ -52,10 +47,12 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+        _running = false;
         float forwardAcceleration = _forwardAcceleration;
         float maxForwardSpeed = _maxForwardSpeed;
         if (InputControls.Run)
         {
+            _running = true;
             forwardAcceleration *= 3;
             maxForwardSpeed *= 3;
         }
@@ -83,46 +80,42 @@ public class PlayerMovement : MonoBehaviour
             _midJump = false;
             _verticalAcceleration = 0.0f;
             _verticalSpeed = 0.0f;
+            _distanceTravelled += Vector3.Distance(transform.position, _priorPosition);
+            _priorPosition = transform.position;
+            PlayStepSound();
         }
         if (priorState != _grounded)
         {
             Debug.Log("Grounded: " + _grounded);
         }
     }
-    private void Activate()
-    {
-        RaycastHit hitInfo;
-        if (SharedFunctions.CastForward(gameObject.transform, LayerManager.InteractableMask, 2.0f, out hitInfo))
-        {
-            Debug.Log(hitInfo.collider.name);
-            hitInfo.collider.gameObject.GetComponent<ActivateableObject>().PlayerChangedStatus();
-        }
-    }
+    
     private void PlayStepSound()
     {
         if(_distanceTravelled - _distanceTravelledSinceLastStep > 2.0f)
         {
             _distanceTravelledSinceLastStep = _distanceTravelled;
-            Debug.Log("Standing On: " + _hitInfo.collider.gameObject.name);
-            Surface standingOn = _hitInfo.collider.gameObject.GetComponent<Surface>();
-            if (standingOn != null)
+            if(_hitInfo.collider != null)
             {
-                if (InputControls.Run)
+                Debug.Log("Standing On: " + _hitInfo.collider.gameObject.name);
+                Surface standingOn = _hitInfo.collider.gameObject.GetComponent<Surface>();
+                if (standingOn != null)
                 {
-                    ComponentRegister.PC.PlaySFX(standingOn.FootstepClip);
-                    Debug.Log("Play Footstep");
-                }
-                else
-                {
-                    Debug.Log("Not Running");
+                    if (_running)
+                    {
+                        ComponentRegister.PC.PlaySFX(standingOn.FootstepClip);
+                        Debug.Log("Play Footstep");
+                    }
+                    else
+                    {
+                        Debug.Log("Not Running");
+                    }
                 }
             }
+            
         }
     }
-    private bool isGrounded()
-    {
-        return SharedFunctions.CastDown(transform, LayerManager.SurfaceMask, 1.0f);
-    }
+
     private bool isGrounded(out RaycastHit hitInfo)
     {
         return _pc.DownwardCaster.CastForward(LayerManager.SurfaceMask, 0.1f, out hitInfo);
