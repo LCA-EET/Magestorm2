@@ -89,13 +89,20 @@ public class Match {
         return _matchTeams.get(teamID);
     }
     
-    public void ChangeObjectState(byte objectID, byte status){
+    public void ChangeObjectState(byte objectID, byte status, byte changedBy){
         if(!_objectStatus.containsKey(objectID)){
             _objectStatus.put(objectID, new ActivatableObject(this, objectID, 5));
             // by default objects will hold their state for 5 seconds. This can be overridden by
             // adding the appropriate entry to the activatables field in the levels table
         }
-        _objectStatus.get(objectID).ChangeState(status);
+        ActivatableObject toChange = _objectStatus.get(objectID);
+        if(toChange.GetStatus() != status){
+            _objectStatus.get(objectID).ChangeState(status);
+            SendToAll(Packets.ObjectStateChangePacket(objectID, status));
+        }
+        else{ // this player is out-of-sync with the server.
+            SendToPlayer(Packets.ObjectStateChangePacket(objectID, status), changedBy);
+        }
     }
 
     public void ProcessObjectStatusPacket(byte requesterID){
@@ -142,8 +149,8 @@ public class Match {
         Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return playerID;
     }
-    public boolean IsAwaitingVerification(byte playerID){
-        return _unverifiedCharacters.containsKey(playerID);
+    public boolean IsAwaitingVerification(int accountID){
+        return _unverifiedCharacters.containsKey(accountID);
     }
     public void UpdatePlayerLocation(byte[] decrypted){
         byte playerID = decrypted[1];

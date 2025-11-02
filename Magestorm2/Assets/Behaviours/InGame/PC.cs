@@ -31,6 +31,7 @@ public class PC : MonoBehaviour
         {
             ComponentRegister.PC = this;
             PlayerMovement.SetPC(this);
+            _currentHP = 1;
             _playerCollider = GetComponent<BoxCollider>();
         }
     }
@@ -137,7 +138,8 @@ public class PC : MonoBehaviour
     private void Activate()
     {
         RaycastHit hitInfo;
-        if (ForwardCaster.CastForward(LayerManager.InteractableMask, 1.0f, out hitInfo))
+        Debug.Log("Casting activation ray.");
+        if (ForwardCaster.CastForward(LayerManager.InteractableMask, 2.0f, out hitInfo))
         {
             Debug.Log(hitInfo.collider.name);
             hitInfo.collider.gameObject.GetComponent<ActivateableObject>().StateChangeRequest();

@@ -78,7 +78,7 @@ public static class Match
     {
         for(int i = 1; i < decrypted.Length; i+=2)
         {
-            ChangeObjectState(decrypted[i], decrypted[i+1]);
+            ChangeObjectState(decrypted[i], decrypted[i+1], true);
         }
     }
     public static void ProcessPlayerJoinedPacket(byte[] decrypted)
@@ -130,11 +130,11 @@ public static class Match
             }
         }
     }
-    public static void ChangeObjectState(byte key, byte state)
+    public static void ChangeObjectState(byte key, byte state, bool force)
     {
         if (_objects.ContainsKey(key))
         {
-            _objects[key].StatusChanged(state);
+            _objects[key].StatusChanged(state, force);
             Debug.Log("Object state change: " + key + ", " + state);
         }
     }

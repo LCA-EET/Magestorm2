@@ -303,7 +303,7 @@ public class InGamePacketProcessor : UDPProcessor
     */
     private void ProcessObjectChangePacket()
     {
-        Match.ChangeObjectState(_decrypted[1], _decrypted[2]);
+        Match.ChangeObjectState(_decrypted[1], _decrypted[2], false);
     }
 }
 
