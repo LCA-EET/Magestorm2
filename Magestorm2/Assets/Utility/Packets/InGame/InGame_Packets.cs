@@ -8,6 +8,14 @@ public static class InGame_Packets
 {
     public static byte[] InactivityResponsePacket() { return OpCodePlusID(InGame_Send.InactivityCheckResponse); }
 
+    public static byte[] FlagCapturedPacket(byte flagCaptured)
+    {
+        byte[] unencrypted = new byte[3];
+        unencrypted[0] = InGame_Send.FlagCaptured;
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = flagCaptured;
+        return unencrypted;
+    }
     public static byte[] FetchPlayerPacket(byte playerID)
     {
         byte[] unencrypted = new byte[3];

@@ -47,7 +47,10 @@ public class Flag : Trigger
             }
             if(IsSafe() && (Team == MatchParams.MatchTeam))
             {
-
+                if(FlagManager.FlagHeldByPlayer != Team.Neutral)
+                {
+                    Game.SendInGameBytes(InGame_Packets.FlagCapturedPacket((byte)FlagManager.FlagHeldByPlayer));
+                }
             }
         }
     }

@@ -434,7 +434,7 @@ PrefabInstance:
     - target: {fileID: 7456529763860407808, guid: 20836dbdd82306d4caddf27b315a9579, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: b410e5760dd23ae4c91fcef9a8dad724, type: 2}
+      objectReference: {fileID: 2100000, guid: 2433fa90d13c60f4b8a3a1ff1695dd0b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -675,7 +675,6 @@ MonoBehaviour:
   ObjectKey: 1
   NumStates: 2
   ActuationAudio: {fileID: 0}
-  ActuationClip: {fileID: 0}
 --- !u!1 &961541735
 GameObject:
   m_ObjectHideFlags: 0

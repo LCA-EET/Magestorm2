@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class FlagManager
 {
-    public static byte FlagHeldByPlayer = 0;
+    public static Team FlagHeldByPlayer = Team.Neutral;
     private static Dictionary<Team, Flag> _flagTable;
     public static void Init()
     {

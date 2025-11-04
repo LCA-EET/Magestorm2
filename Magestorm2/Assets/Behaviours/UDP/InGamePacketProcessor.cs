@@ -113,6 +113,7 @@ public class InGamePacketProcessor : UDPProcessor
         if(takerID == MatchParams.IDinMatch)
         {
             ComponentRegister.MessageRecorder.MessageReceived(new MessageData(Language.BuildString(193, teamName), "Server")); //
+            FlagManager.FlagHeldByPlayer = flagTaken;
         }
         else
         {
@@ -233,24 +234,6 @@ public class InGamePacketProcessor : UDPProcessor
         Game.SendInGameBytes(InGame_Packets.InactivityResponsePacket());
     }
 
-    private void ProcessPlayerJoinedMatchPacket()
-    {
-        byte idInMatch = _decrypted[1];
-        byte teamID = _decrypted[2];
-        byte[] appearance = new byte[5];
-        int index = 3;
-        Array.Copy(_decrypted, index, appearance, 0, appearance.Length);
-        index += 5;
-        byte level = _decrypted[index];
-        index++;
-        byte characterClass = _decrypted[index];
-        index++;
-        byte nameLength = _decrypted[index];
-        index++;
-        string name = ByteUtils.BytesToUTF8(_decrypted, index, nameLength);
-        
-        
-    }
     private void ProcessPlayerLeftMatchPacket()
     {
         byte numDeparted = _decrypted[1];
