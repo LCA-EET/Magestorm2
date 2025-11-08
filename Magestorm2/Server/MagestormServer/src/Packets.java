@@ -94,10 +94,10 @@ public class Packets {
         toEncrypt[3] = playerID;
         toEncrypt[4] = teamID;
         int index = 5;
-        System.arraycopy(scores, 0, toEncrypt, index, 3);
-        index += 3;
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, index, 4);
         index += 4;
+        System.arraycopy(scores, 0, toEncrypt, index, 3);
+        index += 3;
         System.arraycopy(flagBytes, 0, toEncrypt, index, flagBytes.length);
         index += flagBytes.length;
         System.arraycopy(poolBytes, 0, toEncrypt, index, poolBytes.length);
@@ -105,12 +105,13 @@ public class Packets {
     }
 
     public static byte[] FFAEntryPacket(byte sceneID, byte playerID, int port, byte matchType){
-        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 4];
+        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 1 + 4];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
         toEncrypt[1] = matchType;
         toEncrypt[2] = sceneID;
         toEncrypt[3] = playerID;
-        System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 4, 4);
+        toEncrypt[4] = MatchTeam.Neutral;
+        System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 5, 4);
         return Cryptographer.Encrypt(toEncrypt);
     }
 

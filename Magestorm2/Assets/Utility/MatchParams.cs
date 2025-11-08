@@ -46,7 +46,14 @@ public static class MatchParams
     public static void Init(byte[] decrypted)
     {
         _decrypted = decrypted;
-        MatchTypes type = (MatchTypes)decrypted[1];
+        ReturningFromMatch = false;
+        MatchType = decrypted[1];
+        SceneID = decrypted[2];
+        IDinMatch = decrypted[3];
+        MatchTeamID = _decrypted[4];
+        ListeningPort = BitConverter.ToInt32(_decrypted, 5);
+        MatchTeam = (Team)MatchTeamID;
+        MatchTypes type = (MatchTypes)MatchType;
         switch (type)
         {
             case MatchTypes.Deathmatch:
@@ -63,15 +70,6 @@ public static class MatchParams
     public static void InitDM()
     {
         UnityEngine.Debug.Log("InitDM");
-        ReturningFromMatch = false;
-        MatchType = _decrypted[1];
-        SceneID = _decrypted[2];
-        IDinMatch = _decrypted[3];
-        MatchTeamID = _decrypted[4];
-        MatchTeam = (Team)MatchTeamID;
-        
-        
-        ListeningPort = BitConverter.ToInt32(_decrypted, 5);
         _shrineData = new byte[3];
         _shrineData[0] = _decrypted[9];
         _shrineData[1] = _decrypted[10];
@@ -92,6 +90,10 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = true;
         IncludePools = true;
+        byte[] scores = new byte[3];
+        scores[0] = _decrypted[9];
+        scores[1] = _decrypted[10];
+        scores[2] = _decrypted[11];
         FlagManager.Init();
         PoolManager.Init();
     }
@@ -100,12 +102,8 @@ public static class MatchParams
     {
         UnityEngine.Debug.Log("InitFFA");
         ReturningFromMatch = false;
-        MatchType = _decrypted[1];
-        SceneID = _decrypted[2];
-        IDinMatch = _decrypted[3];
         MatchTeamID = 0;
         
-        ListeningPort = BitConverter.ToInt32(_decrypted, 4);
         IncludeShrines = false;
         IncludeFlags = false;
         IncludePools = false;

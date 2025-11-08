@@ -5,21 +5,18 @@ public class Flag : Trigger
     public Team Team;
     private Vector3 _worldLocation;
 
-    private void Awake()
+    private void Start()
     {
         if (!MatchParams.IncludeFlags)
         {
+            Debug.Log("Destroying Flag " + Team);
             Destroy(gameObject);
         }
         else
         {
             _worldLocation = transform.position;
+            FlagManager.Register(this);
         }
-    }
-
-    private void Start()
-    {
-        FlagManager.Register(this);
     }
 
     public void FlagReturned()
