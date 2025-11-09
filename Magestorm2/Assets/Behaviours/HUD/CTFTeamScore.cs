@@ -10,4 +10,8 @@ public class CTFTeamScore : MonoBehaviour
     {
         Score.text = newScore.ToString();
     }
+    public void Refresh()
+    {
+        Score.text = TeamName.text + ": " + FlagManager.GetScore(Team);
+    }
 }

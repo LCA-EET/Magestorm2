@@ -10,15 +10,20 @@ public static class PoolManager
     private static Dictionary<byte, ManaPool> _pools;
     private static Dictionary<byte, InitialPoolData> _initialPoolData;
     private static Level _level;
-    public static void Init()
+    private static byte[] _poolData;
+    public static void Init(byte[] decrypted, int index)
     {
+        int numPools = decrypted[index];
+        index++;
+        _poolData = new byte[numPools * 3];
+        Array.Copy(decrypted, index, _poolData, 0, _poolData.Length);
+        index += _poolData.Length;
         _pools = new Dictionary<byte, ManaPool>();
         _level = LevelData.GetLevel(MatchParams.SceneID);
-        byte[] poolData = MatchParams.GetPoolData();
         _initialPoolData = new Dictionary<byte, InitialPoolData>();
-        for (int i = 0; i < poolData.Length; i += 3)
+        for (int i = 0; i < _poolData.Length; i += 3)
         {
-            _initialPoolData.Add(poolData[i], new InitialPoolData(poolData[i + 1], poolData[i + 2]));
+            _initialPoolData.Add(_poolData[i], new InitialPoolData(_poolData[i + 1], _poolData[i + 2]));
         }
     }
 

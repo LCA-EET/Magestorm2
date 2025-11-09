@@ -8,7 +8,7 @@ public class MatchTeam {
     public static byte Balance = 2;
     public static byte Order = 3;
     public static byte[] TeamCodes = new byte[]{Neutral, Chaos, Balance, Order};
-
+    public static byte[] TeamCodes_NonNeutral = new byte[]{Chaos, Balance, Order};
     private boolean _listChanged;
     private final byte _teamID;
 

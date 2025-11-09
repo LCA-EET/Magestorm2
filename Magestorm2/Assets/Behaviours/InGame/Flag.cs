@@ -19,6 +19,10 @@ public class Flag : Trigger
         }
     }
 
+    public void FlagTaken()
+    {
+        gameObject.SetActive(false);
+    }
     public void FlagReturned()
     {
         gameObject.SetActive(true);

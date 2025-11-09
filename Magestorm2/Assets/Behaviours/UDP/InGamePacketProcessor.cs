@@ -118,6 +118,7 @@ public class InGamePacketProcessor : UDPProcessor
         else
         {
             Avatar flagTaker = null;
+            FlagManager.FlagTaken(flagTaken);
             if (Match.GetAvatar(takerID, ref flagTaker))
             {
                 ComponentRegister.MessageRecorder.MessageReceived(new MessageData(Language.BuildString(192, teamName, flagTaker.Name), "Server")); //
@@ -143,8 +144,9 @@ public class InGamePacketProcessor : UDPProcessor
         byte scoreCapturer = _decrypted[4];
         byte scoreCaptured = _decrypted[5];
 
-        ComponentRegister.CTFScorePanel.ChangeScore(capturingTeam, scoreCapturer);
-        ComponentRegister.CTFScorePanel.ChangeScore(flagCaptured, scoreCaptured);
+        FlagManager.SetScore(capturingTeam, scoreCapturer);
+        FlagManager.SetScore(flagCaptured, scoreCaptured);
+        ComponentRegister.CTFScorePanel.RefreshScores();
         FlagManager.ReturnFlag(flagCaptured);
         MessageData data = new MessageData(Language.BuildString(189, Teams.GetTeamName(flagCaptured), Teams.GetTeamName(capturingTeam)), "Server"); //
         ComponentRegister.MessageRecorder.MessageReceived(data);

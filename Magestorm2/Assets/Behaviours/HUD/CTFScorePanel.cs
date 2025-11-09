@@ -10,6 +10,7 @@ public class CTFScorePanel : MonoBehaviour
     private Dictionary<Team, CTFTeamScore> _teamScores;
     private void Awake()
     {
+        _teamScores = new Dictionary<Team, CTFTeamScore>();
         if (!MatchParams.IncludeFlags)
         {
             Destroy(gameObject);
@@ -22,8 +23,11 @@ public class CTFScorePanel : MonoBehaviour
             _teamScores.Add(Team.Order, OrderEntry);
         }
     }
-    public void ChangeScore(Team team, byte newScore)
+    public void RefreshScores()
     {
-        _teamScores[team].UpdateScore(newScore);
+        foreach (CTFTeamScore score in _teamScores.Values)
+        {
+            score.Refresh();
+        }
     }
 }

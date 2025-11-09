@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public static class MatchParams
 {
@@ -17,8 +12,6 @@ public static class MatchParams
     public static bool ReturningFromMatch;
 
     private static byte[] _decrypted;
-    private static byte[] _poolData;
-    private static byte[] _shrineData;
     private static bool _includePools;
     private static bool _includeShrines;
     private static bool _includeTeams;
@@ -70,18 +63,11 @@ public static class MatchParams
     public static void InitDM()
     {
         UnityEngine.Debug.Log("InitDM");
-        _shrineData = new byte[3];
-        _shrineData[0] = _decrypted[9];
-        _shrineData[1] = _decrypted[10];
-        _shrineData[2] = _decrypted[11];
-        byte numPools = _decrypted[12];
-        _poolData = new byte[numPools * 3];
-        Array.Copy(_decrypted, 13, _poolData, 0, _poolData.Length);
+        ShrineManager.Init(_decrypted, 9);
+        PoolManager.Init(_decrypted, 12);
         IncludeShrines = true;
         IncludeFlags = false;
         IncludePools = true;
-        ShrineManager.Init();
-        PoolManager.Init();
     }
 
     public static void InitCTF()
@@ -90,12 +76,10 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = true;
         IncludePools = true;
-        byte[] scores = new byte[3];
-        scores[0] = _decrypted[9];
-        scores[1] = _decrypted[10];
-        scores[2] = _decrypted[11];
-        FlagManager.Init();
-        PoolManager.Init();
+        byte flagByteLength = _decrypted[12];
+        int index = 13;
+        FlagManager.Init(_decrypted, index);
+        PoolManager.Init(_decrypted, index + flagByteLength);
     }
 
     public static void InitFFA()
@@ -107,21 +91,6 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = false;
         IncludePools = false;
-    }
-
-    public static byte[] GetPoolData()
-    {
-        return _poolData;
-    }
-
-    public static byte[] GetShrineData()
-    {
-        return _shrineData;
-    }
-
-    public static byte GetShrineHealth(byte teamID)
-    {
-        return _shrineData[teamID-1];
     }
 }
 

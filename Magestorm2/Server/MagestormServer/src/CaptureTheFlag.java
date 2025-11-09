@@ -17,7 +17,7 @@ public class CaptureTheFlag extends Match{
         _flags = new ConcurrentHashMap<>();
         _score = new ConcurrentHashMap<>();
         _scores = new byte[3];
-        for(byte teamID : MatchTeam.TeamCodes){
+        for(byte teamID : MatchTeam.TeamCodes_NonNeutral){
             _flags.put(teamID, new Flag(teamID));
             _score.put(teamID, (byte)0);
         }

@@ -70,6 +70,8 @@ public class MatchManager{
                                     sceneID, System.currentTimeMillis(), duration);
                             break;
                         case MatchType.CaptureTheFlag:
+                            newlyCreated = new CaptureTheFlag(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
+                                    sceneID, System.currentTimeMillis(), duration);
                             break;
                     }
                     Main.LogMessage("Match " + matchID + " created by account " + accountID );

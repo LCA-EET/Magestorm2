@@ -23,7 +23,6 @@ public class Shrine : Trigger
     {
         ShrineManager.RegisterShrine(this);
         Indicator.ChangeBias(Team);
-        _health = MatchParams.GetShrineData()[(byte)Team - 1];
     }
     public override void EnterAction()
     {

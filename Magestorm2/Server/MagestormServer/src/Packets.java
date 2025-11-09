@@ -87,7 +87,7 @@ public class Packets {
         byte[] flagBytes = ctf.FlagsStatus();
         byte[] scores = ctf.GetScores();
         byte[] poolBytes = ctf.GetPoolManager().GetPoolBiasData();
-        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 1 + scores.length + 4 + flagBytes.length + poolBytes.length];
+        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 1 + scores.length + 4 + 1 + flagBytes.length + poolBytes.length];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
         toEncrypt[1] = matchType;
         toEncrypt[2] = sceneID;
@@ -98,6 +98,8 @@ public class Packets {
         index += 4;
         System.arraycopy(scores, 0, toEncrypt, index, 3);
         index += 3;
+        toEncrypt[index] = (byte)flagBytes.length;
+        index+=1;
         System.arraycopy(flagBytes, 0, toEncrypt, index, flagBytes.length);
         index += flagBytes.length;
         System.arraycopy(poolBytes, 0, toEncrypt, index, poolBytes.length);
