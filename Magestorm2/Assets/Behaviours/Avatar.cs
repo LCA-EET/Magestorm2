@@ -10,16 +10,34 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private bool _isAlive;
     private bool _updatedNeeded;
     private byte _playerID;
+    private Vector3 _startPostion, _newPosition;
+    private Vector3 _startRotation, _newRotation;
+    private bool _positionChange, _rotationChange;
+    private float _moveElapsed;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-                
+        _moveElapsed = 0.0f;
+        _positionChange = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (_positionChange)
+        {
+            if(SharedFunctions.ProcessLerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform))
+            {
+                _positionChange = false;
+            }
+        }
+        if (_rotationChange)
+        {
+            if (SharedFunctions.ProcessLerp(ref _moveElapsed, Game.TickInterval, _startRotation, _newRotation, transform))
+            {
+                _rotationChange = false;
+            }
+        }
     }
     
 
@@ -40,20 +58,38 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
         }
     }
-    public void UpdatePosition(byte[] decrypted)
+    public void UpdatePosition(byte[] decrypted, bool instant)
     {
         float x = BitConverter.ToSingle(decrypted, 3);
         float y = BitConverter.ToSingle(decrypted, 7);
         float z = BitConverter.ToSingle(decrypted, 11);
-        gameObject.transform.position = new Vector3(x, y, z);
+        if (instant)
+        {
+            gameObject.transform.position = new Vector3(x, y, z);
+        }
+        else
+        {
+            _startPostion = transform.position;
+            _newPosition = new Vector3(x, y, z);
+            _positionChange = true;
+        }
     }
 
-    public void UpdateDirection(byte[] decrypted, int index)
+    public void UpdateDirection(byte[] decrypted, int index, bool instant)
     {
         float x = BitConverter.ToSingle(decrypted, index);
         float y = BitConverter.ToSingle(decrypted, index + 4);
         float z = BitConverter.ToSingle(decrypted, index + 8);
-        gameObject.transform.TransformDirection(new Vector3(x, y, z));
+        if (instant)
+        {
+            transform.eulerAngles = new Vector3(x, y, z);
+        }
+        else
+        {
+            _startRotation = transform.eulerAngles;
+            _newRotation = new Vector3(x, y, z);
+            _rotationChange = true;
+        }
     }
     public bool IsAlive 
     {

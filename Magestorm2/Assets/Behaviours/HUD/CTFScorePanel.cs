@@ -23,6 +23,10 @@ public class CTFScorePanel : MonoBehaviour
             _teamScores.Add(Team.Order, OrderEntry);
         }
     }
+    private void Start()
+    {
+        RefreshScores();
+    }
     public void RefreshScores()
     {
         foreach (CTFTeamScore score in _teamScores.Values)

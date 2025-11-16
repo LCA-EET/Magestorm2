@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using UnityEngine;
 public static class InGame_Packets
 {
     public static byte[] InactivityResponsePacket() { return OpCodePlusID(InGame_Send.InactivityCheckResponse); }
 
+    public static byte[] PlayerMovedPacket(byte controlCode, byte[] data)
+    {
+        byte[] unencrypted = new byte[3 + data.Length];
+        unencrypted[0] = InGame_Send.PlayerMoved;
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = controlCode;
+        data.CopyTo(unencrypted, 3);
+        return unencrypted;
+    }
+    
     public static byte[] FlagCapturedPacket(byte flagCaptured)
     {
         byte[] unencrypted = new byte[3];

@@ -60,7 +60,7 @@ public static class InputControls
                 string stringKey = PlayerAccount.AccountID + "key:" + playerfunction;
                 if (PlayerPrefs.HasKey(stringKey))
                 {
-                    Debug.Log("Loading preference " + stringKey + ", " + (KeyCode)PlayerPrefs.GetInt(stringKey));
+                    //Debug.Log("Loading preference " + stringKey + ", " + (KeyCode)PlayerPrefs.GetInt(stringKey));
                     keysToUpdate.Add(playerfunction, (KeyCode)PlayerPrefs.GetInt(stringKey));
                 }
             }

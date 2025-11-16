@@ -206,8 +206,8 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
-    public static byte[] PlayerLocationBytes(byte[] decrypted){
-        decrypted[0] = InGame_Send.UpdateLocation;
+    public static byte[] PlayerMovedPacket(byte[] decrypted){
+        decrypted[0] = InGame_Send.PlayerMoved;
         return Cryptographer.Encrypt(decrypted);
     }
 

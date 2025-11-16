@@ -50,7 +50,7 @@ public class CaptureTheFlag extends Match{
     public void FlagTaken(byte flagTaken, byte takenBy){
         Flag taken = _flags.get(flagTaken);
         if(!taken.IsHeld()){
-            if(IsCharacterAlive(takenBy)){
+            if(IsCharacterAlive(takenBy) && !IsHoldingFlag(takenBy)){
                 taken.FlagTaken(takenBy);
                 SendToAll(Packets.FlagTakenPacket(flagTaken, takenBy));
             }
@@ -58,6 +58,7 @@ public class CaptureTheFlag extends Match{
     }
 
     private void FlagDropped(Flag droppedFlag, MatchCharacter killedPlayer, byte killerID){
+        Main.LogMessage("FlagDropped: " + killedPlayer.GetIDinMatch() + ", " + killerID);
         if(droppedFlag.IsHeld()){
             AdjustPlayerScore(killedPlayer.GetIDinMatch(), -1);
             droppedFlag.FlagDropped(killedPlayer.GetPosition());
@@ -128,6 +129,25 @@ public class CaptureTheFlag extends Match{
         return false;
     }
 
+    public boolean IsHoldingFlag(byte playerID){
+        for(Flag toCheck : _flags.values()){
+            if(toCheck.HeldBy() == playerID){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void DropCountdown(long msElapsed){
+        for(Flag flag : _flags.values()){
+            if(flag.IsDropped()){
+                if(flag.DropCountdown(msElapsed)){
+                    FlagReturned((byte)0, flag.GetTeamID());
+                }
+            }
+        }
+    }
+
     @Override
     public byte JoinMatch(RemoteClient rc, byte teamID) {
         byte playerID = super.JoinMatch(rc, teamID);
@@ -144,7 +164,16 @@ public class CaptureTheFlag extends Match{
 
     @Override
     public void LeaveMatch(byte id, byte team, boolean send){
+        Main.LogMessage("Player " + id + " is leaving CTF match.");
         SeeIfFlagDropped(id, (byte)0);
         super.LeaveMatch(id, team, send);
     }
+
+    @Override
+    public void Tick(long msElapsed)
+    {
+        DropCountdown(msElapsed);
+        super.Tick(msElapsed);
+    }
+
 }

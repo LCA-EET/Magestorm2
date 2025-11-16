@@ -28,6 +28,10 @@ public class ByteUtils {
         return ByteBuffer.wrap(decrypted).order(_order).getInt(index);
     }
 
+    public static float ExtractFloat(byte[] decrypted, int index){
+        return ByteBuffer.wrap(decrypted).order(_order).getFloat(index);
+    }
+
     public static byte[] IntToByteArray(int value) {
         return _intBuffer.putInt(0, value).array();
     }

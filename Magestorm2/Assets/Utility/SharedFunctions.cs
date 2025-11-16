@@ -85,4 +85,17 @@ public static class SharedFunctions
             SetLayerRecursive(child.gameObject, layer); // Recursively set the layer for children
         }
     }
+
+    public static bool ProcessLerp(ref float elapsed, float lerpPeriod, Vector3 startingPosition, Vector3 endingPosition, Transform mover)
+    {
+        elapsed += Time.deltaTime;
+        float percentComplete = elapsed / lerpPeriod;
+        if (percentComplete > 1.0f)
+        {
+            percentComplete = 1.0f;
+            elapsed = 0.0f;
+        }
+        mover.position = Vector3.Lerp(startingPosition, endingPosition, percentComplete);
+        return percentComplete == 1.0f;
+    }
 }

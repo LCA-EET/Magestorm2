@@ -10,6 +10,7 @@ using UnityEngine.InputSystem.Controls;
 using System.Text;
 public static class Game
 {
+    public const float TickInterval = 0.01f; // 10ms
     public static bool Running;
     private static long _serverTime;
     private static bool _init = false;

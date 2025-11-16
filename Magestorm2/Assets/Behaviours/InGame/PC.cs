@@ -19,6 +19,9 @@ public class PC : MonoBehaviour
     private float _maxHP, _maxMana;
     private float _currentHP, _currentMana;  
     private float _priorHP, _priorMana;
+    private float _prElapsed = 0.0f;
+    private Vector3 _priorPosition, _priorRotation;
+    
 
     private ManaPool _enteredPool;
     public void Awake()
@@ -53,6 +56,38 @@ public class PC : MonoBehaviour
         if (IsAlive && InputControls.Action)
         {
             Activate();
+        }
+        if(_prElapsed >= Game.TickInterval)
+        {
+            ReportMovement();
+        }
+        else
+        {
+            _prElapsed += Time.deltaTime;
+        }
+        
+    }
+    private void ReportMovement()
+    {
+        _prElapsed = 0.0f;
+        if (transform.position != _priorPosition && transform.eulerAngles != _priorRotation)
+        {
+            _priorPosition = transform.position;
+            _priorRotation = transform.eulerAngles;
+            byte[] prData = new byte[28];
+            ByteUtils.FillArray(ref prData, 0, _priorPosition);
+            ByteUtils.FillArray(ref prData, 12, _priorRotation);
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData));
+        }
+        else if (transform.position != _priorPosition)
+        {
+            _priorPosition = transform.position;
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition)));
+        }
+        else if (transform.eulerAngles != _priorRotation)
+        {
+            _priorRotation = transform.eulerAngles;
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation)));
         }
     }
     private void HMLCheck()

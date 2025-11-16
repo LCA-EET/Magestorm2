@@ -33,9 +33,13 @@ public class Flag : Trigger
     {
         return transform.position == _worldLocation;
     }
-
+    public override void ExitAction()
+    {
+        Debug.Log("Flag Exit Action");
+    }
     public override void EnterAction()
     {
+        Debug.Log("Flag Enter Action");
         if (ComponentRegister.PC.IsAlive)
         {
             if (!IsSafe() && (Team == MatchParams.MatchTeam))

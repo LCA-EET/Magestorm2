@@ -34,5 +34,6 @@ public static class InGame_Receive
                         SpellCast = 25,
                         HMLUpdate = 26,
                         FlagTaken = 27,
-                        UpdateLocation = 28;
+                        UpdateLocation = 28,
+                        PlayerMoved = 29;
 }

@@ -83,6 +83,7 @@ public class Match {
             int newScore = _playerScores.get(playerID) + adjustment;
             _playerScores.put(playerID, newScore);
         }
+        Main.LogMessage("Adjusted player " + playerID + " score by " + adjustment);
     }
 
     public MatchTeam GetMatchTeam(byte teamID){
@@ -154,9 +155,11 @@ public class Match {
     }
     public void UpdatePlayerLocation(byte[] decrypted){
         byte playerID = decrypted[1];
+        //Main.LogMessage("Updating player " + playerID + " location.");
         if(_matchCharacters.containsKey(playerID)){
             MatchCharacter toUpdate = _matchCharacters.get(playerID);
             byte controlCode = decrypted[2];
+            //Main.LogMessage("Updating player " + playerID + ". Control code: " + controlCode);
             switch(controlCode){
                 case 0: // position only
                     toUpdate.UpdatePosition(decrypted);
@@ -169,8 +172,9 @@ public class Match {
                     toUpdate.UpdateDirection(decrypted, 15);
                     break;
             }
-            SendToAll(Packets.PlayerLocationBytes(decrypted));
+            SendToAll(Packets.PlayerMovedPacket(decrypted));
         }
+        //Main.LogMessage("Updated player " + playerID + " location.");
     }
     public void LeaveMatch(byte id, byte team, boolean send){
         _matchCharacters.remove(id).PC().MarkRemovedFromMatch();
@@ -264,7 +268,6 @@ public class Match {
         
     }
     public void SendToAll(byte[] encrypted){
-        Main.LogMessage("Sending data to " + _verifiedClients.size() + " clients.");
         _processor.EnqueueForSend(encrypted, _verifiedClients.values());
     }
     public void SendToPlayer(byte[] encrypted, MatchCharacter recipient){
@@ -276,7 +279,6 @@ public class Match {
     }
 
     protected void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
-        Main.LogMessage("Sending data to " + _verifiedClients.size() + " collection.");
         _processor.EnqueueForSend(encrypted, recipients);
     }
     public void Tick(long msElapsed){
@@ -358,6 +360,9 @@ public class Match {
     }
 
     public boolean IsCharacterAlive(byte idInMatch){
+        if(idInMatch == 0){
+            return true;
+        }
         MatchCharacter toCheck = _matchCharacters.get(idInMatch);
         if(toCheck != null){
             return toCheck.IsAlive();

@@ -21,19 +21,10 @@ public class SlidingDoor : ActivateableObject
     {
         if (_actuating)
         {
-            _actuationElapsed += Time.deltaTime;
-            float percentComplete = _actuationElapsed / _actuationTime;
-            if(percentComplete > 1.0f)
-            {
-                percentComplete = 1.0f;
-            }
-            transform.position = Vector3.Lerp(_a, _b, percentComplete);
-            if(percentComplete == 1.0f)
+            if(SharedFunctions.ProcessLerp(ref _actuationElapsed, _actuationTime, _a, _b, transform))
             {
                 _actuating = false;
-                _actuationElapsed = 0.0f;
             }
-            Debug.Log("Actuation Elapsed: " + _actuationElapsed);
         }
     }
 

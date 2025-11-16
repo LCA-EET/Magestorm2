@@ -113,14 +113,14 @@ public static class Match
                 switch (controlCode)
                 {
                     case 0: // position only
-                        _matchPlayers[playerID].UpdatePosition(decrypted);
+                        _matchPlayers[playerID].UpdatePosition(decrypted, false);
                         break;
                     case 1: // direction only
-                        _matchPlayers[playerID].UpdateDirection(decrypted, 3);
+                        _matchPlayers[playerID].UpdateDirection(decrypted, 3, false);
                         break;
                     case 2: // position and direction
-                        _matchPlayers[playerID].UpdatePosition(decrypted);
-                        _matchPlayers[playerID].UpdateDirection(decrypted, 15);
+                        _matchPlayers[playerID].UpdatePosition(decrypted, false);
+                        _matchPlayers[playerID].UpdateDirection(decrypted, 15, false);
                         break;
                 }
             }

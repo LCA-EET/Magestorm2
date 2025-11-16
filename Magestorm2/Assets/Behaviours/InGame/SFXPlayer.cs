@@ -6,7 +6,7 @@ public class SFXPlayer : MonoBehaviour
     public AudioClip SFXButtonPress;
     public AudioClip SFXMessageNotification;
     public AudioClip SFXBias;
-    private AudioSource _audioSource;
+    private AudioSource[] _audioSources;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
@@ -15,7 +15,8 @@ public class SFXPlayer : MonoBehaviour
             Destroy(ComponentRegister.AudioPlayer.gameObject);
         }
         ComponentRegister.AudioPlayer = this;
-        _audioSource = GetComponent<AudioSource>();
+        _audioSources = GetComponents<AudioSource>();
+        
         DontDestroyOnLoad(gameObject);
     }
     void Start()
@@ -31,10 +32,15 @@ public class SFXPlayer : MonoBehaviour
 
     public void PlayClip(AudioClip clip)
     {
-        if (!_audioSource.IsDestroyed())
+        for(int i = 0; i < _audioSources.Length; i++)
         {
-            _audioSource.clip = clip;
-            _audioSource.Play();
+            AudioSource source = _audioSources[i];
+            if (!source.IsDestroyed() && !source.isPlaying)
+            {
+                source.clip = clip;
+                source.Play();
+                break;
+            }
         }
     }
   

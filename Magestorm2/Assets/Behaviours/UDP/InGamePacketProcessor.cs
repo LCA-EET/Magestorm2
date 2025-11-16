@@ -94,7 +94,7 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.FlagTaken:
                             HandleFlagTaken();
                             break;
-                        case InGame_Receive.UpdateLocation:
+                        case InGame_Receive.PlayerMoved:
                             Match.UpdatePlayerLocation(_decrypted);
                             break;
                         case InGame_Receive.PlayerData:
@@ -110,22 +110,22 @@ public class InGamePacketProcessor : UDPProcessor
         Team flagTaken = (Team)_decrypted[1];
         string teamName = Teams.GetTeamName(flagTaken);
         byte takerID = _decrypted[2];
-        if(takerID == MatchParams.IDinMatch)
+        FlagManager.FlagTaken(flagTaken);
+        if (takerID == MatchParams.IDinMatch)
         {
-            ComponentRegister.MessageRecorder.MessageReceived(new MessageData(Language.BuildString(193, teamName), "Server")); //
+            new MessageData(Language.BuildString(193, teamName), "Server"); //
             FlagManager.FlagHeldByPlayer = flagTaken;
         }
         else
         {
             Avatar flagTaker = null;
-            FlagManager.FlagTaken(flagTaken);
             if (Match.GetAvatar(takerID, ref flagTaker))
             {
-                ComponentRegister.MessageRecorder.MessageReceived(new MessageData(Language.BuildString(192, teamName, flagTaker.Name), "Server")); //
+                new MessageData(Language.BuildString(192, teamName, flagTaker.Name), "Server"); //
             }
             else
             {
-                ComponentRegister.MessageRecorder.MessageReceived(new MessageData(Language.BuildString(191, teamName), "Server")); //
+                new MessageData(Language.BuildString(191, teamName), "Server"); //
             }
         }
     }
@@ -133,8 +133,7 @@ public class InGamePacketProcessor : UDPProcessor
     {
         Team flagReturned = (Team)_decrypted[1];
         FlagManager.ReturnFlag(flagReturned);
-        MessageData data = new MessageData(Language.BuildString(190, Teams.GetTeamName(flagReturned)), "Server"); //
-        ComponentRegister.MessageRecorder.MessageReceived(data);
+        new MessageData(Language.BuildString(190, Teams.GetTeamName(flagReturned)), "Server"); //
     }
     private void HandleFlagCapture()
     {
@@ -148,8 +147,7 @@ public class InGamePacketProcessor : UDPProcessor
         FlagManager.SetScore(flagCaptured, scoreCaptured);
         ComponentRegister.CTFScorePanel.RefreshScores();
         FlagManager.ReturnFlag(flagCaptured);
-        MessageData data = new MessageData(Language.BuildString(189, Teams.GetTeamName(flagCaptured), Teams.GetTeamName(capturingTeam)), "Server"); //
-        ComponentRegister.MessageRecorder.MessageReceived(data);
+        new MessageData(Language.BuildString(189, Teams.GetTeamName(flagCaptured), Teams.GetTeamName(capturingTeam)), "Server"); //
     }
     private void HandleFlagDrop()
     {
@@ -162,8 +160,7 @@ public class InGamePacketProcessor : UDPProcessor
         Team flagTeam = (Team)_decrypted[3];
         Vector3 position = ByteUtils.BytesToVector3(_decrypted, 5);
         FlagManager.RepositionFlag(flagTeam, position);
-        MessageData data = new MessageData(Language.BuildString(186, Teams.GetTeamName(flagTeam)), "Server"); //
-        ComponentRegister.MessageRecorder.MessageReceived(data);
+        new MessageData(Language.BuildString(186, Teams.GetTeamName(flagTeam)), "Server"); //
     }
     private void ProcessKilledPlayer()
     {
@@ -199,7 +196,6 @@ public class InGamePacketProcessor : UDPProcessor
             }
             
         }
-        ComponentRegister.MessageRecorder.MessageReceived(data);
     }
     private void ProcessHMLUpdate()
     {

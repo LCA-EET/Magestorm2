@@ -25,7 +25,27 @@ public static class ByteUtils
             BitConverter.ToSingle(decrypted, index + 8));
 
     }
-   
+    public static void FillArray(ref byte[] toFill, int index, Vector3 data)
+    {
+        BitConverter.GetBytes(data.x).CopyTo(toFill, index);
+        BitConverter.GetBytes(data.y).CopyTo(toFill, index + 4);
+        BitConverter.GetBytes(data.z).CopyTo(toFill, index + 8);
+    }
+    public static void FillArray(ref byte[] toFill, int index, Quaternion data)
+    {
+        BitConverter.GetBytes(data.x).CopyTo(toFill, index);
+        BitConverter.GetBytes(data.y).CopyTo(toFill, index + 4);
+        BitConverter.GetBytes(data.z).CopyTo(toFill, index + 8);
+        BitConverter.GetBytes(data.w).CopyTo(toFill, index + 12);
+    }
+    public static byte[] Vector3ToBytes(Vector3 data)
+    {
+        byte[] toReturn = new byte[12];
+        BitConverter.GetBytes(data.x).CopyTo(toReturn, 0);
+        BitConverter.GetBytes(data.y).CopyTo(toReturn, 4);
+        BitConverter.GetBytes(data.z).CopyTo(toReturn, 8);
+        return toReturn;
+    }
 
 }
 

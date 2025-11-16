@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 public class FlagData
 {
     public const byte NOT_HELD = 0;
-    public const byte DROPPED = 1;
+    public const byte DROPPED = 101;
 
     private byte _holder;
     private byte _team;
