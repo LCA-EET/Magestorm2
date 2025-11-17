@@ -10,8 +10,8 @@ public class CaptureTheFlag extends Match{
     private boolean _flagsChanged;
 
 
-    public CaptureTheFlag(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration) {
-        super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.CaptureTheFlag);
+    public CaptureTheFlag(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte[] matchOptions) {
+        super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.CaptureTheFlag, matchOptions);
         _flagsChanged = true;
         _poolManager = new PoolManager(this);
         _flags = new ConcurrentHashMap<>();

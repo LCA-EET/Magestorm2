@@ -46,7 +46,7 @@ public class MatchManager{
         GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), subscribedClients);
         UpdatesNeeded = false;
     }
-    public static void RequestMatchCreation(int accountID, byte sceneID, byte duration, byte matchType){
+    public static void RequestMatchCreation(int accountID, byte sceneID, byte duration, byte matchType, byte[] matchOptions){
         RemoteClient rc = GameServer.GetClient(accountID);
         if(rc != null){
             if(CheckOtherMatchesCreatedByAccount(accountID)){
@@ -63,15 +63,15 @@ public class MatchManager{
                     switch(matchType){
                         case MatchType.DeathMatch:
                             newlyCreated = new DeathMatch(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
-                                    sceneID, System.currentTimeMillis(), duration);
+                                    sceneID, System.currentTimeMillis(), duration, matchOptions);
                             break;
                         case MatchType.FreeForAll:
                             newlyCreated = new FreeForAll(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
-                                    sceneID, System.currentTimeMillis(), duration);
+                                    sceneID, System.currentTimeMillis(), duration, matchOptions);
                             break;
                         case MatchType.CaptureTheFlag:
                             newlyCreated = new CaptureTheFlag(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
-                                    sceneID, System.currentTimeMillis(), duration);
+                                    sceneID, System.currentTimeMillis(), duration, matchOptions);
                             break;
                     }
                     Main.LogMessage("Match " + matchID + " created by account " + accountID );

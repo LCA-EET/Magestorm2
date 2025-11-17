@@ -227,12 +227,12 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] HMLPacket(short health, short mana, byte ley){
-        byte[] toEncrypt = new byte[6];
+    public static byte[] HMLPacket(float health, float mana, byte ley){
+        byte[] toEncrypt = new byte[10];
         toEncrypt[0] = InGame_Send.HMLUpdate;
-        System.arraycopy(ByteUtils.ShortToByteArray(health),0,toEncrypt,1,2);
-        System.arraycopy(ByteUtils.ShortToByteArray(mana),0,toEncrypt,3,2);
-        toEncrypt[5] = ley;
+        System.arraycopy(ByteUtils.FloatToByteArray(health),0,toEncrypt,1,4);
+        System.arraycopy(ByteUtils.FloatToByteArray(mana),0,toEncrypt,5,4);
+        toEncrypt[9] = ley;
         return Cryptographer.Encrypt(toEncrypt);
     }
 
@@ -240,7 +240,7 @@ public class Packets {
         toEncrypt[0] = InGame_Send.SpellCast;
         return Cryptographer.Encrypt(toEncrypt);
     }
-    public static byte[] PlayerDamagedPacket(byte playerID, byte damageSourceID, short newHP){
+    public static byte[] PlayerDamagedPacket(byte playerID, byte damageSourceID, float newHP){
         return null;
     }
 

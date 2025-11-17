@@ -59,6 +59,9 @@ public class PlayerCharacter {
         float toReturn = (_level * (_constitution / 20.0f) * multiplier * 1.579f) + 10;
         return (short)Math.round(toReturn);
     }
+    public short GetMaxSP(){
+        return 0;
+    }
 
     public String GetCharacterName(){
         return _characterName;

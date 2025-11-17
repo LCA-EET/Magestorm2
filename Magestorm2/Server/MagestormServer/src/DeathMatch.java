@@ -4,8 +4,8 @@ public class DeathMatch extends Match{
     private final PoolManager _poolManager;
     private final ConcurrentHashMap<Byte, Shrine> _shrines;
 
-    public DeathMatch(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration) {
-        super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.DeathMatch);
+    public DeathMatch(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte[] matchOptions) {
+        super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.DeathMatch, matchOptions);
         _poolManager = new PoolManager(this);
         _shrines = new ConcurrentHashMap<>();
         for(int i = 1; i < MatchTeam.TeamCodes.length; i++){
@@ -43,6 +43,22 @@ public class DeathMatch extends Match{
                     SendToPlayer(Packets.ShrineFailurePacket(shrineID), adjuster);
                 }
             }
+        }
+    }
+
+    public boolean IsTeamAlive(byte teamID){
+        Shrine toCheck = _shrines.get(teamID);
+        if(toCheck.ShrineHealth() > 0){
+            return true;
+        }
+        else{
+            MatchTeam team = _matchTeams.get(teamID);
+            for(MatchCharacter mc: team.GetPlayers()){
+                if(mc.IsAlive()){
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

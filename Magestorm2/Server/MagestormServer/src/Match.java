@@ -7,8 +7,11 @@ public class Match {
     protected final int _creatorID;
     protected final byte _sceneID;
     protected final long _expirationTime;
+    protected final long _regenTick;
+
     protected final byte[] _creatorName;
     protected final byte[] _matchBytes;
+    protected final MatchOptions _matchOptions;
     protected final byte _lastIndex;
     protected ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
     protected final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
@@ -26,7 +29,9 @@ public class Match {
 
     private int _nextSpellID = 0;
 
-    protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType){
+    protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType, byte[] matchOptions){
+        _matchOptions = new MatchOptions(matchOptions);
+        _regenTick = _matchOptions.IsOptionSet(MatchOptions.FastRegen)?1000:5000;
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
         _sceneID = sceneID;
@@ -64,15 +69,16 @@ public class Match {
         InitTeams();
         InitializeActivatables();
     }
+    public boolean IsOptionEnabled(int optionCode){
+        return _matchOptions.IsOptionSet(optionCode);
+    }
     private void InitializeActivatables(){
         _objectStatus = new ConcurrentHashMap<>();
-        Main.LogMessage("Initializing AO");
         byte[] objectData = GameServer.GetActivatablesData(_sceneID);
         for(int i = 0; i < objectData.length; i+=2){
             byte objectKey = objectData[i];
             _objectStatus.put(objectKey, new ActivatableObject(this,objectKey, objectData[i+1]));
         }
-        Main.LogMessage("AO Initialized");
     }
     protected void AdjustPlayerScore(byte playerID, int adjustment)
     {
@@ -83,7 +89,6 @@ public class Match {
             int newScore = _playerScores.get(playerID) + adjustment;
             _playerScores.put(playerID, newScore);
         }
-        Main.LogMessage("Adjusted player " + playerID + " score by " + adjustment);
     }
 
     public MatchTeam GetMatchTeam(byte teamID){
@@ -144,7 +149,7 @@ public class Match {
     }
     public byte JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
-        MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this);
+        MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this, _regenTick);
         _unverifiedCharacters.put(rc.AccountID(), toAdd);
         Main.LogMessage("Join Match MCSIZE: " + _matchCharacters.size());
         Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
@@ -283,6 +288,18 @@ public class Match {
     }
     public void Tick(long msElapsed){
         CountDownTimedObjects(msElapsed);
+        RegeneratePlayerHP(msElapsed);
+    }
+    private void RegeneratePlayerHP(long msElapsed){
+        for(MatchCharacter mc : _matchCharacters.values()){
+            if(mc.IsAliveButInjured()){
+                mc.RegenerateHP(msElapsed);
+            }
+            if(mc.IsAlive() && !mc.HasFullSP()){
+                mc.RegenerateSP(msElapsed);
+            }
+            mc.UpdateHML();
+        }
     }
     private void CountDownTimedObjects(long msElapsed){
         for(ActivatableObject ao : _objectStatus.values()){
@@ -373,5 +390,9 @@ public class Match {
     protected void PlayerKilled(byte idInMatch, byte damageSource){
         SendToAll(Packets.PlayerKilledPacket(idInMatch, damageSource));
         AdjustPlayerScore(idInMatch, -1);
+    }
+
+    public byte GetMatchType(){
+        return _matchType;
     }
 }

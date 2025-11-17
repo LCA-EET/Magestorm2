@@ -69,7 +69,7 @@ public class PC : MonoBehaviour
     }
     private void ReportMovement()
     {
-        _prElapsed = 0.0f;
+        _prElapsed -= Game.TickInterval;
         if (transform.position != _priorPosition && transform.eulerAngles != _priorRotation)
         {
             _priorPosition = transform.position;
@@ -152,11 +152,11 @@ public class PC : MonoBehaviour
 
     public void HMLUpdate(byte[] decrypted)
     {
-        HMLUpdate(BitConverter.ToInt16(decrypted, 1), BitConverter.ToInt16(decrypted, 3));
+        HMLUpdate(BitConverter.ToSingle(decrypted, 1), BitConverter.ToSingle(decrypted, 5));
         
     }
 
-    public void HMLUpdate(short hp, short mana)
+    public void HMLUpdate(float hp, float mana)
     {
         _currentHP = hp;
         _currentMana = mana;

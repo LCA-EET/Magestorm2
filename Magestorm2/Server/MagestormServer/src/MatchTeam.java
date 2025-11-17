@@ -16,9 +16,11 @@ public class MatchTeam {
     private final ConcurrentHashMap<Byte, MatchCharacter> _teamPlayers;
     private final ConcurrentHashMap<Byte, RemoteClient> _clients;
     private final Match _owningMatch;
+    private int _totalLevel;
 
     public MatchTeam(byte teamID, Match owningMatch)
     {
+        _totalLevel = 0;
         _teamID = teamID;
         _listChanged = true;
         _teamPlayers = new ConcurrentHashMap<>();
@@ -32,11 +34,13 @@ public class MatchTeam {
 
     public void AddPlayer(byte id, MatchCharacter toAdd){
         _teamPlayers.put(id, toAdd);
+        _totalLevel += toAdd.GetLevel();
         _listChanged = true;
     }
 
     public void RemovePlayer(byte idToRemove){
-        _teamPlayers.remove(idToRemove);
+        MatchCharacter mc = _teamPlayers.remove(idToRemove);
+        _totalLevel -= mc.GetLevel();
         _clients.remove(idToRemove);
         _listChanged = true;
     }
@@ -69,7 +73,9 @@ public class MatchTeam {
         toReturn[0] = (byte)players.size();
         return toReturn;
     }
-
+    public int GetTotalLevel(){
+        return _totalLevel;
+    }
     public Collection<RemoteClient> GetRemoteClients(){
         return _clients.values();
     }

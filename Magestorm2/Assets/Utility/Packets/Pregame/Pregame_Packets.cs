@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,15 +85,20 @@ public static class Pregame_Packets
     {
         return OpCodePlusAccountIDBytes(Pregame_Send.DeleteMatch);
     }
-    public static byte[] CreateMatchPacket(byte sceneID, byte duration, byte matchType)
+    public static byte[] CreateMatchPacket(byte sceneID, byte duration, byte matchType, byte[] matchOptions)
     {
         byte[] idBytes = PlayerAccount.AccountIDBytes;
-        byte[] toSend = new byte[1 + 4 + 1 + 1 + 1];
+        byte[] toSend = new byte[1 + 4 + 1 + 1 + 1 + matchOptions.Length];
         toSend[0] = Pregame_Send.CreateMatch;
         idBytes.CopyTo(toSend, 1);
         toSend[5] = sceneID;
         toSend[6] = duration;
         toSend[7] = matchType;
+        for(int i = 0; i < matchOptions.Length; i++)
+        {
+            toSend[8 + i] = matchOptions[i];
+            Debug.Print("Options Byte: " + matchOptions[i]);
+        }
         return toSend;
     }
 

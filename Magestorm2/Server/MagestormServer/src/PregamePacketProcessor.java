@@ -130,7 +130,11 @@ public class PregamePacketProcessor extends UDPProcessor
             byte sceneID = _decrypted[5];
             byte duration = _decrypted[6];
             byte matchType = _decrypted[7];
-            MatchManager.RequestMatchCreation(accountID, sceneID, duration, matchType);
+            byte[] matchOptions = new byte[_decrypted.length - 8];
+            if(matchOptions.length > 0){
+                System.arraycopy(_decrypted, 8, matchOptions, 0, matchOptions.length);
+            }
+            MatchManager.RequestMatchCreation(accountID, sceneID, duration, matchType, matchOptions);
         }
     }
 

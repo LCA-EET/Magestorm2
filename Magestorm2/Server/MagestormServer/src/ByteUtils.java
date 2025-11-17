@@ -3,6 +3,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -67,6 +68,15 @@ public class ByteUtils {
         return BytesToUTF8(nameBytes);
     }
 
-
+    public static ArrayList<Boolean> ByteArrayToBits(byte[] byteArray) {
+        ArrayList<Boolean> bitList = new ArrayList<>();
+        for (byte b : byteArray) {
+            for (int i = 0; i < 8; i++) {
+                boolean bit = (b & (1 << i)) != 0;
+                bitList.add(bit);
+            }
+        }
+        return bitList;
+    }
 
 }

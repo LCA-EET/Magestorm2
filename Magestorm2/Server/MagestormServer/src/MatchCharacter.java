@@ -5,18 +5,34 @@ public class MatchCharacter {
 
     private final byte _teamID;
     private final byte _idInMatch;
+    private final float _hpRegenAmount, _spRegenAmount;
 
     private final byte[] _INLCTA;
+    private final int _idxLevel = 7;
+    private final int _idxClass = 8;
     private boolean _verified;
 
     private long _lastPacketReceived;
+    private long _manaRegenTick;
+    private long _manaRegenElapsed;
+    private long _hpRegenTick;
+    private long _hpRegenElapsed;
+    private long _waitForHPRegen;
+    private long _hpRegenWaitElapsed;
     private final long _inactivityWarningThreshold = 30000;
     private final long _inactivityMaximumThreshold = 61000;
     private final byte[] _position, _direction;
-    private short _currentHP, _currentMana;
+    private float _currentHP, _currentMana, _maxHP, _maxSP;
+    private float _ley;
 
-    public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match){
+    public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match, long hpRegenTick){
         MarkPacketReceived();
+        _ley = 0.0f;
+        _hpRegenElapsed = 0;
+        _hpRegenTick = hpRegenTick;
+        _manaRegenElapsed = 0;
+        _manaRegenTick = 500;
+        _waitForHPRegen = 10000;
         _position = new byte[12];
         _direction = new byte[12];
         _currentHP = 1;
@@ -24,6 +40,10 @@ public class MatchCharacter {
         _verified = false;
         _owningMatch = match;
         _pc = pc;
+        _maxHP = _pc.GetMaxHP();
+        _maxSP = _pc.GetMaxSP();
+        _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
+        _spRegenAmount = (1 + (_pc.GetMaxSP() / 25));
         _pc.SetMatchDetails(idInMatch, match.MatchID(), teamID);
         _teamID = teamID;
         _idInMatch = idInMatch;
@@ -37,6 +57,7 @@ public class MatchCharacter {
     }
 
     public void TakeDamage(short damageAmount, byte damageSource){
+        _hpRegenWaitElapsed = 0;
         _currentHP -= damageAmount;
         if(_currentHP <= 0){
             _owningMatch.PlayerKilled(_idInMatch, damageSource);
@@ -47,13 +68,16 @@ public class MatchCharacter {
         }
     }
 
-    public short GetRemainingMana(){
+    public float GetRemainingMana(){
         return _currentMana;
     }
     public boolean IsAlive(){
         return _currentHP > 0;
     }
-
+    public boolean IsAliveButInjured() {return (_currentHP > 0) && (_currentHP < _maxHP);}
+    public boolean HasFullSP(){
+        return _currentMana == _maxSP;
+    }
     public PlayerCharacter PC(){
         return _pc;
     }
@@ -108,12 +132,42 @@ public class MatchCharacter {
         Main.LogMessage("Inactivity check: " + _lastPacketReceived + ", " + _inactivityMaximumThreshold);
         return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityMaximumThreshold;
     }
-
+    public void RegenerateHP(long msElapsed){
+        if(_hpRegenWaitElapsed >= _waitForHPRegen){
+            if(_hpRegenElapsed >= _hpRegenTick){
+                _hpRegenElapsed -= _hpRegenTick;
+                if(_currentHP + _hpRegenAmount > _maxHP){
+                    _currentHP = _maxHP;
+                }
+                else{
+                    _currentHP += _hpRegenAmount;
+                }
+            }
+            else{
+                _hpRegenElapsed += msElapsed;
+            }
+        }
+        else{
+            _hpRegenWaitElapsed += msElapsed;
+        }
+    }
+    public void RegenerateSP(long msElapsed){
+        _manaRegenElapsed += msElapsed;
+        if(_manaRegenElapsed >= _manaRegenTick){
+            _manaRegenElapsed -= _manaRegenTick;
+            float regenAmount = 1 + (_ley * _spRegenAmount);
+            _currentMana += regenAmount;
+        }
+    }
     public void AdjustMana(int adjustment, boolean notify){
         _currentMana += adjustment;
         if(notify){
-            _owningMatch.SendToPlayer(Packets.HMLPacket(_currentHP, _currentMana, (byte)0), this);
+            UpdateHML();
         }
+    }
+
+    public void UpdateHML(){
+        _owningMatch.SendToPlayer(Packets.HMLPacket(_currentHP, _currentMana, (byte)0), this);
     }
 
     public byte[] GetPosition(){
@@ -130,6 +184,15 @@ public class MatchCharacter {
 
     protected void PlayerDied(MatchCharacter deadPlayer){
 
+    }
+    public float GetCurrentHP(){
+        return _currentHP;
+    }
+    public float GetCurrentMana(){
+        return _currentMana;
+    }
+    public byte GetLevel(){
+        return _INLCTA[_idxLevel];
     }
     @Override
     public String toString(){

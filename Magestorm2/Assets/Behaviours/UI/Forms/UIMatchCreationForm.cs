@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class UIMatchCreationForm : ValidatableForm
 {
+    public MatchOptionSelection MatchOptionSelection;
     public LevelEntry[] LevelEntries;
     public SelectionGroup LevelSelection;
     public BitwiseToggleGroup DurationToggles, MatchTypeToggles;
@@ -47,7 +48,7 @@ public class UIMatchCreationForm : ValidatableForm
             else
             {
                 LevelEntry selected = LevelEntries[selectedIndex];
-                Game.SendPregameBytes(Pregame_Packets.CreateMatchPacket(selected.LevelID, DurationToggles.GetSelectedIndex(), MatchTypeToggles.GetSelectedIndex()));
+                Game.SendPregameBytes(Pregame_Packets.CreateMatchPacket(selected.LevelID, DurationToggles.GetSelectedIndex(), MatchTypeToggles.GetSelectedIndex(), MatchOptionSelection.GenerateValue()));
                 CloseForm();
             }
         }

@@ -15,6 +15,7 @@ public class BitwiseToggleGroup : ToggleGroup
                 return b;
             }
         }
+        
         return 255;
     }
     protected override void Awake()
