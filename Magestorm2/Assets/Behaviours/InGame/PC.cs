@@ -102,8 +102,8 @@ public class PC : MonoBehaviour
         {
             _priorHP = _currentHP;
             _priorMana = _currentMana;
-            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP * 1.0f);
-            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Mana, _currentMana / _maxMana * 1.0f);
+            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP);
+            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Mana, _currentMana / _maxMana);
             updateNeeded = false;
         }
     }
@@ -158,6 +158,7 @@ public class PC : MonoBehaviour
 
     public void HMLUpdate(float hp, float mana)
     {
+        Debug.Log("HMLUpdate: HP: " + hp + ", Mana: " + mana);
         _currentHP = hp;
         _currentMana = mana;
     }

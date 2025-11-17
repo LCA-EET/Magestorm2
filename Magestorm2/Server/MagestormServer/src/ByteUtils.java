@@ -38,7 +38,7 @@ public class ByteUtils {
     }
 
     public static byte[] FloatToByteArray(float value){
-        return  _floatBuffer.putFloat(value).array();
+        return  _floatBuffer.putFloat(0, value).array();
     }
 
     public static byte[] ShortToByteArray(short value){return _shortBuffer.putShort(0, value).array();}

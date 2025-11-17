@@ -31,7 +31,7 @@ public class MatchCharacter {
         _hpRegenElapsed = 0;
         _hpRegenTick = hpRegenTick;
         _manaRegenElapsed = 0;
-        _manaRegenTick = 500;
+        _manaRegenTick = 1000;
         _waitForHPRegen = 10000;
         _position = new byte[12];
         _direction = new byte[12];
@@ -40,8 +40,8 @@ public class MatchCharacter {
         _verified = false;
         _owningMatch = match;
         _pc = pc;
-        _maxHP = _pc.GetMaxHP();
-        _maxSP = _pc.GetMaxSP();
+        _maxHP = 100; // _pc.GetMaxHP();
+        _maxSP = 100; //_pc.GetMaxSP();
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxSP() / 25));
         _pc.SetMatchDetails(idInMatch, match.MatchID(), teamID);
