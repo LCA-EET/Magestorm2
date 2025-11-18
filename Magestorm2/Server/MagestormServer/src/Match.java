@@ -292,12 +292,14 @@ public class Match {
     }
     private void RegeneratePlayerHP(long msElapsed){
         for(MatchCharacter mc : _matchCharacters.values()){
+
             if(mc.IsAliveButInjured()){
                 mc.RegenerateHP(msElapsed);
             }
             if(mc.IsAlive() && !mc.HasFullSP()){
                 mc.RegenerateSP(msElapsed);
             }
+
             mc.UpdateHML();
         }
     }

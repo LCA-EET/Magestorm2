@@ -21,7 +21,7 @@ public class SlidingDoor : ActivateableObject
     {
         if (_actuating)
         {
-            if(SharedFunctions.ProcessLerp(ref _actuationElapsed, _actuationTime, _a, _b, transform))
+            if(SharedFunctions.ProcessVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b, transform))
             {
                 _actuating = false;
             }

@@ -66,4 +66,27 @@ public class PlayerCharacter
     {
         get { return ClassToString((PlayerClass)CharacterClass); }
     }
+    private byte HPMultiplier()
+    {
+        PlayerClass playerClass = (PlayerClass)CharacterClass;
+        switch (playerClass)
+        {
+            case PlayerClass.Cleric:
+                return 6;
+            case PlayerClass.Magician:
+                return 4;
+            default:
+                return 5;
+        }
+    }
+    public byte GetStat(PlayerStats stat)
+    {
+        return _statBytes[(byte)stat];
+    }
+    public float GetMaxHP()
+    {
+        float multiplier = HPMultiplier();
+        float toReturn = (CharacterLevel * (GetStat(PlayerStats.Constitution) / 20.0f) * multiplier * 1.579f) + 10;
+        return Mathf.Round(toReturn);
+    }
 }

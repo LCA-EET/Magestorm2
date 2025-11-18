@@ -54,12 +54,12 @@ public class PlayerCharacter {
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
         CharacterManager.AddToCache(this);
     }
-    public short GetMaxHP(){
+    public float GetMaxHP(){
         short multiplier = _characterClass.HPMultiplier();
         float toReturn = (_level * (_constitution / 20.0f) * multiplier * 1.579f) + 10;
-        return (short)Math.round(toReturn);
+        return Math.round(toReturn);
     }
-    public short GetMaxSP(){
+    public float GetMaxSP(){
         return 0;
     }
 

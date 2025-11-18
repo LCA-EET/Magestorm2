@@ -86,11 +86,23 @@ public static class SharedFunctions
         }
     }
 
-    public static bool ProcessLerp(ref float elapsed, float lerpPeriod, Vector3 startingPosition, Vector3 endingPosition, Transform mover)
+    public static bool ProcessFloatLerp(ref float elapsed, float lerpPeriod, float startValue, float endValue, ref float value)
     {
         elapsed += Time.deltaTime;
         float percentComplete = elapsed / lerpPeriod;
-        if (percentComplete > 1.0f)
+        if(percentComplete >= 1.0f)
+        {
+            percentComplete = 1.0f;
+            elapsed -= lerpPeriod;
+        }
+        value = Mathf.Lerp(startValue, endValue, percentComplete);
+        return percentComplete == 1.0f;
+    }
+    public static bool ProcessVector3Lerp(ref float elapsed, float lerpPeriod, Vector3 startingPosition, Vector3 endingPosition, Transform mover)
+    {
+        elapsed += Time.deltaTime;
+        float percentComplete = elapsed / lerpPeriod;
+        if (percentComplete >= 1.0f)
         {
             percentComplete = 1.0f;
             elapsed = 0.0f;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -14,9 +15,8 @@ public class PlayerStatusPanel : MonoBehaviour
     private Dictionary<PlayerIndicator, Color> _indicatorColors;
     private PlayerCharacter _pc;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
-        _pc = PlayerAccount.SelectedCharacter;
         _indicators = new Dictionary<PlayerIndicator, BarIndicator>();
         _indicators.Add(PlayerIndicator.Health, PlayerIndicators[0]);
         _indicators.Add(PlayerIndicator.Mana, PlayerIndicators[1]);
@@ -32,10 +32,13 @@ public class PlayerStatusPanel : MonoBehaviour
             _indicators[indicator].SetFillColor(_indicatorColors[indicator]);
         }
         ComponentRegister.PlayerStatusPanel = this;
+    }
+    void Start()
+    {
+        _pc = PlayerAccount.SelectedCharacter;
         Teams.Init();
         SetPlayerName(_pc.CharacterName);
         SetLCT(_pc.CharacterLevel, (PlayerClass)_pc.CharacterClass, (Team)MatchParams.MatchTeamID);
-        SetIndicator(PlayerIndicator.Health, 0.9f);
     }
 
     // Update is called once per frame

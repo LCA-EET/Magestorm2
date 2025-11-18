@@ -169,7 +169,6 @@ public class InGamePacketProcessor : UDPProcessor
         MessageData data = null;
         if (killedPlayerID == MatchParams.IDinMatch) // player was killed
         {
-            ComponentRegister.PC.HMLUpdate(0, 0);
             Avatar playerKiller = null;
             if(Match.GetAvatar(killerID, ref playerKiller))
             {

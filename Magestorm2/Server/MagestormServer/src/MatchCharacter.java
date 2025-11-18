@@ -40,7 +40,7 @@ public class MatchCharacter {
         _verified = false;
         _owningMatch = match;
         _pc = pc;
-        _maxHP = 100; // _pc.GetMaxHP();
+        _maxHP = _pc.GetMaxHP();
         _maxSP = 100; //_pc.GetMaxSP();
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxSP() / 25));

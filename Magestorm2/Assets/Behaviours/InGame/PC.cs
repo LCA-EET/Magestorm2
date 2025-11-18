@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PC : MonoBehaviour
 {
@@ -13,11 +14,16 @@ public class PC : MonoBehaviour
     public MusicPlayer MusicPlayer;
     public bool JoinedMatch;
 
-    private float _hmlCheckInterval = 0.1f;
-    private float _hmlCheckElapsed = 0.0f;
+    private bool _hpUpdating;
+    private float _hpUpdateElapsed;
+    private bool _manaUpdating;
+    private float _manaUpdateElapsed;
+
+    private float _hmlPeriod = 0.2f;
 
     private float _maxHP, _maxMana;
     private float _currentHP, _currentMana;  
+   
     private float _priorHP, _priorMana;
     private float _prElapsed = 0.0f;
     private Vector3 _priorPosition, _priorRotation;
@@ -36,22 +42,33 @@ public class PC : MonoBehaviour
             PlayerMovement.SetPC(this);
             _currentHP = 1;
             _playerCollider = GetComponent<BoxCollider>();
+            _hpUpdateElapsed = 0.0f;
+            _manaUpdateElapsed = 0.0f;
         }
     }
     public void Start()
     {
+        _maxHP = PlayerAccount.SelectedCharacter.GetMaxHP();
+        ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP);
+    }
+    private void UpdateIndication(PlayerIndicator toUpdate, ref float elapsed, float prior, float current, float max, ref bool updating)
+    {
+        float value = 0;
+        if (SharedFunctions.ProcessFloatLerp(ref elapsed, _hmlPeriod, prior, current, ref value))
+        {
+            _hpUpdating = false;
+        }
+        ComponentRegister.PlayerStatusPanel.SetIndicator(toUpdate, value / max);
     }
     public void Update()
     {
-        MenuCheck();
-        if (_hmlCheckElapsed >= _hmlCheckInterval)
+        if (_hpUpdating)
         {
-            _hmlCheckElapsed = 0.0f;
-            HMLCheck();
+            UpdateIndication(PlayerIndicator.Health, ref _hpUpdateElapsed, _priorHP, _currentHP, _maxHP, ref _hpUpdating);
         }
-        else
+        if (_manaUpdating)
         {
-            _hmlCheckElapsed += Time.deltaTime;
+            UpdateIndication(PlayerIndicator.Mana, ref _manaUpdateElapsed, _priorMana, _currentMana, _maxMana, ref _manaUpdating);
         }
         if (IsAlive && InputControls.Action)
         {
@@ -65,7 +82,7 @@ public class PC : MonoBehaviour
         {
             _prElapsed += Time.deltaTime;
         }
-        
+        MenuCheck();
     }
     private void ReportMovement()
     {
@@ -90,23 +107,7 @@ public class PC : MonoBehaviour
             Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation)));
         }
     }
-    private void HMLCheck()
-    {
 
-        bool updateNeeded = false;
-        if (_priorHP != _currentHP || _priorMana != _currentMana)
-        {
-            updateNeeded = true;
-        }
-        if (updateNeeded)
-        {
-            _priorHP = _currentHP;
-            _priorMana = _currentMana;
-            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP);
-            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Mana, _currentMana / _maxMana);
-            updateNeeded = false;
-        }
-    }
     private void MenuCheck()
     {
         if (InputControls.InGameMenu && !Game.ControlMode)
@@ -152,15 +153,23 @@ public class PC : MonoBehaviour
 
     public void HMLUpdate(byte[] decrypted)
     {
-        HMLUpdate(BitConverter.ToSingle(decrypted, 1), BitConverter.ToSingle(decrypted, 5));
-        
+        float newHP = BitConverter.ToSingle(decrypted, 1);
+        float newMana = BitConverter.ToSingle(decrypted, 5);
+        HMLUpdate(newHP, ref _currentHP, ref _priorHP, ref _hpUpdating, ref _hpUpdateElapsed);
+        HMLUpdate(newMana, ref _currentMana, ref _priorMana, ref _manaUpdating, ref _manaUpdateElapsed);
     }
-
-    public void HMLUpdate(float hp, float mana)
+    private void HMLUpdate(float newValue, ref float currentValue, ref float priorValue, ref bool updating, ref float elapsed)
     {
-        Debug.Log("HMLUpdate: HP: " + hp + ", Mana: " + mana);
-        _currentHP = hp;
-        _currentMana = mana;
+        if (!updating)
+        {
+            priorValue = currentValue;
+        }
+        currentValue = newValue;
+        updating = currentValue != priorValue;
+        if (updating)
+        {
+            elapsed = 0.0f;
+        }
     }
 
     public bool IsAlive
