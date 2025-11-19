@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UnityEngine.Rendering.DebugUI;
@@ -25,13 +27,18 @@ public class PC : MonoBehaviour
     private float _currentHP, _currentMana;  
    
     private float _priorHP, _priorMana;
-    private float _prElapsed = 0.0f;
+
     private Vector3 _priorPosition, _priorRotation;
-    
+    private List<PeriodicAction> _actionList;
 
     private ManaPool _enteredPool;
+    
     public void Awake()
     {
+        _actionList = new List<PeriodicAction>();
+        PeriodicAction _reportMovement = new PeriodicAction(Game.TickInterval, ReportMovement, _actionList);
+        PeriodicAction _leyCheck = new PeriodicAction(1.0f, LeyCheck, _actionList);
+        
         if (!Game.Running)
         {
             SceneManager.LoadScene("Pregame");
@@ -51,15 +58,8 @@ public class PC : MonoBehaviour
         _maxHP = PlayerAccount.SelectedCharacter.GetMaxHP();
         ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP);
     }
-    private void UpdateIndication(PlayerIndicator toUpdate, ref float elapsed, float prior, float current, float max, ref bool updating)
-    {
-        float value = 0;
-        if (SharedFunctions.ProcessFloatLerp(ref elapsed, _hmlPeriod, prior, current, ref value))
-        {
-            _hpUpdating = false;
-        }
-        ComponentRegister.PlayerStatusPanel.SetIndicator(toUpdate, value / max);
-    }
+
+    
     public void Update()
     {
         if (_hpUpdating)
@@ -74,19 +74,24 @@ public class PC : MonoBehaviour
         {
             Activate();
         }
-        if(_prElapsed >= Game.TickInterval)
-        {
-            ReportMovement();
-        }
-        else
-        {
-            _prElapsed += Time.deltaTime;
-        }
+        PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         MenuCheck();
+    }
+    private void LeyCheck()
+    {
+        Debug.Log("Ley Check");
+    }
+    private void UpdateIndication(PlayerIndicator toUpdate, ref float elapsed, float prior, float current, float max, ref bool updating)
+    {
+        float value = 0;
+        if (SharedFunctions.ProcessFloatLerp(ref elapsed, _hmlPeriod, prior, current, ref value))
+        {
+            _hpUpdating = false;
+        }
+        ComponentRegister.PlayerStatusPanel.SetIndicator(toUpdate, value / max);
     }
     private void ReportMovement()
     {
-        _prElapsed -= Game.TickInterval;
         if (transform.position != _priorPosition && transform.eulerAngles != _priorRotation)
         {
             _priorPosition = transform.position;
