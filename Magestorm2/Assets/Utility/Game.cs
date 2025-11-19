@@ -67,6 +67,7 @@ public static class Game
             LayerManager.Init();
             LevelData.Init();
             Teams.Init();
+            MatchOption.Init();
             ActiveMatches.Init();
             ProfanityChecker.Init();
             _init = true;

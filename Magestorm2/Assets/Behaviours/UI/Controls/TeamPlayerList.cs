@@ -8,6 +8,8 @@ public class TeamPlayerList : MonoBehaviour
     public PlayerEntry[] PlayerEntries;
     public GameObject NoPlayersHeader;
     private Color _initial;
+    private int _startIndex;
+    private int _teamPlayerCount;
     private void Awake()
     {
         
@@ -28,13 +30,28 @@ public class TeamPlayerList : MonoBehaviour
     {
         _teamIcon.color = (TeamID == team) ? Teams.GetTeamColor(TeamID) : _initial;
     }
+    public void DecrementStartIndex()
+    {
+        if(_startIndex > 0)
+        {
+            _startIndex--;
+        }
+    }
+    public void IncrementStartIndex()
+    {
+        if((_startIndex * 10) < _teamPlayerCount)
+        {
+            _startIndex++;
+        }
+    }
     public void FillTeam(RemotePlayerData[] teamPlayers)
     {
-        int i = 0;
-        for (i = 0; i < teamPlayers.Length; i++)
+        int i = _startIndex * 10;
+        _teamPlayerCount = teamPlayers.Length;
+        while (i < teamPlayers.Length)
         {
             RemotePlayerData teamPlayer = teamPlayers[i];
-            if(i < PlayerEntries.Length)
+            if (i < PlayerEntries.Length)
             {
                 PlayerEntries[i].SetText(teamPlayer.Name + " " + teamPlayer.Level + " " + SharedFunctions.ClassAbbreviation(teamPlayer.PlayerClass));
                 PlayerEntries[i].gameObject.SetActive(true);

@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class UIJoinMatch : ValidatableForm
     public TMP_Text MatchIDText;
     public TMP_Text MatchLevelText;
     public TMP_Text MatchTypeText;
+    public TMP_Text MatchOptionsListing;
     private Team _selectedTeam;
     private ListedMatch _match;
 
@@ -32,12 +34,24 @@ public class UIJoinMatch : ValidatableForm
         MatchLevelText.text = Language.BuildString(100,_match.SceneName);       //
         MatchCreatorText.text = Language.BuildString(99, _match.CreatorName);   //
         MatchTypeText.text = Language.BuildString(112, _match.MatchTypeString); //   
+        MatchOptionsListing.text = MatchOption.BuildOptionsString(_match.MatchOptions);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyUp(KeyCode.PageDown))
+        {
+            ChaosPlayerList.DecrementStartIndex();
+            BalancePlayerList.DecrementStartIndex();
+            OrderPlayerList.DecrementStartIndex();
+        }
+        if (Input.GetKeyUp(KeyCode.PageUp))
+        {
+            ChaosPlayerList.IncrementStartIndex();
+            BalancePlayerList.IncrementStartIndex();
+            OrderPlayerList.IncrementStartIndex();
+        }
     }
     private void JoinMatch()
     {

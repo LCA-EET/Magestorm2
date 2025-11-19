@@ -31,6 +31,7 @@ public class Match {
 
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType, byte[] matchOptions){
         _matchOptions = new MatchOptions(matchOptions);
+        byte matchOptionsLength = (byte)matchOptions.length;
         _regenTick = _matchOptions.IsOptionSet(MatchOptions.FastRegen)?1000:5000;
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
@@ -47,7 +48,7 @@ public class Match {
         _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
         Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte nameBytesLength = (byte)_creatorName.length;
-        _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + nameBytesLength + 1];
+        _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + 1 + matchOptions.length + nameBytesLength + 1];
         _lastIndex = (byte)(_matchBytes.length-1);
         int index = 0;
         _matchBytes[index] = matchID;
@@ -64,6 +65,10 @@ public class Match {
         index++;
         _matchBytes[index] = matchType;
         index++;
+        _matchBytes[index] = matchOptionsLength;
+        index++;
+        System.arraycopy(matchOptions, 0, _matchBytes, index, matchOptionsLength);
+        index+= matchOptionsLength;
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();

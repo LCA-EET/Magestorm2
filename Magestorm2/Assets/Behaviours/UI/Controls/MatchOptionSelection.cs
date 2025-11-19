@@ -17,4 +17,6 @@ public class MatchOptionSelection : MonoBehaviour
         ba.CopyTo(toReturn, 0);
         return toReturn;
     }
+
+    
 }
