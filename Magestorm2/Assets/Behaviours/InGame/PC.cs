@@ -10,6 +10,8 @@ public class PC : MonoBehaviour
     public PlayerMovement PlayerMovement;
     public RayCaster DownwardCaster;
     public RayCaster ForwardCaster;
+    private float _positionLimit = 0.067f;
+    private float _rotationLimit = 5f;
     private BoxCollider _playerCollider;
     private Camera _camera;
     public SFXPlayer SFXPlayer;
@@ -93,27 +95,31 @@ public class PC : MonoBehaviour
     }
     private void ReportMovement()
     {
-        if (transform.position != _priorPosition && transform.eulerAngles != _priorRotation)
+        if (MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit) && MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
         {
-            _priorPosition = transform.position;
-            _priorRotation = transform.eulerAngles;
             byte[] prData = new byte[28];
             ByteUtils.FillArray(ref prData, 0, _priorPosition);
             ByteUtils.FillArray(ref prData, 12, _priorRotation);
             Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData));
         }
-        else if (transform.position != _priorPosition)
+        else if (MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit))
         {
-            _priorPosition = transform.position;
             Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition)));
         }
-        else if (transform.eulerAngles != _priorRotation)
+        else if (MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
         {
-            _priorRotation = transform.eulerAngles;
             Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation)));
         }
     }
-
+    private bool MinimumReportingExceedance(Vector3 current, ref Vector3 prior, float limit)
+    {
+        if (Vector3.Distance(current, prior) > limit)
+        {
+            prior = current;
+            return true;
+        }
+        return false;
+    }
     private void MenuCheck()
     {
         if (InputControls.InGameMenu && !Game.ControlMode)
@@ -189,7 +195,6 @@ public class PC : MonoBehaviour
     private void Activate()
     {
         RaycastHit hitInfo;
-        Debug.Log("Casting activation ray.");
         if (RayCaster.CameraCastForward(LayerManager.InteractableMask, 2.0f, out hitInfo))
         {
             Debug.Log(hitInfo.collider.name);

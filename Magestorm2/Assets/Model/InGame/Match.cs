@@ -110,7 +110,7 @@ public static class Match
             if (_matchPlayers.ContainsKey(playerID))
             {
                 Avatar toUpdate = _matchPlayers[playerID];
-                Debug.Log("Updating player location.");
+                
                 switch (controlCode)
                 {
                     case 0: // position only

@@ -24,6 +24,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     // Update is called once per frame
     void Update()
     {
+        
         if (_positionChange)
         {
             if(SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform))
@@ -38,6 +39,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
                 _rotationChange = false;
             }
         }
+        
     }
     
 
