@@ -100,13 +100,14 @@ public static class InGame_Packets
         unencrypted[1] = MatchParams.IDinMatch;
         return unencrypted;
     }
-    public static byte[] ChangedObjectStatePacket(byte key, byte state)
+    public static byte[] ChangedObjectStatePacket(byte key, byte state, byte selfReset)
     {
-        byte[] unencrypted = new byte[4];
+        byte[] unencrypted = new byte[5];
         unencrypted[0] = InGame_Send.ChangedObjectState;
         unencrypted[1] = MatchParams.IDinMatch;
         unencrypted[2] = key;
         unencrypted[3] = state;
+        unencrypted[4] = selfReset;
         return unencrypted;
     }
     public static byte[] MatchJoinedPacket()

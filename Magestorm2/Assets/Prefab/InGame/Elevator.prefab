@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 68999983987403237}
   - component: {fileID: 2820507264879564807}
-  - component: {fileID: 4668609914869182086}
   m_Layer: 6
   m_Name: Elevator
   m_TagString: Untagged
@@ -133,24 +132,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4668609914869182086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1279936647336832022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2671c1f09694c74b8c996ef5cf87e6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  ObjectKey: 0
-  NumStates: 2
-  ActuationAudio: {fileID: 2820507264879564807}
-  EndPosition: {fileID: 9112137203578949908}
-  Platform: {fileID: 6833729979763207842}
-  SelfResetInterval: 5
 --- !u!1 &4377150940933432625
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,6 +144,7 @@ GameObject:
   - component: {fileID: 505537479002065236}
   - component: {fileID: 9200520838713344830}
   - component: {fileID: 8325158256330021471}
+  - component: {fileID: 4303815936000476436}
   m_Layer: 7
   m_Name: Controller
   m_TagString: Untagged
@@ -262,6 +244,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4303815936000476436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377150940933432625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11bf3664b0aceb143b8fccbb4dca4425, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TranslatingAO
+  ObjectKey: 0
+  NumStates: 2
+  ActivationAudio: {fileID: 2820507264879564807}
+  ReactivationInterval: 3
+  SelfResetInterval: 5
+  ActuatingObject: {fileID: 8549903054834510708}
+  ActuationSpeed: 1
+  EndPosition: {fileID: 6833729979763207842}
 --- !u!1 &6833729979763207842
 GameObject:
   m_ObjectHideFlags: 0

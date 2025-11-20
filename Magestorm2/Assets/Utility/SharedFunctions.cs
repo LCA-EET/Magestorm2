@@ -108,6 +108,10 @@ public static class SharedFunctions
             elapsed = 0.0f;
         }
         mover.position = Vector3.Lerp(startingPosition, endingPosition, percentComplete);
-        return percentComplete == 1.0f;
+        if(percentComplete == 1.0f)
+        {
+            return true;
+        }
+        return false;
     }
 }

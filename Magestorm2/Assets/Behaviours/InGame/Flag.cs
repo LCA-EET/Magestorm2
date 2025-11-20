@@ -9,7 +9,7 @@ public class Flag : Trigger
     {
         if (!MatchParams.IncludeFlags)
         {
-            Debug.Log("Destroying Flag " + Team);
+            //Debug.Log("Destroying Flag " + Team);
             Destroy(gameObject);
         }
         else

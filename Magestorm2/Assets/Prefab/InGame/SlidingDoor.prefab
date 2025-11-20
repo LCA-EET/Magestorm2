@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 8771970927496971370}
   - component: {fileID: 1046276402560650296}
   - component: {fileID: 2652473089087069023}
-  - component: {fileID: 4396891145588219687}
   - component: {fileID: 6852556404381911201}
+  - component: {fileID: 2794464813814121623}
   m_Layer: 7
   m_Name: SlidingDoor
   m_TagString: Untagged
@@ -114,23 +114,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4396891145588219687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4881829896708155552}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0670a5fe5fb9f5244b1374b9e292a6fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlidingDoor
-  ObjectKey: 0
-  NumStates: 2
-  ActuationAudio: {fileID: 6852556404381911201}
-  ActuationClip: {fileID: 0}
-  EndPosition: {fileID: 6067563931420970297}
 --- !u!82 &6852556404381911201
 AudioSource:
   m_ObjectHideFlags: 0
@@ -228,6 +211,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2794464813814121623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4881829896708155552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11bf3664b0aceb143b8fccbb4dca4425, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TranslatingAO
+  ObjectKey: 0
+  NumStates: 2
+  ActivationAudio: {fileID: 6852556404381911201}
+  ReactivationInterval: 2
+  SelfResetInterval: 5
+  ActuatingObject: {fileID: 4881829896708155552}
+  ActuationSpeed: 2
+  EndPosition: {fileID: 6067563931420970297}
 --- !u!1 &6067563931420970297
 GameObject:
   m_ObjectHideFlags: 0

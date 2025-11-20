@@ -131,7 +131,8 @@ public class InGamePacketProcessor extends UDPProcessor{
         if(IsVerified()) {
             byte objectID = _decrypted[2];
             byte state = _decrypted[3];
-            _owningMatch.ChangeObjectState(objectID, state, _decrypted[1]);
+            byte selfReset = _decrypted[4];
+            _owningMatch.ChangeObjectState(objectID, state, _decrypted[1], selfReset);
         }
     }
     protected boolean HandleJoinMatchPacket(){

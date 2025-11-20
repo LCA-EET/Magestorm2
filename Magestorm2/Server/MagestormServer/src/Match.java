@@ -100,20 +100,27 @@ public class Match {
         return _matchTeams.get(teamID);
     }
     
-    public void ChangeObjectState(byte objectID, byte status, byte changedBy){
-        if(!_objectStatus.containsKey(objectID)){
-            _objectStatus.put(objectID, new ActivatableObject(this, objectID, 5));
-            // by default objects will hold their state for 5 seconds. This can be overridden by
-            // adding the appropriate entry to the activatables field in the levels table
-        }
-        ActivatableObject toChange = _objectStatus.get(objectID);
-        if(toChange.GetStatus() != status){
-            _objectStatus.get(objectID).ChangeState(status);
+    public void ChangeObjectState(byte objectID, byte status, byte changedBy, byte selfReset){
+        if(selfReset > 0){
+            // this is a self-resetting object. There is no need for the server to send a state reset, so just forward the packet.
             SendToAll(Packets.ObjectStateChangePacket(objectID, status));
         }
-        else{ // this player is out-of-sync with the server.
-            SendToPlayer(Packets.ObjectStateChangePacket(objectID, status), changedBy);
+        else{
+            if(!_objectStatus.containsKey(objectID)){
+                _objectStatus.put(objectID, new ActivatableObject(this, objectID, 5));
+                // by default objects will hold their state for 5 seconds. This can be overridden by
+                // adding the appropriate entry to the activatables field in the levels table
+            }
+            ActivatableObject toChange = _objectStatus.get(objectID);
+            if(toChange.GetStatus() != status){
+                _objectStatus.get(objectID).ChangeState(status);
+                SendToAll(Packets.ObjectStateChangePacket(objectID, status));
+            }
+            else{ // this player is out-of-sync with the server.
+                SendToPlayer(Packets.ObjectStateChangePacket(objectID, status), changedBy);
+            }
         }
+
     }
 
     public void ProcessObjectStatusPacket(byte requesterID){
