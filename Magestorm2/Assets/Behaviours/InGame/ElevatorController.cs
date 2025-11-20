@@ -15,7 +15,7 @@ public class ElevatorController : ActivateableObject
     void Start()
     {
         _resetCountdown= new PeriodicAction(SelfResetInterval, ResetPosition, null);
-        _defaultPosition = transform.position;
+        _defaultPosition = Platform.transform.position;
         _endPosition = EndPosition.position;
         RegisterObject();
     }
@@ -46,20 +46,13 @@ public class ElevatorController : ActivateableObject
     }
     protected override void ApplyStateChange(bool force)
     {
-        if (!force)
+        _countDown = false;
+        _actuating = true;
+        _a = _currentState == 0 ? _endPosition : _defaultPosition;
+        _b = _currentState == 0 ? _defaultPosition : _endPosition;
+        if (ActuationAudio.clip != null)
         {
-            _countDown = false;
-            _actuating = true;
-            _a = _currentState == 0 ? _endPosition : _defaultPosition;
-            _b = _currentState == 0 ? _defaultPosition : _endPosition;
-            if (ActuationAudio.clip != null)
-            {
-                ActuationAudio.Play();
-            }
-        }
-        else
-        {
-            transform.position = _currentState == 0 ? _defaultPosition : _endPosition;
+            ActuationAudio.Play();
         }
     }
 }

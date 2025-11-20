@@ -11,7 +11,7 @@ public class PC : MonoBehaviour
     public RayCaster DownwardCaster;
     public RayCaster ForwardCaster;
     private BoxCollider _playerCollider;
-
+    private Camera _camera;
     public SFXPlayer SFXPlayer;
     public MusicPlayer MusicPlayer;
     public bool JoinedMatch;
@@ -56,6 +56,7 @@ public class PC : MonoBehaviour
     public void Start()
     {
         _maxHP = PlayerAccount.SelectedCharacter.GetMaxHP();
+        _camera = Camera.main;
         ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP);
     }
 
@@ -189,7 +190,7 @@ public class PC : MonoBehaviour
     {
         RaycastHit hitInfo;
         Debug.Log("Casting activation ray.");
-        if (ForwardCaster.CastForward(LayerManager.InteractableMask, 2.0f, out hitInfo))
+        if (RayCaster.CameraCastForward(LayerManager.InteractableMask, 2.0f, out hitInfo))
         {
             Debug.Log(hitInfo.collider.name);
             hitInfo.collider.gameObject.GetComponent<ActivateableObject>().StateChangeRequest();

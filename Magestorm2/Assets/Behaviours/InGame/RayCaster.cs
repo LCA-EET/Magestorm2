@@ -8,4 +8,8 @@ public class RayCaster : MonoBehaviour
         return SharedFunctions.CastForward(transform, mask, distance, out hitInfo);
     }
 
+    public static bool CameraCastForward(int mask, float distance, out RaycastHit hitInfo)
+    {
+        return SharedFunctions.CastForward(Camera.main.transform, mask, distance, out hitInfo);
+    }
 }
