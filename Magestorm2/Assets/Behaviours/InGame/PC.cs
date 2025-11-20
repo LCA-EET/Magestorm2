@@ -36,8 +36,8 @@ public class PC : MonoBehaviour
     public void Awake()
     {
         _actionList = new List<PeriodicAction>();
-        PeriodicAction _reportMovement = new PeriodicAction(Game.TickInterval, ReportMovement, _actionList);
-        PeriodicAction _leyCheck = new PeriodicAction(1.0f, LeyCheck, _actionList);
+        new PeriodicAction(Game.TickInterval, ReportMovement, _actionList);
+        new PeriodicAction(1.0f, LeyCheck, _actionList);
         
         if (!Game.Running)
         {

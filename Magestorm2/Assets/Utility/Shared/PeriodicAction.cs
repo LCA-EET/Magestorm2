@@ -18,7 +18,10 @@ public class PeriodicAction
     {
         _interval = interval;
         _action = toPerform;
-        owner.Add(this);
+        if (owner != null)
+        {
+            owner.Add(this);
+        }
     }
 
     public void ProcessAction(float deltaTime)

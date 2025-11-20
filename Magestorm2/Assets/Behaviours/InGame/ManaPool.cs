@@ -18,23 +18,24 @@ public class ManaPool : Trigger
     }
     public void Start()
     {
+        InitTrigger();
+        new PeriodicAction(5.0f, BiasPool, _actionList);
         _poolPower = PoolManager.RegisterPool(this);
         Debug.Log("Pool ID: " + PoolID + ", Power: " + _poolPower);
+    }
+    private void BiasPool()
+    {
+        if ((MatchParams.MatchTeamID != (byte)_biasedToward) || (_biasAmount < 100))
+        {
+            Game.SendInGameBytes(InGame_Packets.BiasPoolPacket(PoolID));
+            Debug.Log("Bias packet sent.");
+        }
     }
     public void Update()
     {
         if (_playerInPool)
         {
-            _elapsed += Time.deltaTime;
-            if (_elapsed > _interval)
-            {
-                _elapsed = 0.0f;
-                if((MatchParams.MatchTeamID != (byte)_biasedToward) || (_biasAmount < 100))
-                {
-                    Game.SendInGameBytes(InGame_Packets.BiasPoolPacket(PoolID));
-                    Debug.Log("Bias packet sent.");
-                }
-            }
+            PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         }
     }
     public void SetBiasAmount(byte amount, Team team)

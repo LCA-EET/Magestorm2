@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Shrine : Trigger
 {
@@ -21,6 +16,8 @@ public class Shrine : Trigger
     }
     public void Start()
     {
+        InitTrigger();
+        new PeriodicAction(5.0f, BiasShrine, _actionList);
         ShrineManager.RegisterShrine(this);
         Indicator.ChangeBias(Team);
     }
@@ -98,20 +95,19 @@ public class Shrine : Trigger
     {
         return _health;
     }
+    private void BiasShrine()
+    {
+        if ((MatchParams.MatchTeamID == (byte)Team && _health < 100)
+                    || (MatchParams.MatchTeamID != (byte)Team && _health > 0))
+        {
+            Game.SendInGameBytes(InGame_Packets.AdjustShrinePacket((byte)Team));
+        }
+    }
     public void Update()
     {
         if (_playerInShrine)
         {
-            _elapsed += Time.deltaTime;
-            if (_elapsed > _interval)
-            {
-                _elapsed = 0.0f;
-                if ((MatchParams.MatchTeamID == (byte)Team && _health < 100)
-                    || (MatchParams.MatchTeamID != (byte)Team && _health > 0))
-                {
-                    Game.SendInGameBytes(InGame_Packets.AdjustShrinePacket((byte)Team));
-                }
-            }
+            PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         }
     }
 }

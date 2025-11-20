@@ -7,9 +7,12 @@ using UnityEngine;
 
 public class Trigger : MonoBehaviour
 {
-    protected float _elapsed = 0.0f;
-    protected float _interval = 5.0f;
+    protected List<PeriodicAction> _actionList;
 
+    protected virtual void InitTrigger()
+    {
+        _actionList = new List<PeriodicAction>();
+    }
     public virtual void EnterAction(){
        
     }

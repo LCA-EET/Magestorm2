@@ -4,6 +4,7 @@ public class ActivateableObject : MonoBehaviour
 {
     public byte ObjectKey;
     public byte NumStates = 2;
+    
     public AudioSource ActuationAudio;
     protected byte _currentState = 0;
     protected bool _actuating = false;
