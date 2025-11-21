@@ -1,15 +1,19 @@
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputField : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private TMP_InputField _tmpTextMessage;
+    public GameObject Background;
     public TMP_Text placeHolder;
     public static Team ChatTarget;
     void Start()
     {
+        //Background.SetActive(false);
+        Colors.TextBackground = Background.GetComponent<Image>().color;
         ChatTarget = Team.Neutral;
         _tmpTextMessage = GetComponent<TMP_InputField>();
         Language.Init();
@@ -22,6 +26,7 @@ public class InputField : MonoBehaviour
         if (InputControls.ChatMode)
         {
             Game.ChatMode = true;
+            //Background.SetActive(true);
             _tmpTextMessage.ActivateInputField();
             placeHolder.text = Language.BuildString(Language.GetBaseString(2), InputControls.KeyToString(InputControl.SendMessage), InputControls.KeyToString(InputControl.CancelChat));    //
         }
@@ -45,10 +50,11 @@ public class InputField : MonoBehaviour
             {
                 ComponentRegister.Notifier.DisplayNotification(Language.GetBaseString(30)); //
             }
-            
+            //Background.SetActive(false);
         }    
         if (InputControls.CancelChat)
-        {
+        { 
+            //Background.SetActive(false);
             CancelChat();
         }
     }

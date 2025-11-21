@@ -1,37 +1,34 @@
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class MessageDisplay : MonoBehaviour
 {
-    private TMP_Text _tmpText;
     private MessageData _messageData;
-    private void Awake()
-    {
-        _tmpText = GetComponent<TMP_Text>();
-    }
+    private Image _image;
+    private Color _imageColor;
+    public TMP_Text TextObject;
+    public GameObject Background;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        
+        _image = Background.GetComponent<Image>();
+        _imageColor = new Color(Colors.TextBackground.r, Colors.TextBackground.g, Colors.TextBackground.b, Colors.TextBackground.a);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SetMessage(MessageData messageData)
     {
         _messageData = messageData;
-        _tmpText.text = _messageData.Message;
-        _tmpText.color = _messageData.MessageColor;
+        TextObject.text = _messageData.Message;
+        TextObject.color = _messageData.MessageColor;
+        _imageColor.a = 0.5f;
+        _image.color = _imageColor;
     }
     public void ChangeOpacity(float opacity)
     {
-        Color toAdjust = _tmpText.color;
+        Color toAdjust = TextObject.color;
         toAdjust.a = opacity;
-        _tmpText.color = toAdjust;
+        TextObject.color = toAdjust;
+
+        _imageColor.a = opacity * 0.5f;
+        _image.color = _imageColor;
     }
 }

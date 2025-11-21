@@ -32,6 +32,7 @@ public static class Match
     }
     public static void RegisterActivateableObject(ActivateableObject obj)
     {
+        Debug.Log("AO " + obj.ObjectKey + " registered.");
         _objects.Add(obj.ObjectKey, obj);
     }
     public static bool GetAvatar(byte id, ref Avatar avatar)

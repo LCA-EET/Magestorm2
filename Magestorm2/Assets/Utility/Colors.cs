@@ -3,6 +3,7 @@ using UnityEngine;
 
 public static class Colors
 {
+    public static Color TextBackground;
     public static Color Neutral, Order, Balance, Chaos;
     public static Color TeamSelected, TeamUnselected;
     public static Color EntrySelected, EntryUnselected, CardUnselected;
