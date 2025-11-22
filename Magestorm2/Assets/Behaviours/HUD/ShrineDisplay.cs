@@ -33,7 +33,7 @@ public class ShrineDisplay : MonoBehaviour
         Color toApply = Teams.GetTeamColor(shrine.GetTeam());
         Health.color = toApply;
         Title.color = toApply;
-        Health.text = Language.GetBaseString(181) + " " + shrine.GetHealth().ToString(); //
+        Health.text = Language.GetBaseString(181) + " " + shrine.BiasAmount.ToString(); //
         Title.text = Teams.GetTeamName(shrine.Team) + " " + Language.GetBaseString(171); //
         Toggle(true);
     }

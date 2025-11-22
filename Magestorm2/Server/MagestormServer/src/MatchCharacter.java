@@ -27,7 +27,7 @@ public class MatchCharacter {
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match, long hpRegenTick){
         MarkPacketReceived();
-        _ley = 0.0f;
+
         _hpRegenElapsed = 0;
         _hpRegenTick = hpRegenTick;
         _manaRegenElapsed = 0;
@@ -40,6 +40,8 @@ public class MatchCharacter {
         _verified = false;
         _owningMatch = match;
         _pc = pc;
+        _ley = _pc.GetCharacterClass().GetClass() == CharacterClass.Mentalist? 0.6f : 0.0f;
+
         _maxHP = _pc.GetMaxHP();
         _maxSP = 100; //_pc.GetMaxSP();
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));

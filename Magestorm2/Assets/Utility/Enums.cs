@@ -1,4 +1,10 @@
 using UnityEngine;
+public enum TriggerType : byte
+{
+    ManaPool = 0,
+    Shrine = 1,
+    LeyInfluencer = 2
+}
 public enum PlayerStats : byte
 {
     Strength = 0,

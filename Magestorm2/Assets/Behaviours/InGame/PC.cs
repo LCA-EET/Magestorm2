@@ -16,15 +16,18 @@ public class PC : MonoBehaviour
     public MusicPlayer MusicPlayer;
     public bool JoinedMatch;
 
+    private PlayerClass _class;
     private bool _hpUpdating;
     private float _hpUpdateElapsed;
     private bool _manaUpdating;
     private float _manaUpdateElapsed;
+    private float _leyUpdateElapsed;
 
-    private float _hmlPeriod = 0.2f;
+    private float _hmlPeriod = 0.1f;
 
     private float _maxHP, _maxMana;
-    private float _currentHP, _currentMana;  
+    private float _currentHP, _currentMana;
+    private float _ley;
    
     private float _priorHP, _priorMana;
 
@@ -32,25 +35,33 @@ public class PC : MonoBehaviour
     private List<PeriodicAction> _actionList;
 
     private ManaPool _enteredPool;
+    private Dictionary<byte, LeyInfluencer> _activeInfluencers;
     
     public void Awake()
     {
-        _actionList = new List<PeriodicAction>();
-        new PeriodicAction(Game.TickInterval, ReportMovement, _actionList);
-        new PeriodicAction(1.0f, LeyCheck, _actionList);
-        
         if (!Game.Running)
         {
             SceneManager.LoadScene("Pregame");
         }
         else
         {
+            _activeInfluencers = new Dictionary<byte, LeyInfluencer>();
             ComponentRegister.PC = this;
             PlayerMovement.SetPC(this);
             _currentHP = 1;
             _playerCollider = GetComponent<BoxCollider>();
             _hpUpdateElapsed = 0.0f;
             _manaUpdateElapsed = 0.0f;
+            _class = (PlayerClass)PlayerAccount.SelectedCharacter.CharacterClass;
+            _actionList = new List<PeriodicAction>();
+            new PeriodicAction(Game.TickInterval, ReportMovement, _actionList);
+            if(MatchParams.MatchTeam != Team.Neutral)
+            {
+                if (_class == PlayerClass.Cleric || _class == PlayerClass.Magician)
+                {
+                    new PeriodicAction(1.0f, ComputeLey, _actionList);
+                }
+            }
         }
     }
     public void Start()
@@ -58,8 +69,12 @@ public class PC : MonoBehaviour
         _maxHP = PlayerAccount.SelectedCharacter.GetMaxHP();
         _camera = Camera.main;
         ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP);
+        if(_class == PlayerClass.Mentalist)
+        {
+            _ley = 0.6f;
+            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Ley, _ley);
+        }
     }
-
     
     public void Update()
     {
@@ -78,9 +93,34 @@ public class PC : MonoBehaviour
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         MenuCheck();
     }
-    private void LeyCheck()
+    public PlayerClass CharacterClass
     {
-        Debug.Log("Ley Check");
+        get
+        {
+            return _class;
+        }
+    }
+    private void ComputeLey()
+    {
+        float newLey = 0.0f;
+        foreach(LeyInfluencer influence in _activeInfluencers.Values)
+        {
+            newLey += influence.GetLeyContribution();
+        }
+        if(newLey > 1.0f)
+        {
+            newLey = 1.0f;
+        }
+        else if(newLey < 0.0f)
+        {
+            newLey = 0.0f;
+        }
+        if(newLey != _ley)
+        {
+            _ley = newLey;
+            ComponentRegister.PC.HMLUpdate
+            // Update Ley on Server
+        }
     }
     private void UpdateIndication(PlayerIndicator toUpdate, ref float elapsed, float prior, float current, float max, ref bool updating)
     {
@@ -168,7 +208,7 @@ public class PC : MonoBehaviour
         HMLUpdate(newHP, ref _currentHP, ref _priorHP, ref _hpUpdating, ref _hpUpdateElapsed);
         HMLUpdate(newMana, ref _currentMana, ref _priorMana, ref _manaUpdating, ref _manaUpdateElapsed);
     }
-    private void HMLUpdate(float newValue, ref float currentValue, ref float priorValue, ref bool updating, ref float elapsed)
+    public void HMLUpdate(float newValue, ref float currentValue, ref float priorValue, ref bool updating, ref float elapsed)
     {
         if (!updating)
         {
@@ -198,5 +238,15 @@ public class PC : MonoBehaviour
             Debug.Log(hitInfo.collider.name);
             hitInfo.collider.gameObject.GetComponent<ActivateableObject>().StateChangeRequest();
         }
+    }
+
+    public void RegisterLeyInfluencer(byte id, LeyInfluencer influencer)
+    {
+        _activeInfluencers.Add(id, influencer);
+    }
+
+    public void DeregisterLeyInfluencer(byte id)
+    {
+        _activeInfluencers.Remove(id);
     }
 }

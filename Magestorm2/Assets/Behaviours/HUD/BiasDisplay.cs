@@ -28,13 +28,13 @@ public class BiasDisplay : MonoBehaviour
 
     public void Refresh(ManaPool pool)
     {
-        Color toApply = Teams.GetTeamColor(pool.GetTeam());
+        Color toApply = Teams.GetTeamColor(pool.BiasedToward);
         Power.color = toApply;
         Bias.color = toApply;
         Title.color = toApply;
         Power.text = Language.GetBaseString(173) + " " + pool.GetPoolPower().ToString();    //
-        Bias.text = Language.GetBaseString(174) + " " + pool.GetBiasAmount().ToString();    //
-        Title.text = Teams.GetTeamName(pool.GetTeam()) + " " + Language.GetBaseString(172); //
+        Bias.text = Language.GetBaseString(174) + " " + pool.BiasAmount.ToString();    //
+        Title.text = Teams.GetTeamName(pool.BiasedToward) + " " + Language.GetBaseString(172); //
         Toggle(true);
     }
     public void Toggle(bool show)

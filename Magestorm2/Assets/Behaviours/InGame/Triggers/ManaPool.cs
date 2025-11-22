@@ -1,14 +1,13 @@
 ﻿using UnityEditor.Build;
 using UnityEngine;
 
-public class ManaPool : Trigger
+public class ManaPool : BiasableTrigger
 {
     public byte PoolID;
+    public LeyInfluencer LeyInfluencer;
     public BiasIndicator Indicator;
     private bool _playerInPool = false;
     private byte _poolPower;
-    private Team _biasedToward;
-    private byte _biasAmount;
     public void Awake()
     {
         if (!MatchParams.IncludePools)
@@ -18,14 +17,22 @@ public class ManaPool : Trigger
     }
     public void Start()
     {
-        InitTrigger();
+        InitTrigger(TriggerType.ManaPool);
+        if(ComponentRegister.PC.CharacterClass == PlayerClass.Magician)
+        {
+            LeyInfluencer.AssignOwner(this, _poolPower, PoolID);
+        }
+        else
+        {
+            Destroy(LeyInfluencer.gameObject);
+        }
         new PeriodicAction(5.0f, BiasPool, _actionList);
         _poolPower = PoolManager.RegisterPool(this);
         Debug.Log("Pool ID: " + PoolID + ", Power: " + _poolPower);
     }
     private void BiasPool()
     {
-        if ((MatchParams.MatchTeamID != (byte)_biasedToward) || (_biasAmount < 100))
+        if ((MatchParams.MatchTeamID != (byte)BiasedToward) || (BiasAmount < 100))
         {
             Game.SendInGameBytes(InGame_Packets.BiasPoolPacket(PoolID));
             Debug.Log("Bias packet sent.");
@@ -40,8 +47,8 @@ public class ManaPool : Trigger
     }
     public void SetBiasAmount(byte amount, Team team)
     {
-        _biasAmount = amount;
-        _biasedToward = team;
+        BiasAmount = amount;
+        BiasedToward = team;
         Indicator.ChangeBias(team);
         if (_playerInPool)
         {
@@ -55,7 +62,7 @@ public class ManaPool : Trigger
         if(Match.PlayerExists(biaserID, ref biaser))
         {
             string notificationText = "";
-            if(_biasedToward == biaser.PlayerTeam)
+            if(BiasedToward == biaser.PlayerTeam)
             {
                 //increased bias
                 if(biaserID == MatchParams.IDinMatch)
@@ -127,16 +134,6 @@ public class ManaPool : Trigger
             }
             ComponentRegister.Notifier.DisplayNotification(notificationText);
         }
-    }
-
-    public byte GetBiasAmount()
-    {
-        return _biasAmount;
-    }
-
-    public Team GetTeam()
-    {
-        return _biasedToward;
     }
 
     public byte GetPoolPower()

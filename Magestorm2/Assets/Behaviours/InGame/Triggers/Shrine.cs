@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-public class Shrine : Trigger
+public class Shrine : BiasableTrigger
 {
     public Team Team;
+    public LeyInfluencer LeyInfluencer;
     public BiasIndicator Indicator;
-    private byte _health = 100;
+    public byte ShrinePower = 100;
     private bool _playerInShrine = false;
 
     public void Awake()
@@ -16,18 +17,24 @@ public class Shrine : Trigger
     }
     public void Start()
     {
-        InitTrigger();
+        BiasAmount = 100;
+        InitTrigger(TriggerType.Shrine);
+        if(ComponentRegister.PC.CharacterClass == PlayerClass.Cleric)
+        {
+            LeyInfluencer.AssignOwner(this, ShrinePower, (byte)Team);
+        }
+        else
+        {
+            Destroy(LeyInfluencer.gameObject);
+        }
         new PeriodicAction(5.0f, BiasShrine, _actionList);
         ShrineManager.RegisterShrine(this);
         Indicator.ChangeBias(Team);
     }
     public override void EnterAction()
     {
-        if (PlayerAccount.SelectedCharacter.CharacterClass != (byte)PlayerClass.Arcanist)
-        {
-            _playerInShrine = true;
-            ComponentRegister.ShrineDisplay.Refresh(this);
-        }
+        _playerInShrine = true;
+        ComponentRegister.ShrineDisplay.Refresh(this);
         Debug.Log("Entered shrine");
     }
     public override void ExitAction()
@@ -42,19 +49,19 @@ public class Shrine : Trigger
     }
     public void SetHealth(byte amount)
     {
-        _health = amount;
-        Indicator.gameObject.SetActive(_health > 0);
-        ComponentRegister.ShrinePanel.SetFill(Team, _health);
+        BiasAmount = amount;
+        Indicator.gameObject.SetActive(BiasAmount > 0);
+        ComponentRegister.ShrinePanel.SetFill(Team, BiasAmount);
     }
     public void AdjustHealth(byte newHealth, byte adjusterID)
     {
         SetHealth(newHealth);
         Avatar adjuster = null;
-        if (_health == 100)
+        if (BiasAmount == 100)
         {
             ComponentRegister.Notifier.DisplayNotification(Language.BuildString(180, Teams.GetTeamName(Team))); //
         }
-        else if (_health == 0)
+        else if (BiasAmount == 0)
         {
             ComponentRegister.Notifier.DisplayNotification(Language.BuildString(179, Teams.GetTeamName(Team))); //
         }
@@ -91,14 +98,10 @@ public class Shrine : Trigger
             ComponentRegister.Notifier.DisplayNotification(notificationText);
         }
     }
-    public byte GetHealth()
-    {
-        return _health;
-    }
     private void BiasShrine()
     {
-        if ((MatchParams.MatchTeamID == (byte)Team && _health < 100)
-                    || (MatchParams.MatchTeamID != (byte)Team && _health > 0))
+        if ((MatchParams.MatchTeamID == (byte)Team && BiasAmount < 100)
+                    || (MatchParams.MatchTeamID != (byte)Team && BiasAmount > 0))
         {
             Game.SendInGameBytes(InGame_Packets.AdjustShrinePacket((byte)Team));
         }
