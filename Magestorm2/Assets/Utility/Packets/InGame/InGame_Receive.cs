@@ -35,5 +35,9 @@ public static class InGame_Receive
                         HMLUpdate = 26,
                         FlagTaken = 27,
                         UpdateLocation = 28,
-                        PlayerMoved = 29;
+                        PlayerMoved = 29,
+                        HPandManaUpdate = 30,
+                        HPUpdate = 31,
+                        ManaUpdate = 32,
+                        LeyUpdate = 33;
 }

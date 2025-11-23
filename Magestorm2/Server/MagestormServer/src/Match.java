@@ -46,7 +46,7 @@ public class Match {
         _matchID = matchID;
         _creatorID = creatorID;
         _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
-        Main.LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
+        LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + 1 + matchOptions.length + nameBytesLength + 1];
         _lastIndex = (byte)(_matchBytes.length-1);
@@ -141,7 +141,7 @@ public class Match {
         for(byte teamID : MatchTeam.TeamCodes){
             _matchTeams.put(teamID, new MatchTeam(teamID, this));
         }
-        Main.LogMessage("Teams initialized for match " + _matchID + ".");
+        LogMessage("Teams initialized.");
     }
     public byte MatchID(){
         return _matchID;
@@ -163,8 +163,7 @@ public class Match {
         byte playerID = ObtainNextPlayerID();
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this, _regenTick);
         _unverifiedCharacters.put(rc.AccountID(), toAdd);
-        Main.LogMessage("Join Match MCSIZE: " + _matchCharacters.size());
-        Main.LogMessage("Match " + _matchID +": Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
+        LogMessage("Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return playerID;
     }
     public boolean IsAwaitingVerification(int accountID){
@@ -193,9 +192,21 @@ public class Match {
         }
         //Main.LogMessage("Updated player " + playerID + " location.");
     }
+    public void UpdatePlayerLey(byte[] decrypted){
+        byte playerID = decrypted[1];
+        float newLey = ByteUtils.ExtractFloat(decrypted, 2);
+        if(newLey < 0.0f || newLey > 1.0f){
+            LogMessage("Invalid ley: " + newLey + " for player " + playerID);
+        }
+        else{
+            MatchCharacter mc = _matchCharacters.get(playerID);
+            mc.SetLey(newLey);
+            SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.LeyUpdate, newLey), mc);
+        }
+    }
     public void LeaveMatch(byte id, byte team, boolean send){
         _matchCharacters.remove(id).PC().MarkRemovedFromMatch();
-        Main.LogMessage("Leave Match MCSIZE: " + _matchCharacters.size());
+        LogMessage("Player " + id + " has left the match. Players remaining: " + _matchCharacters.size());
         _verifiedClients.remove(id);
         _matchTeams.get(team).RemovePlayer(id);
         if(send){
@@ -249,7 +260,7 @@ public class Match {
     }
     public void MarkExpired(){
         MatchManager.RemoveMatch(_matchID);
-        Main.LogMessage("Match " + _matchID + " has ended. Notifying players...");
+        LogMessage("The match has ended. Notifying players...");
         SendToAll(Packets.MatchEndedPacket());
         _processor.TerminateProcessor();
     }
@@ -263,12 +274,12 @@ public class Match {
             return toCheck.IsVerified();
         }
         else{
-            Main.LogMessage("toCheck in IsPlayerVerified is null, for player: " + playerID);
+            LogMessage("toCheck in IsPlayerVerified is null, for player: " + playerID);
         }
         return false;
     }
     public void MarkPlayerVerified(byte playerID, byte teamID, int accountID){
-        Main.LogMessage("MarkPlayerVerified: Fetching player " + playerID);
+        LogMessage("MarkPlayerVerified: Fetching player " + playerID);
         MatchCharacter toVerify = _unverifiedCharacters.get(accountID);
         if(toVerify != null){
             toVerify.MarkVerified();
@@ -300,21 +311,35 @@ public class Match {
     }
     public void Tick(long msElapsed){
         CountDownTimedObjects(msElapsed);
-        RegeneratePlayerHP(msElapsed);
+        RegeneratePlayerHM(msElapsed);
     }
-    private void RegeneratePlayerHP(long msElapsed){
+    private void RegeneratePlayerHM(long msElapsed){
         for(MatchCharacter mc : _matchCharacters.values()){
-
+            boolean hpChanged = false;
+            boolean manaChanged = false;
             if(mc.IsAliveButInjured()){
-                mc.RegenerateHP(msElapsed);
+                hpChanged = mc.RegenerateHP(msElapsed);
             }
             if(mc.IsAlive() && !mc.HasFullSP()){
-                mc.RegenerateSP(msElapsed);
+                manaChanged = mc.RegenerateSP(msElapsed);
             }
-
-            mc.UpdateHML();
+            if(!hpChanged && !manaChanged){
+                return;
+            }
+            else{
+                if(hpChanged && manaChanged){
+                    SendToPlayer(Packets.HPandManaUpdatePacket(mc.GetCurrentHP(), mc.GetCurrentMana()), mc);
+                }
+                else if (hpChanged) {
+                    SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.HPUpdate, mc.GetCurrentHP()), mc);
+                }
+                else{
+                    SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.ManaUpdate, mc.GetCurrentMana()), mc);
+                }
+            }
         }
     }
+
     private void CountDownTimedObjects(long msElapsed){
         for(ActivatableObject ao : _objectStatus.values()){
             if(ao.TimeRemaining() > 0){
@@ -328,7 +353,7 @@ public class Match {
         ArrayList<RemoteClient> _warningClients = new ArrayList<>();
         for(MatchCharacter mc: _matchCharacters.values()){
             if(mc.InactivityExceededMaximumThreshold()){
-                Main.LogMessage("Sending inactivity termination.");
+                LogMessage("Sending inactivity termination.");
                 _inactiveClients.add(mc.GetRemoteClient());
                 _departedCharacters.add(mc);
             }
@@ -337,7 +362,7 @@ public class Match {
             }
         }
         if(!_warningClients.isEmpty()){
-            Main.LogMessage("Sending inactivity warning.");
+            LogMessage("Sending inactivity warning.");
             SendToCollection(Packets.InactivityWarningPacket(), _warningClients);
         }
         if(!_inactiveClients.isEmpty()){
@@ -383,7 +408,7 @@ public class Match {
             if(toCast != null){
                 byte spellCost = toCast.SpellCost();
                 if(caster.GetRemainingMana() >= spellCost){
-                    caster.AdjustMana(-spellCost, true);
+                    caster.AdjustMana(-spellCost);
                     SendToAll(Packets.SpellCastPacket(decrypted));
                 }
             }
@@ -408,5 +433,12 @@ public class Match {
 
     public byte GetMatchType(){
         return _matchType;
+    }
+
+    public void LogMessage(String toLog){
+        Main.LogMessage("Match " + _matchID +": " + toLog);
+    }
+    public void LogError(String toLog){
+        Main.LogError("Match " + _matchID + ": " + toLog);
     }
 }

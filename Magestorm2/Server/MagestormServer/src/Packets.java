@@ -4,6 +4,7 @@ import java.util.Collection;
 
 public class Packets {
 
+
     private static final byte[] AccountCreated_Bytes = new byte[]{Pregame_Send.AccountCreated};
     private static final byte[] CreationFailed_Bytes = new byte[]{Pregame_Send.CreationFailed};
     private static final byte[] AccountExistsPacket_Bytes = new byte[]{Pregame_Send.AccountAlreadyExists};
@@ -227,12 +228,18 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] HMLPacket(float health, float mana, byte ley){
-        byte[] toEncrypt = new byte[10];
-        toEncrypt[0] = InGame_Send.HMLUpdate;
+    public static byte[] HPandManaUpdatePacket(float health, float mana){
+        byte[] toEncrypt = new byte[9];
+        toEncrypt[0] = InGame_Send.HPandManaUpdate;
         System.arraycopy(ByteUtils.FloatToByteArray(health),0,toEncrypt,1,4);
         System.arraycopy(ByteUtils.FloatToByteArray(mana),0,toEncrypt,5,4);
-        toEncrypt[9] = ley;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] HPorManaorLeyUpdatePacket(byte packetID, float value){
+        byte[] toEncrypt = new byte[5];
+        toEncrypt[0] = packetID;
+        System.arraycopy(ByteUtils.FloatToByteArray(value),0,toEncrypt,1,4);
         return Cryptographer.Encrypt(toEncrypt);
     }
 

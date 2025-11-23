@@ -76,9 +76,6 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.ShrineFailure:
                             ProcessShrineFailure();
                             break;
-                        case InGame_Receive.HMLUpdate:
-                            ProcessHMLUpdate();
-                            break;
                         case InGame_Receive.PlayerKilled:
                             ProcessKilledPlayer();
                             break;
@@ -100,6 +97,15 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.PlayerData:
                             Match.ProcessPlayerJoinedPacket(_decrypted);
                             break;
+                        case InGame_Receive.HPandManaUpdate:
+                            ComponentRegister.PC.HPandManaUpdate(_decrypted);
+                            break;
+                        case InGame_Receive.HPUpdate:
+                        case InGame_Receive.ManaUpdate:
+                        case InGame_Receive.LeyUpdate:
+                            ComponentRegister.PC.HPorManaorLeyUpdate(_decrypted);
+                            break;
+                        
                     }
                 }
             }
@@ -195,10 +201,6 @@ public class InGamePacketProcessor : UDPProcessor
             }
             
         }
-    }
-    private void ProcessHMLUpdate()
-    {
-        ComponentRegister.PC.HMLUpdate(_decrypted);
     }
     private void ProcessShrineFailure()
     {

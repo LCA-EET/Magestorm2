@@ -8,6 +8,14 @@ public static class InGame_Packets
 {
     public static byte[] InactivityResponsePacket() { return OpCodePlusID(InGame_Send.InactivityCheckResponse); }
 
+    public static byte[] UpdateLeyPacket(float newLey)
+    {
+        byte[] unencrypted = new byte[6];
+        unencrypted[0] = InGame_Send.UpdateLey;
+        unencrypted[1] = MatchParams.IDinMatch;
+        BitConverter.GetBytes(newLey).CopyTo(unencrypted, 2);
+        return unencrypted;
+    }
     public static byte[] PlayerMovedPacket(byte controlCode, byte[] data)
     {
         byte[] unencrypted = new byte[3 + data.Length];

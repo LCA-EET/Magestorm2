@@ -60,7 +60,7 @@ public class PlayerCharacter {
         return Math.round(toReturn);
     }
     public float GetMaxSP(){
-        return 0;
+        return 25;
     }
 
     public String GetCharacterName(){

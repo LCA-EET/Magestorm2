@@ -23,6 +23,7 @@ public class MatchCharacter {
     private final long _inactivityMaximumThreshold = 61000;
     private final byte[] _position, _direction;
     private float _currentHP, _currentMana, _maxHP, _maxSP;
+    private float _priorHP, _priorMana;
     private float _ley;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match, long hpRegenTick){
@@ -57,7 +58,9 @@ public class MatchCharacter {
         System.arraycopy(appearanceBytes, 0, _INLCTA, 2, appearanceBytes.length);
         System.arraycopy(nameLevelClass, 0, _INLCTA, 7, nameLevelClass.length);
     }
-
+    public void SetLey(float ley){
+        _ley = ley;
+    }
     public void TakeDamage(short damageAmount, byte damageSource){
         _hpRegenWaitElapsed = 0;
         _currentHP -= damageAmount;
@@ -134,7 +137,7 @@ public class MatchCharacter {
         Main.LogMessage("Inactivity check: " + _lastPacketReceived + ", " + _inactivityMaximumThreshold);
         return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityMaximumThreshold;
     }
-    public void RegenerateHP(long msElapsed){
+    public boolean RegenerateHP(long msElapsed){
         if(_hpRegenWaitElapsed >= _waitForHPRegen){
             if(_hpRegenElapsed >= _hpRegenTick){
                 _hpRegenElapsed -= _hpRegenTick;
@@ -152,24 +155,27 @@ public class MatchCharacter {
         else{
             _hpRegenWaitElapsed += msElapsed;
         }
+        if(_priorHP != _currentHP){
+            _priorHP = _currentHP;
+            return true;
+        }
+        return false;
     }
-    public void RegenerateSP(long msElapsed){
+    public boolean RegenerateSP(long msElapsed){
         _manaRegenElapsed += msElapsed;
         if(_manaRegenElapsed >= _manaRegenTick){
             _manaRegenElapsed -= _manaRegenTick;
             float regenAmount = 1 + (_ley * _spRegenAmount);
             _currentMana += regenAmount;
         }
-    }
-    public void AdjustMana(int adjustment, boolean notify){
-        _currentMana += adjustment;
-        if(notify){
-            UpdateHML();
+        if(_priorMana != _currentMana){
+            _priorMana = _currentMana;
+            return true;
         }
+        return false;
     }
-
-    public void UpdateHML(){
-        _owningMatch.SendToPlayer(Packets.HMLPacket(_currentHP, _currentMana, (byte)0), this);
+    public void AdjustMana(int adjustment){
+        _currentMana += adjustment;
     }
 
     public byte[] GetPosition(){

@@ -25,21 +25,15 @@ public class DMPacketProcessor extends InGamePacketProcessor{
         return false;
     }
     private boolean HandleShrineAdjustment(){
-        if(IsVerified()){
-            _owningDM.AdjustShrineHealth(_decrypted[1], _decrypted[2]);
-        }
+        _owningDM.AdjustShrineHealth(_decrypted[1], _decrypted[2]);
         return true;
     }
     private boolean HandlePoolBias(){
-        if(IsVerified()){
-            _owningDM.GetPoolManager().BiasPool(_decrypted[1], _decrypted[2], _remote);
-        }
+        _owningDM.GetPoolManager().BiasPool(_decrypted[1], _decrypted[2], _remote);
         return true;
     }
     private boolean HandleShrineHealthRequest(){
-        if(IsVerified()){
-            SendShrineHealthPacket();
-        }
+        SendShrineHealthPacket();
         return true;
     }
     private void SendShrineHealthPacket(){
@@ -47,9 +41,7 @@ public class DMPacketProcessor extends InGamePacketProcessor{
         EnqueueForSend(Packets.AllShrineHealthPacket(health[0], health[1], health[2]), _remote);
     }
     private boolean HandleTeamMessage(){
-        if(IsVerified()){
-            SharedHandlers.HandleTeamMessage(_decrypted, this, _owningDM, _remote);
-        }
+        SharedHandlers.HandleTeamMessage(_decrypted, this, _owningDM, _remote);
         return true;
     }
 

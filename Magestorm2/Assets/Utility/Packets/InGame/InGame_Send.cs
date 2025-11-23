@@ -25,5 +25,6 @@ public static class InGame_Send
                         CastSpell = 17,
                         ObjectStatus = 18,
                         PlayerMoved = 19,
-                        FetchPlayer = 20;
+                        FetchPlayer = 20,
+                        UpdateLey = 21;
 }

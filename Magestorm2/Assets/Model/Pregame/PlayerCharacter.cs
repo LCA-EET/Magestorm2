@@ -89,4 +89,8 @@ public class PlayerCharacter
         float toReturn = (CharacterLevel * (GetStat(PlayerStats.Constitution) / 20.0f) * multiplier * 1.579f) + 10;
         return Mathf.Round(toReturn);
     }
+    public float GetMaxMana()
+    {
+        return 25;
+    }
 }

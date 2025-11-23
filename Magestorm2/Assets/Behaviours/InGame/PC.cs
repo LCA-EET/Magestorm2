@@ -17,25 +17,14 @@ public class PC : MonoBehaviour
     public bool JoinedMatch;
 
     private PlayerClass _class;
-    private bool _hpUpdating;
-    private float _hpUpdateElapsed;
-    private bool _manaUpdating;
-    private float _manaUpdateElapsed;
-    private float _leyUpdateElapsed;
-
-    private float _hmlPeriod = 0.1f;
-
-    private float _maxHP, _maxMana;
-    private float _currentHP, _currentMana;
-    private float _ley;
-   
-    private float _priorHP, _priorMana;
-
+    
     private Vector3 _priorPosition, _priorRotation;
     private List<PeriodicAction> _actionList;
 
     private ManaPool _enteredPool;
+    private Dictionary<PlayerIndicator, HMLUpdater> _hml;
     private Dictionary<byte, LeyInfluencer> _activeInfluencers;
+    private HMLUpdater _hp, _mana, _ley;
     
     public void Awake()
     {
@@ -48,13 +37,12 @@ public class PC : MonoBehaviour
             _activeInfluencers = new Dictionary<byte, LeyInfluencer>();
             ComponentRegister.PC = this;
             PlayerMovement.SetPC(this);
-            _currentHP = 1;
             _playerCollider = GetComponent<BoxCollider>();
-            _hpUpdateElapsed = 0.0f;
-            _manaUpdateElapsed = 0.0f;
+            _hml = new Dictionary<PlayerIndicator, HMLUpdater>();
             _class = (PlayerClass)PlayerAccount.SelectedCharacter.CharacterClass;
             _actionList = new List<PeriodicAction>();
             new PeriodicAction(Game.TickInterval, ReportMovement, _actionList);
+            new PeriodicAction(Game.TickInterval, UpdateIndicators, _actionList);
             if(MatchParams.MatchTeam != Team.Neutral)
             {
                 if (_class == PlayerClass.Cleric || _class == PlayerClass.Magician)
@@ -66,26 +54,18 @@ public class PC : MonoBehaviour
     }
     public void Start()
     {
-        _maxHP = PlayerAccount.SelectedCharacter.GetMaxHP();
+        _hp = new HMLUpdater(0.1f, PlayerAccount.SelectedCharacter.GetMaxHP(), PlayerIndicator.Health, _hml);
+        _mana = new HMLUpdater(0.1f, PlayerAccount.SelectedCharacter.GetMaxMana(), PlayerIndicator.Mana, _hml);
+        _ley = new HMLUpdater(0.1f, 1.0f, PlayerIndicator.Ley, _hml);
         _camera = Camera.main;
-        ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Health, _currentHP / _maxHP);
         if(_class == PlayerClass.Mentalist)
         {
-            _ley = 0.6f;
-            ComponentRegister.PlayerStatusPanel.SetIndicator(PlayerIndicator.Ley, _ley);
+            _ley.UpdateValue(0.6f);
         }
     }
     
     public void Update()
     {
-        if (_hpUpdating)
-        {
-            UpdateIndication(PlayerIndicator.Health, ref _hpUpdateElapsed, _priorHP, _currentHP, _maxHP, ref _hpUpdating);
-        }
-        if (_manaUpdating)
-        {
-            UpdateIndication(PlayerIndicator.Mana, ref _manaUpdateElapsed, _priorMana, _currentMana, _maxMana, ref _manaUpdating);
-        }
         if (IsAlive && InputControls.Action)
         {
             Activate();
@@ -100,6 +80,16 @@ public class PC : MonoBehaviour
             return _class;
         }
     }
+    private void UpdateIndicators()
+    {
+        foreach(HMLUpdater updater in _hml.Values)
+        {
+            if (updater.UpdateNeeded)
+            {
+                updater.UpdateIndication();
+            }
+        }
+    }
     private void ComputeLey()
     {
         float newLey = 0.0f;
@@ -107,6 +97,7 @@ public class PC : MonoBehaviour
         {
             newLey += influence.GetLeyContribution();
         }
+        newLey = (float)Math.Round(newLey, 1);
         if(newLey > 1.0f)
         {
             newLey = 1.0f;
@@ -115,22 +106,12 @@ public class PC : MonoBehaviour
         {
             newLey = 0.0f;
         }
-        if(newLey != _ley)
+        if(newLey != _ley.Value)
         {
-            _ley = newLey;
-            ComponentRegister.PC.HMLUpdate
-            // Update Ley on Server
+            Game.SendInGameBytes(InGame_Packets.UpdateLeyPacket(newLey));
         }
     }
-    private void UpdateIndication(PlayerIndicator toUpdate, ref float elapsed, float prior, float current, float max, ref bool updating)
-    {
-        float value = 0;
-        if (SharedFunctions.ProcessFloatLerp(ref elapsed, _hmlPeriod, prior, current, ref value))
-        {
-            _hpUpdating = false;
-        }
-        ComponentRegister.PlayerStatusPanel.SetIndicator(toUpdate, value / max);
-    }
+    
     private void ReportMovement()
     {
         if (MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit) && MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
@@ -200,33 +181,32 @@ public class PC : MonoBehaviour
         trigger = other.GetComponent<Trigger>();
         return trigger != null;
     }
-
-    public void HMLUpdate(byte[] decrypted)
+    public void HPandManaUpdate(byte[] decrypted)
     {
-        float newHP = BitConverter.ToSingle(decrypted, 1);
-        float newMana = BitConverter.ToSingle(decrypted, 5);
-        HMLUpdate(newHP, ref _currentHP, ref _priorHP, ref _hpUpdating, ref _hpUpdateElapsed);
-        HMLUpdate(newMana, ref _currentMana, ref _priorMana, ref _manaUpdating, ref _manaUpdateElapsed);
+        _hp.UpdateValue(BitConverter.ToSingle(decrypted, 1));
+        _mana.UpdateValue(BitConverter.ToSingle(decrypted, 5));
     }
-    public void HMLUpdate(float newValue, ref float currentValue, ref float priorValue, ref bool updating, ref float elapsed)
+    public void HPorManaorLeyUpdate(byte[] decrypted)
     {
-        if (!updating)
+        float value = BitConverter.ToSingle(decrypted, 1);
+        switch (decrypted[0])
         {
-            priorValue = currentValue;
-        }
-        currentValue = newValue;
-        updating = currentValue != priorValue;
-        if (updating)
-        {
-            elapsed = 0.0f;
+            case InGame_Receive.HPUpdate:
+                _hp.UpdateValue(value);
+                break;
+            case InGame_Receive.ManaUpdate:
+                _mana.UpdateValue(value);
+                break;
+            case InGame_Receive.LeyUpdate:
+                _ley.UpdateValue(value);
+                break;
         }
     }
-
     public bool IsAlive
     {
         get
         {
-            return _currentHP > 0;
+            return _hp.Value > 0;
         }
     }
 

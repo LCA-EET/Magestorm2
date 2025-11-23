@@ -29,4 +29,8 @@ public class InGame_Send {
     public static final byte FlagTaken = 27;
     public static final byte UpdateLocation = 28;
     public static final byte PlayerMoved = 29;
+    public static final byte HPandManaUpdate = 30;
+    public static final byte HPUpdate = 31;
+    public static final byte ManaUpdate = 32;
+    public static final byte LeyUpdate = 33;
 }
