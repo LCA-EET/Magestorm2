@@ -32,7 +32,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1515088743228150997}
   m_Father: {fileID: 1727405269882703439}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6588779086953336190
@@ -124,6 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a9c34376f3141a418cb219e2b43edb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BiasAmount: 0
+  BiasedToward: 0
   PoolID: 0
   LeyInfluencer: {fileID: 3056422097405324232}
   Indicator: {fileID: 3103008895376377860}
@@ -157,7 +160,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1279227485158090597}
-  - {fileID: 1515088743228150997}
   - {fileID: 7146755062599889028}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -244,7 +246,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1727405269882703439}
+    m_TransformParent: {fileID: 7146755062599889028}
     m_Modifications:
     - target: {fileID: 2947948395212817381, guid: 4ce18bf17d78d8445be1c38417cf843d, type: 3}
       propertyPath: m_Name
@@ -288,11 +290,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7619728244433985289, guid: 4ce18bf17d78d8445be1c38417cf843d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7619728244433985289, guid: 4ce18bf17d78d8445be1c38417cf843d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7619728244433985289, guid: 4ce18bf17d78d8445be1c38417cf843d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

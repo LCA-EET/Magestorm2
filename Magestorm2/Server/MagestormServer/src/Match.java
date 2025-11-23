@@ -159,12 +159,12 @@ public class Match {
     public boolean HasRoomForAnotherPlayer(){
         return NumPlayersInMatch() < _maxPlayers;
     }
-    public byte JoinMatch(RemoteClient rc, byte teamID){
+    public MatchCharacter JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
         MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this, _regenTick);
         _unverifiedCharacters.put(rc.AccountID(), toAdd);
         LogMessage("Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
-        return playerID;
+        return toAdd;
     }
     public boolean IsAwaitingVerification(int accountID){
         return _unverifiedCharacters.containsKey(accountID);

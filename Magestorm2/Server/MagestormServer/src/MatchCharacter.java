@@ -44,9 +44,9 @@ public class MatchCharacter {
         _ley = _pc.GetCharacterClass().GetClass() == CharacterClass.Mentalist? 0.6f : 0.0f;
 
         _maxHP = _pc.GetMaxHP();
-        _maxSP = 100; //_pc.GetMaxSP();
+        _maxSP = _pc.GetMaxMana();
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
-        _spRegenAmount = (1 + (_pc.GetMaxSP() / 25));
+        _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
         _pc.SetMatchDetails(idInMatch, match.MatchID(), teamID);
         _teamID = teamID;
         _idInMatch = idInMatch;

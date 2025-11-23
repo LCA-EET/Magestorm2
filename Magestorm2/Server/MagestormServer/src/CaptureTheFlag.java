@@ -149,10 +149,10 @@ public class CaptureTheFlag extends Match{
     }
 
     @Override
-    public byte JoinMatch(RemoteClient rc, byte teamID) {
-        byte playerID = super.JoinMatch(rc, teamID);
-        GameServer.EnqueueForSend(Packets.CTFEntryPacket(_sceneID, playerID, teamID, _matchPort, _matchID, _matchType), rc);
-        return playerID;
+    public MatchCharacter JoinMatch(RemoteClient rc, byte teamID) {
+        MatchCharacter mc = super.JoinMatch(rc, teamID);
+        GameServer.EnqueueForSend(Packets.CTFEntryPacket(_sceneID, mc, teamID, _matchPort, _matchID, _matchType), rc);
+        return mc;
     }
 
     @Override

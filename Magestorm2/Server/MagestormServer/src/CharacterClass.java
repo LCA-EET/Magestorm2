@@ -46,6 +46,8 @@ public class CharacterClass {
         };
     }
 
+
+
     public String ToString(){
         return switch (_classID) {
             case Arcanist -> "Arcanist";

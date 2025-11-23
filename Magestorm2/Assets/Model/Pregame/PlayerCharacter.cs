@@ -23,10 +23,6 @@ public class PlayerCharacter
         _appearanceBytes = appearanceBytes;
         _idBytes = BitConverter.GetBytes(characterID);
     }
-    public static byte StringToClass(string playerClass)
-    {
-        return 0;
-    }
     public static string ClassToString(PlayerClass playerClass)
     {
         switch (playerClass)
@@ -91,6 +87,8 @@ public class PlayerCharacter
     }
     public float GetMaxMana()
     {
-        return 25;
+        byte statToUse = (PlayerClass)CharacterClass == PlayerClass.Cleric ? GetStat(PlayerStats.Charisma) : GetStat(PlayerStats.Intellect);
+        float manaMultiplier = 1 + ((statToUse - 10) * 0.05f);
+        return ((_characterLevel * 4) + 10) * manaMultiplier;
     }
 }

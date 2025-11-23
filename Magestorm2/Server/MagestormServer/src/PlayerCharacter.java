@@ -59,10 +59,11 @@ public class PlayerCharacter {
         float toReturn = (_level * (_constitution / 20.0f) * multiplier * 1.579f) + 10;
         return Math.round(toReturn);
     }
-    public float GetMaxSP(){
-        return 25;
+    public float GetMaxMana(){
+        byte statToUse = _characterClass.IsCleric() ? _charisma : _intellect;
+        float manaMultiplier = 1 + ((statToUse - 10) * 0.05f);
+        return ((_level * 4) + 10) * manaMultiplier;
     }
-
     public String GetCharacterName(){
         return _characterName;
     }

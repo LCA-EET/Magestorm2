@@ -6,10 +6,10 @@ public class FreeForAll extends Match{
     }
 
     @Override
-    public byte JoinMatch(RemoteClient rc, byte teamID) {
+    public MatchCharacter JoinMatch(RemoteClient rc, byte teamID) {
         Main.LogMessage("Joining FFA " + _matchID + ", scene: " + _sceneID);
-        byte playerID = super.JoinMatch(rc, teamID);
-        GameServer.EnqueueForSend(Packets.FFAEntryPacket(_sceneID, playerID, _matchPort, _matchType), rc);
-        return playerID;
+        MatchCharacter mc = super.JoinMatch(rc, teamID);
+        GameServer.EnqueueForSend(Packets.FFAEntryPacket(_sceneID, mc, _matchPort, _matchType), rc);
+        return mc;
     }
 }

@@ -3,7 +3,7 @@
 public class LeyInfluencer : Trigger
 {
     public SphereCollider SphereCollider;
-    public float InfluenceRadius;
+    private float _influenceRadius;
 
     private BiasableTrigger _owner;
     private byte _key;
@@ -14,7 +14,7 @@ public class LeyInfluencer : Trigger
         _triggerType = TriggerType.LeyInfluencer;
         _owner = owner;
         power = _power;
-        SphereCollider.radius = InfluenceRadius;
+        _influenceRadius = SphereCollider.radius;
     }
     
     public TriggerType OwningTriggerType
@@ -31,7 +31,7 @@ public class LeyInfluencer : Trigger
             return 0;
         }
         float distance = Vector3.Distance(transform.position, ComponentRegister.PC.transform.position);
-        float distanceFactor = 1.0f - (distance / InfluenceRadius);
+        float distanceFactor = 1.0f - (distance / _influenceRadius);
         return (distanceFactor * (_owner.BiasAmount / 100.0f)) * (_owner.BiasedToward == MatchParams.MatchTeam ? 1.0f : -1.0f);
     }
     public override void EnterAction()

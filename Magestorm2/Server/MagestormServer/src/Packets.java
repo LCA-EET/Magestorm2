@@ -66,36 +66,44 @@ public class Packets {
         return Cryptographer.Encrypt(MatchIsFull_Bytes);
     }
 
-    public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, byte playerID, int port, byte matchID, byte matchType){
+    public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, MatchCharacter mc, int port, byte matchID,
+                                               byte matchType){
         DeathMatch dm = (DeathMatch)MatchManager.GetMatch(matchID);
         byte[] poolData = dm.GetPoolManager().GetPoolBiasData();
         byte[] shrineData = dm.ReportAllShrineHealth();
-        byte[] toEncrypt = new byte[9 + shrineData.length + poolData.length];
+        byte[] toEncrypt = new byte[9 + 4 + 4 + shrineData.length + poolData.length];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
         toEncrypt[1] = matchType;
         toEncrypt[2] = sceneID;
-        toEncrypt[3] = playerID;
+        toEncrypt[3] = mc.GetIDinMatch();
         toEncrypt[4] = teamID;
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 5, 4);
-        System.arraycopy(shrineData, 0, toEncrypt, 9, shrineData.length);
-        System.arraycopy(poolData, 0, toEncrypt, 12, poolData.length);
+        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxHP()), 0, toEncrypt, 9, 4);
+        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxMana()), 0, toEncrypt, 13, 4);
+        System.arraycopy(shrineData, 0, toEncrypt, 17, shrineData.length);
+        System.arraycopy(poolData, 0, toEncrypt, 20, poolData.length);
 
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] CTFEntryPacket(byte sceneID, byte playerID, byte teamID, int port, byte matchID, byte matchType){
+    public static byte[] CTFEntryPacket(byte sceneID, MatchCharacter mc, byte teamID, int port, byte matchID,
+                                        byte matchType){
         CaptureTheFlag ctf = (CaptureTheFlag) MatchManager.GetMatch(matchID);
         byte[] flagBytes = ctf.FlagsStatus();
         byte[] scores = ctf.GetScores();
         byte[] poolBytes = ctf.GetPoolManager().GetPoolBiasData();
-        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 1 + scores.length + 4 + 1 + flagBytes.length + poolBytes.length];
+        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 1 + 4 + 4 + 4 + scores.length + 1 + flagBytes.length + poolBytes.length];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
         toEncrypt[1] = matchType;
         toEncrypt[2] = sceneID;
-        toEncrypt[3] = playerID;
+        toEncrypt[3] = mc.GetIDinMatch();
         toEncrypt[4] = teamID;
         int index = 5;
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, index, 4);
+        index += 4;
+        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxHP()), 0, toEncrypt, index, 4);
+        index += 4;
+        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxMana()), 0, toEncrypt, index, 4);
         index += 4;
         System.arraycopy(scores, 0, toEncrypt, index, 3);
         index += 3;
@@ -107,14 +115,16 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] FFAEntryPacket(byte sceneID, byte playerID, int port, byte matchType){
-        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 1 + 4];
+    public static byte[] FFAEntryPacket(byte sceneID, MatchCharacter mc, int port, byte matchType){
+        byte[] toEncrypt = new byte[1 + 1 + 1 + 1 + 1 + 4 + 4 + 4];
         toEncrypt[0] = Pregame_Send.MatchEntryPacket;
         toEncrypt[1] = matchType;
         toEncrypt[2] = sceneID;
-        toEncrypt[3] = playerID;
+        toEncrypt[3] = mc.GetIDinMatch();
         toEncrypt[4] = MatchTeam.Neutral;
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toEncrypt, 5, 4);
+        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxHP()), 0, toEncrypt, 9, 4);
+        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxMana()), 0, toEncrypt, 13, 4);
         return Cryptographer.Encrypt(toEncrypt);
     }
 

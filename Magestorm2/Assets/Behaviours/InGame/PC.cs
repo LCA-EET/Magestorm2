@@ -54,8 +54,8 @@ public class PC : MonoBehaviour
     }
     public void Start()
     {
-        _hp = new HMLUpdater(0.1f, PlayerAccount.SelectedCharacter.GetMaxHP(), PlayerIndicator.Health, _hml);
-        _mana = new HMLUpdater(0.1f, PlayerAccount.SelectedCharacter.GetMaxMana(), PlayerIndicator.Mana, _hml);
+        _hp = new HMLUpdater(0.1f, MatchParams.MaxHP, PlayerIndicator.Health, _hml);
+        _mana = new HMLUpdater(0.1f, MatchParams.MaxMana, PlayerIndicator.Mana, _hml);
         _ley = new HMLUpdater(0.1f, 1.0f, PlayerIndicator.Ley, _hml);
         _camera = Camera.main;
         if(_class == PlayerClass.Mentalist)

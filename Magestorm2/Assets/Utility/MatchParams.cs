@@ -16,6 +16,8 @@ public static class MatchParams
     private static bool _includeShrines;
     private static bool _includeTeams;
     private static bool _includeFlags;
+    private static float _maxHP;
+    private static float _maxMana;
 
     public static bool IncludeFlags{
         get { return _includeFlags;}
@@ -45,6 +47,8 @@ public static class MatchParams
         IDinMatch = decrypted[3];
         MatchTeamID = _decrypted[4];
         ListeningPort = BitConverter.ToInt32(_decrypted, 5);
+        _maxHP = BitConverter.ToSingle(_decrypted, 9);
+        _maxMana = BitConverter.ToSingle(_decrypted, 13);
         MatchTeam = (Team)MatchTeamID;
         MatchTypes type = (MatchTypes)MatchType;
         switch (type)
@@ -63,8 +67,8 @@ public static class MatchParams
     public static void InitDM()
     {
         UnityEngine.Debug.Log("InitDM");
-        ShrineManager.Init(_decrypted, 9);
-        PoolManager.Init(_decrypted, 12);
+        ShrineManager.Init(_decrypted, 17);
+        PoolManager.Init(_decrypted, 20);
         IncludeShrines = true;
         IncludeFlags = false;
         IncludePools = true;
@@ -76,8 +80,8 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = true;
         IncludePools = true;
-        byte flagByteLength = _decrypted[12];
-        int index = 13;
+        byte flagByteLength = _decrypted[20];
+        int index = 21;
         FlagManager.Init(_decrypted, index);
         PoolManager.Init(_decrypted, index + flagByteLength);
     }
@@ -91,6 +95,22 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = false;
         IncludePools = false;
+    }
+
+    public static float MaxHP
+    {
+        get
+        {
+            return _maxHP;
+        }
+    }
+
+    public static float MaxMana
+    {
+        get
+        {
+            return _maxMana;
+        }
     }
 }
 
