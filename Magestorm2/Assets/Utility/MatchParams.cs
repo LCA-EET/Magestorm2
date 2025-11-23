@@ -4,6 +4,7 @@ public static class MatchParams
 {
     public static Team MatchTeam;
     public static byte MatchTeamID;
+    public static byte MatchID;
     public static byte IDinMatch;
     public static byte SceneID;
     public static byte MatchType;
@@ -18,6 +19,7 @@ public static class MatchParams
     private static bool _includeFlags;
     private static float _maxHP;
     private static float _maxMana;
+    private static byte _maxStamina;
 
     public static bool IncludeFlags{
         get { return _includeFlags;}
@@ -46,9 +48,11 @@ public static class MatchParams
         SceneID = decrypted[2];
         IDinMatch = decrypted[3];
         MatchTeamID = _decrypted[4];
-        ListeningPort = BitConverter.ToInt32(_decrypted, 5);
-        _maxHP = BitConverter.ToSingle(_decrypted, 9);
-        _maxMana = BitConverter.ToSingle(_decrypted, 13);
+        MatchID = _decrypted[5];
+        ListeningPort = BitConverter.ToInt32(_decrypted, 6);
+        _maxHP = BitConverter.ToSingle(_decrypted, 10);
+        _maxMana = BitConverter.ToSingle(_decrypted, 14);
+        _maxStamina = _decrypted[18];
         MatchTeam = (Team)MatchTeamID;
         MatchTypes type = (MatchTypes)MatchType;
         switch (type)
@@ -67,8 +71,8 @@ public static class MatchParams
     public static void InitDM()
     {
         UnityEngine.Debug.Log("InitDM");
-        ShrineManager.Init(_decrypted, 17);
-        PoolManager.Init(_decrypted, 20);
+        ShrineManager.Init(_decrypted, 19);
+        PoolManager.Init(_decrypted, 22);
         IncludeShrines = true;
         IncludeFlags = false;
         IncludePools = true;
@@ -80,8 +84,8 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = true;
         IncludePools = true;
-        byte flagByteLength = _decrypted[20];
-        int index = 21;
+        byte flagByteLength = _decrypted[22];
+        int index = 23;
         FlagManager.Init(_decrypted, index);
         PoolManager.Init(_decrypted, index + flagByteLength);
     }
@@ -110,6 +114,14 @@ public static class MatchParams
         get
         {
             return _maxMana;
+        }
+    }
+
+    public static float MaxStamina
+    {
+        get
+        {
+            return _maxStamina;
         }
     }
 }

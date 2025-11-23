@@ -54,6 +54,9 @@ public class PlayerCharacter {
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
         CharacterManager.AddToCache(this);
     }
+    public byte GetMaxStamina(){
+        return (byte)(85.0f + (_strength * 8.5f));
+    }
     public float GetMaxHP(){
         short multiplier = _characterClass.HPMultiplier();
         float toReturn = (_level * (_constitution / 20.0f) * multiplier * 1.579f) + 10;

@@ -11,7 +11,7 @@ public class UIIngameMenu : ValidatableForm
         AssociateFormToButtons();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
-        MatchID.text = Language.BuildString(98, MatchParams.IDinMatch); //
+        MatchID.text = Language.BuildString(98, MatchParams.MatchID); //
         MatchType.text = Language.BuildString(112, SharedFunctions.MatchTypeString((MatchTypes)MatchParams.MatchType)); //
     }
 

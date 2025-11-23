@@ -24,7 +24,7 @@ public class PC : MonoBehaviour
     private ManaPool _enteredPool;
     private Dictionary<PlayerIndicator, HMLUpdater> _hml;
     private Dictionary<byte, LeyInfluencer> _activeInfluencers;
-    private HMLUpdater _hp, _mana, _ley;
+    private HMLUpdater _hp, _mana, _ley, _stamina;
     
     public void Awake()
     {
@@ -57,6 +57,7 @@ public class PC : MonoBehaviour
         _hp = new HMLUpdater(0.1f, MatchParams.MaxHP, PlayerIndicator.Health, _hml);
         _mana = new HMLUpdater(0.1f, MatchParams.MaxMana, PlayerIndicator.Mana, _hml);
         _ley = new HMLUpdater(0.1f, 1.0f, PlayerIndicator.Ley, _hml);
+        _stamina = new HMLUpdater(0.1f, MatchParams.MaxStamina, PlayerIndicator.Stamina, _hml);
         _camera = Camera.main;
         if(_class == PlayerClass.Mentalist)
         {
@@ -228,5 +229,23 @@ public class PC : MonoBehaviour
     public void DeregisterLeyInfluencer(byte id)
     {
         _activeInfluencers.Remove(id);
+    }
+    public float CurrentMana
+    {
+        get
+        {
+            return _mana.Value;
+        }
+    }
+    public float CurrentStamina
+    {
+        get
+        {
+            return _stamina.Value;
+        }
+    }
+    public void UseStamina(float amount)
+    {
+        _stamina.UpdateValue(_stamina.Value - amount);
     }
 }

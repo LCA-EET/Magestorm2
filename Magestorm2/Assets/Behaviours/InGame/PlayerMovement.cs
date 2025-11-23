@@ -43,21 +43,28 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-        if (!ComponentRegister.PC.JoinedMatch)
+        if (!_pc.JoinedMatch)
         {
             return;
         }
         _running = false;
         float forwardAcceleration = _forwardAcceleration;
         float maxForwardSpeed = _maxForwardSpeed;
-        if (InputControls.Run)
+        if (InputControls.Run && _pc.CurrentStamina > 0)
         {
             _running = true;
             forwardAcceleration *= 3;
             maxForwardSpeed *= 3;
         }
-        MoveAlongAxis(ref _lateralSpeed, _maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, _lateralAcceleration, SpeedModifier);
-        MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, _forwardAcceleration, SpeedModifier);
+        bool xAxisInput = MoveAlongAxis(ref _lateralSpeed, _maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, _lateralAcceleration, SpeedModifier);
+        bool zAxisInput = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, _forwardAcceleration, SpeedModifier);
+        if(_running && (xAxisInput || zAxisInput)){
+            _pc.UseStamina(Time.deltaTime * 5.0f);
+        }
+        if (!_running)
+        {
+
+        }
         if (!_grounded)
         {
             Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
@@ -133,8 +140,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
    
-    private void MoveAlongAxis(ref float speed, float maxSpeed, Vector3 directionVector, InputControl negative, InputControl positive, float acceleration, float speedModifier)
+    private bool MoveAlongAxis(ref float speed, float maxSpeed, Vector3 directionVector, InputControl negative, InputControl positive, float acceleration, float speedModifier)
     {
+        bool movementInput = false;
         float directionFactor = 0.0f;
         if (_midJump)
         {
@@ -148,9 +156,11 @@ public class PlayerMovement : MonoBehaviour
         else if (InputControls.IsPressed(negative) || InputControls.IsPressed(positive))
         {
             directionFactor = InputControls.IsPressed(negative) ? -1.0f : 1.0f;
+            movementInput = true;
         }
         Accelerate(ref speed, maxSpeed, directionFactor, acceleration);
         Controller.Move(directionVector * speed * Time.deltaTime * speedModifier);
+        return movementInput;
     }
 
     private bool MovingOnMultipleAxes
