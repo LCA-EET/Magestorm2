@@ -58,12 +58,13 @@ public class PlayerMovement : MonoBehaviour
         }
         bool xAxisInput = MoveAlongAxis(ref _lateralSpeed, _maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, _lateralAcceleration, SpeedModifier);
         bool zAxisInput = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, _forwardAcceleration, SpeedModifier);
-        if(_running && (xAxisInput || zAxisInput)){
-            _pc.UseStamina(Time.deltaTime * 5.0f);
+        bool moving = xAxisInput || zAxisInput;
+        if(_running && moving){
+            _pc.UseStamina(Time.deltaTime * 10.0f);
         }
         if (!_running)
         {
-
+            _pc.RegenStamina(Time.deltaTime, moving);
         }
         if (!_grounded)
         {

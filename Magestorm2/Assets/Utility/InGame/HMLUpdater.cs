@@ -28,6 +28,7 @@ public class HMLUpdater
         }
         ComponentRegister.PlayerStatusPanel.SetIndicator(_barIndicator, _currentValue / _maxValue);
     }
+    
     public void UpdateValue(float newValue)
     {
         _priorValue = _currentValue;

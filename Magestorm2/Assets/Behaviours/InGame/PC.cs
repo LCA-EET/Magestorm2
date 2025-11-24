@@ -10,6 +10,7 @@ public class PC : MonoBehaviour
     public RayCaster ForwardCaster;
     private float _positionLimit = 0.067f;
     private float _rotationLimit = 5f;
+    private float _staminaRegen;
     private BoxCollider _playerCollider;
     private Camera _camera;
     public SFXPlayer SFXPlayer;
@@ -37,6 +38,7 @@ public class PC : MonoBehaviour
             _activeInfluencers = new Dictionary<byte, LeyInfluencer>();
             ComponentRegister.PC = this;
             PlayerMovement.SetPC(this);
+            _staminaRegen = MatchParams.MaxStamina / 8.0f;
             _playerCollider = GetComponent<BoxCollider>();
             _hml = new Dictionary<PlayerIndicator, HMLUpdater>();
             _class = (PlayerClass)PlayerAccount.SelectedCharacter.CharacterClass;
@@ -247,5 +249,11 @@ public class PC : MonoBehaviour
     public void UseStamina(float amount)
     {
         _stamina.UpdateValue(_stamina.Value - amount);
+    }
+    public void RegenStamina(float deltaTime, bool moving)
+    {
+        Debug.Log("RS moving: " + moving);
+        float regen = moving ? _staminaRegen / 2.0f : _staminaRegen;
+        _stamina.UpdateValue(_stamina.Value + (deltaTime * regen));
     }
 }
