@@ -195,12 +195,15 @@ public class PC : MonoBehaviour
         switch (decrypted[0])
         {
             case InGame_Receive.HPUpdate:
+                Debug.Log("HP Update");
                 _hp.UpdateValue(value);
                 break;
             case InGame_Receive.ManaUpdate:
+                Debug.Log("Mana Update");
                 _mana.UpdateValue(value);
                 break;
             case InGame_Receive.LeyUpdate:
+                Debug.Log("Ley Update");
                 _ley.UpdateValue(value);
                 break;
         }
@@ -246,13 +249,16 @@ public class PC : MonoBehaviour
             return _stamina.Value;
         }
     }
+    public void UpdateHP(float value)
+    {
+        _hp.UpdateValue(value);
+    }
     public void UseStamina(float amount)
     {
         _stamina.UpdateValue(_stamina.Value - amount);
     }
     public void RegenStamina(float deltaTime, bool moving)
     {
-        Debug.Log("RS moving: " + moving);
         float regen = moving ? _staminaRegen / 2.0f : _staminaRegen;
         _stamina.UpdateValue(_stamina.Value + (deltaTime * regen));
     }

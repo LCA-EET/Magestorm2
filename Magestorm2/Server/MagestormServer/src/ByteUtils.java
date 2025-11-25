@@ -56,6 +56,14 @@ public class ByteUtils {
         }
         return toReturn;
     }
+    public static byte[] UTF8toBytes(String[] toEncode, String delimiter, int startIndex){
+        String reassembled = "";
+        for(int i = startIndex; i < toEncode.length; i++){
+            reassembled = reassembled.equals("") ? toEncode[i] : reassembled + delimiter + toEncode[i];
+        }
+        Main.LogMessage(("Reassembled string: " + reassembled));
+        return reassembled.getBytes(StandardCharsets.UTF_8);
+    }
 
     public static String BytesToUTF8(byte[] toConvert){
         return new String(toConvert, StandardCharsets.UTF_8);

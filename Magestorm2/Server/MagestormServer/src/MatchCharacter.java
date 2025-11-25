@@ -22,7 +22,7 @@ public class MatchCharacter {
     private final long _inactivityWarningThreshold = 30000;
     private final long _inactivityMaximumThreshold = 61000;
     private final byte[] _position, _direction;
-    private float _currentHP, _currentMana, _maxHP, _maxSP;
+    private float _currentHP, _currentMana, _maxHP, _maxMana;
     private float _priorHP, _priorMana;
     private float _ley;
 
@@ -44,7 +44,7 @@ public class MatchCharacter {
         _ley = _pc.GetCharacterClass().GetClass() == CharacterClass.Mentalist? 0.6f : 0.0f;
 
         _maxHP = _pc.GetMaxHP();
-        _maxSP = _pc.GetMaxMana();
+        _maxMana = _pc.GetMaxMana();
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
         _pc.SetMatchDetails(idInMatch, match.MatchID(), teamID);
@@ -81,7 +81,7 @@ public class MatchCharacter {
     }
     public boolean IsAliveButInjured() {return (_currentHP > 0) && (_currentHP < _maxHP);}
     public boolean HasFullSP(){
-        return _currentMana == _maxSP;
+        return _currentMana == _maxMana;
     }
     public PlayerCharacter PC(){
         return _pc;
@@ -166,7 +166,12 @@ public class MatchCharacter {
         if(_manaRegenElapsed >= _manaRegenTick){
             _manaRegenElapsed -= _manaRegenTick;
             float regenAmount = 1 + (_ley * _spRegenAmount);
-            _currentMana += regenAmount;
+            if(_currentMana + regenAmount > _maxMana){
+                _currentMana = _maxMana;
+            }
+            else{
+                _currentMana += regenAmount;
+            }
         }
         if(_priorMana != _currentMana){
             _priorMana = _currentMana;

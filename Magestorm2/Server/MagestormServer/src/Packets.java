@@ -218,6 +218,18 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
+    public static byte[] TeamChatPacket(byte[] messageBytes, byte sender, byte teamID){
+        int messageLength = messageBytes.length;
+        byte[] messageLengthBytes = ByteUtils.IntToByteArray(messageLength);
+        byte[] toEncrypt = new byte[1 + 1 + 1 + 4 + messageLength];
+        toEncrypt[0] = InGame_Send.TeamMessage;
+        toEncrypt[1] = sender;
+        toEncrypt[2] = teamID;
+        System.arraycopy(messageLengthBytes, 0, toEncrypt, 3, 4);
+        System.arraycopy(messageBytes, 0, toEncrypt, 7, messageLength);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] RemovedFromMatchPacket(byte reasonCode){
         byte[] toEncrypt = new byte[2];
         toEncrypt[0] = InGame_Send.RemovedFromMatch;

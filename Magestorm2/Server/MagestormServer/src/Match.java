@@ -435,6 +435,36 @@ public class Match {
         return _matchType;
     }
 
+    public boolean ParseCommand(String command, String[] params, byte senderID){
+        Main.LogMessage("Command: " + command);
+        switch(command){
+            case "killself":
+                _matchCharacters.get(senderID).TakeDamage((short)30000, senderID);
+                return true;
+            case "o":
+                SendTeamMessage(params, " ", 1, senderID, MatchTeam.Order);
+                return true;
+            case "c":
+                SendTeamMessage(params, " ", 1, senderID, MatchTeam.Chaos);
+                return true;
+            case "b":
+                SendTeamMessage(params, " ", 1, senderID, MatchTeam.Balance);
+                return true;
+        }
+        return false;
+    }
+    private void SendTeamMessage(String[] params, String delimeter, int startIndex, byte senderID, byte teamID){
+        byte[] messageBytes = ByteUtils.UTF8toBytes(params, delimeter, startIndex);
+        SendToCollection(Packets.TeamChatPacket(messageBytes, senderID, teamID),
+                _matchTeams.get(teamID).GetRemoteClients());
+        MatchCharacter sender = GetMatchCharacter(senderID);
+        if(sender != null){
+            if(sender.GetTeamID() != teamID){
+                SendToPlayer(Packets.TeamChatPacket(messageBytes, senderID, teamID), sender);
+            }
+        }
+    }
+
     public void LogMessage(String toLog){
         Main.LogMessage("Match " + _matchID +": " + toLog);
     }

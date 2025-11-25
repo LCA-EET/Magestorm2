@@ -105,11 +105,35 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.LeyUpdate:
                             ComponentRegister.PC.HPorManaorLeyUpdate(_decrypted);
                             break;
+                        case InGame_Receive.TeamMessage:
+                            HandleTeamMessage();
+                            break;
                         
                     }
                 }
             }
         }
+    }
+    private void HandleTeamMessage()
+    {
+
+        byte senderID = _decrypted[1];
+        Team recipientTeam = (Team)_decrypted[2];
+        int messageLength = BitConverter.ToInt32(_decrypted, 3);
+        byte[] messageBytes = new byte[messageLength];
+        Array.Copy(_decrypted, 7, messageBytes, 0, messageLength);
+        string message = ByteUtils.BytesToUTF8(messageBytes, 0, messageLength);
+        Avatar sender = null;
+        string senderName = "Server";
+        if(senderID == MatchParams.IDinMatch)
+        {
+            senderName = Language.GetBaseString(206) + " " + Teams.GetTeamName(recipientTeam);
+        }
+        else if(Match.GetAvatar(senderID, ref sender))
+        {
+            senderName = sender.Name;
+        }
+        MessageData md = new MessageData(message, senderName, Teams.GetTeamColor(recipientTeam));
     }
     private void HandleFlagTaken()
     {
@@ -158,15 +182,20 @@ public class InGamePacketProcessor : UDPProcessor
     private void HandleFlagDrop()
     {
         byte killedPlayerID = _decrypted[1];
+        if(killedPlayerID == MatchParams.IDinMatch)
+        {
+            FlagManager.FlagHeldByPlayer = Team.Neutral;
+        }
         byte killerID = _decrypted[2];
-        if(killerID > 0)
+        if (killerID > 0 && killedPlayerID != killerID)
         {
             ProcessKilledPlayer();
         }
+        
         Team flagTeam = (Team)_decrypted[3];
         Vector3 position = ByteUtils.BytesToVector3(_decrypted, 5);
         FlagManager.RepositionFlag(flagTeam, position);
-        new MessageData(Language.BuildString(186, Teams.GetTeamName(flagTeam)), "Server"); //
+        new MessageData(Language.BuildString(188, Teams.GetTeamName(flagTeam)), "Server"); //
     }
     private void ProcessKilledPlayer()
     {
@@ -176,6 +205,7 @@ public class InGamePacketProcessor : UDPProcessor
         if (killedPlayerID == MatchParams.IDinMatch) // player was killed
         {
             Avatar playerKiller = null;
+            ComponentRegister.PC.UpdateHP(0.0f);
             if(Match.GetAvatar(killerID, ref playerKiller))
             {
                 data = new MessageData(Language.BuildString(186, playerKiller.Name), "Server"); //

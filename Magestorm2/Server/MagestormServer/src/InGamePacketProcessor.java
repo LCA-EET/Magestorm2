@@ -95,10 +95,18 @@ public class InGamePacketProcessor extends UDPProcessor{
                     _remote);
         }
         else{
-            EnqueueForSend(Packets.MessagePacket(_decrypted, InGame_Send.BroadcastMessage),
-                    _owningMatch.GetVerifiedClients());
+            Main.LogMessage("MessageString: " + messageString);
+            if(messageString.startsWith("/")){
+                String[] split = messageString.split(" ");
+                _owningMatch.ParseCommand(split[0].toLowerCase().substring(1), split, _decrypted[1]);
+            }
+            else{
+                EnqueueForSend(Packets.MessagePacket(_decrypted, InGame_Send.BroadcastMessage),
+                        _owningMatch.GetVerifiedClients());
+            }
         }
     }
+
     private void HandleDirectMessage(){
         byte recipientID = _decrypted[2];
         if(IsVerified(recipientID)){

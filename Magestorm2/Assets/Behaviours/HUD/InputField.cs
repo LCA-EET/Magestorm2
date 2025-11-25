@@ -36,15 +36,7 @@ public class InputField : MonoBehaviour
             CancelChat();
             if (!ProfanityChecker.ContainsProhibitedLanguage(message))
             {
-                if (message.StartsWith("/"))
-                {
-
-                }
-                else
-                {
-                    ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.BroadcastMessagePacket(message));
-                }
-                    
+                ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.BroadcastMessagePacket(message));
             }
             else
             {

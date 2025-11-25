@@ -147,6 +147,17 @@ public class CaptureTheFlag extends Match{
             }
         }
     }
+    @Override
+    public boolean ParseCommand(String command, String[] params, byte senderID){
+        if(!super.ParseCommand(command, params, senderID)){
+            switch(command){
+                case "dropflag":
+                    SeeIfFlagDropped(senderID, senderID);
+                    return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID) {
