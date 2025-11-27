@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private float _distanceTravelled = 0.0f;
     private float _distanceTravelledSinceLastStep = 0.0f;
 
+
     private bool _positionChanged = false;
     private bool _midJump = false;
     private bool _grounded = false;
@@ -41,6 +42,60 @@ public class PlayerMovement : MonoBehaviour
     {
         _pc = pc;
     }
+    private void LivingMovement()
+    {
+        float forwardAcceleration = _forwardAcceleration;
+        float lateralAcceleration = _lateralAcceleration;
+        float maxForwardSpeed = _maxForwardSpeed;
+        float maxLateralSpeed = _maxLateralSpeed;
+
+        if (InputControls.Run && _pc.CurrentStamina > 0)
+        {
+            _running = true;
+            forwardAcceleration *= 3;
+            maxForwardSpeed *= 3;
+        }
+
+        bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
+
+        if (_running && moving)
+        {
+            _pc.UseStamina(Time.deltaTime * 10.0f);
+        }
+        if (!_running)
+        {
+            _pc.RegenStamina(Time.deltaTime, moving);
+        }
+
+        if (!_grounded)
+        {
+            Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
+            Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+        }
+        else if (InputControls.Jump && _grounded)
+        {
+            _verticalSpeed = _verticalSpeed + _jumpSpeed;
+            Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+            _midJump = true;
+        }
+
+        UpdateGroundedStatus();
+    }
+    private void DeadMovement()
+    {
+        float forwardAcceleration = _forwardAcceleration * 0.5f;
+        float lateralAcceleration = _lateralAcceleration * 0.5f;
+        float maxForwardSpeed = _maxForwardSpeed * 0.5f;
+        float maxLateralSpeed = _maxLateralSpeed * 0.5f;
+
+        MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);        
+    }
+    private bool MoveAlongAxes(ref float lateralSpeed, ref float forwardSpeed, float maxLateralSpeed, float maxForwardSpeed, float lateralAcceleration, float forwardAcceleration)
+    {
+        bool xAxisInput = MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
+        bool zAxisInput = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, SpeedModifier);
+        return xAxisInput || zAxisInput;
+    }
     void Update()
     {
         if (!_pc.JoinedMatch)
@@ -48,36 +103,14 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         _running = false;
-        float forwardAcceleration = _forwardAcceleration;
-        float maxForwardSpeed = _maxForwardSpeed;
-        if (InputControls.Run && _pc.CurrentStamina > 0)
+        if (_pc.IsAlive)
         {
-            _running = true;
-            forwardAcceleration *= 3;
-            maxForwardSpeed *= 3;
+            LivingMovement();
         }
-        bool xAxisInput = MoveAlongAxis(ref _lateralSpeed, _maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, _lateralAcceleration, SpeedModifier);
-        bool zAxisInput = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, _forwardAcceleration, SpeedModifier);
-        bool moving = xAxisInput || zAxisInput;
-        if(_running && moving){
-            _pc.UseStamina(Time.deltaTime * 10.0f);
-        }
-        if (!_running)
+        else
         {
-            _pc.RegenStamina(Time.deltaTime, moving);
+            DeadMovement();
         }
-        if (!_grounded)
-        {
-            Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
-            Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
-        }
-        else if(InputControls.Jump && _grounded)
-        {
-            _verticalSpeed = _verticalSpeed + _jumpSpeed;
-            Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
-            _midJump = true;
-        }
-        UpdateGroundedStatus();
     }
     private void UpdateGroundedStatus()
     {
