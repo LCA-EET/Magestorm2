@@ -5,6 +5,7 @@ using UnityEngine;
 public static class FlagManager
 {
     public static Team FlagHeldByPlayer = Team.Neutral;
+    public static bool FlagJustDropped = false;
     private static Dictionary<byte, FlagData> _flagData;
     private static Dictionary<Team, Flag> _flagTable;
     private static Dictionary<Team, byte> _scores;

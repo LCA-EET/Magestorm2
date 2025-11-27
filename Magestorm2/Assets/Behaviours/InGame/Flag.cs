@@ -36,25 +36,32 @@ public class Flag : Trigger
     public override void ExitAction()
     {
         Debug.Log("Flag Exit Action");
+        if (FlagManager.FlagJustDropped)
+        {
+            FlagManager.FlagJustDropped = false;
+        }
     }
     public override void EnterAction()
     {
         Debug.Log("Flag Enter Action");
         if (ComponentRegister.PC.IsAlive)
         {
-            if (!IsSafe() && (Team == MatchParams.MatchTeam))
+            if (!FlagManager.FlagJustDropped)
             {
-                Game.SendInGameBytes(InGame_Packets.FlagReturnedPacket((byte)Team));
-            }
-            if (Team != MatchParams.MatchTeam)
-            {
-                Game.SendInGameBytes(InGame_Packets.FlagTakenPacket((byte)Team));
-            }
-            if(IsSafe() && (Team == MatchParams.MatchTeam))
-            {
-                if(FlagManager.FlagHeldByPlayer != Team.Neutral)
+                if (!IsSafe() && (Team == MatchParams.MatchTeam))
                 {
-                    Game.SendInGameBytes(InGame_Packets.FlagCapturedPacket((byte)FlagManager.FlagHeldByPlayer));
+                    Game.SendInGameBytes(InGame_Packets.FlagReturnedPacket((byte)Team));
+                }
+                if (Team != MatchParams.MatchTeam)
+                {
+                    Game.SendInGameBytes(InGame_Packets.FlagTakenPacket((byte)Team));
+                }
+                if (IsSafe() && (Team == MatchParams.MatchTeam))
+                {
+                    if (FlagManager.FlagHeldByPlayer != Team.Neutral)
+                    {
+                        Game.SendInGameBytes(InGame_Packets.FlagCapturedPacket((byte)FlagManager.FlagHeldByPlayer));
+                    }
                 }
             }
         }

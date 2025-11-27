@@ -33,7 +33,13 @@ public class PeriodicAction
             _action();
         }
     }
-
+    public float PercentComplete
+    {
+        get
+        {
+            return _elapsed / _interval;
+        }
+    }
     public static void PerformActions(float elapsed, List<PeriodicAction> toPerform)
     {
         foreach(PeriodicAction pa in toPerform)

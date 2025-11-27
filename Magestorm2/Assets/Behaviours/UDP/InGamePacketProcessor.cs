@@ -182,11 +182,16 @@ public class InGamePacketProcessor : UDPProcessor
     private void HandleFlagDrop()
     {
         byte killedPlayerID = _decrypted[1];
-        if(killedPlayerID == MatchParams.IDinMatch)
+        byte killerID = _decrypted[2];
+        if (killedPlayerID == MatchParams.IDinMatch)
         {
             FlagManager.FlagHeldByPlayer = Team.Neutral;
+            if(killedPlayerID == killerID)
+            {
+                // voluntary drop
+                FlagManager.FlagJustDropped = true;
+            }
         }
-        byte killerID = _decrypted[2];
         if (killerID > 0 && killedPlayerID != killerID)
         {
             ProcessKilledPlayer();
