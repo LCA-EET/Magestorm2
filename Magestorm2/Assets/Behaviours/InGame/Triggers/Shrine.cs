@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Shrine : BiasableTrigger
 {
@@ -17,6 +19,7 @@ public class Shrine : BiasableTrigger
     }
     public void Start()
     {
+        ShrineManager.RegisterShrine(this);
         BiasAmount = 100;
         InitTrigger(TriggerType.Shrine);
         if(ComponentRegister.PC.CharacterClass == PlayerClass.Cleric)
@@ -28,7 +31,6 @@ public class Shrine : BiasableTrigger
             Destroy(LeyInfluencer.gameObject);
         }
         new PeriodicAction(5.0f, BiasShrine, _actionList);
-        ShrineManager.RegisterShrine(this);
         Indicator.ChangeBias(Team);
     }
     public override void EnterAction()
@@ -52,6 +54,7 @@ public class Shrine : BiasableTrigger
         BiasAmount = amount;
         Indicator.gameObject.SetActive(BiasAmount > 0);
         ComponentRegister.ShrinePanel.SetFill(Team, BiasAmount);
+        TorchManager.AdjustTeamTorchIntensity(Team, BiasAmount / 100.0f);
     }
     public void AdjustHealth(byte newHealth, byte adjusterID)
     {
@@ -72,9 +75,9 @@ public class Shrine : BiasableTrigger
         if (Match.PlayerExists(adjusterID, ref adjuster))
         {
             string notificationText = "";
-            if(adjuster.PlayerID == MatchParams.IDinMatch)
+            if (adjuster.PlayerID == MatchParams.IDinMatch)
             {
-                if(MatchParams.MatchTeam == Team)
+                if (MatchParams.MatchTeam == Team)
                 {
                     notificationText = Language.BuildString(175, Language.GetBaseString(177), Teams.GetTeamName(Team)); //
                 }
@@ -86,7 +89,7 @@ public class Shrine : BiasableTrigger
             }
             else
             {
-                if(adjuster.PlayerTeam == Team)
+                if (adjuster.PlayerTeam == Team)
                 {
                     notificationText = Language.BuildString(176, adjuster.Name, Language.GetBaseString(177), Teams.GetTeamName(Team)); //
                 }

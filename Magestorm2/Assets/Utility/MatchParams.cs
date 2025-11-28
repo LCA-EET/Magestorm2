@@ -73,6 +73,7 @@ public static class MatchParams
         UnityEngine.Debug.Log("InitDM");
         ShrineManager.Init(_decrypted, 19);
         PoolManager.Init(_decrypted, 22);
+        TorchManager.Init();
         IncludeShrines = true;
         IncludeFlags = false;
         IncludePools = true;

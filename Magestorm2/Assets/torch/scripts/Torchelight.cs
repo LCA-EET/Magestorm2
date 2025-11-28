@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class Torchelight : MonoBehaviour {
 	
@@ -10,28 +9,30 @@ public class Torchelight : MonoBehaviour {
 	public GameObject Fumee;
 	public float MaxLightIntensity;
 	public float IntensityLight;
-	
+	private float _priorIntensity;
+	private Light _lightComponent;
 
 	void Start () {
-		TorchLight.GetComponent<Light>().intensity=IntensityLight;
-		MainFlame.GetComponent<ParticleSystem>().emissionRate=IntensityLight*20f;
-		BaseFlame.GetComponent<ParticleSystem>().emissionRate=IntensityLight*15f;	
-		Etincelles.GetComponent<ParticleSystem>().emissionRate=IntensityLight*7f;
-		Fumee.GetComponent<ParticleSystem>().emissionRate=IntensityLight*12f;
+		_lightComponent = TorchLight.GetComponent<Light>();
+		_lightComponent.intensity = IntensityLight;
+		_priorIntensity = IntensityLight;
+		SetEmissionRate(MainFlame, 20f);
+        SetEmissionRate(BaseFlame, 15f);
+        SetEmissionRate(Etincelles, 7f);
+        SetEmissionRate(Fumee, 12f);
+    }
+
+	private void SetEmissionRate(GameObject emitter, float rate)
+	{
+		ParticleSystem.EmissionModule em = MainFlame.GetComponent<ParticleSystem>().emission;
+		em.rateOverTime = rate * IntensityLight; 
 	}
-	
 
 	void Update () {
-		if (IntensityLight<0) IntensityLight=0;
-		if (IntensityLight>MaxLightIntensity) IntensityLight=MaxLightIntensity;		
-
-		TorchLight.GetComponent<Light>().intensity=IntensityLight/2f+Mathf.Lerp(IntensityLight-0.1f,IntensityLight+0.1f,Mathf.Cos(Time.time*30));
-
-		TorchLight.GetComponent<Light>().color=new Color(Mathf.Min(IntensityLight/1.5f,1f),Mathf.Min(IntensityLight/2f,1f),0f);
-		MainFlame.GetComponent<ParticleSystem>().emissionRate=IntensityLight*20f;
-		BaseFlame.GetComponent<ParticleSystem>().emissionRate=IntensityLight*15f;
-		Etincelles.GetComponent<ParticleSystem>().emissionRate=IntensityLight*7f;
-		Fumee.GetComponent<ParticleSystem>().emissionRate=IntensityLight*12f;		
-
+		if(_priorIntensity != IntensityLight)
+		{
+			_lightComponent.intensity = IntensityLight / 2f + Mathf.Lerp(IntensityLight - 0.1f, IntensityLight + 0.1f, Mathf.Cos(Time.time * 30));
+			_priorIntensity = IntensityLight;
+        }
 	}
 }
