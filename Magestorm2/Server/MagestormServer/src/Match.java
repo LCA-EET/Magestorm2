@@ -107,8 +107,8 @@ public class Match {
         }
         else{
             if(!_objectStatus.containsKey(objectID)){
-                _objectStatus.put(objectID, new ActivatableObject(this, objectID, 5));
-                // by default objects will hold their state for 5 seconds. This can be overridden by
+                _objectStatus.put(objectID, new ActivatableObject(this, objectID, 0));
+                // by default objects will hold their state indefinitely. This can be overridden by
                 // adding the appropriate entry to the activatables field in the levels table
             }
             ActivatableObject toChange = _objectStatus.get(objectID);

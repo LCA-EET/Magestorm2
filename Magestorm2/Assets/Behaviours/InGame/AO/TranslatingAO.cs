@@ -33,8 +33,16 @@ public class TranslatingAO : ActuatingAO
     }
     protected override void ApplyStateChange(bool force)
     {
-        base.ApplyStateChange(force);
-        _a = _currentState == 0 ? _end : _default;
-        _b = _currentState == 0 ? _default : _end;
+        if (force)
+        {
+            ActuatingObject.transform.position = _end;
+        }
+        else
+        {
+            base.ApplyStateChange(force);
+            _a = _currentState == 0 ? _end : _default;
+            _b = _currentState == 0 ? _default : _end;
+        }
+            
     }
 }
