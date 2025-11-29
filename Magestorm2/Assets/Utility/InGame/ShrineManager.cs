@@ -30,7 +30,18 @@ public static class ShrineManager
         }
 
     }
-
+    public static bool IsShrineAlive(Team team)
+    {
+        Shrine toCheck = GetShrine(team);
+        if(toCheck != null)
+        {
+            return toCheck.BiasAmount > 0;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public static Shrine GetShrine(Team team)
     {
         if (_shrineData.ContainsKey(team))

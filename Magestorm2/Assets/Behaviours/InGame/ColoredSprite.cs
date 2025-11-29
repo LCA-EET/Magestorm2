@@ -28,6 +28,10 @@ public class ColoredSprite : MonoBehaviour
             SpriteRenderer.color = new Color(lerpColor.x, lerpColor.y, lerpColor.z, _transparency);
         }
     }
+    public void SetColor(Color toUse)
+    {
+        SpriteRenderer.color = toUse;
+    }
     private void Recolor()
     {
         _a = new Vector3(SpriteRenderer.color.r, SpriteRenderer.color.g, SpriteRenderer.color.b);
