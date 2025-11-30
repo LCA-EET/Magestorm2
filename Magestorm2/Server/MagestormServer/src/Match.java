@@ -438,6 +438,9 @@ public class Match {
     public boolean ParseCommand(String command, String[] params, byte senderID){
         Main.LogMessage("Command: " + command);
         switch(command){
+            case "revive":
+                _matchCharacters.get(senderID).Revive(senderID);
+                return true;
             case "killself":
                 _matchCharacters.get(senderID).TakeDamage((short)30000, senderID);
                 return true;

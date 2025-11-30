@@ -65,6 +65,9 @@ public class MatchCharacter {
     public void SetLey(float ley){
         _ley = ley;
     }
+    public void Revive(byte reviverID){
+
+    }
     public void TakeDamage(short damageAmount, byte damageSource){
         _hpRegenWaitElapsed = 0;
         _currentHP -= damageAmount;
