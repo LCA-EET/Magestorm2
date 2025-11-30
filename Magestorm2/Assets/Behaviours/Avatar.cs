@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Avatar : MonoBehaviour, IComparable<Avatar>
 {
+    private int _lastPRPacketID = 0;
     private string _name;
     private byte _level, _class;
     private string _playerClassString;
@@ -60,11 +61,16 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
         }
     }
+    public int LastPRPacketID
+    {
+        get { return _lastPRPacketID; }
+        set { _lastPRPacketID = value; }
+    }
     public void UpdatePosition(byte[] decrypted, bool instant)
     {
-        float x = BitConverter.ToSingle(decrypted, 3);
-        float y = BitConverter.ToSingle(decrypted, 7);
-        float z = BitConverter.ToSingle(decrypted, 11);
+        float x = BitConverter.ToSingle(decrypted, 7);
+        float y = BitConverter.ToSingle(decrypted, 11);
+        float z = BitConverter.ToSingle(decrypted, 15);
         if (instant)
         {
             gameObject.transform.position = new Vector3(x, y, z);

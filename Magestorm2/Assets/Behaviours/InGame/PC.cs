@@ -26,7 +26,8 @@ public class PC : MonoBehaviour
     private Dictionary<PlayerIndicator, HMLUpdater> _hml;
     private Dictionary<byte, LeyInfluencer> _activeInfluencers;
     private HMLUpdater _hp, _mana, _ley, _stamina;
-    
+    private PeriodicAction _joinRerequest;
+    private int _prPacketID = 0;
     public void Awake()
     {
         if (!Game.Running)
@@ -65,10 +66,19 @@ public class PC : MonoBehaviour
         {
             _ley.UpdateValue(0.6f);
         }
+        if (!JoinedMatch)
+        {
+            _joinRerequest = new PeriodicAction(1.0f, JoinRerequest, null);
+        }
     }
     
     public void Update()
     {
+        if (!JoinedMatch)
+        {
+            _joinRerequest.ProcessAction(Time.deltaTime);
+            Debug.Log("Re-requesting to Join Match");
+        }
         if (IsAlive && InputControls.Action)
         {
             Activate();
@@ -82,6 +92,10 @@ public class PC : MonoBehaviour
         {
             return _class;
         }
+    }
+    private void JoinRerequest()
+    {
+        Game.SendInGameBytes(InGame_Packets.MatchJoinedPacket(InGame_Send.JoinedMatch));
     }
     private void UpdateIndicators()
     {
@@ -122,15 +136,15 @@ public class PC : MonoBehaviour
             byte[] prData = new byte[28];
             ByteUtils.FillArray(ref prData, 0, _priorPosition);
             ByteUtils.FillArray(ref prData, 12, _priorRotation);
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData));
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData, ref _prPacketID));
         }
         else if (MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit))
         {
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition)));
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
         }
         else if (MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
         {
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation)));
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
         }
     }
     private bool MinimumReportingExceedance(Vector3 current, ref Vector3 prior, float limit)

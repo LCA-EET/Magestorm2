@@ -25,10 +25,11 @@ public class MatchCharacter {
     private float _currentHP, _currentMana, _maxHP, _maxMana;
     private float _priorHP, _priorMana;
     private float _ley;
+    private int _lastPRPacketID;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match, long hpRegenTick){
         MarkPacketReceived();
-
+        _lastPRPacketID = 0;
         _hpRegenElapsed = 0;
         _hpRegenTick = hpRegenTick;
         _manaRegenElapsed = 0;
@@ -57,6 +58,9 @@ public class MatchCharacter {
         byte[] appearanceBytes = pc.GetAppearanceBytes();
         System.arraycopy(appearanceBytes, 0, _INLCTA, 2, appearanceBytes.length);
         System.arraycopy(nameLevelClass, 0, _INLCTA, 7, nameLevelClass.length);
+    }
+    public int GetLastPRPacketID(){
+        return _lastPRPacketID;
     }
     public void SetLey(float ley){
         _ley = ley;
@@ -188,7 +192,7 @@ public class MatchCharacter {
     }
 
     protected void UpdatePosition(byte[] decrypted){
-        System.arraycopy(decrypted, 3, _position, 0, 12);
+        System.arraycopy(decrypted, 7, _position, 0, 12);
     }
 
     protected void UpdateDirection(byte[] decrypted, int index){

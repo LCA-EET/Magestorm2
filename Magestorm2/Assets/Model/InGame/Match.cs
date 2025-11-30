@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -107,23 +108,27 @@ public static class Match
         byte playerID = decrypted[1];
         if(playerID != MatchParams.IDinMatch)
         {
-            byte controlCode = decrypted[2];
+            byte controlCode = decrypted[6];
             if (_matchPlayers.ContainsKey(playerID))
             {
                 Avatar toUpdate = _matchPlayers[playerID];
-                
-                switch (controlCode)
+                int packetID = BitConverter.ToInt32(decrypted, 2);
+                if(packetID > toUpdate.LastPRPacketID)
                 {
-                    case 0: // position only
-                        _matchPlayers[playerID].UpdatePosition(decrypted, false);
-                        break;
-                    case 1: // direction only
-                        _matchPlayers[playerID].UpdateDirection(decrypted, 3, false);
-                        break;
-                    case 2: // position and direction
-                        _matchPlayers[playerID].UpdatePosition(decrypted, false);
-                        _matchPlayers[playerID].UpdateDirection(decrypted, 15, false);
-                        break;
+                    toUpdate.LastPRPacketID = packetID;
+                    switch (controlCode)
+                    {
+                        case 0: // position only
+                            _matchPlayers[playerID].UpdatePosition(decrypted, false);
+                            break;
+                        case 1: // direction only
+                            _matchPlayers[playerID].UpdateDirection(decrypted, 7, false);
+                            break;
+                        case 2: // position and direction
+                            _matchPlayers[playerID].UpdatePosition(decrypted, false);
+                            _matchPlayers[playerID].UpdateDirection(decrypted, 19, false);
+                            break;
+                    }
                 }
             }
             else

@@ -171,26 +171,26 @@ public class Match {
     }
     public void UpdatePlayerLocation(byte[] decrypted){
         byte playerID = decrypted[1];
-        //Main.LogMessage("Updating player " + playerID + " location.");
         if(_matchCharacters.containsKey(playerID)){
             MatchCharacter toUpdate = _matchCharacters.get(playerID);
-            byte controlCode = decrypted[2];
-            //Main.LogMessage("Updating player " + playerID + ". Control code: " + controlCode);
-            switch(controlCode){
-                case 0: // position only
-                    toUpdate.UpdatePosition(decrypted);
-                    break;
-                case 1: // direction only
-                    toUpdate.UpdateDirection(decrypted, 3);
-                    break;
-                case 2: // position and direction
-                    toUpdate.UpdatePosition(decrypted);
-                    toUpdate.UpdateDirection(decrypted, 15);
-                    break;
+            int packetID = ByteUtils.ExtractInt(decrypted, 2);
+            if(packetID > toUpdate.GetLastPRPacketID()){
+                byte controlCode = decrypted[6];
+                switch(controlCode){
+                    case 0: // position only
+                        toUpdate.UpdatePosition(decrypted);
+                        break;
+                    case 1: // direction only
+                        toUpdate.UpdateDirection(decrypted, 7);
+                        break;
+                    case 2: // position and direction
+                        toUpdate.UpdatePosition(decrypted);
+                        toUpdate.UpdateDirection(decrypted, 19);
+                        break;
+                }
+                SendToAll(Packets.PlayerMovedPacket(decrypted));
             }
-            SendToAll(Packets.PlayerMovedPacket(decrypted));
         }
-        //Main.LogMessage("Updated player " + playerID + " location.");
     }
     public void UpdatePlayerLey(byte[] decrypted){
         byte playerID = decrypted[1];

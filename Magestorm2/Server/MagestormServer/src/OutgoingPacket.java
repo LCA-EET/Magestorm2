@@ -7,6 +7,7 @@ import java.util.List;
 public class OutgoingPacket {
     private byte[] _data;
     private Iterable _recipients;
+    
     public OutgoingPacket(byte[] bytes, RemoteClient rc){
         _data = bytes;
         _recipients = Collections.singletonList(rc);

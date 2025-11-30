@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private float _forwardAcceleration = 6.0f;
     private float _verticalSpeed = 0.0f;
     private float _maxVerticalSpeed = 30.0f;
-    private float _verticalAcceleration = 0.0f;
+    private float _verticalAcceleration = 6.0f;
     private float _distanceTravelled = 0.0f;
     private float _distanceTravelledSinceLastStep = 0.0f;
 
@@ -87,9 +87,10 @@ public class PlayerMovement : MonoBehaviour
         float lateralAcceleration = _lateralAcceleration * 0.5f;
         float maxForwardSpeed = _maxForwardSpeed * 0.5f;
         float maxLateralSpeed = _maxLateralSpeed * 0.5f;
-
-        MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);        
+        MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, 1f);
+        MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, Camera.main.transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, 1f);
     }
+
     private bool MoveAlongAxes(ref float lateralSpeed, ref float forwardSpeed, float maxLateralSpeed, float maxForwardSpeed, float lateralAcceleration, float forwardAcceleration)
     {
         bool xAxisInput = MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);

@@ -16,13 +16,15 @@ public static class InGame_Packets
         BitConverter.GetBytes(newLey).CopyTo(unencrypted, 2);
         return unencrypted;
     }
-    public static byte[] PlayerMovedPacket(byte controlCode, byte[] data)
+    public static byte[] PlayerMovedPacket(byte controlCode, byte[] data, ref int packetID)
     {
-        byte[] unencrypted = new byte[3 + data.Length];
+        packetID++;
+        byte[] unencrypted = new byte[7 + data.Length];
         unencrypted[0] = InGame_Send.PlayerMoved;
         unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = controlCode;
-        data.CopyTo(unencrypted, 3);
+        BitConverter.GetBytes(packetID).CopyTo(unencrypted, 2);
+        unencrypted[6] = controlCode;
+        data.CopyTo(unencrypted, 7);
         return unencrypted;
     }
     
@@ -118,10 +120,10 @@ public static class InGame_Packets
         unencrypted[4] = selfReset;
         return unencrypted;
     }
-    public static byte[] MatchJoinedPacket()
+    public static byte[] MatchJoinedPacket(byte packetID)
     {
         byte[] unencrypted = new byte[11];
-        unencrypted[0] = InGame_Send.JoinedMatch;
+        unencrypted[0] = packetID;
         PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
         PlayerAccount.SelectedCharacter.IDBytes.CopyTo(unencrypted, 5);
         unencrypted[9] = MatchParams.IDinMatch;

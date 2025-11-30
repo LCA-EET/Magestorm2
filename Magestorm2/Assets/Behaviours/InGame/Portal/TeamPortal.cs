@@ -10,7 +10,8 @@ public class TeamPortal : Portal
     public void Awake()
     {
         Sprite.Randomize = false;
-        Sprite.SetColor(Teams.GetTeamColor(Team));
+        Color toUse = Teams.GetTeamColor(Team);
+        Sprite.SetColor(new Color(toUse.r, toUse.g, toUse.b, 0.5f));
         if(MatchParams.MatchType == (byte)MatchTypes.Deathmatch)
         {
             _checkShrineHealth = new PeriodicAction(1.0f, CheckShrineHealth, null);

@@ -31,7 +31,7 @@ public class SceneInitializer : MonoBehaviour
         Debug.Log("Sending Match Joined Packet");
         Game.ChatMode = false;
         Game.MenuMode = false;
-        ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.MatchJoinedPacket());
+        ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.MatchJoinedPacket(InGame_Send.JoinedMatch));
     }
 
     // Update is called once per frame

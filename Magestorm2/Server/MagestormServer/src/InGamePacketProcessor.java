@@ -52,11 +52,11 @@ public class InGamePacketProcessor extends UDPProcessor{
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
-            HandleJoinMatchPacket();
-            return true;
+            return HandleJoinMatchPacket();
         }
         return false;
     }
+
     private void HandleLeyUpdate(){
         _owningMatch.UpdatePlayerLey(_decrypted);
     }
@@ -141,6 +141,10 @@ public class InGamePacketProcessor extends UDPProcessor{
                 _owningMatch.SendToAll(Packets.PlayerDataPacket(_owningMatch.GetMatchCharacter(idInMatch).GetINLCTABytes()));
                 _owningMatch.ProcessObjectStatusPacket(_decrypted[9]);
                 Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);
+                return true;
+            }
+            else if (_owningMatch.IsPlayerVerified(idInMatch)){
+                _owningMatch.SendToPlayer(Packets.PlayerDataPacket(_owningMatch.GetMatchCharacter(idInMatch).GetINLCTABytes()), idInMatch);
                 return true;
             }
             else{
