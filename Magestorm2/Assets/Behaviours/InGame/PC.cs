@@ -79,12 +79,24 @@ public class PC : MonoBehaviour
             _joinRerequest.ProcessAction(Time.deltaTime);
             Debug.Log("Re-requesting to Join Match");
         }
-        if (IsAlive && InputControls.Action)
+        if (InputControls.Action)
         {
-            Activate();
+            if (IsAlive)
+            {
+                Activate();
+            }
+            else
+            {
+                Tap();
+            }
         }
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         MenuCheck();
+    }
+    private void Tap()
+    {
+        Debug.Log("Sending tap packet.");
+        Game.SendInGameBytes(InGame_Packets.TapPacket());
     }
     public PlayerClass CharacterClass
     {
@@ -275,5 +287,11 @@ public class PC : MonoBehaviour
     {
         float regen = moving ? _staminaRegen / 2.0f : _staminaRegen;
         _stamina.UpdateValue(_stamina.Value + (deltaTime * regen));
+    }
+    public void UpdatePosition(Vector3 position)
+    {
+        ComponentRegister.PlayerController.enabled = false;
+        transform.position = position;
+        ComponentRegister.PlayerController.enabled = true;
     }
 }

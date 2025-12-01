@@ -65,8 +65,15 @@ public class MatchCharacter {
     public void SetLey(float ley){
         _ley = ley;
     }
-    public void Revive(byte reviverID){
-
+    public void Revive(byte reviverID, float hp){
+        _currentHP = hp;
+        _owningMatch.SendToAll(Packets.PlayerRevivedPacket(_idInMatch, reviverID, _currentHP));
+    }
+    public void SetHP(float newHP){
+        _currentHP = newHP;
+    }
+    public void SetToMaxHP(){
+        _currentHP = _maxHP;
     }
     public void TakeDamage(short damageAmount, byte damageSource){
         _hpRegenWaitElapsed = 0;

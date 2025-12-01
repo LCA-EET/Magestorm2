@@ -40,6 +40,10 @@ public static class Match
     {
         bool toReturn = _matchPlayers.ContainsKey(id);
         avatar = toReturn ? _matchPlayers[id] : null;
+        if (!toReturn)
+        {
+            Game.SendInGameBytes(InGame_Packets.FetchPlayerPacket(id));
+        }
         return toReturn;
     }
     public static void LeaveMatch()

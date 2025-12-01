@@ -204,6 +204,20 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] PlayerTapped(byte playerID){
+        byte[] toEncrypt = new byte[2];
+        toEncrypt[0] = InGame_Send.PlayerTapped;
+        toEncrypt[1] = playerID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+    public static byte[] PlayerRevivedPacket(byte revivedID, byte reviverID, float hp){
+        byte[] toEncrypt = new byte[7];
+        toEncrypt[0] = InGame_Send.PlayerRevived;
+        toEncrypt[1] = revivedID;
+        toEncrypt[2] = reviverID;
+        System.arraycopy(ByteUtils.FloatToByteArray(hp), 0, toEncrypt, 3, 4);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] PlayerMovedPacket(byte[] decrypted){
         decrypted[0] = InGame_Send.PlayerMoved;
         return Cryptographer.Encrypt(decrypted);

@@ -6,11 +6,12 @@ public class Portal : Trigger
     
     public override void EnterAction()
     {
+        Debug.Log("Entered Portal.");
         if (ComponentRegister.PC.IsAlive)
         {
             int exitID = Random.Range(0, Exits.Length);
             GameObject selectedExit = Exits[exitID];
-            ComponentRegister.PC.transform.position = selectedExit.transform.position;
+            ComponentRegister.PC.UpdatePosition(selectedExit.transform.position);
             ComponentRegister.PC.transform.eulerAngles = selectedExit.transform.eulerAngles;
         }
     }

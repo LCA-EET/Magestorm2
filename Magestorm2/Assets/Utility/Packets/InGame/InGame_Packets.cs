@@ -8,6 +8,13 @@ public static class InGame_Packets
 {
     public static byte[] InactivityResponsePacket() { return OpCodePlusID(InGame_Send.InactivityCheckResponse); }
 
+    public static byte[] TapPacket()
+    {
+        byte[] unencrypted = new byte[2];
+        unencrypted[0] = InGame_Send.Tap;
+        unencrypted[1] = MatchParams.IDinMatch;
+        return unencrypted;
+    }
     public static byte[] UpdateLeyPacket(float newLey)
     {
         byte[] unencrypted = new byte[6];

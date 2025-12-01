@@ -34,7 +34,7 @@ public class DeathGraphic : MonoBehaviour
         _deathGraphicShown = show;
         ImageAndText.SetActive(show);
         Reticle.SetActive(!show);
-        string text = Language.BuildString(207, InputControls.Action.ToString());
+        string text = Language.BuildString(207, InputControls.KeyToString(InputControl.Action));
         TextString.text = text;
     }
 }

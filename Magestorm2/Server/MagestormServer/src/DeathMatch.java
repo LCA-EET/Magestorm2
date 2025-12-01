@@ -68,4 +68,19 @@ public class DeathMatch extends Match{
         GameServer.EnqueueForSend(Packets.DeathMatchEntryPacket(_sceneID, teamID, mc, _matchPort, _matchID, _matchType), rc);
         return mc;
     }
+
+    @Override
+    public void PlayerTapped(byte playerID){
+        MatchCharacter mc = _matchCharacters.get(playerID);
+        byte teamID = mc.GetTeamID();
+        LogMessage("DM tap: " + playerID + "." );
+        if(teamID == MatchTeam.Neutral){
+            super.PlayerTapped(playerID);
+        }
+        else{
+            if(_shrines.get(teamID).IsAlive()){
+                super.PlayerTapped(playerID);
+            }
+        }
+    }
 }

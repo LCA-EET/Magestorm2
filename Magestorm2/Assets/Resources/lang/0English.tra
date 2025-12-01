@@ -205,3 +205,10 @@ Stats
 You dropped the {0} flag.
 To
 You died! Press {0} to tap, or wait for a Cleric to resurrect you.
+You have been resurrected by {0}.
+Server
+You have been resurrected.
+{0} has been resurrected.
+{0} has been resurrected by {1}.
+You tapped the power of {0} to resurrect.
+{0} tapped the power of {1} to resurrect.

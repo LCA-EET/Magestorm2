@@ -39,5 +39,7 @@ public static class InGame_Receive
                         HPandManaUpdate = 30,
                         HPUpdate = 31,
                         ManaUpdate = 32,
-                        LeyUpdate = 33;
+                        LeyUpdate = 33,
+                        PlayerRevived = 34,
+                        PlayerTapped = 35;
 }

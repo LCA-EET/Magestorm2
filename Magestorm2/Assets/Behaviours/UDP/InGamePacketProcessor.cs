@@ -108,9 +108,54 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.TeamMessage:
                             HandleTeamMessage();
                             break;
-                        
+                        case InGame_Receive.PlayerRevived:
+                            HandleRevive();
+                            break;
+                        case InGame_Receive.PlayerTapped:
+                            HandleTap();
+                            break;
                     }
                 }
+            }
+        }
+    }
+    private void HandleTap()
+    {
+        byte tapperID = _decrypted[1];
+        
+        if(tapperID == MatchParams.IDinMatch)
+        {
+            ComponentRegister.Valhalla.EnterValhalla();
+            ComponentRegister.PC.UpdateHP(MatchParams.MaxHP);
+            new MessageData(Language.BuildString(213, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), "Server");
+        }
+        else
+        {
+            Avatar tapper = null;
+            if(Match.GetAvatar(tapperID, ref tapper))
+            {
+                new MessageData(Language.BuildString(214, tapper.Name, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), "Server");
+            }
+        }
+    }
+    private void HandleRevive()
+    {
+        byte revivedID = _decrypted[1];
+        byte reviverID = _decrypted[2];
+        Avatar reviver = null;
+        Match.GetAvatar(reviverID, ref reviver);
+        if(revivedID == MatchParams.IDinMatch)
+        {
+            float hp = BitConverter.ToSingle(_decrypted, 3);
+            ComponentRegister.PC.UpdateHP(hp);
+            new MessageData(reviver == null ? Language.GetBaseString(210) : Language.BuildString(208, reviver.Name), "Server");
+        }
+        else
+        {
+            Avatar revived = null;
+            if(Match.GetAvatar(revivedID, ref revived))
+            {
+                new MessageData(reviver == null ? Language.BuildString(211, revived.Name) : Language.BuildString(212, revived.Name, reviver.Name), "Server");
             }
         }
     }

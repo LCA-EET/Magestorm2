@@ -32,7 +32,13 @@ public static class ComponentRegister
     private static TeamChatControl _teamChatControl;
     private static CTFScorePanel _ctfscorePanel;
     private static Spawner _spawner;
+    private static Valhalla _valhalla;
 
+    public static Valhalla Valhalla
+    {
+        get {  return _valhalla; }
+        set { _valhalla = value; }
+    }
     public static Spawner Spawner
     {
         get { return _spawner; }

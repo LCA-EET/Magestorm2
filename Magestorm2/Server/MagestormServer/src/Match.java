@@ -192,6 +192,14 @@ public class Match {
             }
         }
     }
+    public void PlayerTapped(byte playerID){
+        MatchCharacter mc = _matchCharacters.get(playerID);
+        LogMessage("DM tap: " + playerID + "." );
+        if(!mc.IsAlive()){
+            mc.SetToMaxHP();
+            SendToAll(Packets.PlayerTapped(playerID));
+        }
+    }
     public void UpdatePlayerLey(byte[] decrypted){
         byte playerID = decrypted[1];
         float newLey = ByteUtils.ExtractFloat(decrypted, 2);
@@ -439,7 +447,7 @@ public class Match {
         Main.LogMessage("Command: " + command);
         switch(command){
             case "revive":
-                _matchCharacters.get(senderID).Revive(senderID);
+                _matchCharacters.get(senderID).Revive(senderID, 1);
                 return true;
             case "killself":
                 _matchCharacters.get(senderID).TakeDamage((short)30000, senderID);

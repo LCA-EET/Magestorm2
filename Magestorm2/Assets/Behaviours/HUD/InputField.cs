@@ -34,19 +34,20 @@ public class InputField : MonoBehaviour
         {
             string message = _tmpTextMessage.text;
             CancelChat();
-            if (!ProfanityChecker.ContainsProhibitedLanguage(message))
+            if(message.Trim() != "")
             {
-                ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.BroadcastMessagePacket(message));
+                if (!ProfanityChecker.ContainsProhibitedLanguage(message))
+                {
+                    ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.BroadcastMessagePacket(message));
+                }
+                else
+                {
+                    ComponentRegister.Notifier.DisplayNotification(Language.GetBaseString(30)); //
+                }
             }
-            else
-            {
-                ComponentRegister.Notifier.DisplayNotification(Language.GetBaseString(30)); //
-            }
-            //Background.SetActive(false);
         }    
         if (InputControls.CancelChat)
         { 
-            //Background.SetActive(false);
             CancelChat();
         }
     }

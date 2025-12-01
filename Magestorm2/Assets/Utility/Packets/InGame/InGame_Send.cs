@@ -26,5 +26,6 @@ public static class InGame_Send
                         ObjectStatus = 18,
                         PlayerMoved = 19,
                         FetchPlayer = 20,
-                        UpdateLey = 21;
+                        UpdateLey = 21,
+                        Tap = 22;
 }

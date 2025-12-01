@@ -69,13 +69,6 @@ public class ActivateableObject : MonoBehaviour
             ActivationAudio.Play();
         }
     }
-    protected virtual void ResetCheck()
-    {
-        if (_resetCountDown)
-        {
-
-        }
-    }
     public void StatusChanged(byte newStatus, bool force)
     {
         _currentState = newStatus;

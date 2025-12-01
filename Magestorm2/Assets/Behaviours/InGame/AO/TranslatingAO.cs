@@ -15,7 +15,7 @@ public class TranslatingAO : ActuatingAO
     protected override void Update()
     {
         base.Update();
-        if (_resetCountDown)
+        if (_resetCountDown && (_resetCountdownPA != null))
         {
             _resetCountdownPA.ProcessAction(Time.deltaTime);
         }

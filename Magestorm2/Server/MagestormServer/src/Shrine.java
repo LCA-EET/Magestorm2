@@ -27,7 +27,9 @@ public class Shrine {
     public byte ShrineHealth(){
         return _shrineHealth;
     }
-
+    public boolean IsAlive(){
+        return _shrineHealth > 0;
+    }
     public static byte AdjustmentChance(byte classCode) {
         if(classCode == CharacterClass.Cleric){
             return 50;

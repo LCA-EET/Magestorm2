@@ -7,17 +7,17 @@ public class TeamPortal : Portal
     public ColoredSprite Sprite;
     private PeriodicAction _checkShrineHealth;
     private bool _shrineIsAlive;
-    public void Awake()
+
+    public void Start()
     {
         Sprite.Randomize = false;
         Color toUse = Teams.GetTeamColor(Team);
         Sprite.SetColor(new Color(toUse.r, toUse.g, toUse.b, 0.5f));
-        if(MatchParams.MatchType == (byte)MatchTypes.Deathmatch)
+        if (MatchParams.MatchType == (byte)MatchTypes.Deathmatch)
         {
             _checkShrineHealth = new PeriodicAction(1.0f, CheckShrineHealth, null);
         }
     }
-
     private void CheckShrineHealth()
     {
         _shrineIsAlive = ShrineManager.IsShrineAlive(Team);
@@ -34,7 +34,8 @@ public class TeamPortal : Portal
 
     public override void EnterAction()
     {
-        if (_shrineIsAlive && Team == MatchParams.MatchTeam)
+        Debug.Log("Entered " + Teams.GetTeamName(Team) + " portal.");
+        if ((_shrineIsAlive && Team == MatchParams.MatchTeam) || (MatchParams.MatchTeam == Team.Neutral))
         {
             base.EnterAction();
         }

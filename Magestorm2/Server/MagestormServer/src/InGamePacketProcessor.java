@@ -49,6 +49,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.LeyUpdate:
                     HandleLeyUpdate();
                     return true;
+                case InGame_Receive.Tap:
+                    HandleTap();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -56,7 +59,9 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
         return false;
     }
-
+    private void HandleTap(){
+        _owningMatch.PlayerTapped(_decrypted[1]);
+    }
     private void HandleLeyUpdate(){
         _owningMatch.UpdatePlayerLey(_decrypted);
     }
