@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1851860422575509216}
   - component: {fileID: 7707213682917761074}
+  - component: {fileID: 4077408626760148567}
   m_Layer: 0
   m_Name: Valhalla
   m_TagString: Untagged
@@ -54,6 +55,27 @@ MonoBehaviour:
   - {fileID: 7076604747849912374}
   - {fileID: 7227713903117060967}
   - {fileID: 3746835996288902438}
+--- !u!65 &4077408626760148567
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 86025326256876864}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2915861876164333774
 GameObject:
   m_ObjectHideFlags: 0

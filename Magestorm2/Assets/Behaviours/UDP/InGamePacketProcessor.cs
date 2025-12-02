@@ -122,41 +122,43 @@ public class InGamePacketProcessor : UDPProcessor
     private void HandleTap()
     {
         byte tapperID = _decrypted[1];
-        
-        if(tapperID == MatchParams.IDinMatch)
+
+        Avatar tapper = null;
+        if (Match.GetAvatar(tapperID, ref tapper))
         {
-            ComponentRegister.Valhalla.EnterValhalla();
-            ComponentRegister.PC.UpdateHP(MatchParams.MaxHP);
-            new MessageData(Language.BuildString(213, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), "Server");
-        }
-        else
-        {
-            Avatar tapper = null;
-            if(Match.GetAvatar(tapperID, ref tapper))
+            if(tapperID == MatchParams.IDinMatch)
+            {
+                ComponentRegister.Valhalla.EnterValhalla();
+                ComponentRegister.PC.UpdateHP(MatchParams.MaxHP);
+                new MessageData(Language.BuildString(213, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), "Server");
+            }
+            else
             {
                 new MessageData(Language.BuildString(214, tapper.Name, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), "Server");
             }
+            tapper.SetAlive(true);
         }
     }
     private void HandleRevive()
     {
         byte revivedID = _decrypted[1];
         byte reviverID = _decrypted[2];
-        Avatar reviver = null;
-        Match.GetAvatar(reviverID, ref reviver);
-        if(revivedID == MatchParams.IDinMatch)
+        Avatar revived = null;
+        if(Match.GetAvatar(revivedID, ref revived))
         {
-            float hp = BitConverter.ToSingle(_decrypted, 3);
-            ComponentRegister.PC.UpdateHP(hp);
-            new MessageData(reviver == null ? Language.GetBaseString(210) : Language.BuildString(208, reviver.Name), "Server");
-        }
-        else
-        {
-            Avatar revived = null;
-            if(Match.GetAvatar(revivedID, ref revived))
+            Avatar reviver = null;
+            Match.GetAvatar(reviverID, ref reviver);
+            if(revivedID == MatchParams.IDinMatch)
+            {
+                float hp = BitConverter.ToSingle(_decrypted, 3);
+                ComponentRegister.PC.UpdateHP(hp);
+                new MessageData(reviver == null ? Language.GetBaseString(210) : Language.BuildString(208, reviver.Name), "Server");
+            }
+            else
             {
                 new MessageData(reviver == null ? Language.BuildString(211, revived.Name) : Language.BuildString(212, revived.Name, reviver.Name), "Server");
             }
+            revived.SetAlive(true);
         }
     }
     private void HandleTeamMessage()
@@ -252,19 +254,19 @@ public class InGamePacketProcessor : UDPProcessor
         byte killedPlayerID = _decrypted[1];
         byte killerID = _decrypted[2];
         MessageData data = null;
-        if (killedPlayerID == MatchParams.IDinMatch) // player was killed
+        Avatar killedPlayer = null;
+        if(Match.GetAvatar(killedPlayerID, ref killedPlayer))
         {
-            Avatar playerKiller = null;
-            ComponentRegister.PC.UpdateHP(0.0f);
-            if(Match.GetAvatar(killerID, ref playerKiller))
+            if(killedPlayerID == MatchParams.IDinMatch)
             {
-                data = new MessageData(Language.BuildString(186, playerKiller.Name), "Server"); //
+                Avatar playerKiller = null;
+                ComponentRegister.PC.UpdateHP(0.0f);
+                if (Match.GetAvatar(killerID, ref playerKiller))
+                {
+                    data = new MessageData(Language.BuildString(186, playerKiller.Name), "Server"); //
+                }
             }
-        }
-        else
-        {
-            Avatar killedPlayer = null;
-            if(Match.GetAvatar(killedPlayerID, ref killedPlayer))
+            else
             {
                 if (killerID == MatchParams.IDinMatch) // player killed someone
                 {
@@ -273,13 +275,13 @@ public class InGamePacketProcessor : UDPProcessor
                 else // someone else killed someone
                 {
                     Avatar killer = null;
-                    if(Match.GetAvatar(killerID, ref killer))
+                    if (Match.GetAvatar(killerID, ref killer))
                     {
                         data = new MessageData(Language.BuildString(187, killedPlayer.Name), "Server"); //
                     }
                 }
             }
-            
+            killedPlayer.SetAlive(false);
         }
     }
     private void ProcessShrineFailure()

@@ -8,11 +8,15 @@ public class ManaPool : BiasableTrigger
     public BiasIndicator Indicator;
     private bool _playerInPool = false;
     private byte _poolPower;
-    public void Awake()
+    protected override void Awake()
     {
         if (!MatchParams.IncludePools)
         {
             Destroy(this);
+        }
+        else
+        {
+            base.Awake();
         }
     }
     public void Start()
@@ -107,15 +111,15 @@ public class ManaPool : BiasableTrigger
     {
         if(PlayerAccount.SelectedCharacter.CharacterClass != (byte)PlayerClass.Arcanist)
         {
+            base.EnterAction();
             _playerInPool = true;
             ComponentRegister.BiasDisplay.Refresh(this);
         }
-        Debug.Log("Entered pool");
     }
     public override void ExitAction()
     {
+        base.ExitAction();
         _playerInPool = false;
         ComponentRegister.BiasDisplay.Toggle(false);
-        Debug.Log("Exited pool");
     }
 }

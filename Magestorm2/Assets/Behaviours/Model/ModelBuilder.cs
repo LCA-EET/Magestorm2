@@ -68,6 +68,9 @@ public class ModelBuilder : MonoBehaviour
     private Dictionary<byte, GameObject[]> _femaleLightParts;
     private Dictionary<byte, GameObject[]> _femaleDarkParts;
 
+    private Dictionary<string, Material> _opaqueToTransparent;
+    private Dictionary<string, Material> _transparentToOpaque;
+
     private int[] _componentIndices;
     private void Awake()
     {
@@ -75,6 +78,7 @@ public class ModelBuilder : MonoBehaviour
         {
             ComponentRegister.ModelBuilder = this;
             DontDestroyOnLoad(this);
+            BuildMaterialsTable();
             _componentIndices = new int[4];
             _maleLightBodies = new GameObject[12];
             _femaleLightBodies = new GameObject[12];
@@ -96,6 +100,40 @@ public class ModelBuilder : MonoBehaviour
             Destroy(gameObject);
         }
         
+    }
+    private void BuildMaterialsTable()
+    {
+        _opaqueToTransparent = new Dictionary<string, Material>();
+        _transparentToOpaque = new Dictionary<string, Material>();
+        Material[] loaded = Resources.LoadAll<Material>("Materials");
+        //Debug.Log("ModelBuilder: Loading " + loaded.Length + " materials.");
+        Dictionary<string, Material> temp = new Dictionary<string, Material>();
+        foreach (Material mat in loaded)
+        {
+            temp.Add(mat.name.ToLower(), mat);
+            //Debug.Log("ModelBuilder: Loaded material " + mat.name.ToLower() + " to the temp table.");
+        }
+        foreach (string matName in temp.Keys)
+        {
+            string transparentMaterialName = "transparent " + matName;
+            if(temp.ContainsKey(transparentMaterialName))
+            {
+                //Debug.Log("ModelBuilder: Added transparent material " + transparentMaterialName);
+                _opaqueToTransparent.Add(matName, temp[transparentMaterialName]);
+                _transparentToOpaque.Add(transparentMaterialName, temp[matName]);
+            }
+        }
+    }
+    public bool GetMaterial(string materialName, bool opaque, ref Material material)
+    {
+        string key = materialName.ToLower();
+        Dictionary<string, Material> toUse = opaque ? _transparentToOpaque : _opaqueToTransparent;
+        if (toUse.ContainsKey(key))
+        {
+            material = toUse[key];
+            return true;
+        }
+        return false;
     }
     private void FillBodyArray(ref GameObject[] array, GameObject[][] bodies)
     {

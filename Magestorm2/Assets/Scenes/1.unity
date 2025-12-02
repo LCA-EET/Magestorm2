@@ -619,6 +619,7 @@ Transform:
   - {fileID: 5311193719373118137}
   - {fileID: 49534040}
   - {fileID: 2098277828}
+  - {fileID: 2128253025}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1019785752 stripped
@@ -1039,6 +1040,72 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 9194968891050090327, guid: 86c059f467ea1f94fbed867a57362374, type: 3}
   m_PrefabInstance: {fileID: 6067631305929663203}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2128253024
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 961541736}
+    m_Modifications:
+    - target: {fileID: 3566213319049767198, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9ec67bf25245c2343badeae87d5f3efa, type: 2}
+    - target: {fileID: 3566213319061333022, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_Name
+      value: Fair Nature Female Mage 01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.91442
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.02428
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+--- !u!4 &2128253025 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3566213319061502014, guid: d54dae597ec08634f89adbf1f36d8111, type: 3}
+  m_PrefabInstance: {fileID: 2128253024}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1263529671214535194
 PrefabInstance:

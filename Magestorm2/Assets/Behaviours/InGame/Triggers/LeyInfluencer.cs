@@ -35,11 +35,13 @@ public class LeyInfluencer : Trigger
     }
     public override void EnterAction()
     {
+        base.EnterAction();
         ComponentRegister.PC.RegisterLeyInfluencer(_key, this);
         Debug.Log("Ley Influence Enter");
     }
     public override void ExitAction()
     {
+        base.ExitAction();
         ComponentRegister.PC.DeregisterLeyInfluencer(_key);
         Debug.Log("Ley Influence Exit");
     }

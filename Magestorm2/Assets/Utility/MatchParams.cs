@@ -74,6 +74,7 @@ public static class MatchParams
         ShrineManager.Init(_decrypted, 19);
         PoolManager.Init(_decrypted, 22);
         TorchManager.Init();
+        TriggerManager.Init();
         IncludeShrines = true;
         IncludeFlags = false;
         IncludePools = true;

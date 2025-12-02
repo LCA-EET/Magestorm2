@@ -28,6 +28,11 @@ public class PC : MonoBehaviour
     private HMLUpdater _hp, _mana, _ley, _stamina;
     private PeriodicAction _joinRerequest;
     private int _prPacketID = 0;
+    public bool InValhalla = false;
+    public HashSet<int> _inTriggers;
+    public HashSet<int> _priorInTriggers;
+
+    private Dictionary<EffectCode, AppliedEffect> _effects;
     public void Awake()
     {
         if (!Game.Running)
@@ -36,6 +41,9 @@ public class PC : MonoBehaviour
         }
         else
         {
+            _effects = new Dictionary<EffectCode, AppliedEffect>();
+            _inTriggers = new HashSet<int>();
+            _priorInTriggers = new HashSet<int>();
             _activeInfluencers = new Dictionary<byte, LeyInfluencer>();
             ComponentRegister.PC = this;
             PlayerMovement.SetPC(this);
@@ -55,6 +63,7 @@ public class PC : MonoBehaviour
             }
         }
     }
+    
     public void Start()
     {
         _hp = new HMLUpdater(0.1f, MatchParams.MaxHP, PlayerIndicator.Health, _hml);
@@ -71,7 +80,45 @@ public class PC : MonoBehaviour
             _joinRerequest = new PeriodicAction(1.0f, JoinRerequest, null);
         }
     }
-    
+    public void ApplyEffect(AppliedEffect effect)
+    {
+        EffectCode effectCode = effect.EffectCode;
+        if (_effects.ContainsKey(effectCode))
+        {
+            AppliedEffect toCancel = _effects[effectCode];
+        }
+    }
+    public void FixedUpdate()
+    {
+        if (_priorInTriggers.Count > 0 || _inTriggers.Count > 0)
+        {
+            List<int> exited = new List<int>();
+            foreach (int id in _priorInTriggers)
+            {
+                if (!_inTriggers.Contains(id))
+                {
+                    exited.Add(id);
+                }
+            }
+            _priorInTriggers.Clear();
+            foreach(int id in _inTriggers)
+            {
+                _priorInTriggers.Add(id);
+            }
+            _inTriggers.Clear();
+            foreach(int id in exited)
+            {
+                Trigger exitedTrigger = null;
+                if(TriggerManager.GetTrigger(id, ref exitedTrigger))
+                {
+                    if(exitedTrigger.Entered && !exitedTrigger.Exited)
+                    {
+                        exitedTrigger.ExitAction();
+                    }
+                }
+            }
+        }
+    }
     public void Update()
     {
         if (!JoinedMatch)
@@ -199,10 +246,21 @@ public class PC : MonoBehaviour
     }
     public void OnTriggerExit(Collider other)
     {
+        /*
         Trigger toProcess = null;
         if (ObtainTrigger(other, ref toProcess))
         {
             toProcess.ExitAction();
+        }
+        */
+    }
+
+    public void OnTriggerStay(Collider other)
+    {
+        Trigger toProcess = null;
+        if (ObtainTrigger(other, ref toProcess))
+        {
+            _inTriggers.Add(toProcess.TriggerID);
         }
     }
     private bool ObtainTrigger(Collider other, ref Trigger trigger)

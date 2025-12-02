@@ -10,11 +10,15 @@ public class Shrine : BiasableTrigger
     public byte ShrinePower = 100;
     private bool _playerInShrine = false;
 
-    public void Awake()
+    protected override void Awake()
     {
         if (!MatchParams.IncludeShrines)
         {
             Destroy(this);
+        }
+        else
+        {
+            base.Awake();
         }
     }
     public void Start()
@@ -35,15 +39,15 @@ public class Shrine : BiasableTrigger
     }
     public override void EnterAction()
     {
+        base.EnterAction();
         _playerInShrine = true;
         ComponentRegister.ShrineDisplay.Refresh(this);
-        Debug.Log("Entered shrine");
     }
     public override void ExitAction()
     {
+        base.ExitAction();
         _playerInShrine = false;
         ComponentRegister.ShrineDisplay.Toggle(false);
-        Debug.Log("Exited shrine");
     }
     public Team GetTeam()
     {

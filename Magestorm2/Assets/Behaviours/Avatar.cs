@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Avatar : MonoBehaviour, IComparable<Avatar>
@@ -15,9 +16,13 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private Vector3 _startRotation, _newRotation;
     private bool _positionChange, _rotationChange;
     private float _moveElapsed;
+    private Renderer[] _renderers;
+    private Dictionary<EffectCode, AppliedEffect> _appliedEffects;
+    private GameObject _model;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _appliedEffects = new Dictionary<EffectCode, AppliedEffect>();
         _moveElapsed = 0.0f;
         _positionChange = false;
     }
@@ -25,7 +30,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     // Update is called once per frame
     void Update()
     {
-        
         if (_positionChange)
         {
             if(SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform))
@@ -40,9 +44,39 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
                 _rotationChange = false;
             }
         }
-        
     }
-    
+    private void SwapMaterials(bool opaque)
+    {
+        if(_renderers == null)
+        {
+            _renderers = GetComponentsInChildren<Renderer>();
+        }
+        for(int i = 0; i < _renderers.Length; i++)
+        {
+            Renderer renderer = _renderers[i];
+            string materialName = renderer.material.name.ToLower().Replace (" (instance)", "");
+            Material toUse = null;
+            if(ComponentRegister.ModelBuilder.GetMaterial(materialName, opaque, ref toUse))
+            {
+                renderer.material = toUse;
+            }
+        }
+    }
+    public void SetAlive(bool alive)
+    {
+        SwapMaterials(alive);
+        _isAlive = alive;
+    }
+    public void AddEffect(AppliedEffect effect)
+    {
+        if (_appliedEffects.ContainsKey(effect.EffectCode))
+        {
+            AppliedEffect toCancel = _appliedEffects[effect.EffectCode];
+            toCancel.ReverseEffect();
+        }
+        _appliedEffects.Add(effect.EffectCode, effect);
+        effect.ApplyEffect();
+    }
 
     public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
     {
@@ -53,7 +87,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _team = team;
         _playerID = id;
         Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
-        ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
+        _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
         gameObject.transform.localPosition = new Vector3(0, -0.08f, 0);
         if(MatchParams.IDinMatch == id)
         {
@@ -102,7 +136,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     public bool IsAlive 
     {
         get { return _isAlive; }
-        set { _isAlive = value; }
     }
     public bool UpdateNeeded
     {

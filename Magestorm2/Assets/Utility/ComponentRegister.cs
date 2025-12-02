@@ -33,7 +33,13 @@ public static class ComponentRegister
     private static CTFScorePanel _ctfscorePanel;
     private static Spawner _spawner;
     private static Valhalla _valhalla;
+    private static ValhallaNotice _valhallaNotice;
 
+    public static ValhallaNotice ValhallaNotice
+    {
+        get { return _valhallaNotice; }
+        set { _valhallaNotice = value; }
+    }
     public static Valhalla Valhalla
     {
         get {  return _valhalla; }
