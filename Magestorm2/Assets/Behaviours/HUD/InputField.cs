@@ -33,11 +33,29 @@ public class InputField : MonoBehaviour
         if (InputControls.SendMessage)
         {
             string message = _tmpTextMessage.text;
+            
             CancelChat();
             if(message.Trim() != "")
             {
                 if (!ProfanityChecker.ContainsProhibitedLanguage(message))
                 {
+                    if (MatchParams.IncludeTeams && !message.StartsWith("/") && ChatTarget != Team.Neutral)
+                    {
+                        string prepend = "";
+                        switch (ChatTarget)
+                        {
+                            case Team.Chaos:
+                                prepend = "/c ";
+                                break;
+                            case Team.Balance:
+                                prepend = "/b ";
+                                break;
+                            case Team.Order:
+                                prepend = "/o ";
+                                break;
+                        }
+                        message = prepend + message;
+                    }
                     ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.BroadcastMessagePacket(message));
                 }
                 else

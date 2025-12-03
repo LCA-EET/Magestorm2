@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Avatar : MonoBehaviour, IComparable<Avatar>
 {
+    public GameObject CharacterName;
     private int _lastPRPacketID = 0;
     private string _name;
     private byte _level, _class;
@@ -19,6 +21,14 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private Renderer[] _renderers;
     private Dictionary<EffectCode, AppliedEffect> _appliedEffects;
     private GameObject _model;
+    private TMP_Text _nameText;
+    private PeriodicAction _lookAtCamera;
+    
+    void Awake()
+    {
+        _lookAtCamera = new PeriodicAction(0.2f, NameRotate, null);
+        _nameText = CharacterName.GetComponent<TMP_Text>();
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -44,6 +54,12 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
                 _rotationChange = false;
             }
         }
+        _lookAtCamera.ProcessAction(Time.deltaTime);
+    }
+    private void NameRotate()
+    {
+        CharacterName.transform.LookAt(Camera.main.transform.position);
+        CharacterName.transform.Rotate(0, 180, 0);
     }
     private void SwapMaterials(bool opaque)
     {
@@ -85,6 +101,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _level = level;
         _playerClassString = PlayerCharacter.ClassToString((PlayerClass)playerClass);
         _team = team;
+        _nameText.text = name;
+        _nameText.color = Teams.GetTeamColor(_team);
         _playerID = id;
         Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
         _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);

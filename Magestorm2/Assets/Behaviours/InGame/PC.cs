@@ -31,7 +31,7 @@ public class PC : MonoBehaviour
     public bool InValhalla = false;
     public HashSet<int> _inTriggers;
     public HashSet<int> _priorInTriggers;
-
+    
     private Dictionary<EffectCode, AppliedEffect> _effects;
     public void Awake()
     {

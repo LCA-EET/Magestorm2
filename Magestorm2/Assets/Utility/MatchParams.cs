@@ -78,6 +78,7 @@ public static class MatchParams
         IncludeShrines = true;
         IncludeFlags = false;
         IncludePools = true;
+        IncludeTeams = true;
     }
 
     public static void InitCTF()
@@ -86,6 +87,7 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = true;
         IncludePools = true;
+        IncludeTeams = true;
         byte flagByteLength = _decrypted[22];
         int index = 23;
         FlagManager.Init(_decrypted, index);
@@ -101,6 +103,7 @@ public static class MatchParams
         IncludeShrines = false;
         IncludeFlags = false;
         IncludePools = false;
+        IncludeTeams = false;
     }
 
     public static float MaxHP

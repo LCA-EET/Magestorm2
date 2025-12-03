@@ -34,6 +34,7 @@ public class TeamChatButton : FormButton
         if (selected == buttonType)
         {
             InputField.ChatTarget = AssociatedTeam;
+            new MessageData(Language.BuildString(216, Teams.GetTeamName(AssociatedTeam)), "Server", Teams.GetTeamColor(AssociatedTeam));
         }
     }
 }

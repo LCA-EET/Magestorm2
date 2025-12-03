@@ -10,7 +10,10 @@ public static class SharedFunctions
         get { return _params; } 
         set { _params = value; }
     }
-
+    public static void FaceCamera(GameObject go)
+    {
+        go.transform.LookAt(Camera.main.transform.position);
+    }
     public static int GameServerPort
     {
         get; set;
