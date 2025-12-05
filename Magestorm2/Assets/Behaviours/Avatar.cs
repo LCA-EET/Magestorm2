@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Avatar : MonoBehaviour, IComparable<Avatar>
@@ -107,10 +108,16 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
         _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
         gameObject.transform.localPosition = new Vector3(0, -0.08f, 0);
+        
         if(MatchParams.IDinMatch == id)
         {
+            gameObject.layer = LayerMask.NameToLayer("Player");
             gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
             SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
+        }
+        else
+        {
+            gameObject.layer = LayerMask.NameToLayer("RemotePlayer");
         }
     }
     public int LastPRPacketID
