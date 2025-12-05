@@ -30,6 +30,7 @@ public class ValidatableForm : InstantiatableForm
         {
             button.SetForm(this);
             _buttonTable.Add(button.buttonType, button);
+            Debug.Log("Associated button " + button.buttonType.ToString()); 
         }
     }
     public void ToggleButtonState(ButtonType buttonType, bool active)

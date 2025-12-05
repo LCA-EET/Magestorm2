@@ -23,6 +23,7 @@ public class InputField : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (InputControls.ChatMode)
         {
             Game.ChatMode = true;

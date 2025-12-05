@@ -14,7 +14,17 @@ public class MouseLook : MonoBehaviour
 
     void Update()
     {
-        if (Game.GameMode)
+        if (InputControls.MouseMode)
+        {
+            Game.MouseMode = !Game.MouseMode;
+            Cursor.lockState = Game.MouseMode ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = Game.MouseMode;
+            if (Game.MouseMode)
+            {
+                new MessageData(Language.BuildString(218, InputControls.KeyToString(InputControl.MouseMode)), "Server");
+            }
+        }
+        if (Game.GameMode && !Game.MouseMode)
         {
             if (ComponentRegister.PlayerMovement.PositionChanged)
             {

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4697217981819516901}
   - component: {fileID: 5486150606364832899}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: ChatSelector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,6 +319,10 @@ PrefabInstance:
     - target: {fileID: 5860777818093966321, guid: d482cd4c583eaed408b274a179ecba86, type: 3}
       propertyPath: m_Name
       value: TeamButton Neutral
+      objectReference: {fileID: 0}
+    - target: {fileID: 6952729035023692176, guid: d482cd4c583eaed408b274a179ecba86, type: 3}
+      propertyPath: buttonType
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 8220243645846572000, guid: d482cd4c583eaed408b274a179ecba86, type: 3}
       propertyPath: m_Pivot.x

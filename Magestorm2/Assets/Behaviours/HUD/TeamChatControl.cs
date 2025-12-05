@@ -28,7 +28,10 @@ public class TeamChatControl : ValidatableForm
 
     public override void ButtonPressed(ButtonType buttonType)
     {
-        _buttonTable[buttonType].CallBack(buttonType);
+        foreach(FormButton button in _buttonTable.Values)
+        {
+            button.CallBack(buttonType);
+        }
     }
     public void SetTeam(Team team)
     {

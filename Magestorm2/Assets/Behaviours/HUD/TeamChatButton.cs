@@ -11,8 +11,9 @@ public class TeamChatButton : FormButton
         Colors.Init();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         if (AssociatedTeam == Team.Neutral)
         {
             CallBack(buttonType);

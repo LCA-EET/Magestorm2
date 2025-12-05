@@ -1670,6 +1670,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChatSelector
       objectReference: {fileID: 0}
+    - target: {fileID: 6369131454918719982, guid: 0f2b224ba0e562e4e88ee516b2ba28dd, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

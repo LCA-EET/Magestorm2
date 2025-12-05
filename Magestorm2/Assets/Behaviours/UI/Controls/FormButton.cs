@@ -33,7 +33,7 @@ public class FormButton : MonoBehaviour
     private Button _button;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected virtual void Start()
     {
         _button = GetComponent<Button>();
         _button.onClick.AddListener(NotifyForm);

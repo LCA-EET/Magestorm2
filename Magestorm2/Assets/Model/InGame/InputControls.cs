@@ -38,7 +38,8 @@ public enum InputControl
     Slot7 = 34,
     Slot8 = 35,
     Slot9 = 36,
-    Slot10 = 37
+    Slot10 = 37,
+    MouseMode = 38
 }
 public static class InputControls
 {
@@ -114,9 +115,17 @@ public static class InputControls
         defaults.Add(InputControl.Slot8, KeyCode.Alpha8);
         defaults.Add(InputControl.Slot9, KeyCode.Alpha9);
         defaults.Add(InputControl.Slot10, KeyCode.Alpha0);
+        defaults.Add(InputControl.MouseMode, KeyCode.P);
         return defaults;
     }
    
+    public static bool MouseMode
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.MouseMode])) && Game.GameMode;
+        }
+    }
     public static bool Action
     {
         get
