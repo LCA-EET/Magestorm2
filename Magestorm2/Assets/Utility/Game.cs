@@ -27,7 +27,10 @@ public static class Game
             return !ChatMode && !MenuMode && !ControlMode;
         }
     }
-
+    public static Avatar PCAvatar
+    {
+        get { return ComponentRegister.PlayerAvatar; }
+    }
     public static void Quit()
     {
         if (!EditorApplication.isPlaying)

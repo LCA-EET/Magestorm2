@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class ComponentRegister
 {
+    private static Avatar _playerAvatar;
     private static Transform _playerTransform;
     private static PC _PC;
     private static PlayerMovement _playerMovement;
@@ -35,6 +36,11 @@ public static class ComponentRegister
     private static Valhalla _valhalla;
     private static ValhallaNotice _valhallaNotice;
 
+    public static Avatar PlayerAvatar
+    {
+        get { return _playerAvatar; }
+        set { _playerAvatar = value; }  
+    }
     public static ValhallaNotice ValhallaNotice
     {
         get { return _valhallaNotice; }

@@ -190,20 +190,21 @@ public class PC : MonoBehaviour
     
     private void ReportMovement()
     {
+        byte posture = Game.PCAvatar.Posture;
         if (MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit) && MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
         {
             byte[] prData = new byte[28];
             ByteUtils.FillArray(ref prData, 0, _priorPosition);
             ByteUtils.FillArray(ref prData, 12, _priorRotation);
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData, ref _prPacketID));
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, posture, prData, ref _prPacketID));
         }
         else if (MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit))
         {
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, posture, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
         }
         else if (MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
         {
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
+            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, posture, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
         }
     }
     private bool MinimumReportingExceedance(Vector3 current, ref Vector3 prior, float limit)

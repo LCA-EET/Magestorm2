@@ -124,7 +124,7 @@ public static class InputControls
     {
         get
         {
-            return (Input.GetKey(_controls[InputControl.Crouch])) && Game.GameMode;
+            return (Input.GetKeyDown(_controls[InputControl.Crouch])) && Game.GameMode;
         }
     }
     public static bool MouseMode

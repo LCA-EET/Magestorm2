@@ -187,7 +187,7 @@ public class Database {
             ps.setInt(1, accountID);
             ps.setString(2, charname);
             ps.setByte(3, classCode);
-            ps.setByte(4, CharacterStatus.Activated);
+            ps.setByte(4, ControlCodes.CharacterStatus_Activated);
             ps.setByte(5, stats[0]);
             ps.setByte(6, stats[1]);
             ps.setByte(7, stats[2]);
@@ -308,7 +308,7 @@ public class Database {
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, accountID);
-            ps.setByte(2, CharacterStatus.Activated);
+            ps.setByte(2, ControlCodes.CharacterStatus_Activated);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 int characterID = rs.getInt("id");

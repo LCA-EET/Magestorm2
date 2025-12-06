@@ -39,7 +39,7 @@ Transform:
   - {fileID: 84992513041701559}
   - {fileID: 7536431974352290740}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0}
 --- !u!114 &3757165163785592636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +91,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08

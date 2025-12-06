@@ -23,15 +23,16 @@ public static class InGame_Packets
         BitConverter.GetBytes(newLey).CopyTo(unencrypted, 2);
         return unencrypted;
     }
-    public static byte[] PlayerMovedPacket(byte controlCode, byte[] data, ref int packetID)
+    public static byte[] PlayerMovedPacket(byte controlCode, byte posture, byte[] data, ref int packetID)
     {
         packetID++;
-        byte[] unencrypted = new byte[7 + data.Length];
+        byte[] unencrypted = new byte[8 + data.Length];
         unencrypted[0] = InGame_Send.PlayerMoved;
         unencrypted[1] = MatchParams.IDinMatch;
         BitConverter.GetBytes(packetID).CopyTo(unencrypted, 2);
-        unencrypted[6] = controlCode;
-        data.CopyTo(unencrypted, 7);
+        unencrypted[6] = posture;
+        unencrypted[7] = controlCode;
+        data.CopyTo(unencrypted, 8);
         return unencrypted;
     }
     

@@ -175,17 +175,18 @@ public class Match {
             MatchCharacter toUpdate = _matchCharacters.get(playerID);
             int packetID = ByteUtils.ExtractInt(decrypted, 2);
             if(packetID > toUpdate.GetLastPRPacketID()){
-                byte controlCode = decrypted[6];
+                toUpdate.SetPosture(decrypted[6]);
+                byte controlCode = decrypted[7];
                 switch(controlCode){
                     case 0: // position only
                         toUpdate.UpdatePosition(decrypted);
                         break;
                     case 1: // direction only
-                        toUpdate.UpdateDirection(decrypted, 7);
+                        toUpdate.UpdateDirection(decrypted, 8);
                         break;
                     case 2: // position and direction
                         toUpdate.UpdatePosition(decrypted);
-                        toUpdate.UpdateDirection(decrypted, 19);
+                        toUpdate.UpdateDirection(decrypted, 20);
                         break;
                 }
                 SendToAll(Packets.PlayerMovedPacket(decrypted));

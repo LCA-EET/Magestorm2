@@ -112,10 +112,12 @@ public static class Match
         byte playerID = decrypted[1];
         if(playerID != MatchParams.IDinMatch)
         {
-            byte controlCode = decrypted[6];
+            byte posture = decrypted[6];
+            byte controlCode = decrypted[7];
             if (_matchPlayers.ContainsKey(playerID))
             {
                 Avatar toUpdate = _matchPlayers[playerID];
+                toUpdate.Posture = posture;
                 int packetID = BitConverter.ToInt32(decrypted, 2);
                 if(packetID > toUpdate.LastPRPacketID)
                 {
@@ -126,11 +128,11 @@ public static class Match
                             _matchPlayers[playerID].UpdatePosition(decrypted, false);
                             break;
                         case 1: // direction only
-                            _matchPlayers[playerID].UpdateDirection(decrypted, 7, false);
+                            _matchPlayers[playerID].UpdateDirection(decrypted, 8, false);
                             break;
                         case 2: // position and direction
                             _matchPlayers[playerID].UpdatePosition(decrypted, false);
-                            _matchPlayers[playerID].UpdateDirection(decrypted, 19, false);
+                            _matchPlayers[playerID].UpdateDirection(decrypted, 20, false);
                             break;
                     }
                 }

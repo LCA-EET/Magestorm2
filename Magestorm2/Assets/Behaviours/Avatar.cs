@@ -24,7 +24,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private GameObject _model;
     private TMP_Text _nameText;
     private PeriodicAction _lookAtCamera;
-    
+    private byte _posture;
     void Awake()
     {
         _lookAtCamera = new PeriodicAction(0.2f, NameRotate, null);
@@ -43,14 +43,14 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     {
         if (_positionChange)
         {
-            if(SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform))
+            if(SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform, false))
             {
                 _positionChange = false;
             }
         }
         if (_rotationChange)
         {
-            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startRotation, _newRotation, transform))
+            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startRotation, _newRotation, transform, false))
             {
                 _rotationChange = false;
             }
@@ -98,6 +98,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
     {
         _name = name;
+        _posture = ControlCodes.Posture_Standing;
         _class = playerClass;
         _level = level;
         _playerClassString = PlayerCharacter.ClassToString((PlayerClass)playerClass);
@@ -111,6 +112,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         
         if(MatchParams.IDinMatch == id)
         {
+            ComponentRegister.PlayerAvatar = this;
             gameObject.layer = LayerMask.NameToLayer("Player");
             gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
             SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
@@ -127,9 +129,9 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     }
     public void UpdatePosition(byte[] decrypted, bool instant)
     {
-        float x = BitConverter.ToSingle(decrypted, 7);
-        float y = BitConverter.ToSingle(decrypted, 11);
-        float z = BitConverter.ToSingle(decrypted, 15);
+        float x = BitConverter.ToSingle(decrypted, 8);
+        float y = BitConverter.ToSingle(decrypted, 12);
+        float z = BitConverter.ToSingle(decrypted, 16);
         if (instant)
         {
             gameObject.transform.position = new Vector3(x, y, z);
@@ -157,6 +159,23 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             _newRotation = new Vector3(x, y, z);
             _rotationChange = true;
         }
+    }
+    public byte Posture
+    {
+        get { return _posture; }
+        set { _posture = value; }
+    }
+    public bool IsCrouched
+    {
+        get { return _posture == ControlCodes.Posture_Crouched; }
+    }
+    public bool IsStanding
+    {
+        get { return _posture == ControlCodes.Posture_Standing; }
+    }
+    public bool IsAirborne
+    {
+        get { return _posture == ControlCodes.Posture_Airborne; } 
     }
     public bool IsAlive 
     {

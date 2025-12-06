@@ -253,31 +253,31 @@ public class InGamePacketProcessor : UDPProcessor
     {
         byte killedPlayerID = _decrypted[1];
         byte killerID = _decrypted[2];
-        MessageData data = null;
         Avatar killedPlayer = null;
         if(Match.GetAvatar(killedPlayerID, ref killedPlayer))
         {
             if(killedPlayerID == MatchParams.IDinMatch)
             {
+                ComponentRegister.PlayerMovement.DeathResetCameraAndController();
                 Avatar playerKiller = null;
                 ComponentRegister.PC.UpdateHP(0.0f);
                 if (Match.GetAvatar(killerID, ref playerKiller))
                 {
-                    data = new MessageData(Language.BuildString(186, playerKiller.Name), "Server"); //
+                    new MessageData(Language.BuildString(186, playerKiller.Name), "Server"); //
                 }
             }
             else
             {
                 if (killerID == MatchParams.IDinMatch) // player killed someone
                 {
-                    data = new MessageData(Language.BuildString(185, killedPlayer.Name), "Server"); //
+                    new MessageData(Language.BuildString(185, killedPlayer.Name), "Server"); //
                 }
                 else // someone else killed someone
                 {
                     Avatar killer = null;
                     if (Match.GetAvatar(killerID, ref killer))
                     {
-                        data = new MessageData(Language.BuildString(187, killedPlayer.Name), "Server"); //
+                        new MessageData(Language.BuildString(187, killedPlayer.Name), "Server"); //
                     }
                 }
             }

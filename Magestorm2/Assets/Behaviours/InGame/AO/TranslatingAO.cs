@@ -21,7 +21,7 @@ public class TranslatingAO : ActuatingAO
         }
         if (_actuating)
         {
-            if (SharedFunctions.ProcessVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b, ActuatingObject.transform))
+            if (SharedFunctions.ProcessVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b, ActuatingObject.transform, false))
             {
                 _actuating = false;
                 if (ActuatingObject.transform.position == _end)
