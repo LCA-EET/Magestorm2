@@ -23,4 +23,5 @@ public class InGame_Receive {
     public static final byte FetchPlayer = 20;
     public static final byte LeyUpdate = 21;
     public static final byte Tap = 22;
+    public static final byte PostureChange = 23;
 }

@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _priorPosition;
     private RaycastHit _hitInfo;
     private PC _pc;
+    private byte _priorPosture = ControlCodes.Posture_Standing;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -179,7 +180,7 @@ public class PlayerMovement : MonoBehaviour
                 Game.PCAvatar.Posture = ControlCodes.Posture_Crouched;
                 SetControllerHC(_controllerCrouchCenter, _controllerCrouchHeight);
             }
-            Debug.Log("Posture: " + Game.PCAvatar.Posture);
+            Game.SendInGameBytes(InGame_Packets.PostureChangePacket(Game.PCAvatar.Posture));
         }
     }
     private void SetControllerHC(Vector3 center, float height)
@@ -193,6 +194,15 @@ public class PlayerMovement : MonoBehaviour
         _csChanging = false;
         Camera.main.transform.localPosition = _cameraLocalPosition;
         SetControllerHC(_controllerCenter, _controllerHeight);
+    }
+    public bool PostureChanged
+    {
+        get
+        {
+            bool toReturn = (_priorPosture == Game.PCAvatar.Posture);
+            _priorPosture = Game.PCAvatar.Posture;
+            return toReturn;
+        }
     }
     private void UpdateGroundedStatus()
     {

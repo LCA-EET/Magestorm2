@@ -52,12 +52,20 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.Tap:
                     HandleTap();
                     return true;
+                case InGame_Receive.PostureChange:
+                    HandlePostureChange();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
             return HandleJoinMatchPacket();
         }
         return false;
+    }
+    private void HandlePostureChange(){
+        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        mc.SetPosture(_decrypted[2]);
+        _owningMatch.SendToAll(Packets.PostureChangePacket(_decrypted));
     }
     private void HandleTap(){
         _owningMatch.PlayerTapped(_decrypted[1]);

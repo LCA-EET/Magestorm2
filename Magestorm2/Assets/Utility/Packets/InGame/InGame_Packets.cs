@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 public static class InGame_Packets
 {
-    public static byte[] InactivityResponsePacket() { return OpCodePlusID(InGame_Send.InactivityCheckResponse); }
-
+    public static byte[] InactivityResponsePacket() 
+    {
+        return new byte[] { InGame_Send.InactivityCheckResponse, MatchParams.IDinMatch };
+    }
+    public static byte[] PostureChangePacket(byte posture)
+    {
+        return new byte[] { InGame_Send.PostureChange, MatchParams.IDinMatch, posture};
+    }
     public static byte[] TapPacket()
     {
-        byte[] unencrypted = new byte[2];
-        unencrypted[0] = InGame_Send.Tap;
-        unencrypted[1] = MatchParams.IDinMatch;
-        return unencrypted;
+        return new byte[] { InGame_Send.Tap, MatchParams.IDinMatch };
     }
     public static byte[] UpdateLeyPacket(float newLey)
     {
@@ -38,35 +37,19 @@ public static class InGame_Packets
     
     public static byte[] FlagCapturedPacket(byte flagCaptured)
     {
-        byte[] unencrypted = new byte[3];
-        unencrypted[0] = InGame_Send.FlagCaptured;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = flagCaptured;
-        return unencrypted;
+        return new byte[] { InGame_Send.FlagCaptured, MatchParams.IDinMatch, flagCaptured };
     }
     public static byte[] FetchPlayerPacket(byte playerID)
     {
-        byte[] unencrypted = new byte[3];
-        unencrypted[0] = InGame_Send.FetchPlayer;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = playerID;
-        return unencrypted;
+        return new byte[] { InGame_Send.FetchPlayer, MatchParams.IDinMatch, playerID };
     }
     public static byte[] FlagTakenPacket(byte flagID)
     {
-        byte[] unencrypted = new byte[3];
-        unencrypted[0] = InGame_Send.FlagTaken;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = flagID;
-        return unencrypted;
+        return new byte[] { InGame_Send.FlagTaken, MatchParams.IDinMatch, flagID };
     }
     public static byte[] FlagReturnedPacket(byte flagID)
     {
-        byte[] unencrypted = new byte[3];
-        unencrypted[0] = InGame_Send.FlagReturned;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = flagID;
-        return unencrypted;
+        return new byte[] { InGame_Send.FlagReturned, MatchParams.IDinMatch, flagID};
     }
     public static byte[] QuitGamePacket()
     {
@@ -79,11 +62,7 @@ public static class InGame_Packets
     }
     public static byte[] LeaveMatchPacket()
     {
-        byte[] unencrypted = new byte[3];
-        unencrypted[0] = InGame_Send.LeaveMatch;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = MatchParams.MatchTeamID;
-        return unencrypted;
+        return new byte[] { InGame_Send.LeaveMatch, MatchParams.IDinMatch, MatchParams.MatchTeamID};
     }
     public static byte[] BroadcastMessagePacket(string messageText)
     {
@@ -97,36 +76,19 @@ public static class InGame_Packets
     }
     public static byte[] AdjustShrinePacket (byte shrineID)
     {
-        byte[] unencrypted = new byte[3];
-        unencrypted[0] = InGame_Send.AdjustShrine;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = shrineID;
-        return unencrypted;
+        return new byte[] { InGame_Send.AdjustShrine, MatchParams.IDinMatch, shrineID};
     }
     public static byte[] BiasPoolPacket(byte poolID)
     {
-        byte[] unencrypted = new byte[3];
-        unencrypted[0] = InGame_Send.BiasPool;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = poolID;
-        return unencrypted;
+        return new byte[] {InGame_Send.BiasPool, MatchParams.IDinMatch, poolID};
     }
     public static byte[] FetchShrineHealthPacket()
     {
-        byte[] unencrypted = new byte[2];
-        unencrypted[0] = InGame_Send.FetchShrineHealth;
-        unencrypted[1] = MatchParams.IDinMatch;
-        return unencrypted;
+        return new byte[] {InGame_Send.FetchShrineHealth, MatchParams.IDinMatch};
     }
     public static byte[] ChangedObjectStatePacket(byte key, byte state, byte selfReset)
     {
-        byte[] unencrypted = new byte[5];
-        unencrypted[0] = InGame_Send.ChangedObjectState;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = key;
-        unencrypted[3] = state;
-        unencrypted[4] = selfReset;
-        return unencrypted;
+        return new byte[] { InGame_Send.ChangedObjectState, MatchParams.IDinMatch, key, state, selfReset };
     }
     public static byte[] MatchJoinedPacket(byte packetID)
     {
@@ -138,13 +100,5 @@ public static class InGame_Packets
         unencrypted[10] = MatchParams.MatchTeamID;
         return unencrypted;
 
-    }
-    
-    public static byte[] OpCodePlusID(byte opCode)
-    {
-        byte[] unencrypted = new byte[2];
-        unencrypted[0] = opCode;
-        unencrypted[1]= MatchParams.IDinMatch;
-        return unencrypted;
     }
 }

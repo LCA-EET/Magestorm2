@@ -27,5 +27,6 @@ public static class InGame_Send
                         PlayerMoved = 19,
                         FetchPlayer = 20,
                         UpdateLey = 21,
-                        Tap = 22;
+                        Tap = 22,
+                        PostureChange = 23;
 }

@@ -114,9 +114,22 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.PlayerTapped:
                             HandleTap();
                             break;
+                        case InGame_Receive.PostureChange:
+                            HandlePostureChange();
+                            break;
                     }
                 }
             }
+        }
+    }
+    private void HandlePostureChange()
+    {
+        byte avatarID = _decrypted[1];
+        Avatar avatar = null;
+        if(Match.GetAvatar(avatarID, ref avatar))
+        {
+            avatar.Posture = _decrypted[2];
+            Debug.Log("Posture Change, Avatar: " + avatarID + ", Posture: " + Game.PCAvatar.Posture);
         }
     }
     private void HandleTap()

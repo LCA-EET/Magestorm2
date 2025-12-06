@@ -41,5 +41,6 @@ public static class InGame_Receive
                         ManaUpdate = 32,
                         LeyUpdate = 33,
                         PlayerRevived = 34,
-                        PlayerTapped = 35;
+                        PlayerTapped = 35,
+                        PostureChange = 36;
 }

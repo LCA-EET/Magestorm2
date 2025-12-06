@@ -35,4 +35,5 @@ public class InGame_Send {
     public static final byte LeyUpdate = 33;
     public static final byte PlayerRevived = 34;
     public static final byte PlayerTapped = 35;
+    public static final byte PostureChange = 36;
 }

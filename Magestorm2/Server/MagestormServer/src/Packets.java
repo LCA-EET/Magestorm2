@@ -204,11 +204,12 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] PostureChangePacket(byte[] decrypted){
+        decrypted[0] = InGame_Send.PostureChange;
+        return Cryptographer.Encrypt(decrypted);
+    }
     public static byte[] PlayerTapped(byte playerID){
-        byte[] toEncrypt = new byte[2];
-        toEncrypt[0] = InGame_Send.PlayerTapped;
-        toEncrypt[1] = playerID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerTapped, playerID});
     }
     public static byte[] PlayerRevivedPacket(byte revivedID, byte reviverID, float hp){
         byte[] toEncrypt = new byte[7];
@@ -245,10 +246,7 @@ public class Packets {
     }
 
     public static byte[] RemovedFromMatchPacket(byte reasonCode){
-        byte[] toEncrypt = new byte[2];
-        toEncrypt[0] = InGame_Send.RemovedFromMatch;
-        toEncrypt[1] = reasonCode;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.RemovedFromMatch, reasonCode});
     }
 
     public static byte[] HPandManaUpdatePacket(float health, float mana){
@@ -275,19 +273,11 @@ public class Packets {
     }
 
     public static byte[] PlayerKilledPacket(byte playerKilled, byte killerID){
-        byte[] toEncrypt = new byte[3];
-        toEncrypt[0] = InGame_Send.PlayerKilled;
-        toEncrypt[1] = playerKilled;
-        toEncrypt[2] = killerID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerKilled, playerKilled, killerID});
     }
 
     public static byte[] FlagTakenPacket(byte flagID, byte playerID){
-        byte[] toEncrypt = new byte[3];
-        toEncrypt[0] = InGame_Send.FlagTaken;
-        toEncrypt[1] = flagID;
-        toEncrypt[2] = playerID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.FlagTaken, flagID, playerID});
     }
 
     public static byte[] FlagDroppedPacket(byte playerID, byte[] flagBytes, byte killer){
@@ -300,65 +290,32 @@ public class Packets {
     }
 
     public static byte[] FlagReturnedPacket(byte flagReturned){
-        byte[] toEncrypt = new byte[3];
-        toEncrypt[0] = InGame_Send.FlagReturned;
-        toEncrypt[1] = flagReturned;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.FlagReturned, flagReturned});
     }
 
     public static byte[] FlagCapturedPacket(byte capturingTeam, byte flagCaptured, byte capturedBy, byte scoreCapturer,
                                             byte scoreCaptured)
     {
-        byte[] toEncrypt = new byte[6];
-        toEncrypt[0] = InGame_Send.FlagCaptured;
-        toEncrypt[1] = capturingTeam;
-        toEncrypt[2] = flagCaptured;
-        toEncrypt[3] = capturedBy;
-        toEncrypt[4] = scoreCapturer;
-        toEncrypt[5] = scoreCaptured;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.FlagCaptured, capturingTeam, flagCaptured, capturedBy, scoreCapturer, scoreCaptured});
     }
 
     public static byte[] AllShrineHealthPacket(byte chaos, byte balance, byte order){
-        byte[] toEncrypt = new byte[4];
-        toEncrypt[0] = InGame_Send.AllShrineHealth;
-        toEncrypt[1] = chaos;
-        toEncrypt[2] = balance;
-        toEncrypt[3] = order;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.AllShrineHealth, chaos, balance, order});
     }
 
     public static byte[] ShrineAdjustmentPacket(byte health, byte shrineID, byte adjusterID){
-        byte[] toEncrypt = new byte[4];
-        toEncrypt[0] = InGame_Send.ShrineAdjusted;
-        toEncrypt[1] = shrineID;
-        toEncrypt[2] = health;
-        toEncrypt[3] = adjusterID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.ShrineAdjusted, shrineID, health, adjusterID});
     }
     public static byte[] ObjectStateChangePacket(byte objectID, byte state){
-        byte[] toEncrypt = new byte[3];
-        toEncrypt[0] = InGame_Send.ObjectStateChange;
-        toEncrypt[1] = objectID;
-        toEncrypt[2] = state;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.ObjectStateChange, objectID, state});
     }
 
     public static byte[] ShrineFailurePacket(byte shrineID){
-        byte[] toEncrypt = new byte[2];
-        toEncrypt[0] = InGame_Send.ShrineFailure;
-        toEncrypt[1] = shrineID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.ShrineFailure, shrineID});
     }
 
     public static byte[] PoolBiasPacket(byte poolID, byte bias, byte teamID, byte biaserID){
-        byte[] toEncrypt = new byte[5];
-        toEncrypt[0] = InGame_Send.PoolBiased;
-        toEncrypt[1] = poolID;
-        toEncrypt[2] = bias;
-        toEncrypt[3] = teamID;
-        toEncrypt[4] = biaserID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.PoolBiased, poolID, bias, teamID, biaserID});
     }
 
     public static byte[] PlayersLeftMatchPacket(ArrayList<MatchCharacter> departed){
@@ -374,12 +331,7 @@ public class Packets {
     }
 
     public static byte[] PlayerLeftMatchPacket(byte playerID){
-        byte[] toEncrypt = new byte[3];
-        toEncrypt[0] = InGame_Send.PlayerLeftMatch;
-        toEncrypt[1] = 1;
-        toEncrypt[2] = playerID;
-        //toEncrypt[3] = teamID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerLeftMatch, 1, playerID});
     }
 
     public static byte[] PlayerDataPacket(byte[] INCTLA){
