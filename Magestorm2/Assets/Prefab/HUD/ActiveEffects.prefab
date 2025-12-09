@@ -56,6 +56,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d8ff883b8e3ca748b95e6f89b46f05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EffectIcons:
+  - {fileID: 21300000, guid: 55832153fd9d01b43a4eb2c725859a27, type: 3}
+  - {fileID: 21300000, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+  - {fileID: 21300000, guid: e8c6d22f2364e844e8e290ffe9103cbe, type: 3}
+  - {fileID: 21300000, guid: e347ae08874574a4ab7937b337bb2d65, type: 3}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 25078fd8eac621f4e962440a3e75bd7d, type: 3}
+  - {fileID: 21300000, guid: 8b4edfa8b52f5b8429ce6e8eb2746ffa, type: 3}
+  - {fileID: 21300000, guid: 263e99bda15569e4393bf99f4a866584, type: 3}
+  - {fileID: 21300000, guid: 3be1f519ec1756444a1d2984f1308915, type: 3}
+  - {fileID: 21300000, guid: 0c94eecbd19d74d4fbb6237cfb04d387, type: 3}
   EffectDisplays:
   - {fileID: 8779395018442691134}
   - {fileID: 4855335754218236891}

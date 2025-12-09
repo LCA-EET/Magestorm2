@@ -117,8 +117,34 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.PostureChange:
                             HandlePostureChange();
                             break;
+                        case InGame_Receive.ApplyEffect:
+                            HandleEffect();
+                            break;
                     }
                 }
+            }
+        }
+    }
+    private void HandleEffect()
+    {
+        byte appliedToID = _decrypted[1];
+        Avatar appliedTo = null;
+        if(Match.GetAvatar(appliedToID, ref appliedTo))
+        {
+            byte applierID = _decrypted[2];
+            byte effectCode = _decrypted[3];
+            byte duration = _decrypted[4];
+            byte degree = _decrypted[5];
+            if (applierID != appliedToID)
+            {
+                Avatar applier = null;
+                if(Match.GetAvatar(applierID, ref applier)){
+                    appliedTo.AddEffect(new AppliedEffect((EffectCode)effectCode, applier, duration));
+                }
+            }
+            else
+            {
+                appliedTo.AddEffect(new AppliedEffect((EffectCode)effectCode, appliedTo, duration));
             }
         }
     }

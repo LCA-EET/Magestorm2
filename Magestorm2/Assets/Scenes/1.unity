@@ -201,6 +201,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7731744415248213515, guid: 65e6f38717900c746b20a0ffd8542959, type: 3}
   m_PrefabInstance: {fileID: 3686384862917338403}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &225662895
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 225662896}
+  m_Layer: 0
+  m_Name: IconLibrary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &225662896
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225662895}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,6 +651,7 @@ Transform:
   - {fileID: 49534040}
   - {fileID: 2098277828}
   - {fileID: 2128253025}
+  - {fileID: 9019946728715860799}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1019785752 stripped
@@ -1658,10 +1690,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
+    - target: {fileID: 7795006096266923996, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7795006096266923996, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: m_EmojiFallbackSupport
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8045045044118618306, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8049955403047467140, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: 'EffectIcons.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1847039390, guid: cd6726947eb51274881ff2899c5dff5e, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2164,7 +2208,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 961541736}
     m_Modifications:
     - target: {fileID: 4855701769849046549, guid: 496528a4443dbcb43994ebd61780b193, type: 3}
       propertyPath: ObjectKey
@@ -2223,6 +2267,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 496528a4443dbcb43994ebd61780b193, type: 3}
+--- !u!4 &9019946728715860799 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5260243226340894349, guid: 496528a4443dbcb43994ebd61780b193, type: 3}
+  m_PrefabInstance: {fileID: 9019946728715860798}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9068441914006870919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2300,6 +2349,6 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 961541736}
-  - {fileID: 9019946728715860798}
   - {fileID: 7368698380334257421}
   - {fileID: 1749596018}
+  - {fileID: 225662896}

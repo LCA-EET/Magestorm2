@@ -65,6 +65,7 @@ public static class Game
     {
         if (!_init)
         {
+            IconLibrary.Init();
             Colors.Init();
             Language.Init();
             LayerManager.Init();

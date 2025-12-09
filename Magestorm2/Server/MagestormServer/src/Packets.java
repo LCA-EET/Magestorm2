@@ -116,10 +116,7 @@ public class Packets {
     }
 
     public static byte[] NameCheckResults(byte isUsed){
-        byte[] toEncrypt = new byte[2];
-        toEncrypt[0] = Pregame_Send.NameCheckResult;
-        toEncrypt[1] = isUsed;
-        return Cryptographer.Encrypt(toEncrypt);
+        return Cryptographer.Encrypt(new byte[]{Pregame_Send.NameCheckResult, isUsed});
     }
     public static byte[] MatchDetailsPacket(Match match){
         return Cryptographer.Encrypt(match.PlayersInMatch(Pregame_Send.MatchDetails));
@@ -204,6 +201,9 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] ApplyEffectPacket(byte playerAppliedTo, byte applierID, byte effectCode, byte duration, byte degree){
+        return Cryptographer.Encrypt(new byte[]{InGame_Send.ApplyEffect, playerAppliedTo, applierID, effectCode, duration, degree});
+    }
     public static byte[] PostureChangePacket(byte[] decrypted){
         decrypted[0] = InGame_Send.PostureChange;
         return Cryptographer.Encrypt(decrypted);

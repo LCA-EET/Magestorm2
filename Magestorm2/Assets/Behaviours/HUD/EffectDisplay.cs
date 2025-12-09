@@ -1,30 +1,45 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class EffectDisplay : MonoBehaviour
 {
-    private Image _image;
+    public Image Image;
     private bool _isShown;
+    private PeriodicAction _advanceSprite;
+    private SpriteSet _spriteSet;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
-        _image = GetComponentInChildren<Image>();
+        _advanceSprite = new PeriodicAction(0.167f, AdvanceFrame, null);
     }
     void Start()
     {
-        Show(false, 0);
+        Hide();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (_isShown)
+        {
+            _advanceSprite.ProcessAction(Time.deltaTime);
+        }
     }
-
-    public void Show(bool show, byte effectID)
+    public void Hide()
     {
-        _image.gameObject.SetActive(show);
+        _isShown = false;
+        Image.gameObject.SetActive(false); 
+    }
+    public void Show(bool show, SpriteSet spriteSet)
+    {
+        _spriteSet = spriteSet;
+        Image.gameObject.SetActive(show);
         _isShown = show;
     }
 
+    private void AdvanceFrame()
+    {
+        Image.sprite = _spriteSet.GetNextSprite();
+    }
 }

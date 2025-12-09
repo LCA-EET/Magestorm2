@@ -10,6 +10,12 @@ public static class ByteUtils
         toConvert.CopyTo(temp, 0);
         return temp[0];
     }
+    public static byte[] BitArrayToBytes(BitArray toConvert)
+    {
+        byte[] toReturn = new byte[(toConvert.Length + 7) / 8];
+        toConvert.CopyTo(toReturn, 0);
+        return toReturn;
+    }
     public static string BytesToUTF8(byte[] decrypted, int index, int length)
     {
         return Encoding.UTF8.GetString(decrypted, index, length);

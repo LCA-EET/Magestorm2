@@ -42,5 +42,6 @@ public static class InGame_Receive
                         LeyUpdate = 33,
                         PlayerRevived = 34,
                         PlayerTapped = 35,
-                        PostureChange = 36;
+                        PostureChange = 36,
+                        ApplyEffect = 37;
 }

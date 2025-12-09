@@ -4,31 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public enum EffectCode : byte
-{
-    Haste = 0,
-    Slow = 1,
-    Freezing = 2,
-    Burning = 3,
-    Shocked = 4,
-    Grounded = 5,
-    FireShield = 6,
-    ColdShield = 7,
-    ElectricShield = 8,
-    EarthShield = 9,
-    Bleeding = 10
-}
-
 public class AppliedEffect
 {
     private EffectCode _effectCode;
-    public AppliedEffect(EffectCode effectCode)
+    private Avatar _appliedTo, _applier;
+    private float _duration;
+    public AppliedEffect(EffectCode effectCode, Avatar applier,  float duration)
     {
+        _applier = applier;
         _effectCode = effectCode;
+        _duration = duration;
     }
-    public virtual void ApplyEffect()
+    public bool Tick(float deltaTime)
     {
-
+        _duration -= deltaTime;
+        return _duration <= 0;
+    }
+    public virtual void ApplyEffect(Avatar appliedTo)
+    {
+        _appliedTo = appliedTo;
     }
     public virtual void ReverseEffect()
     {
@@ -37,5 +31,9 @@ public class AppliedEffect
     public EffectCode EffectCode
     {
         get { return _effectCode; }
+    }
+    public float TimeRemaining
+    {
+        get { return _duration; }
     }
 }

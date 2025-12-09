@@ -453,6 +453,12 @@ public class Match {
             case "killself":
                 _matchCharacters.get(senderID).TakeDamage((short)30000, senderID);
                 return true;
+            case "effect":
+                byte effectCode = Byte.parseByte(params[1]);
+                byte duration = Byte.parseByte(params[2]);
+                byte degree = Byte.parseByte(params[3]);
+                SendToAll(Packets.ApplyEffectPacket(senderID, senderID, effectCode, duration, degree));
+                return true;
             case "o":
                 SendTeamMessage(params, " ", 1, senderID, MatchTeam.Order);
                 return true;

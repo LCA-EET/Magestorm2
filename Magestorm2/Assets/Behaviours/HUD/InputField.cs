@@ -26,10 +26,7 @@ public class InputField : MonoBehaviour
         
         if (InputControls.ChatMode)
         {
-            Game.ChatMode = true;
-            //Background.SetActive(true);
-            _tmpTextMessage.ActivateInputField();
-            placeHolder.text = Language.BuildString(Language.GetBaseString(2), InputControls.KeyToString(InputControl.SendMessage), InputControls.KeyToString(InputControl.CancelChat));    //
+            ActivateChat();
         }
         if (InputControls.SendMessage)
         {
@@ -70,11 +67,20 @@ public class InputField : MonoBehaviour
             CancelChat();
         }
     }
+    private void ActivateChat()
+    {
+        Game.ChatMode = true;
+        //Background.SetActive(true);
+        _tmpTextMessage.ActivateInputField();
+        placeHolder.text = Language.BuildString(Language.GetBaseString(2), InputControls.KeyToString(InputControl.SendMessage), InputControls.KeyToString(InputControl.CancelChat));    //
+        Debug.Log("Chat mode activated");
+    }
     private void CancelChat()
     {
         Game.ChatMode = false;
         placeHolder.text = Language.BuildString(Language.GetBaseString(1), InputControls.KeyToString(InputControl.ChatMode)); //
         _tmpTextMessage.text = "";
         _tmpTextMessage.DeactivateInputField();
+        Debug.Log("Chat mode deactivated");
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor.Rendering;
@@ -19,15 +20,19 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private Vector3 _startRotation, _newRotation;
     private bool _positionChange, _rotationChange;
     private float _moveElapsed;
+    private float _effectTick = 0.5f;
     private Renderer[] _renderers;
     private Dictionary<EffectCode, AppliedEffect> _appliedEffects;
     private GameObject _model;
     private TMP_Text _nameText;
-    private PeriodicAction _lookAtCamera;
+    private List<PeriodicAction> _actionList;
+    private PeriodicAction _lookAtCamera, _effectsTick;
     private byte _posture;
     void Awake()
     {
-        _lookAtCamera = new PeriodicAction(0.2f, NameRotate, null);
+        _actionList = new List<PeriodicAction>();  
+        _lookAtCamera = new PeriodicAction(0.2f, NameRotate, _actionList);
+        _effectsTick = new PeriodicAction(_effectTick, EffectTick, _actionList);
         _nameText = CharacterName.GetComponent<TMP_Text>();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -55,7 +60,30 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
                 _rotationChange = false;
             }
         }
-        _lookAtCamera.ProcessAction(Time.deltaTime);
+        PeriodicAction.PerformActions(Time.deltaTime, _actionList);
+    }
+    private void EffectTick()
+    {
+        if (_appliedEffects.Count > 0)
+        {
+            List<AppliedEffect> expired = new List<AppliedEffect>();
+            foreach (AppliedEffect effect in _appliedEffects.Values)
+            {
+                if (effect.Tick(_effectTick))
+                {
+                    expired.Add(effect);
+                }
+                Debug.Log("Time Remaining: " + effect.TimeRemaining);
+            }
+            foreach(AppliedEffect effect in expired)
+            {
+                RemoveEffect(effect.EffectCode, false);
+            }
+            if(expired.Count > 0)
+            {
+                RefreshEffectsDisplay();
+            }
+        }
     }
     private void NameRotate()
     {
@@ -83,18 +111,55 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     {
         SwapMaterials(alive);
         _isAlive = alive;
+        if (!_isAlive)
+        {
+            RemoveAllEffects();
+        }
     }
     public void AddEffect(AppliedEffect effect)
     {
         if (_appliedEffects.ContainsKey(effect.EffectCode))
         {
-            AppliedEffect toCancel = _appliedEffects[effect.EffectCode];
-            toCancel.ReverseEffect();
+            RemoveEffect(effect.EffectCode, true);
         }
+        effect.ApplyEffect(this);
         _appliedEffects.Add(effect.EffectCode, effect);
-        effect.ApplyEffect();
+        RefreshEffectsDisplay();
     }
-
+    public void RemoveAllEffects()
+    {
+        List<EffectCode> toRemove = new List<EffectCode>();
+        foreach(EffectCode key in _appliedEffects.Keys)
+        {
+            toRemove.Add(key);
+        }
+        foreach (EffectCode key in toRemove)
+        {
+            RemoveEffect(key, false);
+        }
+        RefreshEffectsDisplay();
+    }
+    public void RemoveEffect(EffectCode toRemove, bool refresh)
+    {
+        AppliedEffect removed = _appliedEffects[toRemove];
+        removed.ReverseEffect();
+        _appliedEffects.Remove(toRemove);
+        if (refresh)
+        {
+            RefreshEffectsDisplay();
+        }
+    }
+    private void RefreshEffectsDisplay()
+    {
+        if(_playerID == MatchParams.IDinMatch)
+        {
+            BitArray effectBits = new BitArray(16, false);
+            for (byte b = 0; b < effectBits.Length; b++) {
+                effectBits[b] = _appliedEffects.ContainsKey((EffectCode)b);
+            }
+            ComponentRegister.EffectsList.RefreshEffects(ByteUtils.BitArrayToBytes(effectBits));
+        }
+    }
     public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
     {
         _name = name;
