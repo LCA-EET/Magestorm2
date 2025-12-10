@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ad158c0b1ed9b4faf7a056e24ef9d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Reticle: {fileID: 0}
   PlayerIndicators:
   - {fileID: 1033570876346068129}
   - {fileID: 7199362106977319664}
@@ -592,7 +593,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3208291294575233039, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7265413002012053164, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
       propertyPath: m_text
@@ -971,7 +972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3208291294575233039, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
       propertyPath: 'StringReferences.Array.data[0]'
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7265413002012053164, guid: da8df2e046256b14aa7486ec149e0eb8, type: 3}
       propertyPath: m_text

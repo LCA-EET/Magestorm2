@@ -23,7 +23,10 @@ public class InputField : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(!Game.ChatMode && _tmpTextMessage.isFocused)
+        {
+            CancelChat();
+        }
         if (InputControls.ChatMode)
         {
             ActivateChat();
@@ -31,9 +34,9 @@ public class InputField : MonoBehaviour
         if (InputControls.SendMessage)
         {
             string message = _tmpTextMessage.text;
-            
+
             CancelChat();
-            if(message.Trim() != "")
+            if (message.Trim() != "")
             {
                 if (!ProfanityChecker.ContainsProhibitedLanguage(message))
                 {

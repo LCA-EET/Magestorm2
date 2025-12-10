@@ -1598,6 +1598,10 @@ PrefabInstance:
       propertyPath: MinimapCamera
       value: 
       objectReference: {fileID: 173355891}
+    - target: {fileID: 4555934743020961869, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: 'StringReferences.Array.data[0]'
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5352387103591919628, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1677,6 +1681,10 @@ PrefabInstance:
     - target: {fileID: 5352387103591919628, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522703786491382372, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: 'StringReferences.Array.data[0]'
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6820293472796443022, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
       propertyPath: buttonType

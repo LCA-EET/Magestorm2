@@ -18,6 +18,7 @@ public class MatchTimer : MonoBehaviour
     void Start()
     {
         _timeText = GetComponentInChildren<TMP_Text>();
+        Teams.SetTextColor(_timeText);
         RefreshTime();
     }
 

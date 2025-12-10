@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class PlayerStatusPanel : MonoBehaviour
 {
+    public Image Reticle;
     public BarIndicator[] PlayerIndicators;
     public TMP_Text PlayerName;
     public TMP_Text LCT;
@@ -38,7 +39,8 @@ public class PlayerStatusPanel : MonoBehaviour
         _pc = PlayerAccount.SelectedCharacter;
         Teams.Init();
         SetPlayerName(_pc.CharacterName);
-        SetLCT(_pc.CharacterLevel, (PlayerClass)_pc.CharacterClass, (Team)MatchParams.MatchTeamID);
+        SetLCT(_pc.CharacterLevel, (PlayerClass)_pc.CharacterClass, MatchParams.MatchTeam);
+        Reticle.color = Teams.GetTeamColor(MatchParams.MatchTeam);
     }
 
     // Update is called once per frame
@@ -53,6 +55,7 @@ public class PlayerStatusPanel : MonoBehaviour
     public void SetPlayerName(string name)
     {
         PlayerName.text = name;
+        Teams.SetTextColor(PlayerName);
     }
     public void SetLCT(byte level, PlayerClass playerClass, Team team)
     {
@@ -68,6 +71,7 @@ public class PlayerStatusPanel : MonoBehaviour
             baseString = string.Format(baseString, level, SharedFunctions.PlayerClassToString(playerClass), Teams.GetTeamName(team));
         }
         LCT.text = baseString;
+        Teams.SetTextColor(LCT);
     }
     public void SetKillCounter(byte killCount)
     {

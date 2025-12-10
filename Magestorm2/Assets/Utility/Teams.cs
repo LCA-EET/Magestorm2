@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -44,5 +45,15 @@ public static class Teams
     public static string GetTeamName(Team team)
     {
         return Language.GetBaseString(_teamNames[team]);
+    }
+
+    public static void SetTextColor(TMP_Text text)
+    {
+        SetTextColor(text, MatchParams.MatchTeam);
+    }
+
+    public static void SetTextColor(TMP_Text text, Team team)
+    {
+        text.color = _teamColors[team];
     }
 }

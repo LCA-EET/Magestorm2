@@ -11,6 +11,7 @@ public class Counter : LanguageUpdater
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Teams.SetTextColor(TextFields[0]);
         SetCount(0);                
     }
 

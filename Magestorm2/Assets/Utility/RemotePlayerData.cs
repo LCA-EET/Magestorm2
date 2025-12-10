@@ -35,4 +35,9 @@ public class RemotePlayerData
     {
         get { return _playerClass; }
     }
+
+    public byte TeamID
+    {
+        get { return _teamID; }
+    }
 }

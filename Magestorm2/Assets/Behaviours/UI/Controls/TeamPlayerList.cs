@@ -51,10 +51,12 @@ public class TeamPlayerList : MonoBehaviour
         while (i < teamPlayers.Length)
         {
             RemotePlayerData teamPlayer = teamPlayers[i];
+            PlayerEntry entry;
             if (i < PlayerEntries.Length)
             {
-                PlayerEntries[i].SetText(teamPlayer.Name + " " + teamPlayer.Level + " " + SharedFunctions.ClassAbbreviation(teamPlayer.PlayerClass));
-                PlayerEntries[i].gameObject.SetActive(true);
+                entry = PlayerEntries[i];
+                entry.SetText(teamPlayer.Name + " " + teamPlayer.Level + " " + SharedFunctions.ClassAbbreviation(teamPlayer.PlayerClass));
+                entry.gameObject.SetActive(true);
             }
         }
         while (i < PlayerEntries.Length)
