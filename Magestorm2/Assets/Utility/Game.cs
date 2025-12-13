@@ -101,17 +101,12 @@ public static class Game
     }
     public static int FetchServerInfo()
     {
-        using (HttpClient client = new HttpClient())
+        try
         {
-            try
+            string contents;
+            if(SharedFunctions.GetPHPString("serverinfo", out contents))
             {
-                client.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
-                {
-                    NoCache = true
-                };
-                Task<string> t = client.GetStringAsync("https://www.fosiemods.net/ms2.php?func=serverinfo&appid=ms2");
-                string returned = t.Result;
-                string[] returnedArray = returned.Split("<br>");
+                string[] returnedArray = contents.Split("<br>");
                 int portNumber = int.Parse(returnedArray[0]);
                 string key64 = returnedArray[1];
                 Debug.Log("key64: " + key64);
@@ -121,10 +116,10 @@ public static class Game
                 Cryptography.Init(key);
                 return UDPBuilder.CreateClient(portNumber);
             }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
         }
         return -1;
     }

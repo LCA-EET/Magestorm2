@@ -107,6 +107,15 @@ public class UICharacterSelectForm : ValidatableForm
             case ButtonType.Edit:
                 ComponentRegister.UIPrefabManager.InstantiateKeyMapper();
                 break;
+            case ButtonType.Misc0:
+                ComponentRegister.UIPrefabManager.InstantiateSpellInfo();
+                break;
+            case ButtonType.Misc1:
+
+                break;
+            case ButtonType.Misc2:
+
+                break;
         }
     }
     public override void CloseForm()

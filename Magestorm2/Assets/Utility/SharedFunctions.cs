@@ -1,6 +1,9 @@
 using System.IO;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public static class SharedFunctions
@@ -121,6 +124,29 @@ public static class SharedFunctions
         if(percentComplete == 1.0f)
         {
             return true;
+        }
+        return false;
+    }
+
+    public static bool GetPHPString(string function, out string contents)
+    {
+        contents = "";
+        using (HttpClient client = new HttpClient())
+        {
+            try
+            {
+                client.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
+                {
+                    NoCache = true
+                };
+                Task<string> t = client.GetStringAsync("https://www.fosiemods.net/ms2.php?func="+ function + "&appid=ms2");
+                contents = t.Result;
+                return true;
+            }
+            catch(System.Exception e)
+            {
+
+            }
         }
         return false;
     }

@@ -17,6 +17,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabAppearanceChooser;
     public GameObject PrefabUIIngameMenu;
     public GameObject PrefabUIKeyMapper;
+    public GameObject PrefabSpellInfo;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -52,6 +53,10 @@ public class UIPrefabManager : MonoBehaviour
     {
         
         AddToStack(Instantiate(PrefabUIIngameMenu));
+    }
+    public void InstantiateSpellInfo()
+    {
+        AddToStack(Instantiate(PrefabSpellInfo));
     }
     public void InstantiateAppearanceChooser()
     {

@@ -10,6 +10,10 @@ public class UILoginForm : ValidatableForm
     private void Awake()
     {
         _udpPort = Game.FetchServerInfo();
+        if(_udpPort > 0)
+        {
+            SpellManager.Init();
+        }
         ComponentRegister.UILoginForm = this;
     }
    
