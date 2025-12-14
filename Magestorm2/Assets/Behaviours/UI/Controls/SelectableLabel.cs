@@ -6,6 +6,7 @@ public class SelectableLabel : MonoBehaviour
 {
     public Button Button;
     public TMP_Text Caption;
+    public Image Background;
 
     private int _optionID;
     private ILabelCollection _owner;
@@ -16,10 +17,22 @@ public class SelectableLabel : MonoBehaviour
         Button.onClick.AddListener(ButtonPressed);
         _owner = owner;
         gameObject.SetActive(true);
+        Background.color = Colors.EntrySelected;
     }
 
     private void ButtonPressed()
     {
+        UIAudio.PlayButtonPress();
         _owner.RecordSelection(_optionID);
+    }
+
+    public void MarkSelected(bool selected)
+    {
+        Background.gameObject.SetActive(selected);
+    }
+
+    public int OptionID
+    {
+        get { return _optionID; }
     }
 }

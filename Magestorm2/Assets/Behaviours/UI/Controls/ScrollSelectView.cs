@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Reflection.Emit;
 using UnityEngine;
 
 public class ScrollSelectView : MonoBehaviour, ILabelCollection
 {
     public SelectableLabel[] Labels;
     private int _selectedOption;
-    private int _nextKey = 0;
     private void Awake()
     {
+        
     }
     void Start()
     {
-        
+        RecordSelection(Labels[0].OptionID);
     }
 
     public void AssignKeys(Dictionary<byte, int> optionsTable)
@@ -34,5 +33,9 @@ public class ScrollSelectView : MonoBehaviour, ILabelCollection
     public void RecordSelection(int optionID)
     {
         _selectedOption = optionID;
+        foreach (SelectableLabel label in Labels)
+        {
+            label.MarkSelected(_selectedOption == label.OptionID);
+        }
     }
 }
