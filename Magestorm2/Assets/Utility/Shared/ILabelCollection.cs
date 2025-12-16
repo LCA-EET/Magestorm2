@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 public interface ILabelCollection
 {
-    void RecordSelection(int optionID);
+    void RecordSelection(byte optionID);
 }

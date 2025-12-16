@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 public static class SpellManager
 {
     private static bool _init;
     private static Dictionary<int, SpellData> _spells;
+    private static Dictionary<SpellDiscipline, List<SpellData>> _spellsOfDiscipline;
     public static void Init()
     {
         if (!_init)
         {
             _spells = new Dictionary<int, SpellData>();
+            _spellsOfDiscipline = new Dictionary<SpellDiscipline, List<SpellData>>();
             string contents;
             if (SharedFunctions.GetPHPString("spells", out contents))
             {
@@ -19,10 +20,25 @@ public static class SpellManager
                 {
                     SpellData toAdd = new SpellData(fields, spelldata[i]);
                     _spells.Add(int.Parse(toAdd.GetData(SpellAttributes.ID).ToString()), toAdd);
+                    SpellDiscipline discipline = (SpellDiscipline)toAdd.GetByte(SpellAttributes.DISCIPLINE);
+                    if (!_spellsOfDiscipline.ContainsKey(discipline))
+                    {
+                        _spellsOfDiscipline.Add(discipline, new List<SpellData>());
+                    }
+                    _spellsOfDiscipline[discipline].Add(toAdd);
                 }
                 
             }
         }
+    }
+
+    public static SpellData GetSpell(byte key)
+    {
+        return _spells[key];
+    }
+    public static List<SpellData> GetSpellsOfDiscipline(SpellDiscipline discipline)
+    {
+        return _spellsOfDiscipline[discipline];
     }
 
 }

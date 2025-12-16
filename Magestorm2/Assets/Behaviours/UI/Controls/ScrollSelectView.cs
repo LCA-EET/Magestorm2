@@ -4,12 +4,9 @@ using UnityEngine;
 public class ScrollSelectView : MonoBehaviour, ILabelCollection
 {
     public SelectableLabel[] Labels;
-    private int _selectedOption;
-    private void Awake()
-    {
-        
-    }
-    void Start()
+    protected byte _selectedOption;
+
+    public virtual void Start()
     {
         RecordSelection(Labels[0].OptionID);
     }
@@ -30,12 +27,18 @@ public class ScrollSelectView : MonoBehaviour, ILabelCollection
         }
     }
 
-    public void RecordSelection(int optionID)
+    public void RecordSelection(byte optionID)
     {
         _selectedOption = optionID;
         foreach (SelectableLabel label in Labels)
         {
             label.MarkSelected(_selectedOption == label.OptionID);
         }
+        ProcessSelection();
+    }
+
+    protected virtual void ProcessSelection()
+    {
+
     }
 }

@@ -1,4 +1,20 @@
 using UnityEngine;
+
+public enum SpellDiscipline: byte
+{
+    FireLaw = 0,
+    IceLaw = 1,
+    EarthLaw = 2,
+    Brilliance = 3,
+    Displacement = 4,
+    Psionics = 5,
+    Supplication = 6,
+    Healing = 7,
+    Smiting = 8,
+    ManaLaw = 9,
+    VoidLaw = 10,
+    Sigils = 11
+}
 public enum TriggerType : byte
 {
     ManaPool = 0,

@@ -8,9 +8,9 @@ public class SelectableLabel : MonoBehaviour
     public TMP_Text Caption;
     public Image Background;
 
-    private int _optionID;
+    private byte _optionID;
     private ILabelCollection _owner;
-    public void Register(int referenceID, int optionID, ILabelCollection owner)
+    public void Register(int referenceID, byte optionID, ILabelCollection owner)
     {
         _optionID = optionID;
         Caption.text = Language.GetBaseString(referenceID);
@@ -31,7 +31,7 @@ public class SelectableLabel : MonoBehaviour
         Background.gameObject.SetActive(selected);
     }
 
-    public int OptionID
+    public byte OptionID
     {
         get { return _optionID; }
     }

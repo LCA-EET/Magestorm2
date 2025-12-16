@@ -59,10 +59,13 @@ public class ByteUtils {
     public static byte[] UTF8toBytes(String[] toEncode, String delimiter, int startIndex){
         String reassembled = "";
         for(int i = startIndex; i < toEncode.length; i++){
-            reassembled = reassembled.equals("") ? toEncode[i] : reassembled + delimiter + toEncode[i];
+            reassembled = reassembled.isEmpty() ? toEncode[i] : reassembled + delimiter + toEncode[i];
         }
-        Main.LogMessage(("Reassembled string: " + reassembled));
         return reassembled.getBytes(StandardCharsets.UTF_8);
+    }
+
+    public static byte[] UTF8toBytes(String toEncode){
+        return toEncode.getBytes(StandardCharsets.UTF_8);
     }
 
     public static String BytesToUTF8(byte[] toConvert){

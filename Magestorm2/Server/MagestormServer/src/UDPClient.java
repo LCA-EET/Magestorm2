@@ -1,5 +1,6 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class UDPClient extends Thread{
     private DatagramSocket _udpSocket;
@@ -47,8 +48,8 @@ public class UDPClient extends Thread{
     public void StopListening() {
         _listening = false;
     }
+
     public void Send(byte[] encryptedPayload, RemoteClient rc){
-        //Main.LogMessage("Sending packet to " + rc.IPAddress().toString() + ", " + rc.ReceivingPort());
         DatagramPacket toSend = new DatagramPacket(encryptedPayload, encryptedPayload.length, rc.IPAddress(), _localPort);
         try{
             _udpSocket.send(toSend);
@@ -56,4 +57,15 @@ public class UDPClient extends Thread{
             Main.LogError("UDPClient.Send(): " + e.getMessage());
         }
     }
+
+    public void Send(byte[] payload, InetAddress address, int remotePort){
+        DatagramPacket toSend = new DatagramPacket(payload, payload.length, address, remotePort);
+        try{
+            _udpSocket.send(toSend);
+        }catch(Exception e){
+            Main.LogError("UDPClient.Send(): " + e.getMessage());
+        }
+    }
+
+
 }

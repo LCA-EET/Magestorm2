@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 public class UISpellInfo : ValidatableForm
 {
-    public ScrollSelectView Disciplines;
-    public ScrollSelectView Spells;
+    public TMP_Text SpellDescription;
+    public DisciplineSelectView Disciplines;
+    public SpellSelectView Spells;
     private Dictionary<byte, int> _disciplines;
     void Start()
     {
@@ -22,6 +24,7 @@ public class UISpellInfo : ValidatableForm
         _disciplines.Add(11, 240); // Sigils
         Disciplines.AssignKeys(_disciplines);
         AssociateFormToButtons();
+        Spells.SetOwningForm(this);
     }
 
     public override void ButtonPressed(ButtonType buttonType)
@@ -32,5 +35,11 @@ public class UISpellInfo : ValidatableForm
                 CloseForm();
                 break;
         }
+    }
+
+    public void UpdateSpellInfo(SpellData spellData)
+    {
+        SpellDescription.text = Language.GetBaseString(spellData.GetInt(SpellAttributes.SPELL_NAME_REFERENCE)) + "\n" +
+            Language.GetBaseString(spellData.GetInt(SpellAttributes.DESCRIPTION));
     }
 }

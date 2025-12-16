@@ -230,13 +230,46 @@ Fire Law
 Ice Law
 Earth Law
 Brilliance
-Flight Law
+Displacement
 Psionics
 Supplication
 Healing
-Wounding
+Smiting
 Mana Law
 Void Law
 Sigils
 Close
 Edit
+Flame Strike
+Basic: Launches a projectile dealing 2-4 fire damage. The projectile has a 10% chance of burning the target. \nExpert: Two projectiles\nMaster: Three projectiles.
+Ice Dart
+Basic: Launches a projectile dealing 2-4 cold damage. The projectile has a 10% chance of freezing the target. \nExpert: Two projectiles\nMaster: Three projectiles.
+Stone Fist
+Basic: Launches a projectile dealing 1-2 earth damage and 1-2 physical damage. The projectile has a 10% chance of grounding the target. \nExpert: Two projectiles\nMaster: Three projectiles.
+Static Charge
+Basic: Launches a projectile dealing 2-4 electric. The projectile has a 10% chance of shocking the target. \nExpert: Two projectiles\nMaster: Three projectiles.
+Leap
+Basic: The caster leaps high into the air.\nExpert and Master: Increases the height of the leap.
+Mind Probe
+Basic: A point-blank mental assault on a target, dealing 8-16 mind damage. \nExpert and Master: Deals 50% more damage.
+Prayer
+Basic: Reduces damage taken by 20% for one minute.\nExpert and Master: Reduces damage by an additional 20%. 
+Resurrection
+Basic: Restores a fallen comrade to life.\nExpert: Resurrects players with 25% HP.\nMaster: Resurrects players with 50% HP.
+Heal Other
+Basic: Restores 2-8 HP to a wounded comrade.\nExpert and Master: Restores 100% more HP.
+Heal Self
+Basic: Restores 2-8 HP to the caster.\nExpert and Master: Restores 100% more HP.
+Wound
+Basic: Fires a projectile dealing 1-2 holy damage + 1 physical damage.\nExpert: Two projectiles\nMaster: Three projectiles.
+Mana Strike
+Basic: Launches a projectile dealing 2-4 energy damage. \nExpert: Two projectiles\nMaster: Three projectiles.
+Void Law
+Basic: Launches a projectile dealing 1 physical damage. The projectile also drains the target of 1 mana. \nExpert: Two projectiles\nMaster: Three projectiles.
+Leap
+Basic: The player that steps on this sigil will leap high into the air. \nExpert and Master: Increases the height of the leap.
+Curse 
+Expert: Causes the target to deal 20% less damage for 15 seconds. Master: Damage debuff is increased by 50%.
+Available Spells
+Spell Slots
+{0}:{1}
