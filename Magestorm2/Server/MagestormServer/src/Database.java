@@ -25,16 +25,14 @@ public class Database {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int colIdx = 0;
                 int spellID = rs.getInt(1);
-                String spellName = rs.getString(2);
                 int columnCount = rs.getMetaData().getColumnCount();
-                byte[] attrib = new byte[columnCount - 2];
-                while (colIdx <= columnCount){
-                    attrib[colIdx - 2] = rs.getByte(colIdx);
-                    colIdx++;
+                byte columnsToSkip = 4;
+                byte[] attrib = new byte[columnCount - columnsToSkip];
+                for(int i = columnsToSkip; i < columnCount; i++){
+                    attrib[i - columnsToSkip] = rs.getByte(i + 1); // first column is one, not zero;
                 }
-                Spell toAdd = new Spell(spellID, spellName, attrib);
+                Spell toAdd = new Spell(spellID,attrib);
                 SpellManager.AddSpell(toAdd);
            }
         }

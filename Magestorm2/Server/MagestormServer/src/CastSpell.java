@@ -1,7 +1,7 @@
 public class CastSpell {
-    private final byte _casterID;
-    private final int _castID;
-    private Spell _baseReference;
+    protected final byte _casterID;
+    protected final int _castID;
+    protected Spell _baseReference;
 
     public CastSpell(byte casterID, int castID, int baseSpellID){
         _casterID = casterID;
@@ -12,10 +12,4 @@ public class CastSpell {
     public Spell GetBaseSpell(){
         return _baseReference;
     }
-
-    protected byte GetAttribute(byte key)
-    {
-        return _baseReference.GetAttribute(key);
-    }
-
 }

@@ -8,9 +8,9 @@ public class DamagingSpell extends CastSpell{
 
     private void CalculateDamage()
     {
-        byte minRoll = GetAttribute(SpellAttributes.MinDamagePerRoll);
-        byte maxRoll = GetAttribute(SpellAttributes.MaxDamagePerRoll);
-        _damage = GameUtils.DiceRoll(minRoll, maxRoll, 1);
+        byte minRoll = _baseReference.GetMinDamagePerRoll();
+        byte maxRoll = _baseReference.GetMaxDamagePerRoll();
+        _damage = GameUtils.DiceRoll(minRoll, maxRoll, _baseReference.GetNumRolls());
     }
 
     public short GetDamage(){
