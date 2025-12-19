@@ -212,7 +212,9 @@ public class Database {
     }
     private static PlayerCharacter GetCharacter(int accountID, int characterID, Connection conn){
         PlayerCharacter toReturn = null;
-        String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead, level, experience FROM characters WHERE accountid = ? AND id = ?";
+        String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis, appsex, " +
+                "appskin, apphair, appface, apphead, level, experience, slot0, slot1, slot2, slot3, slot4, slot5," +
+                "slot6, slot7, slot8, slot9 FROM characters WHERE accountid = ? AND id = ?";
         try{
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, accountID);
@@ -240,6 +242,10 @@ public class Database {
                 byte appface = rs.getByte("appface");
                 byte apphead = rs.getByte("apphead");
                 byte level = rs.getByte("level");
+                byte[] slots = new byte[10];
+                for(int i = 0; i < slots.length; i++){
+                    slots[i] = rs.getByte("slot" + i);
+                }
                 int experience = rs.getInt("experience");
                 fetched[5] = strength;
                 fetched[6] = dexterity;
@@ -257,7 +263,7 @@ public class Database {
                 System.arraycopy(experienceBytes, 0,fetched, 17, 4);
                 fetched[21] = nameLength;
                 System.arraycopy(nameBytes, 0, fetched, 22, nameLength);
-                toReturn = new PlayerCharacter(fetched, accountID);
+                toReturn = new PlayerCharacter(fetched, accountID, slots);
             }
         }
         catch(Exception ex){

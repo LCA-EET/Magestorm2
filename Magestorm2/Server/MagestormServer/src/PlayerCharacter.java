@@ -14,6 +14,7 @@ public class PlayerCharacter {
     private final byte[] _nameBytes;
     private final byte[] _nameLevelClass;
     private final byte[] _appearanceBytes;
+    private final byte[] _slots;
     private final int _indexExperience = 17;
     private final int _indexLevel = 16;
     private final int _accountID;
@@ -22,8 +23,9 @@ public class PlayerCharacter {
     private byte _currentMatchID, _idInCurrentMatch, _currentTeam;
     private boolean _inMatch;
 
-    public PlayerCharacter(byte[] fetched, int accountID){
+    public PlayerCharacter(byte[] fetched, int accountID, byte[] slots){
         _inMatch = false;
+        _slots = slots;
         _remoteClient = GameServer.GetClient(accountID);
         _accountID = accountID;
         _characterBytes = fetched;
