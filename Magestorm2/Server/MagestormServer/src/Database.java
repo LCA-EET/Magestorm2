@@ -227,7 +227,7 @@ public class Database {
                 byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte) nameBytes.length;
-                byte[] fetched = new byte[22 + nameLength];
+                byte[] fetched = new byte[32 + nameLength];
                 System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
                 fetched[4] = charClass;
                 byte strength = rs.getByte("statstr");
@@ -242,10 +242,6 @@ public class Database {
                 byte appface = rs.getByte("appface");
                 byte apphead = rs.getByte("apphead");
                 byte level = rs.getByte("level");
-                byte[] slots = new byte[10];
-                for(int i = 0; i < slots.length; i++){
-                    slots[i] = rs.getByte("slot" + i);
-                }
                 int experience = rs.getInt("experience");
                 fetched[5] = strength;
                 fetched[6] = dexterity;
@@ -259,11 +255,14 @@ public class Database {
                 fetched[14] = appface;
                 fetched[15] = apphead;
                 fetched[16] = level;
+                for(int i = 17; i < 27; i++){
+                    fetched[i] = rs.getByte("slot" + i);
+                }
                 byte[] experienceBytes = ByteUtils.IntToByteArray(experience);
-                System.arraycopy(experienceBytes, 0,fetched, 17, 4);
-                fetched[21] = nameLength;
-                System.arraycopy(nameBytes, 0, fetched, 22, nameLength);
-                toReturn = new PlayerCharacter(fetched, accountID, slots);
+                System.arraycopy(experienceBytes, 0,fetched, 27, 4);
+                fetched[31] = nameLength;
+                System.arraycopy(nameBytes, 0, fetched, 32, nameLength);
+                toReturn = new PlayerCharacter(fetched, accountID);
             }
         }
         catch(Exception ex){

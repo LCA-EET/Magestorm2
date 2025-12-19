@@ -26,7 +26,12 @@ public class ByteUtils {
     }
 
     public static int ExtractInt(byte[] decrypted, int index){
-        return ByteBuffer.wrap(decrypted).order(_order).getInt(index);
+        if((index + 4) < decrypted.length){
+            return ByteBuffer.wrap(decrypted).order(_order).getInt(index);
+        }
+        else{
+            return -1;
+        }
     }
 
     public static float ExtractFloat(byte[] decrypted, int index){

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class PregamePacketProcessor extends UDPProcessor
 {
+    private int _accountID;
 
     public PregamePacketProcessor(int port){
         super(port);
@@ -59,8 +60,14 @@ public class PregamePacketProcessor extends UDPProcessor
             case Pregame_Receive.RequestMatchList:
                 HandleMatchListRequest();
                 break;
+            case Pregame_Receive.UpdateSlotting:
+                HandleSlotUpdate();
+                break;
         }
         return true;
+    }
+    private void HandleSlotUpdate(){
+        int accountID = IsLoggedIn();
     }
     private void HandleMatchListRequest(){
         int accountID = IsLoggedIn();

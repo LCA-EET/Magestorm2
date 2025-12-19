@@ -1,17 +1,19 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class UDPClient extends Thread{
     private DatagramSocket _udpSocket;
     private boolean _listening;
     private final int _localPort;
     private final UDPProcessor _processor;
-
+    private final ConcurrentLinkedQueue<DatagramPacket> _toProcess;
     public UDPClient(int localPort, UDPProcessor processor){
         _listening = true;
         _localPort = localPort;
         _processor = processor;
+        _toProcess = new ConcurrentLinkedQueue<>();
         try{
             _udpSocket = new DatagramSocket(_localPort);
             new Thread(this).start();

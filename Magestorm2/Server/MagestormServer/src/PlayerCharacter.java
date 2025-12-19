@@ -14,18 +14,18 @@ public class PlayerCharacter {
     private final byte[] _nameBytes;
     private final byte[] _nameLevelClass;
     private final byte[] _appearanceBytes;
-    private final byte[] _slots;
-    private final int _indexExperience = 17;
+    private final int _indexExperience = 27;
+    private final int _indexNameLength = 31;
     private final int _indexLevel = 16;
+    private final int _indexSlotStart = 17;
     private final int _accountID;
     private final RemoteClient _remoteClient;
 
     private byte _currentMatchID, _idInCurrentMatch, _currentTeam;
     private boolean _inMatch;
 
-    public PlayerCharacter(byte[] fetched, int accountID, byte[] slots){
+    public PlayerCharacter(byte[] fetched, int accountID){
         _inMatch = false;
-        _slots = slots;
         _remoteClient = GameServer.GetClient(accountID);
         _accountID = accountID;
         _characterBytes = fetched;
@@ -45,9 +45,9 @@ public class PlayerCharacter {
         _appearanceBytes[4] = fetched[15];
         _level = fetched[_indexLevel];
         _experience = ByteUtils.ExtractInt(fetched, _indexExperience);
-        byte nameLength = fetched[21];
+        byte nameLength = fetched[_indexNameLength];
         _nameBytes = new byte[nameLength];
-        System.arraycopy(fetched, 22, _nameBytes, 0, nameLength);
+        System.arraycopy(fetched, 32, _nameBytes, 0, nameLength);
         _characterName = ByteUtils.BytesToUTF8(_nameBytes);
         _nameLevelClass = new byte[1 + 1 + 1 + nameLength];
         _nameLevelClass[0] = _level;
@@ -55,6 +55,11 @@ public class PlayerCharacter {
         _nameLevelClass[2] = nameLength;
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
         CharacterManager.AddToCache(this);
+    }
+    public void UpdateSlottedSpells(byte[] newSlotting){
+        for(int i = 0; i < newSlotting.length; i++){
+            _characterBytes[i + _indexSlotStart] = newSlotting[i];
+        }
     }
     public byte GetMaxStamina(){
         return (byte)(85.0f + (_strength * 8.5f));
