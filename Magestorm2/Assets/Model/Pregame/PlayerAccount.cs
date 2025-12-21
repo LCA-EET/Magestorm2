@@ -30,9 +30,9 @@ public static class PlayerAccount
         _characterList.Add(toAdd.CharacterID, toAdd);
         UpdatesMade = true;
     }
-    public static void AddCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes)
+    public static void AddCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes, byte[] slots)
     {
-        PlayerCharacter pc = new PlayerCharacter(characterID, characterName, characterClass, characterLevel, statBytes, appearanceBytes);
+        PlayerCharacter pc = new PlayerCharacter(characterID, characterName, characterClass, characterLevel, statBytes, appearanceBytes, slots);
         AddCharacter(pc);
     }
     public static void MarkUpdatesMade()

@@ -17,4 +17,8 @@ public class CharacterManager {
         }
         return null;
     }
+
+    public static boolean CharacterBelongsToAccount(int characterID, int accountID){
+        return _cachedCharacters.get(characterID).GetAccountID() == accountID;
+    }
 }

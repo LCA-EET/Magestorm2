@@ -11,6 +11,7 @@ public class UIMatchList : ValidatableForm
     private void Awake()
     {
         Game.SendPregameBytes(Pregame_Packets.RequestMatchListPacket());
+        Debug.Log("Match List Request Sent.");
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     

@@ -26,7 +26,7 @@ public class ByteUtils {
     }
 
     public static int ExtractInt(byte[] decrypted, int index){
-        if((index + 4) < decrypted.length){
+        if((index + 4) <= decrypted.length){
             return ByteBuffer.wrap(decrypted).order(_order).getInt(index);
         }
         else{

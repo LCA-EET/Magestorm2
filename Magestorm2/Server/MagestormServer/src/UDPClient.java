@@ -8,12 +8,11 @@ public class UDPClient extends Thread{
     private boolean _listening;
     private final int _localPort;
     private final UDPProcessor _processor;
-    private final ConcurrentLinkedQueue<DatagramPacket> _toProcess;
+
     public UDPClient(int localPort, UDPProcessor processor){
         _listening = true;
         _localPort = localPort;
         _processor = processor;
-        _toProcess = new ConcurrentLinkedQueue<>();
         try{
             _udpSocket = new DatagramSocket(_localPort);
             new Thread(this).start();
@@ -27,21 +26,12 @@ public class UDPClient extends Thread{
         Main.LogMessage("UDPClient.run(): Listening on port " + _localPort);
         final int bufferSize = 256;
         byte[] receivedBuffer = new byte[bufferSize];
-        boolean dataReceived = false;
         while (_listening) {
             DatagramPacket receivedPacket = new DatagramPacket(receivedBuffer, receivedBuffer.length);
             try {
                 _udpSocket.receive((receivedPacket));
-                dataReceived = true;
-                _processor.ProcessPacket(receivedPacket);
-                dataReceived = false;
-            } catch (Exception e)
-            {
-                if(dataReceived){
-                    Main.LogError("UDPClient.run():" + e.getMessage() + ", " + e.getLocalizedMessage());
-                    dataReceived = false;
-                }
-            }
+                _processor.EnqueuePacket(receivedPacket);
+            }catch (Exception e){ }
             receivedBuffer = new byte[bufferSize];
         }
         _udpSocket.close();

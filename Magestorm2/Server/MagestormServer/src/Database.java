@@ -178,7 +178,8 @@ public class Database {
 
     public static int AddCharacter(int accountID, String charname, byte classCode, byte[] stats, byte[] appearance){
         int charID = -1;
-        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead, level) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead, level, " +
+                "slot0, slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Main.LogMessage("Adding character " + charname + " to database.");
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -198,6 +199,38 @@ public class Database {
             ps.setByte(14, appearance[3]);
             ps.setByte(15, appearance[4]);
             ps.setByte(16, (byte)1);
+            int index = 17;
+            for(int i = 0; i < 10; i++){ // default slots to 0
+                ps.setByte(index, (byte)0);
+                index++;
+            }
+            for(int i = 0; i < 12; i++){ // default skills to 0
+                ps.setByte(index, (byte)0);
+                index++;
+            }
+            switch(classCode){
+                case CharacterClass.Cleric:
+                    ps.setByte(ControlCodes.Discipline_Healing, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Smiting, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Supplication, (byte)1);
+                    break;
+                case CharacterClass.Magician:
+                    ps.setByte(ControlCodes.Discipline_FireLaw, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_IceLaw, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_EarthLaw, (byte)1);
+                    break;
+                case CharacterClass.Arcanist:
+                    ps.setByte(ControlCodes.Discipline_ManaLaw, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_VoidLaw, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Sigils, (byte)1);
+                    break;
+                case CharacterClass.Mentalist:
+                    ps.setByte(ControlCodes.Discipline_Brilliance, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Psionics, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Displacement, (byte)1);
+                    break;
+            }
+
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -256,7 +289,7 @@ public class Database {
                 fetched[15] = apphead;
                 fetched[16] = level;
                 for(int i = 17; i < 27; i++){
-                    fetched[i] = rs.getByte("slot" + i);
+                    fetched[i] = rs.getByte("slot" + (i-17));
                 }
                 byte[] experienceBytes = ByteUtils.IntToByteArray(experience);
                 System.arraycopy(experienceBytes, 0,fetched, 27, 4);
@@ -428,5 +461,22 @@ public class Database {
             Main.LogError("Database.GetScenes(): " + e.getMessage());
         }
         return toReturn;
+    }
+    public static void UpdateSlotting(int characterID, byte[] decrypted, int offset){
+        String sql = "UPDATE characters SET slot0 = ?, slot1 = ?, slot2 = ?, slot3 = ?, slot4 = ?, " +
+                "slot5 = ?, slot6 = ?, slot7 = ?, slot8 = ?, slot9 = ? WHERE id = ?";
+        try(Connection conn = DBConnection()) {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int index = 1;
+            for(int i = offset; i < decrypted.length; i++){
+                ps.setByte(index, decrypted[i]);
+                index++;
+            }
+            ps.setInt(index, characterID);
+            ps.execute();
+        }
+        catch(Exception e){
+            Main.LogError("Database.UpdateSlotting(): " + e.getMessage());
+        }
     }
 }

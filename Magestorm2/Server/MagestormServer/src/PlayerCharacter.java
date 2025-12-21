@@ -56,10 +56,10 @@ public class PlayerCharacter {
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
         CharacterManager.AddToCache(this);
     }
-    public void UpdateSlottedSpells(byte[] newSlotting){
-        for(int i = 0; i < newSlotting.length; i++){
-            _characterBytes[i + _indexSlotStart] = newSlotting[i];
-        }
+    public void UpdateSlottedSpells(byte[] decrypted){
+        int offset = 9;
+        System.arraycopy(decrypted, offset, _characterBytes, _indexSlotStart, 10);
+        Database.UpdateSlotting(_characterID, decrypted, offset);
     }
     public byte GetMaxStamina(){
         return (byte)(85.0f + (_strength * 8.5f));

@@ -1,5 +1,23 @@
 public class ControlCodes {
 
+    //region Discipline
+        public static final byte Discipline_FireLaw = 0;
+        public static final byte Discipline_IceLaw = 1;
+        public static final byte Discipline_EarthLaw = 2;
+        public static final byte Discipline_Brilliance = 3;
+        public static final byte Discipline_Displacement = 4;
+        public static final byte Discipline_Psionics = 5;
+        public static final byte Discipline_Supplication = 6;
+        public static final byte Discipline_Healing = 7;
+        public static final byte Discipline_Smiting = 8;
+        public static final byte Discipline_ManaLaw = 9;
+        public static final byte Discipline_VoidLaw = 10;
+        public static final byte Discipline_Sigils = 11;
+        public static final byte Discipline_SpiritLaw = 12;
+        public static final byte Discipline_Barriers = 13;
+        public static final byte Discipline_Shielding = 14;
+    //endregion
+
     //region Character Status
         public static final byte CharacterStatus_Deactivated = 0;
         public static final byte CharacterStatus_Activated = 1;

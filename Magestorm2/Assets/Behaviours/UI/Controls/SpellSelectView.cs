@@ -9,8 +9,6 @@ public class SpellSelectView : ScrollSelectView
         base.Start();
     }
 
-
-
     public void SetOwningForm(UISpellInfo owner)
     {
         _owner = owner;
@@ -18,7 +16,7 @@ public class SpellSelectView : ScrollSelectView
 
     public void PopulateOptions(byte disciplineCode)
     {
-        List<SpellData> spellData = SpellManager.GetSpellsOfDiscipline((SpellDiscipline)disciplineCode);
+        List<SpellData> spellData = SpellManager.GetSpellsOfDiscipline(new SpellDiscipline[] { (SpellDiscipline)disciplineCode });
         Dictionary<byte, int> options = new Dictionary<byte, int>();
         foreach(SpellData sd in spellData)
         {

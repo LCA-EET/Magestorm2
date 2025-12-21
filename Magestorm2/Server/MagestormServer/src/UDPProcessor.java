@@ -3,12 +3,13 @@ import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class UDPProcessor {
+public class UDPProcessor extends Thread{
 
     protected RemoteClient _remote;
     protected final UDPClient _udpClient;
     protected final PacketSender _sender;
     protected final ConcurrentLinkedQueue<OutgoingPacket> _outgoingPackets;
+    protected final ConcurrentLinkedQueue<DatagramPacket> _toProcess;
     protected byte[] _decrypted;
     protected final int _listeningPort;
     protected byte _opCode;
@@ -18,8 +19,10 @@ public class UDPProcessor {
         _listeningPort = listeningPort;
         _udpClient = new UDPClient(listeningPort, this);
         _outgoingPackets = new ConcurrentLinkedQueue<>();
+        _toProcess = new ConcurrentLinkedQueue<>();
         _terminated = false;
         _sender = new PacketSender(_udpClient, this);
+        new Thread(this).start();
     }
     public boolean IsTerminated(){
         return _terminated;
@@ -58,5 +61,18 @@ public class UDPProcessor {
     protected boolean ProcessPacket(DatagramPacket received){
         Main.LogError("Unimplemented packet handler.");
         return true;
+    }
+
+    public void EnqueuePacket(DatagramPacket received){
+        _toProcess.add(received);
+    }
+
+    @Override
+    public void run(){
+        while(Main.Running){
+            if(!_toProcess.isEmpty()){
+                ProcessPacket(_toProcess.poll());
+            }
+        }
     }
 }

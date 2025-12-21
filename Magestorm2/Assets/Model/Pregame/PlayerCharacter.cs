@@ -13,7 +13,10 @@ public class PlayerCharacter
     private byte[] _appearanceBytes;
     private byte[] _statBytes;
     private byte[] _idBytes;
-    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes) { 
+    private byte[] _slottedSpells;
+    private byte[] _skills;
+    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes, byte[] slots) { 
+        _slottedSpells = slots;
         _characterID = characterID;
         _characterName = characterName;
         _characterClass = characterClass;

@@ -262,7 +262,7 @@ public class PregamePacketProcessor : UDPProcessor
         byte[] statBytes = FillSegment(_decrypted, 11, 6);
         byte nameLength = _decrypted[17];
         string characterName = Encoding.UTF8.GetString(_decrypted, 18, nameLength);
-        PlayerAccount.AddCharacter(characterID, characterName, classCode, 1, statBytes, appearanceBytes);
+        PlayerAccount.AddCharacter(characterID, characterName, classCode, 1, statBytes, appearanceBytes, new byte[10]);
         UICharacterCreationForm creationForm = ComponentRegister.UICharacterCreationForm;
         if (creationForm != null)
         {
@@ -299,13 +299,19 @@ public class PregamePacketProcessor : UDPProcessor
                 index += 5;
                 byte level = _decrypted[index];
                 index++;
+                byte[] slots = new byte[10];
+                for(int i = 0; i < 10; i++)
+                {
+                    slots[i] = _decrypted[index];
+                    index++;
+                }
                 int experience = BitConverter.ToInt32(_decrypted, index);
                 index += 4;
                 byte nameLength = _decrypted[index];
                 index++;
                 string charname = Encoding.UTF8.GetString(_decrypted, index, nameLength);
                 index += nameLength;
-                PlayerAccount.AddCharacter(characterID, charname, charClass, level, statBytes, appearanceBytes);
+                PlayerAccount.AddCharacter(characterID, charname, charClass, level, statBytes, appearanceBytes, slots);
                 charIndex++;
             }
             

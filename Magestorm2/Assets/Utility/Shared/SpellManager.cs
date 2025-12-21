@@ -36,9 +36,14 @@ public static class SpellManager
     {
         return _spells[key];
     }
-    public static List<SpellData> GetSpellsOfDiscipline(SpellDiscipline discipline)
+    public static List<SpellData> GetSpellsOfDiscipline(SpellDiscipline[] disciplines)
     {
-        return _spellsOfDiscipline[discipline];
+        List<SpellData> toReturn = new List<SpellData> ();
+        foreach (SpellDiscipline discipline in disciplines)
+        {
+            toReturn.AddRange(_spellsOfDiscipline[discipline]);
+        }
+        return toReturn;
     }
 
 }

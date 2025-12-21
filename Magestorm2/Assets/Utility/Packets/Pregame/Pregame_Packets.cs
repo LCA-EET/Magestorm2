@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 
 public static class Pregame_Packets
 {
+    public static byte[] UpdateSlottingPacket(int characterID, byte[] slots)
+    {
+        byte[] unencrypted = new byte[19];
+        unencrypted[0] = Pregame_Send.UpdateSlotting;
+        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
+        slots.CopyTo(unencrypted, 9);
+        return unencrypted;
+    }
     public static byte[] JoinMatchPacket(byte matchID, byte teamID)
     {
         byte[] unencrypted = new byte[7];
