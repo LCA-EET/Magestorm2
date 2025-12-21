@@ -84,6 +84,9 @@ public class ByteUtils {
         return BytesToUTF8(nameBytes);
     }
 
+    public static byte[] BitArrayToBytes(ArrayList<Boolean> bitArray){
+
+    }
     public static ArrayList<Boolean> ByteArrayToBits(byte[] byteArray) {
         ArrayList<Boolean> bitList = new ArrayList<>();
         for (byte b : byteArray) {

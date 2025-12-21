@@ -213,21 +213,26 @@ public class Database {
                     ps.setByte(ControlCodes.Discipline_Healing, (byte)1);
                     ps.setByte(ControlCodes.Discipline_Smiting, (byte)1);
                     ps.setByte(ControlCodes.Discipline_Supplication, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_SpiritLaw, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Barriers, (byte)1);
                     break;
                 case CharacterClass.Magician:
                     ps.setByte(ControlCodes.Discipline_FireLaw, (byte)1);
                     ps.setByte(ControlCodes.Discipline_IceLaw, (byte)1);
                     ps.setByte(ControlCodes.Discipline_EarthLaw, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Shielding, (byte)1);
                     break;
                 case CharacterClass.Arcanist:
                     ps.setByte(ControlCodes.Discipline_ManaLaw, (byte)1);
                     ps.setByte(ControlCodes.Discipline_VoidLaw, (byte)1);
                     ps.setByte(ControlCodes.Discipline_Sigils, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Shielding, (byte)1);
                     break;
                 case CharacterClass.Mentalist:
                     ps.setByte(ControlCodes.Discipline_Brilliance, (byte)1);
                     ps.setByte(ControlCodes.Discipline_Psionics, (byte)1);
                     ps.setByte(ControlCodes.Discipline_Displacement, (byte)1);
+                    ps.setByte(ControlCodes.Discipline_Shielding, (byte)1);
                     break;
             }
 

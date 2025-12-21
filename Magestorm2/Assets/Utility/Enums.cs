@@ -13,7 +13,10 @@ public enum SpellDiscipline: byte
     Smiting = 8,
     ManaLaw = 9,
     VoidLaw = 10,
-    Sigils = 11
+    Sigils = 11,
+    SpiritLaw = 12,
+    Barriers = 13,
+    Shielding = 14
 }
 public enum TriggerType : byte
 {
