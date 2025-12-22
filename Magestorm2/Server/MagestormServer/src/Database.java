@@ -179,8 +179,9 @@ public class Database {
     public static int AddCharacter(int accountID, String charname, byte classCode, byte[] stats, byte[] appearance){
         int charID = -1;
         String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead, level, " +
-                "slot0, slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "slots, skills) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Main.LogMessage("Adding character " + charname + " to database.");
+        //18
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, accountID);
@@ -199,43 +200,13 @@ public class Database {
             ps.setByte(14, appearance[3]);
             ps.setByte(15, appearance[4]);
             ps.setByte(16, (byte)1);
-            int index = 17;
-            for(int i = 0; i < 10; i++){ // default slots to 0
-                ps.setByte(index, (byte)0);
-                index++;
+            ps.setString(17, "0:0:0:0:0:0:0:0:0:0");
+            boolean[] skillBits = new boolean[32];
+            byte[] baseSkills = CharacterClass.GetBaseSkills(classCode);
+            for(byte baseSkill : baseSkills){
+                ByteUtils.FillBooleanArray(skillBits, 1, baseSkill * 2);
             }
-            for(int i = 0; i < 12; i++){ // default skills to 0
-                ps.setByte(index, (byte)0);
-                index++;
-            }
-            switch(classCode){
-                case CharacterClass.Cleric:
-                    ps.setByte(ControlCodes.Discipline_Healing, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Smiting, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Supplication, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_SpiritLaw, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Barriers, (byte)1);
-                    break;
-                case CharacterClass.Magician:
-                    ps.setByte(ControlCodes.Discipline_FireLaw, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_IceLaw, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_EarthLaw, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Shielding, (byte)1);
-                    break;
-                case CharacterClass.Arcanist:
-                    ps.setByte(ControlCodes.Discipline_ManaLaw, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_VoidLaw, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Sigils, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Shielding, (byte)1);
-                    break;
-                case CharacterClass.Mentalist:
-                    ps.setByte(ControlCodes.Discipline_Brilliance, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Psionics, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Displacement, (byte)1);
-                    ps.setByte(ControlCodes.Discipline_Shielding, (byte)1);
-                    break;
-            }
-
+            ps.setInt(18, ByteUtils.BitsToInt(skillBits));
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -251,8 +222,7 @@ public class Database {
     private static PlayerCharacter GetCharacter(int accountID, int characterID, Connection conn){
         PlayerCharacter toReturn = null;
         String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis, appsex, " +
-                "appskin, apphair, appface, apphead, level, experience, slot0, slot1, slot2, slot3, slot4, slot5," +
-                "slot6, slot7, slot8, slot9 FROM characters WHERE accountid = ? AND id = ?";
+                "appskin, apphair, appface, apphead, level, experience, slots, skills FROM characters WHERE accountid = ? AND id = ?";
         try{
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, accountID);
@@ -262,10 +232,15 @@ public class Database {
                 String characterName = rs.getString("charname");
                 byte charClass = rs.getByte("charclass");
                 Main.LogMessage("Fetched character: " + characterName);
+                String[] slotString = rs.getString("slots").split(":");
+                byte[] slots = new byte[slotString.length];
+                for(int i = 0; i < slotString.length; i++){
+                    slots[i] = Byte.parseByte(slotString[i]);
+                }
                 byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte) nameBytes.length;
-                byte[] fetched = new byte[32 + nameLength];
+                byte[] fetched = new byte[22 + slots.length + nameLength];
                 System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
                 fetched[4] = charClass;
                 byte strength = rs.getByte("statstr");
@@ -281,6 +256,8 @@ public class Database {
                 byte apphead = rs.getByte("apphead");
                 byte level = rs.getByte("level");
                 int experience = rs.getInt("experience");
+
+                //slotString.split(":");
                 fetched[5] = strength;
                 fetched[6] = dexterity;
                 fetched[7] = constitution;
@@ -293,13 +270,15 @@ public class Database {
                 fetched[14] = appface;
                 fetched[15] = apphead;
                 fetched[16] = level;
-                for(int i = 17; i < 27; i++){
-                    fetched[i] = rs.getByte("slot" + (i-17));
+                int index = 17;
+                for(int i = 0; i < slots.length; i++){
+                    fetched[index] = slots[i];
+                    index++;
                 }
                 byte[] experienceBytes = ByteUtils.IntToByteArray(experience);
-                System.arraycopy(experienceBytes, 0,fetched, 27, 4);
-                fetched[31] = nameLength;
-                System.arraycopy(nameBytes, 0, fetched, 32, nameLength);
+                System.arraycopy(experienceBytes, 0,fetched, 17 + slots.length, 4);
+                fetched[17 + slots.length + 4] = nameLength;
+                System.arraycopy(nameBytes, 0, fetched, 17 + slots.length + 4 + 1, nameLength);
                 toReturn = new PlayerCharacter(fetched, accountID);
             }
         }

@@ -84,8 +84,53 @@ public class ByteUtils {
         return BytesToUTF8(nameBytes);
     }
 
-    public static byte[] BitArrayToBytes(ArrayList<Boolean> bitArray){
+    public static void FillBooleanArray(boolean[] toFill, int value, int startIndex){
+        switch(value){
+            case 0:
+                toFill[startIndex]      = false;
+                toFill[startIndex + 1]  = false;
+                break;
+            case 1:
+                toFill[startIndex]      = true;
+                toFill[startIndex + 1]  = false;
+                break;
+            case 2:
+                toFill[startIndex]      = false;
+                toFill[startIndex + 1]  = true;
+                break;
+            case 3:
+                toFill[startIndex]      = true;
+                toFill[startIndex + 1]  = true;
+                break;
+            case 4:
+                toFill[startIndex]      = false;
+                toFill[startIndex + 1]  = false;
+                toFill[startIndex + 2]  = true;
+                break;
+            case 5:
+                toFill[startIndex]      = true;
+                toFill[startIndex + 1]  = false;
+                toFill[startIndex + 2]  = true;
+                break;
+            case 6:
+                toFill[startIndex]      = false;
+                toFill[startIndex + 1]  = true;
+                toFill[startIndex + 2]  = true;
+                break;
+            case 7:
+                toFill[startIndex]      = true;
+                toFill[startIndex + 1]  = true;
+                toFill[startIndex + 2]  = true;
+                break;
+        }
+    }
 
+    public static int BitsToInt(boolean[] bits) {
+        int result = 0;
+        for (boolean b : bits) {
+            result = (result << 1) | (b ? 1 : 0);
+        }
+        return result;
     }
     public static ArrayList<Boolean> ByteArrayToBits(byte[] byteArray) {
         ArrayList<Boolean> bitList = new ArrayList<>();
