@@ -7,6 +7,14 @@ using System.Threading.Tasks;
 
 public static class Pregame_Packets
 {
+    public static byte[] UpdateSkillsPacket(int characterID, int skills)
+    {
+        byte[] unencrypted = new byte[9];
+        unencrypted[0] = Pregame_Send.UpdateSkills;
+        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
+        return unencrypted;
+    }
     public static byte[] UpdateSlottingPacket(int characterID, byte[] slots)
     {
         byte[] unencrypted = new byte[19];

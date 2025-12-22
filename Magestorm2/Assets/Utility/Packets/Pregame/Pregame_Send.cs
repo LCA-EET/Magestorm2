@@ -18,6 +18,7 @@ public static class Pregame_Send
                         UpdateAppearance = 13,
                         JoinMatch = 14,
                         RequestMatchList = 15,
-                        UpdateSlotting = 16;
+                        UpdateSlotting = 16,
+                        UpdateSkills = 17;
 }
         

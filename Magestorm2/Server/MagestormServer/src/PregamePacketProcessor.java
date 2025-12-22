@@ -61,6 +61,9 @@ public class PregamePacketProcessor extends UDPProcessor
                 case Pregame_Receive.UpdateSlotting:
                     HandleSlotUpdate();
                     break;
+                case Pregame_Receive.UpdateSkills:
+                    HandleSkillUpdate();
+                    break;
             }
         }
         else{
@@ -73,6 +76,14 @@ public class PregamePacketProcessor extends UDPProcessor
             }
         }
         return true;
+    }
+    private void HandleSkillUpdate(){
+        int characterID = ByteUtils.ExtractInt(_decrypted, 5);
+        if(CharacterManager.CharacterBelongsToAccount(characterID, _accountID)){
+            int skills = ByteUtils.ExtractInt(_decrypted, 9);
+            Database.UpdateSkills(characterID, skills);
+            CharacterManager.GetCharacter(characterID).UpdateSkills(skills);
+        }
     }
     private void HandleSlotUpdate(){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);

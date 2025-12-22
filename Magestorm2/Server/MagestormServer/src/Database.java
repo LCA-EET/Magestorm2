@@ -204,7 +204,9 @@ public class Database {
             boolean[] skillBits = new boolean[32];
             byte[] baseSkills = CharacterClass.GetBaseSkills(classCode);
             for(byte baseSkill : baseSkills){
-                ByteUtils.FillBooleanArray(skillBits, 1, baseSkill * 2);
+                int skillIndex = baseSkill * 2;
+                Main.LogMessage("Skill Index: " + skillIndex);
+                ByteUtils.FillBooleanArray(skillBits, 1, skillIndex);
             }
             ps.setInt(18, ByteUtils.BitsToInt(skillBits));
             ps.execute();
@@ -219,6 +221,21 @@ public class Database {
         }
         return charID;
     }
+    public static boolean UpdateSkills(int characterID, int skillsInt){
+        String sql = "UPDATE characters SET skills=? WHERE id=?";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, characterID);
+            ps.setInt(2, skillsInt);
+            ps.execute();
+            return true;
+        }
+        catch(Exception e){
+            Main.LogError("Database.UpdateSkills: " + e.getMessage());
+        }
+        return false;
+    }
+
     private static PlayerCharacter GetCharacter(int accountID, int characterID, Connection conn){
         PlayerCharacter toReturn = null;
         String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis, appsex, " +
@@ -256,7 +273,7 @@ public class Database {
                 byte apphead = rs.getByte("apphead");
                 byte level = rs.getByte("level");
                 int experience = rs.getInt("experience");
-
+                int skills = rs.getInt("skills");
                 //slotString.split(":");
                 fetched[5] = strength;
                 fetched[6] = dexterity;
@@ -279,7 +296,7 @@ public class Database {
                 System.arraycopy(experienceBytes, 0,fetched, 17 + slots.length, 4);
                 fetched[17 + slots.length + 4] = nameLength;
                 System.arraycopy(nameBytes, 0, fetched, 17 + slots.length + 4 + 1, nameLength);
-                toReturn = new PlayerCharacter(fetched, accountID);
+                toReturn = new PlayerCharacter(fetched, accountID, skills);
             }
         }
         catch(Exception ex){

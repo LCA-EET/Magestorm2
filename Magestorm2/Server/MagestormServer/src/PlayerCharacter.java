@@ -1,3 +1,5 @@
+import java.util.Hashtable;
+
 public class PlayerCharacter {
     private final String _characterName;
     private final int _characterID;
@@ -20,12 +22,14 @@ public class PlayerCharacter {
     private final int _indexSlotStart = 17;
     private final int _accountID;
     private final RemoteClient _remoteClient;
+    private final Hashtable<Byte, Byte> _skillsTable;
 
     private byte _currentMatchID, _idInCurrentMatch, _currentTeam;
     private boolean _inMatch;
-
-    public PlayerCharacter(byte[] fetched, int accountID){
+    private boolean[] _skills;
+    public PlayerCharacter(byte[] fetched, int accountID, int skills){
         _inMatch = false;
+        _skillsTable = new Hashtable<>();
         _remoteClient = GameServer.GetClient(accountID);
         _accountID = accountID;
         _characterBytes = fetched;
@@ -54,7 +58,37 @@ public class PlayerCharacter {
         _nameLevelClass[1] = _characterClass.GetClass();
         _nameLevelClass[2] = nameLength;
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
+        UpdateSkills(skills);
         CharacterManager.AddToCache(this);
+    }
+    public void UpdateSkills(int skills){
+        _skills = ByteUtils.IntegerToBoolArray(skills);
+        Main.LogMessage("Skills int: " + skills + ", " + ByteUtils.BitsToInt(_skills));
+        _skillsTable.clear();
+        byte[] classSkills = CharacterClass.GetBaseSkills(_characterClass.GetClass());
+        for(byte classSkill : classSkills){
+            int skillIndex = classSkill * 2;
+            boolean lsb = _skills[skillIndex];
+            boolean msb = _skills[skillIndex + 1];
+            byte value;
+            if(!msb && !lsb){   // 00
+                value = 0;
+            }
+            else if (!msb){     // 01
+                value = 1;
+            }
+            else if (!lsb){     // 10
+                value = 2;
+            }
+            else{               // 11
+                value = 3;
+            }
+            _skillsTable.put(classSkill, value);
+        }
+        Main.LogMessage("Skills Table");
+        for(Byte key : _skillsTable.keySet()){
+            Main.LogMessage(key + ":" + _skillsTable.get(key));
+        }
     }
     public void UpdateSlottedSpells(byte[] decrypted){
         int offset = 9;

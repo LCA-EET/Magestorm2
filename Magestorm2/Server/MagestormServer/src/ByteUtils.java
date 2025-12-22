@@ -124,11 +124,23 @@ public class ByteUtils {
                 break;
         }
     }
+    public static boolean[] IntegerToBoolArray(int num)
+    {
+        boolean[] binary = new boolean[32];
+        int id = 0;
 
+        while (num != 0) {
+            binary[id++] = num % 2 != 0;
+            num = num / 2;
+        }
+        return binary;
+    }
     public static int BitsToInt(boolean[] bits) {
         int result = 0;
-        for (boolean b : bits) {
-            result = (result << 1) | (b ? 1 : 0);
+        for(int i = 0; i < bits.length; i++){
+            double toAdd = bits[i] ? Math.pow(2,i) : 0;
+            Main.LogMessage("Bit " + i + " is " + bits[i] + ", adding " + toAdd);
+            result += toAdd;
         }
         return result;
     }
