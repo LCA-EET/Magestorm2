@@ -257,7 +257,19 @@ public class Database {
                 byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte) nameBytes.length;
-                byte[] fetched = new byte[22 + slots.length + nameLength];
+                byte[] fetched = new byte[26 + slots.length + nameLength];
+                /* STRUCTURE
+                 * 0 - 3:   ID
+                 * 4:       CHARACTER CLASS
+                 * 5 - 10:  STATS (STR, DEX, CON, INT, CHA, WIS)
+                 * 11 - 15: APPEARANCE (SEX, SKIN, HAIR, FACE, HEAD)
+                 * 16:      LEVEL
+                 * 17 - 20: EXPERIENCE
+                 * 21 - 24: SKILLS
+                 * 25 - 34: SLOTS
+                 * 35:      NAMELENGTH
+                 * 36 - END:NAME
+                 */
                 System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
                 fetched[4] = charClass;
                 byte strength = rs.getByte("statstr");
@@ -288,15 +300,20 @@ public class Database {
                 fetched[15] = apphead;
                 fetched[16] = level;
                 int index = 17;
+                byte[] experienceBytes = ByteUtils.IntToByteArray(experience);
+                System.arraycopy(experienceBytes, 0,fetched, index, 4);
+                index += 4;
+                byte[] skillBytes = ByteUtils.IntToByteArray(skills);
+                System.arraycopy(skillBytes, 0,fetched, index, 4);
+                index += 4;
                 for(int i = 0; i < slots.length; i++){
                     fetched[index] = slots[i];
                     index++;
                 }
-                byte[] experienceBytes = ByteUtils.IntToByteArray(experience);
-                System.arraycopy(experienceBytes, 0,fetched, 17 + slots.length, 4);
-                fetched[17 + slots.length + 4] = nameLength;
-                System.arraycopy(nameBytes, 0, fetched, 17 + slots.length + 4 + 1, nameLength);
-                toReturn = new PlayerCharacter(fetched, accountID, skills);
+                fetched[index] = nameLength;
+                index++;
+                System.arraycopy(nameBytes, 0, fetched, index, nameLength);
+                toReturn = new PlayerCharacter(fetched, accountID);
             }
         }
         catch(Exception ex){

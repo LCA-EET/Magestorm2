@@ -185,7 +185,7 @@ public class PregamePacketProcessor extends UDPProcessor
                     EnqueueForSend(Packets.CreationFailedPacket(), _remote);
                 }
                 else{
-                    EnqueueForSend(Packets.CharacterCreatedPacket(charID, classCode, characterName, stats, appearance), _remote);
+                    EnqueueForSend(Packets.CharacterCreatedPacket(charID), _remote);
                 }
             }
         }

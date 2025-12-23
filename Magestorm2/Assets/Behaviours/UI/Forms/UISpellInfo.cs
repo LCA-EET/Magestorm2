@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-public class UISpellInfo : ValidatableForm
+public class UISpellInfo : ValidatableForm, ISpellProcessor
 {
     public TMP_Text SpellDescription;
     public DisciplineSelectView Disciplines;
@@ -36,9 +36,9 @@ public class UISpellInfo : ValidatableForm
                 break;
         }
     }
-
-    public void UpdateSpellInfo(SpellData spellData)
+    public void SelectionMade(object[] args)
     {
+        SpellData spellData = (SpellData)args[0];
         SpellDescription.text = Language.GetBaseString(spellData.GetInt(SpellAttributes.SPELL_NAME_REFERENCE)) + "\n" +
             Language.GetBaseString(spellData.GetInt(SpellAttributes.DESCRIPTION));
     }

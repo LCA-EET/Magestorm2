@@ -18,6 +18,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabUIIngameMenu;
     public GameObject PrefabUIKeyMapper;
     public GameObject PrefabSpellInfo;
+    public GameObject PrefabAvailableSpells;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -113,6 +114,12 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateKeyMapper()
     {
         AddToStack(Instantiate(PrefabUIKeyMapper));
+    }
+    public void InstantiateAvailableSpellList(byte slotID, UISpellSlots owningForm)
+    {
+        GameObject newForm = Instantiate(PrefabAvailableSpells);
+        newForm.GetComponentInChildren<UIAvailableSpells>().InitializeForm(slotID, owningForm);
+        AddToStack(newForm);
     }
     public GameObject AddToStack(GameObject go)
     {

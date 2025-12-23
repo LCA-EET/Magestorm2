@@ -16,10 +16,11 @@ public class PlayerCharacter {
     private final byte[] _nameBytes;
     private final byte[] _nameLevelClass;
     private final byte[] _appearanceBytes;
-    private final int _indexExperience = 27;
-    private final int _indexNameLength = 31;
+    private final int _indexExperience = 17;
+    private final int _indexSkills = 21;
+    private final int _indexNameLength = 35;
     private final int _indexLevel = 16;
-    private final int _indexSlotStart = 17;
+    private final int _indexSlotStart = 25;
     private final int _accountID;
     private final RemoteClient _remoteClient;
     private final Hashtable<Byte, Byte> _skillsTable;
@@ -27,7 +28,7 @@ public class PlayerCharacter {
     private byte _currentMatchID, _idInCurrentMatch, _currentTeam;
     private boolean _inMatch;
     private boolean[] _skills;
-    public PlayerCharacter(byte[] fetched, int accountID, int skills){
+    public PlayerCharacter(byte[] fetched, int accountID){
         _inMatch = false;
         _skillsTable = new Hashtable<>();
         _remoteClient = GameServer.GetClient(accountID);
@@ -49,9 +50,10 @@ public class PlayerCharacter {
         _appearanceBytes[4] = fetched[15];
         _level = fetched[_indexLevel];
         _experience = ByteUtils.ExtractInt(fetched, _indexExperience);
+        int skills = ByteUtils.ExtractInt(fetched, _indexSkills);
         byte nameLength = fetched[_indexNameLength];
         _nameBytes = new byte[nameLength];
-        System.arraycopy(fetched, 32, _nameBytes, 0, nameLength);
+        System.arraycopy(fetched, _indexNameLength + 1, _nameBytes, 0, nameLength);
         _characterName = ByteUtils.BytesToUTF8(_nameBytes);
         _nameLevelClass = new byte[1 + 1 + 1 + nameLength];
         _nameLevelClass[0] = _level;

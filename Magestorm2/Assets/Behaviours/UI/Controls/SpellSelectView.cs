@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 public class SpellSelectView : ScrollSelectView
 {
-    private UISpellInfo _owner;
+    private ISpellProcessor _owner;
     public override void Start()
     {
         base.Start();
     }
 
-    public void SetOwningForm(UISpellInfo owner)
+    public void SetOwningForm(ISpellProcessor owner)
     {
         _owner = owner;
     }
@@ -29,7 +29,6 @@ public class SpellSelectView : ScrollSelectView
 
     protected override void ProcessSelection()
     {
-        SpellData selected = SpellManager.GetSpell(_selectedOption);
-        _owner.UpdateSpellInfo(selected);
+        _owner.SelectionMade(new object[] { SpellManager.GetSpell(_selectedOption) });
     }
 }

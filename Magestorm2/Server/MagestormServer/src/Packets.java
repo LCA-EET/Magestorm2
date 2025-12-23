@@ -171,7 +171,14 @@ public class Packets {
         return Cryptographer.Encrypt(toSend);
     }
 
-    public static byte[] CharacterCreatedPacket(int characterID, byte classCode, String charname, byte[] stats, byte[] appearance){
+    public static byte[] CharacterCreatedPacket(int characterID){
+        PlayerCharacter newlyCreated = CharacterManager.GetCharacter(characterID);
+        byte[] characterBytes = newlyCreated.GetCharacterBytes();
+        byte[] toEncrypt = new byte[1 + characterBytes.length];
+        toEncrypt[0] = Pregame_Send.CharacterCreated;
+        System.arraycopy(characterBytes, 0, toEncrypt, 1, characterBytes.length);
+        return Cryptographer.Encrypt(toEncrypt);
+        /*
         byte[] nameBytes = charname.getBytes(StandardCharsets.UTF_8);
         byte nameLength = (byte)nameBytes.length;
         byte[] toReturn = new byte[1 + 1 + 4 + 5 + 6 + 1 + nameLength];
@@ -184,6 +191,7 @@ public class Packets {
         toReturn[17] = nameLength;
         System.arraycopy(nameBytes,0,toReturn,18,nameLength);
         return Cryptographer.Encrypt(toReturn);
+        */
     }
 
     public static byte[] RemovedFromServerPacket(byte reasonCode){

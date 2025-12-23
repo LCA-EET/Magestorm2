@@ -9,6 +9,35 @@ using UnityEngine;
 public static class SharedFunctions
 {
     private static object[] _params;
+
+    private static SpellDiscipline[] ArcanistDisciplines = new SpellDiscipline[] { 
+        SpellDiscipline.ManaLaw, 
+        SpellDiscipline.VoidLaw, 
+        SpellDiscipline.Sigils, 
+        SpellDiscipline.Shielding 
+    };
+
+    private static SpellDiscipline[] ClericDisciplines = new SpellDiscipline[] { 
+        SpellDiscipline.Barriers, 
+        SpellDiscipline.Healing, 
+        SpellDiscipline.Smiting, 
+        SpellDiscipline.SpiritLaw, 
+        SpellDiscipline.Supplication 
+    };
+    
+    private static SpellDiscipline[] MagicianDisciplines = new SpellDiscipline[] { 
+        SpellDiscipline.EarthLaw,  
+        SpellDiscipline.FireLaw, 
+        SpellDiscipline.IceLaw 
+    };
+    
+    private static SpellDiscipline[] MentalistDisciplines = new SpellDiscipline[] { 
+        SpellDiscipline.Brilliance,
+        SpellDiscipline.Displacement,
+        SpellDiscipline.Psionics,
+        SpellDiscipline.Shielding
+    };
+
     public static object[] Params {  
         get { return _params; } 
         set { _params = value; }
@@ -54,6 +83,56 @@ public static class SharedFunctions
         return "Undefined";
     }
 
+    public static SpellDiscipline[] DisciplinesByClass(PlayerClass playerClass)
+    {
+        switch (playerClass)
+        {
+            case PlayerClass.Arcanist:
+                return ArcanistDisciplines;
+            case PlayerClass.Cleric:
+                return ClericDisciplines;
+            case PlayerClass.Magician:
+                return MagicianDisciplines;
+            case PlayerClass.Mentalist:
+                return MentalistDisciplines;
+        }
+        return null;
+    }
+    public static int SpellDisciplineStringReference(SpellDiscipline spellDiscipline)
+    {
+        switch (spellDiscipline)
+        {
+            case SpellDiscipline.SpiritLaw:
+                return 283;
+            case SpellDiscipline.VoidLaw:
+                return 239;
+            case SpellDiscipline.FireLaw:
+                return 229;
+            case SpellDiscipline.IceLaw:
+                return 230;
+            case SpellDiscipline.ManaLaw:
+                return 238;
+            case SpellDiscipline.Barriers:
+                return 284;
+            case SpellDiscipline.Brilliance:
+                return 232;
+            case SpellDiscipline.Displacement:
+                return 233;
+            case SpellDiscipline.EarthLaw:
+                return 231;
+            case SpellDiscipline.Psionics:
+                return 234;
+            case SpellDiscipline.Smiting:
+                return 237;
+            case SpellDiscipline.Supplication:
+                return 235;
+            case SpellDiscipline.Sigils:
+                return 240;
+            case SpellDiscipline.Shielding:
+                return 285;
+        }
+        return 0;
+    }
     public static string ClassAbbreviation(PlayerClass playerClass)
     {
         switch (playerClass)

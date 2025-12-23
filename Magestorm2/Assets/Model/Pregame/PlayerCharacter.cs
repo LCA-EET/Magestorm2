@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -14,17 +15,20 @@ public class PlayerCharacter
     private byte[] _statBytes;
     private byte[] _idBytes;
     private byte[] _slottedSpells;
-    private byte[] _skills;
-    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes, byte[] slots) { 
+    private Dictionary<SpellDiscipline, byte> _skills;
+    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes, byte[] slots, int skills) {
+        _skills = new Dictionary<SpellDiscipline, byte>();
         _slottedSpells = slots;
         _characterID = characterID;
         _characterName = characterName;
         _characterClass = characterClass;
+        Debug.Log("CharacterClass: " + _characterClass);
         _characterLevel = characterLevel;
         _characterNameBytes = Encoding.UTF8.GetBytes(characterName);
         _statBytes = statBytes;
         _appearanceBytes = appearanceBytes;
         _idBytes = BitConverter.GetBytes(characterID);
+        UpdateSkillsTable(skills);
     }
     public static string ClassToString(PlayerClass playerClass)
     {
@@ -93,5 +97,40 @@ public class PlayerCharacter
         byte statToUse = (PlayerClass)CharacterClass == PlayerClass.Cleric ? GetStat(PlayerStats.Charisma) : GetStat(PlayerStats.Intellect);
         float manaMultiplier = 1 + ((statToUse - 10) * 0.05f);
         return ((_characterLevel * 4) + 10) * manaMultiplier;
+    }
+    public void UpdateSkillsTable(int skills)
+    {
+        bool[] skillArray = new bool[skills];
+        int id = 0;
+        while(skills != 0)
+        {
+            skillArray[id] = skills % 2 != 0;
+            skills = skills / 2;
+        }
+        _skills.Clear();
+        foreach(SpellDiscipline discipline in SharedFunctions.DisciplinesByClass((PlayerClass)_characterClass))
+        {
+            int skillIndex = ((byte)discipline) * 2;
+            bool lsb = skillArray[skillIndex];
+            bool msb = skillArray[skillIndex + 1];
+            byte value;
+            if(!msb && !lsb)    // 00
+            {
+                value = 0;
+            }
+            else if (!msb)      // 01
+            {
+                value = 1;
+            }
+            else if (!lsb)      // 10
+            {
+                value = 2;
+            }
+            else                // 11
+            {
+                value = 3;
+            }
+            _skills.Add(discipline, value);
+        }
     }
 }

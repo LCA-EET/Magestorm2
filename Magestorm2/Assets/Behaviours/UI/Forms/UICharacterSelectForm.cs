@@ -91,6 +91,12 @@ public class UICharacterSelectForm : ValidatableForm
     {
         switch (buttonType)
         {
+            case ButtonType.Delete:
+                if (ValidateForm())
+                {
+                    Game.YesNo(Language.BuildString(50, PlayerAccount.SelectedCharacter.CharacterName), this);
+                }
+                break;
             case ButtonType.Cancel:
                 CloseForm();
                 break;
@@ -116,6 +122,13 @@ public class UICharacterSelectForm : ValidatableForm
             case ButtonType.Misc2:
 
                 break;
+        }
+    }
+    public override void SetResult(FormResult result)
+    {
+        if(result == FormResult.Yes)
+        {
+            Game.SendPregameBytes(Pregame_Packets.DeleteCharacterPacket(PlayerAccount.SelectedCharacter.CharacterID));
         }
     }
     public override void CloseForm()

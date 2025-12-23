@@ -256,13 +256,31 @@ public class PregamePacketProcessor : UDPProcessor
     }
     private void HandleCharacterCreatedPacket()
     {
-        byte classCode = _decrypted[1];
-        int characterID = BitConverter.ToInt32(_decrypted, 2);
-        byte[] appearanceBytes = FillSegment(_decrypted, 6, 5);
-        byte[] statBytes = FillSegment(_decrypted, 11, 6);
-        byte nameLength = _decrypted[17];
-        string characterName = Encoding.UTF8.GetString(_decrypted, 18, nameLength);
-        PlayerAccount.AddCharacter(characterID, characterName, classCode, 1, statBytes, appearanceBytes, new byte[10]);
+        int index = 1;
+        int characterID = BitConverter.ToInt32(_decrypted, index);
+        index+=4;
+        byte classCode = _decrypted[index];
+        index++;
+        byte[] statBytes = FillSegment(_decrypted, index, 6);
+        index += 6;
+        byte[] appearanceBytes = FillSegment(_decrypted, index, 5);
+        index += 5;
+        byte level = _decrypted[index];
+        index++;
+        int experience = BitConverter.ToInt32(_decrypted, index);
+        index += 4;
+        int skills = BitConverter.ToInt32(_decrypted, index);
+        index += 4;
+        byte[] slots = new byte[10];
+        for(int i = 0; i < 10; i++)
+        {
+            slots[i] = _decrypted[index];
+            index++;
+        }
+        byte nameLength = _decrypted[index];
+        index++;
+        string characterName = Encoding.UTF8.GetString(_decrypted, index, nameLength);
+        PlayerAccount.AddCharacter(characterID, characterName, classCode, level, statBytes, appearanceBytes, slots, skills);
         UICharacterCreationForm creationForm = ComponentRegister.UICharacterCreationForm;
         if (creationForm != null)
         {
@@ -299,19 +317,36 @@ public class PregamePacketProcessor : UDPProcessor
                 index += 5;
                 byte level = _decrypted[index];
                 index++;
+                /* STRUCTURE
+                 * 0 - 3:   ID
+                 * 4:       CHARACTER CLASS
+                 * 5 - 10:  STATS (STR, DEX, CON, INT, CHA, WIS)
+                 * 11 - 15: APPEARANCE (SEX, SKIN, HAIR, FACE, HEAD)
+                 * 16:      LEVEL
+                 * 17 - 20: EXPERIENCE
+                 * 21 - 24: SKILLS
+                 * 25 - 34: SLOTS
+                 * 35:      NAMELENGTH
+                 * 36 - END:NAME
+                 */
+
+                int experience = BitConverter.ToInt32(_decrypted, index);
+                index += 4;
+                int skills = BitConverter.ToInt32(_decrypted, index);
+                index += 4;
+
                 byte[] slots = new byte[10];
-                for(int i = 0; i < 10; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     slots[i] = _decrypted[index];
                     index++;
                 }
-                int experience = BitConverter.ToInt32(_decrypted, index);
-                index += 4;
+
                 byte nameLength = _decrypted[index];
                 index++;
                 string charname = Encoding.UTF8.GetString(_decrypted, index, nameLength);
                 index += nameLength;
-                PlayerAccount.AddCharacter(characterID, charname, charClass, level, statBytes, appearanceBytes, slots);
+                PlayerAccount.AddCharacter(characterID, charname, charClass, level, statBytes, appearanceBytes, slots, skills);
                 charIndex++;
             }
             

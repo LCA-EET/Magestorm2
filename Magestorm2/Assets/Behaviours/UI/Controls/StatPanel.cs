@@ -6,11 +6,13 @@ public class StatPanel : MonoBehaviour
 {
     public TMP_Text TotalText;
     private Dictionary<PlayerStats, StatLine> _statTable;
+    private bool _readOnly = false;
+    private StatLine[] _statLines;
     private void Awake()
     {
         _statTable = new Dictionary<PlayerStats, StatLine>();
-        StatLine[] statLines = GetComponentsInChildren<StatLine>();
-        foreach (StatLine statLine in statLines)
+        _statLines = GetComponentsInChildren<StatLine>();
+        foreach (StatLine statLine in _statLines)
         {
             _statTable.Add(statLine.Statistic, statLine);
             statLine.AssignOwner(this);
@@ -19,13 +21,24 @@ public class StatPanel : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        RefreshTotal();
+        if (!_readOnly)
+        {
+            RefreshTotal();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+    public void MakeReadOnly()
+    {
+        _readOnly = true;
+        foreach (StatLine statLine in _statLines)
+        {
+            statLine.DisableButtons();
+        }
     }
     public void RefreshTotal()
     {
