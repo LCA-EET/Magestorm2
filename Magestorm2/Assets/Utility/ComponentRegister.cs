@@ -35,7 +35,13 @@ public static class ComponentRegister
     private static Spawner _spawner;
     private static Valhalla _valhalla;
     private static ValhallaNotice _valhallaNotice;
+    private static UIPCEditor _uiPCEditor;
 
+    public static UIPCEditor UIPCEditor
+    {
+        get { return _uiPCEditor; }
+        set { _uiPCEditor = value; }
+    }
     public static Avatar PlayerAvatar
     {
         get { return _playerAvatar; }

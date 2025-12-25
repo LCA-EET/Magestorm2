@@ -62,14 +62,6 @@ public class UICharacterCard : ValidatableForm
     {
         switch (buttonType)
         {
-            case ButtonType.Delete:
-                Game.YesNo(Language.BuildString(50, _character.CharacterName), this); //
-                break;
-            case ButtonType.Submit:
-                ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();
-                break;
-            case ButtonType.Edit:
-                break;
             case ButtonType.Select:
                 if (_populated)
                 {
@@ -77,7 +69,7 @@ public class UICharacterCard : ValidatableForm
                 }
                 else
                 {
-                    ComponentRegister.UIPrefabManager.InstantiateCharacterCreator();
+                    ComponentRegister.UIPrefabManager.InstantiateCharacterEditor(null);
                 }
                 break;
         }

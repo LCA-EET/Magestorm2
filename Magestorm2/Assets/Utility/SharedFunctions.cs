@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using System;
 
 public static class SharedFunctions
 {
@@ -132,6 +133,10 @@ public static class SharedFunctions
                 return 285;
         }
         return 0;
+    }
+    public static byte GetMaxSkillPointsForLevel(byte characterLevel)
+    {
+        return (byte)(3 + Math.Floor(characterLevel / 7.0));
     }
     public static string ClassAbbreviation(PlayerClass playerClass)
     {

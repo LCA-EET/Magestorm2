@@ -133,7 +133,7 @@ public class PregamePacketProcessor : UDPProcessor
         switch (isUsed)
         {
             case 0:
-                ComponentRegister.UICharacterCreationForm.NameCheckPassed();
+                ComponentRegister.UIPCEditor.NameCheckPassed();
                 break;
             case 1:
                 Game.MessageBoxReference(96);

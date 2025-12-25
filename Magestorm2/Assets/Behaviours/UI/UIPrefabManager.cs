@@ -8,6 +8,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabPregamePacketProcessor;
     public GameObject PrefabCharacterSelector;
     public GameObject PrefabCharacterCreator;
+    public GameObject PrefabCharacterEditor;
     public GameObject PrefabMatchList;
     public GameObject PrefabYesNoBox;
     public GameObject PrefabMatchCreator;
@@ -50,6 +51,13 @@ public class UIPrefabManager : MonoBehaviour
     {
         _uiStack.Clear();
     }
+    public void InstantiateCharacterEditor(PlayerCharacter character)
+    {
+        GameObject instantiated = Instantiate(PrefabCharacterEditor);
+        instantiated.GetComponent<UIPCEditor>().InitForm(character);
+        AddToStack(instantiated);
+    }
+    
     public void InstantiateInGameMenu()
     {
         

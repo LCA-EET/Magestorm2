@@ -30,6 +30,15 @@ public class PlayerCharacter
         _idBytes = BitConverter.GetBytes(characterID);
         UpdateSkillsTable(skills);
     }
+    public byte GetSkillLevel(SpellDiscipline discipline)
+    {
+        if (_skills.ContainsKey(discipline))
+        {
+            return _skills[discipline];
+        }
+        return 0;
+    }
+
     public static string ClassToString(PlayerClass playerClass)
     {
         switch (playerClass)
@@ -44,6 +53,10 @@ public class PlayerCharacter
                 return Language.GetBaseString(9); //
         }
         return "";
+    }
+    public byte[] StatBytes
+    {
+        get { return _statBytes; }
     }
     public byte[] IDBytes
     {

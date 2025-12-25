@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ValidateableObject : MonoBehaviour
 {
+    protected string _validationFailureMessage;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,5 +25,10 @@ public class ValidateableObject : MonoBehaviour
     public virtual object GetValue()
     {
         return null;
+    }
+
+    public string ValidationFailureMessage
+    {
+        get { return _validationFailureMessage; }
     }
 }

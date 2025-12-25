@@ -5,6 +5,7 @@ public class ValidatableForm : InstantiatableForm
 {
     public ValidateableObject[] EntriesToValidate;
     public FormButton[] FormButtons;
+    protected string _validationFailureMessages;
     protected FormResult _result;
     protected Dictionary<ButtonType, FormButton> _buttonTable;
      
@@ -30,7 +31,6 @@ public class ValidatableForm : InstantiatableForm
         {
             button.SetForm(this);
             _buttonTable.Add(button.buttonType, button);
-            Debug.Log("Associated button " + button.buttonType.ToString()); 
         }
     }
     public void ToggleButtonState(ButtonType buttonType, bool active)
@@ -43,16 +43,29 @@ public class ValidatableForm : InstantiatableForm
     }
     protected virtual bool ValidateForm()
     {
+        return ValidateForm(true);
+    }
+    protected virtual bool ValidateForm(bool message)
+    {
         bool passValidation = true;
+        _validationFailureMessages = "";
         foreach (ValidateableObject toValidate in EntriesToValidate)
         {
             if (!toValidate.Validate())
             {
+                if(_validationFailureMessages == "")
+                {
+                    _validationFailureMessages += toValidate.ValidationFailureMessage;
+                }
+                else
+                {
+                    _validationFailureMessages += "\n" + toValidate.ValidationFailureMessage;
+                }
                 toValidate.MarkInvalid(true);
                 passValidation = false;
             }
         }
-        if (!passValidation)
+        if (!passValidation && message)
         {
             Game.MessageBox(Language.GetBaseString(20)); //
         }
@@ -60,7 +73,6 @@ public class ValidatableForm : InstantiatableForm
     }
     public virtual void ButtonPressed(ButtonType buttonType)
     {
-        Debug.Log("ValidatableForm.ButtonPressed: " + buttonType.ToString());
         if (buttonType == ButtonType.Submit)
         {
             if (ValidateForm())

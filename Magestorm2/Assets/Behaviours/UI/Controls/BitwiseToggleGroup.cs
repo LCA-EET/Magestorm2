@@ -28,6 +28,14 @@ public class BitwiseToggleGroup : ToggleGroup
         Options[DefaultSelection].Select();
         
     }
+    public void MarkSelected(byte index)
+    {
+        Options[index].isOn = true;
+        foreach (Toggle toggle in Options)
+        {
+            toggle.enabled = false;
+        }
+    }
     public bool[] GetBits()
     {
         int numBits = (int)Mathf.Ceil(Options.Length / 2);
