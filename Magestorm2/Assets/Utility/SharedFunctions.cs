@@ -29,7 +29,8 @@ public static class SharedFunctions
     private static SpellDiscipline[] MagicianDisciplines = new SpellDiscipline[] { 
         SpellDiscipline.EarthLaw,  
         SpellDiscipline.FireLaw, 
-        SpellDiscipline.IceLaw 
+        SpellDiscipline.IceLaw,
+        SpellDiscipline.Shielding
     };
     
     private static SpellDiscipline[] MentalistDisciplines = new SpellDiscipline[] { 
@@ -101,6 +102,7 @@ public static class SharedFunctions
     }
     public static int SpellDisciplineStringReference(SpellDiscipline spellDiscipline)
     {
+        
         switch (spellDiscipline)
         {
             case SpellDiscipline.SpiritLaw:
@@ -131,6 +133,8 @@ public static class SharedFunctions
                 return 240;
             case SpellDiscipline.Shielding:
                 return 285;
+            case SpellDiscipline.Healing:
+                return 236;
         }
         return 0;
     }

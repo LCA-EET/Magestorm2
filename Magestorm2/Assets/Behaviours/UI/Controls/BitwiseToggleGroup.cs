@@ -1,11 +1,16 @@
 using System.Collections;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 public class BitwiseToggleGroup : ToggleGroup
 {
+    private IToggleGroupOwner _owningForm;
     public Toggle[] Options;
     public byte DefaultSelection = 0;
+    public byte GroupID;
 
+    private byte _priorSelection;
+    private PeriodicAction _action;
     public byte GetSelectedIndex()
     {
         for (byte b = 0; b < Options.Length; b++)
@@ -21,12 +26,34 @@ public class BitwiseToggleGroup : ToggleGroup
     protected override void Awake()
     {
         base.Awake();
+        
         foreach (Toggle toggle in Options)
         {
             toggle.group = this;
         }
         Options[DefaultSelection].Select();
         
+    }
+    public void Update()
+    {
+        if (_owningForm != null)
+        {
+            _action.ProcessAction(Time.deltaTime);    
+        }
+    }
+    private void CheckSelection()
+    {
+        byte selected = GetSelectedIndex();
+        if (selected != _priorSelection)
+        {
+            _priorSelection = selected;
+            _owningForm.GroupToggleChange(GroupID, selected);
+        }
+    }
+    public void SetOwningForm(IToggleGroupOwner owningForm)
+    {
+        _action = new PeriodicAction(0.1f, CheckSelection, null);
+        _owningForm = owningForm;
     }
     public void MarkSelected(byte index)
     {

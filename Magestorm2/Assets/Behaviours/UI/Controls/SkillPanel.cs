@@ -1,21 +1,36 @@
 ﻿using TMPro;
+using UnityEngine;
 public class SkillPanel : ValidateableObject
 {
     public SkillLine[] SkillLines;
     public TMP_Text RemainingText;
 
+    private PeriodicAction _counter;
     private byte _characterLevel;
+    private void Start()
+    {
+        _counter = new PeriodicAction(0.1f, UpdateRemainingPoints, null);
+    }
     public void InitControl(byte characterLevel)
     {
         _characterLevel = characterLevel;   
     }
-    public void RefreshClass(byte level, PlayerClass playerClass)
+    private void Update()
+    {
+        _counter.ProcessAction(Time.deltaTime);
+    }
+    private void UpdateRemainingPoints()
+    {
+        int pointsRemaining = (SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel) - GetUsedSkillPoints());
+        RemainingText.text = Language.BuildString(286, pointsRemaining);
+    }
+    public void RefreshClass(PlayerClass playerClass)
     {
         SpellDiscipline[] availableDisciplines = SharedFunctions.DisciplinesByClass(playerClass);
         int index = 0;
         for (int i = 0; i < availableDisciplines.Length; i++)
         {
-            SkillLines[i].Init(level, availableDisciplines[i], _characterLevel);
+            SkillLines[i].Init(0, availableDisciplines[i], _characterLevel);
             index++;
         }
         while(index < SkillLines.Length)
@@ -26,7 +41,7 @@ public class SkillPanel : ValidateableObject
     }
     public void FillSkills(PlayerCharacter pc)
     {
-        RefreshClass(pc.CharacterLevel, (PlayerClass)pc.CharacterClass);
+        RefreshClass((PlayerClass)pc.CharacterClass);
         for (int i = 0; i < SkillLines.Length; i++) 
         {
             SkillLine toUpdate = SkillLines[i];

@@ -2109,8 +2109,7 @@ MonoBehaviour:
   - {fileID: 1005345770961880195}
   - {fileID: 452892603971130088}
   - {fileID: 5023407420428888943}
-  - {fileID: 5714105630741588480}
-  StringReferences: 160100005b00000057000000cc000000120100001f0100002001000021010000
+  StringReferences: 210100005b00000057000000cc000000120100001f01000020010000
 --- !u!114 &319785222264701821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2127,7 +2126,9 @@ MonoBehaviour:
   - {fileID: 1048737100821727728}
   - {fileID: 3065059814437102816}
   - {fileID: 6010546169695886885}
-  FormButtons: []
+  FormButtons:
+  - {fileID: 361755539071378437}
+  - {fileID: 8222034427773930020}
   StatPanel: {fileID: 3065059814437102816}
   SkillPanel: {fileID: 6010546169695886885}
   SlotSelectView: {fileID: 2146668212897843324}
@@ -2782,6 +2783,18 @@ PrefabInstance:
     - target: {fileID: 2304074668684741220, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: m_Name
       value: NameField
+      objectReference: {fileID: 0}
+    - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+      propertyPath: TextFields.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+      propertyPath: StringReferences.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+      propertyPath: 'StringReferences.Array.data[0]'
+      value: 288
       objectReference: {fileID: 0}
     - target: {fileID: 4356297596424314138, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: m_SizeDelta.x

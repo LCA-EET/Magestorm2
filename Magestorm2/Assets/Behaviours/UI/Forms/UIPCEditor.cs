@@ -1,22 +1,31 @@
 ﻿using UnityEngine;
 using TMPro;
-public class UIPCEditor : ValidatableForm
+public class UIPCEditor : ValidatableForm, IToggleGroupOwner
 {
     public StatPanel StatPanel;
     public SkillPanel SkillPanel;
     public SlotSelectView SlotSelectView;
-    public BitwiseToggleGroup ClassToggleGroup; 
-
+    public BitwiseToggleGroup ClassToggleGroup;
+    
     private void Awake()
     {
         ComponentRegister.UIPCEditor = this;
         AssociateFormToButtons();
+        ClassToggleGroup.SetOwningForm(this);
+    }
+    
+    public void GroupToggleChange(byte groupID, byte selectedIndex)
+    {
+        if(groupID == 0)
+        {
+            SkillPanel.RefreshClass((PlayerClass)selectedIndex);
+        }
     }
     public void InitForm(PlayerCharacter character)
     {
         if (character == null)
         {
-            
+            SkillPanel.InitControl(1);
         }
         else
         {

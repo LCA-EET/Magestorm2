@@ -62,6 +62,9 @@ public class UICharacterCard : ValidatableForm
     {
         switch (buttonType)
         {
+            case ButtonType.Submit:
+                ComponentRegister.UIPrefabManager.InstantiateCharacterEditor(null);
+                break;
             case ButtonType.Select:
                 if (_populated)
                 {
