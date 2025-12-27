@@ -30,6 +30,13 @@ public class PlayerCharacter
         _idBytes = BitConverter.GetBytes(characterID);
         UpdateSkillsTable(skills);
     }
+    public byte[] SlottedSpells
+    {
+        get
+        {
+            return _slottedSpells;
+        }
+    }
     public byte GetSkillLevel(SpellDiscipline discipline)
     {
         if (_skills.ContainsKey(discipline))

@@ -2,7 +2,7 @@ public class Spell {
     private final int _spellID;
 
     private final byte _minDamagePerRoll, _maxDamagePerRoll, _minHealPerRoll, _maxHealPerRoll, _element, _spellCost,
-            _spellType, _discipline, _skillRequired, _numRolls;
+            _spellType, _discipline, _skillRequired, _numRolls, _minlevel;
 
     public Spell(int id, byte[] params){
         _spellID = id;
@@ -16,6 +16,7 @@ public class Spell {
         _discipline = params[7];
         _skillRequired = params[8];
         _numRolls = params[9];
+        _minlevel = params[10];
     }
     public int GetSpellID(){
         return _spellID;
@@ -50,4 +51,5 @@ public class Spell {
     public byte GetNumRolls(){
         return _numRolls;
     }
+    public byte GetMinLevel() {return _minlevel;}
 }

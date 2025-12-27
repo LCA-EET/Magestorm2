@@ -26,6 +26,8 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
         if (character == null)
         {
             SkillPanel.InitControl(1);
+            SkillPanel.RefreshClass((PlayerClass)ClassToggleGroup.DefaultSelection);
+            SlotSelectView.Init(new byte[10],1, SkillPanel);
         }
         else
         {
@@ -33,7 +35,9 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
             StatPanel.FillStats(character);
             StatPanel.DisablePanel();
             SkillPanel.FillSkills(character);
+            SlotSelectView.Init(character.SlottedSpells, character.CharacterLevel, SkillPanel);
         }
+        
     }
     public void NameCheckPassed()
     {

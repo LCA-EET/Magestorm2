@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 public class SkillPanel : ValidateableObject
 {
@@ -76,5 +77,17 @@ public class SkillPanel : ValidateableObject
     {
         _validationFailureMessage = Language.GetBaseString(291);
         return GetUsedSkillPoints() != SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel);
+    }
+    public Dictionary<SpellDiscipline, byte> GetDisciplineTable()
+    {
+        Dictionary<SpellDiscipline, byte> toReturn = new Dictionary<SpellDiscipline, byte>();
+        foreach (SkillLine line in SkillLines)
+        {
+            if (line.gameObject.activeSelf)
+            {
+                toReturn.Add(line.SpellDiscipline, line.SkillLevel);
+            }
+        }
+        return toReturn;
     }
 }

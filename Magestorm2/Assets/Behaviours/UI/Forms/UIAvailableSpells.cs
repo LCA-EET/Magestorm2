@@ -1,21 +1,25 @@
 ﻿using TMPro;
+using System.Collections.Generic;
 public class UIAvailableSpells : ValidatableForm, ISpellProcessor
 {
     public TMP_Text FormHeader;
     public SpellSelectView SpellSelectView;
 
     private ISpellProcessor _owner;
-    private byte _slotID;
+    private byte _slotID, _characterLevel;
 
     private void Start()
     {
         AssociateFormToButtons();
     }
-    public void InitializeForm(byte slotID, ISpellProcessor owner)
+    public void InitializeForm(byte characterLevel, byte slotID, ISpellProcessor owner, Dictionary<SpellDiscipline, byte> disciplineLevels)
     {
         _slotID = slotID;
         _owner = owner;
+        _characterLevel = characterLevel;
         FormHeader.text = Language.BuildString(277, slotID);
+        List<SpellData> availableSpells = SpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
+        SpellSelectView.AssignKeys
     }
 
     public override void ButtonPressed(ButtonType buttonType)

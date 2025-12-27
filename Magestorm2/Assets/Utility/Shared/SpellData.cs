@@ -33,6 +33,7 @@ public class SpellData
     {
         return int.Parse(_data[key].ToString());
     }
+
 }
 public static class SpellAttributes
 {
@@ -50,4 +51,5 @@ public static class SpellAttributes
     public const string SKILLNEEDED = "skillneeded";
     public const string ROLLS = "rolls";
     public const string SPELL_NAME_REFERENCE = "spellnameref";
+    public const string MINLEVEL = "minlevel";
 }

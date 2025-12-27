@@ -32,9 +32,31 @@ public static class SpellManager
         }
     }
 
-    public static SpellData GetSpell(byte key)
+    public static bool GetSpell(byte key, ref SpellData spellReference)
     {
-        return _spells[key];
+        bool toReturn = false;
+        if (_spells.ContainsKey(key))
+        {
+            toReturn = true;
+            spellReference = _spells[key];
+        }
+        return toReturn;
+    }
+    public static List<SpellData> GetAvailableSpells(byte characterLevel, Dictionary<SpellDiscipline, byte> disciplineTable)
+    {
+        List<SpellData> toReturn = new List<SpellData>();
+        foreach(SpellDiscipline disciplineKey in disciplineTable.Keys)
+        {
+            List<SpellData> toCheck = GetSpellsOfDiscipline(new SpellDiscipline[] { disciplineKey });
+            foreach(SpellData data in toCheck)
+            {
+                if(data.GetByte(SpellAttributes.MINLEVEL) <= characterLevel &&
+                    data.GetByte(SpellAttributes.SKILLNEEDED) <= disciplineTable[disciplineKey]){
+                    toReturn.Add(data);
+                }
+            }
+        }
+        return toReturn;
     }
     public static List<SpellData> GetSpellsOfDiscipline(SpellDiscipline[] disciplines)
     {

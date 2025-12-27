@@ -29,6 +29,10 @@ public class SpellSelectView : ScrollSelectView
 
     protected override void ProcessSelection()
     {
-        _owner.SelectionMade(new object[] { SpellManager.GetSpell(_selectedOption) });
+        SpellData reference = null;
+        if(SpellManager.GetSpell(_selectedOption, ref reference))
+        {
+            _owner.SelectionMade(new object[] { reference });
+        }
     }
 }

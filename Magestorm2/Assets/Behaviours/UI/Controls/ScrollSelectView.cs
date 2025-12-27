@@ -8,7 +8,7 @@ public class ScrollSelectView : MonoBehaviour, ILabelCollection
 
     public virtual void Start()
     {
-        RecordSelection(Labels[0].OptionID);
+        //RecordSelection(Labels[0].OptionID);
     }
 
     public void AssignKeys(Dictionary<byte, int> optionsTable)
