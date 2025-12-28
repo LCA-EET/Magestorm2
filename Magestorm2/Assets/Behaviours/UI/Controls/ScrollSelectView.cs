@@ -17,7 +17,9 @@ public class ScrollSelectView : MonoBehaviour, ILabelCollection
         foreach (byte key in optionsTable.Keys) {
             if (index < Labels.Length)
             {
-                Labels[index].Register(optionsTable[key], key, this);
+                SelectableLabel label = Labels[index];
+                label.Register(optionsTable[key], key, this);
+                label.MarkSelected(false);
             }
             index++;
         }

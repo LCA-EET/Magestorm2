@@ -31,7 +31,7 @@ public class UICharacterCreationForm : ValidatableForm
         ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
             ClassToggleGroup.GetSelectedIndex(),
             stats,
-            appearanceBytes));
+            appearanceBytes, null));
         CloseForm();
     }
     protected override void PassedValidation()

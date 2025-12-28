@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using System.Collections.Generic;
+using UnityEngine;
 public class UIAvailableSpells : ValidatableForm, ISpellProcessor
 {
     public TMP_Text FormHeader;
@@ -11,6 +12,7 @@ public class UIAvailableSpells : ValidatableForm, ISpellProcessor
     private void Start()
     {
         AssociateFormToButtons();
+        Debug.Log("UIAvailableSpells form launched");
     }
     public void InitializeForm(byte characterLevel, byte slotID, ISpellProcessor owner, Dictionary<SpellDiscipline, byte> disciplineLevels)
     {
@@ -19,7 +21,13 @@ public class UIAvailableSpells : ValidatableForm, ISpellProcessor
         _characterLevel = characterLevel;
         FormHeader.text = Language.BuildString(277, slotID);
         List<SpellData> availableSpells = SpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
-        SpellSelectView.AssignKeys
+        Dictionary<byte, int> options = new Dictionary<byte, int>();
+        foreach(SpellData spellData in availableSpells)
+        {
+            options.Add((byte)spellData.GetInt(SpellAttributes.ID), spellData.GetInt(SpellAttributes.SPELL_NAME_REFERENCE));
+        }
+        SpellSelectView.SetOwningForm(this);
+        SpellSelectView.AssignKeys(options);
     }
 
     public override void ButtonPressed(ButtonType buttonType)
@@ -35,7 +43,7 @@ public class UIAvailableSpells : ValidatableForm, ISpellProcessor
     public void SelectionMade(object[] args)
     {
         SpellData selected = (SpellData)args[0];
-        _owner.SelectionMade(new object[] { _slotID, selected.GetData(SpellAttributes.NAME) });
+        _owner.SelectionMade(new object[] { _slotID, selected.GetInt(SpellAttributes.SPELL_NAME_REFERENCE), selected.GetByte(SpellAttributes.ID)});
         CloseForm();
     }
 }

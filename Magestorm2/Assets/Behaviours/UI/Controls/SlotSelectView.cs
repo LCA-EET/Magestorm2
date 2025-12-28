@@ -1,8 +1,23 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 public class SlotSelectView : ScrollSelectView, ISpellProcessor
 {
     private byte _characterLevel;
     private SkillPanel _skillPanel;
+    private byte[] _slottedSpells;
+    private const int _noSelectionRef = 276;
+    void Awake()
+    {
+        _slottedSpells = new byte[10];
+    }
+    public void ClearSelections()
+    {
+        for(byte slotID = 0; slotID < 10; slotID++)
+        {
+            _slottedSpells[slotID] = 0;
+            Labels[slotID].UpdateText(_noSelectionRef);
+        }
+    }
     public void Init(byte[] slottedSpells, byte characterLevel, SkillPanel skillPanel)
     {
         _skillPanel = skillPanel;
@@ -10,23 +25,40 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
         for (byte i = 0; i < slottedSpells.Length; i++)
         {
             byte spellID = slottedSpells[i];
-            int referenceID = 276;
             SpellData slottedSpell = null;
+            int referenceID = _noSelectionRef;
             if (SpellManager.GetSpell(spellID, ref slottedSpell))
             {
                 referenceID = slottedSpell.GetInt(SpellAttributes.SPELL_NAME_REFERENCE);
             }
+            _slottedSpells[i] = spellID;
             Labels[i].Register(referenceID, i, this);
+            Labels[i].MarkSelected(false);
         }
     }
-
+    public void RecordSpellSelection(byte slotID, byte spellID)
+    {
+        _slottedSpells[slotID] = spellID;
+    }
     public void SelectionMade(object[] args)
     {
-        throw new System.NotImplementedException();
+        byte slotID = (byte)args[0];
+        int nameRef = (int)args[1];
+        byte spellID = (byte)args[2];
+        RecordSpellSelection(slotID, spellID);
+        Labels[slotID].UpdateText(nameRef);
     }
 
     protected override void ProcessSelection()
     {
         ComponentRegister.UIPrefabManager.InstantiateAvailableSpellList(_characterLevel, _selectedOption, this, _skillPanel.GetDisciplineTable());
+    }
+
+    public byte[] SlotSelections
+    {
+        get
+        {
+            return _slottedSpells;
+        }
     }
 }

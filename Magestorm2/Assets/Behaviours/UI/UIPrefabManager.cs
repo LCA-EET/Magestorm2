@@ -126,7 +126,7 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateAvailableSpellList(byte characterLevel, byte slotID, ISpellProcessor owner, Dictionary<SpellDiscipline, byte> disciplines)
     {
         GameObject newForm = Instantiate(PrefabAvailableSpells);
-        newForm.GetComponentInChildren<UIAvailableSpells>().InitializeForm(characterLevel, slotID, owner);
+        newForm.GetComponentInChildren<UIAvailableSpells>().InitializeForm(characterLevel, slotID, owner, disciplines);
         AddToStack(newForm);
     }
     public GameObject AddToStack(GameObject go)

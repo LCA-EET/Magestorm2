@@ -169,8 +169,10 @@ public class PregamePacketProcessor extends UDPProcessor
         if(AntiCheat.CheckStats(stats, _remote, _accountID)){
             return;
         }
-        byte nameLength = _decrypted[17];
-        String characterName = new String(Packets.ExtractBytes(_decrypted, 18, nameLength),
+        byte[] slots = new byte[10];
+        System.arraycopy(_decrypted, 17, slots, 0, slots.length);
+        byte nameLength = _decrypted[27];
+        String characterName = new String(Packets.ExtractBytes(_decrypted, 28, nameLength),
                 StandardCharsets.UTF_8);
         if(ProfanityChecker.ContainsProhibitedLanguage(characterName)){
             EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_Send.ProhibitedLanguage), _remote);

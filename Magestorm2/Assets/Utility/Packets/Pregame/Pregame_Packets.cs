@@ -116,19 +116,20 @@ public static class Pregame_Packets
         return toSend;
     }
 
-    public static byte[] CreateCharacterPacket(string charname, byte charclass, byte[] stats, byte[] appearance)
+    public static byte[] CreateCharacterPacket(string charname, byte charclass, byte[] stats, byte[] appearance, byte[] slots)
     {
         byte[] idBytes = PlayerAccount.AccountIDBytes;
         byte[] nameBytes = Encoding.UTF8.GetBytes(charname);
         byte nameLength = (byte)nameBytes.Length;
-        byte[] toSend = new byte[1 + 4 + 1 + 6 + 5 + 1 + nameLength];
+        byte[] toSend = new byte[1 + 4 + 1 + 6 + 5 + 10 + 1 + nameLength];
         toSend[0] = Pregame_Send.CreateCharacter;
         idBytes.CopyTo(toSend, 1);
         toSend[5] = charclass;
         stats.CopyTo(toSend, 6);
         appearance.CopyTo(toSend, 12);
-        toSend[17] = nameLength;
-        nameBytes.CopyTo(toSend, 18);
+        slots.CopyTo(toSend, 17);
+        toSend[27] = nameLength;
+        nameBytes.CopyTo(toSend, 28);
         return toSend;
     }
 

@@ -6,7 +6,9 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
     public SkillPanel SkillPanel;
     public SlotSelectView SlotSelectView;
     public BitwiseToggleGroup ClassToggleGroup;
-    
+
+    private byte _characterLevel;
+
     private void Awake()
     {
         ComponentRegister.UIPCEditor = this;
@@ -18,6 +20,7 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
     {
         if(groupID == 0)
         {
+            SlotSelectView.ClearSelections();
             SkillPanel.RefreshClass((PlayerClass)selectedIndex);
         }
     }
@@ -25,17 +28,19 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
     {
         if (character == null)
         {
+            _characterLevel = 1;
             SkillPanel.InitControl(1);
             SkillPanel.RefreshClass((PlayerClass)ClassToggleGroup.DefaultSelection);
-            SlotSelectView.Init(new byte[10],1, SkillPanel);
+            SlotSelectView.Init(new byte[10], _characterLevel, SkillPanel);
         }
         else
         {
+            _characterLevel = character.CharacterLevel;
             ClassToggleGroup.MarkSelected(character.CharacterClass);
             StatPanel.FillStats(character);
             StatPanel.DisablePanel();
             SkillPanel.FillSkills(character);
-            SlotSelectView.Init(character.SlottedSpells, character.CharacterLevel, SkillPanel);
+            SlotSelectView.Init(character.SlottedSpells, _characterLevel, SkillPanel);
         }
         
     }
@@ -52,7 +57,8 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
             ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
                 ClassToggleGroup.GetSelectedIndex(),
                 stats,
-                appearanceBytes));
+                appearanceBytes,
+                SlotSelectView.SlotSelections));
             CloseForm();
         }
     }

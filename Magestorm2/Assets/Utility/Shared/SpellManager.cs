@@ -63,7 +63,10 @@ public static class SpellManager
         List<SpellData> toReturn = new List<SpellData> ();
         foreach (SpellDiscipline discipline in disciplines)
         {
-            toReturn.AddRange(_spellsOfDiscipline[discipline]);
+            if (_spellsOfDiscipline.ContainsKey(discipline))
+            {
+                toReturn.AddRange(_spellsOfDiscipline[discipline]);
+            }
         }
         return toReturn;
     }

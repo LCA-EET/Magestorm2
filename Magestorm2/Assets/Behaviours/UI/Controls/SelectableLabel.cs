@@ -13,13 +13,15 @@ public class SelectableLabel : MonoBehaviour
     public void Register(int referenceID, byte optionID, ILabelCollection owner)
     {
         _optionID = optionID;
-        Caption.text = Language.GetBaseString(referenceID);
+        UpdateText(referenceID);
         Button.onClick.AddListener(ButtonPressed);
         _owner = owner;
-        gameObject.SetActive(true);
         Background.color = Colors.EntrySelected;
     }
-
+    public void UpdateText(int newReferenceID)
+    {
+        Caption.text = Language.GetBaseString(newReferenceID);
+    }
     private void ButtonPressed()
     {
         UIAudio.PlayButtonPress();

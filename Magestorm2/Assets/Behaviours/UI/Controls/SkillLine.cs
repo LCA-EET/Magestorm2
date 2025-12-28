@@ -25,7 +25,7 @@ public class SkillLine : ValidatableForm
         _skillID = skillID;
         _buttonsEnabled = true;
         gameObject.SetActive(true);
-        Debug.Log("Checking for discipline: " + (byte)skillID);
+        //Debug.Log("Checking for discipline: " + (byte)skillID);
         SkillText.text = Language.GetBaseString(SharedFunctions.SpellDisciplineStringReference(skillID));
         RefreshText();
     }
