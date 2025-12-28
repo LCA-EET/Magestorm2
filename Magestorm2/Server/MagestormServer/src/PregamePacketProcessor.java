@@ -182,7 +182,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 EnqueueForSend(Packets.CharacterExistsPacket(), _remote);
             }
             else{
-                int charID = Database.AddCharacter(_accountID, characterName, classCode, stats, appearance);
+                int charID = Database.AddCharacter(_accountID, characterName, classCode, stats, appearance, slots);
                 if(charID == -1){
                     EnqueueForSend(Packets.CreationFailedPacket(), _remote);
                 }
