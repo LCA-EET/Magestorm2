@@ -49,6 +49,7 @@ public class SkillPanel : ValidateableObject
             if (toUpdate.gameObject.activeSelf)
             {
                 byte skillLevel = pc.GetSkillLevel(toUpdate.SpellDiscipline);
+                Debug.Log("Updating skill level " + (byte)toUpdate.SpellDiscipline + ": " + skillLevel);
                 toUpdate.SetSkillLevel(skillLevel);
             }
         }
@@ -71,12 +72,14 @@ public class SkillPanel : ValidateableObject
                 usedSkillPoints += toCheck.SkillLevel;
             }
         }
+        Debug.Log("UsedSkillPoints: " + usedSkillPoints);
         return usedSkillPoints;
     }
     public override bool Validate()
     {
-        _validationFailureMessage = Language.GetBaseString(291);
-        return GetUsedSkillPoints() != SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel);
+        bool toReturn = GetUsedSkillPoints() == SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel);
+        _validationFailureMessage = toReturn?"":Language.GetBaseString(291);
+        return toReturn;
     }
     public Dictionary<SpellDiscipline, byte> GetDisciplineTable()
     {

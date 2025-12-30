@@ -171,8 +171,9 @@ public class PregamePacketProcessor extends UDPProcessor
         }
         byte[] slots = new byte[10];
         System.arraycopy(_decrypted, 17, slots, 0, slots.length);
-        byte nameLength = _decrypted[27];
-        String characterName = new String(Packets.ExtractBytes(_decrypted, 28, nameLength),
+        int skillsInt = ByteUtils.ExtractInt(_decrypted, 27);
+        byte nameLength = _decrypted[31];
+        String characterName = new String(Packets.ExtractBytes(_decrypted, 32, nameLength),
                 StandardCharsets.UTF_8);
         if(ProfanityChecker.ContainsProhibitedLanguage(characterName)){
             EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_Send.ProhibitedLanguage), _remote);
@@ -182,7 +183,8 @@ public class PregamePacketProcessor extends UDPProcessor
                 EnqueueForSend(Packets.CharacterExistsPacket(), _remote);
             }
             else{
-                int charID = Database.AddCharacter(_accountID, characterName, classCode, stats, appearance, slots);
+                int charID = Database.AddCharacter(_accountID, characterName, classCode, stats, appearance,
+                        slots, skillsInt);
                 if(charID == -1){
                     EnqueueForSend(Packets.CreationFailedPacket(), _remote);
                 }

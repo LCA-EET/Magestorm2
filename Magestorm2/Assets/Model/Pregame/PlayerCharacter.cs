@@ -22,7 +22,6 @@ public class PlayerCharacter
         _characterID = characterID;
         _characterName = characterName;
         _characterClass = characterClass;
-        Debug.Log("CharacterClass: " + _characterClass);
         _characterLevel = characterLevel;
         _characterNameBytes = Encoding.UTF8.GetBytes(characterName);
         _statBytes = statBytes;
@@ -120,13 +119,19 @@ public class PlayerCharacter
     }
     public void UpdateSkillsTable(int skills)
     {
-        bool[] skillArray = new bool[skills];
+        bool[] skillArray = new bool[32];
         int id = 0;
+        string binary = "";
+        Debug.Log("Skills base 10: " + skills);
         while(skills != 0)
         {
-            skillArray[id] = skills % 2 != 0;
+            bool result = skills % 2 != 0;
+            skillArray[id] = result;
             skills = skills / 2;
+            binary = (result ? "1" : "0") + binary;
+            id++;
         }
+        Debug.Log("Skills base 2: " + binary +", length = " + binary.Length);
         _skills.Clear();
         foreach(SpellDiscipline discipline in SharedFunctions.DisciplinesByClass((PlayerClass)_characterClass))
         {
@@ -150,6 +155,7 @@ public class PlayerCharacter
             {
                 value = 3;
             }
+            Debug.Log("Adding skill " + (byte)discipline + ": " + value);
             _skills.Add(discipline, value);
         }
     }

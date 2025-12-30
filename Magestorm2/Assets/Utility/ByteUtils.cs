@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Text;
+using System.Collections.Generic;
 using UnityEngine;
 public static class ByteUtils
 {
@@ -52,6 +53,48 @@ public static class ByteUtils
         BitConverter.GetBytes(data.z).CopyTo(toReturn, 8);
         return toReturn;
     }
-
+    public static void FillBooleanArray(ref bool[] toFill, int value, int startIndex)
+    {
+        switch (value)
+        {
+            // higher index is msb
+            case 0:
+                toFill[startIndex + 1] = false;
+                toFill[startIndex] = false;
+                break;
+            case 1:
+                toFill[startIndex + 1] = false;
+                toFill[startIndex] = true;
+                break;
+            case 2:
+                toFill[startIndex + 1] = true;
+                toFill[startIndex] = false;
+                break;
+            case 3:
+                toFill[startIndex + 1] = true;
+                toFill[startIndex] = true;
+                break;
+            case 4:
+                toFill[startIndex + 2] = true;
+                toFill[startIndex + 1] = false;
+                toFill[startIndex] = false;
+                break;
+            case 5:
+                toFill[startIndex + 2] = true;
+                toFill[startIndex + 1] = false;
+                toFill[startIndex] = true;
+                break;
+            case 6:
+                toFill[startIndex + 2] = true;
+                toFill[startIndex + 1] = true;
+                toFill[startIndex] = false;
+                break;
+            case 7:
+                toFill[startIndex + 2] = true;
+                toFill[startIndex + 1] = true;
+                toFill[startIndex] = true;
+                break;
+        }
+    }
 }
 

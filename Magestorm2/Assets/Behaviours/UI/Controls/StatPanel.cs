@@ -71,6 +71,7 @@ public class StatPanel : ValidateableObject
         {
             total += line.Value;
         }
+        Debug.Log("StatTotal: " + total);
         return total;
     }
     public byte[] GetStats()
@@ -87,16 +88,9 @@ public class StatPanel : ValidateableObject
 
     public override bool Validate()
     {
-        bool toReturn = StatTotal() == 90;
-        if (!toReturn)
-        {
-            _validationFailureMessage = Language.GetBaseString(290);
-        }
-        else
-        {
-            _validationFailureMessage = "";
-        }
-        return StatTotal() == 90;
+        bool toReturn = (StatTotal() == 90);
+        _validationFailureMessage = toReturn?"": Language.GetBaseString(290);
+        return toReturn;
     }
 
     public override void MarkInvalid(bool invalid)

@@ -26,6 +26,7 @@ public class UICharacterCreationForm : ValidatableForm
     }
     public void NameCheckPassed()
     {
+        /*
         byte[] stats = _statPanel.GetStats();
         byte[] appearanceBytes = new byte[5];
         ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
@@ -33,6 +34,7 @@ public class UICharacterCreationForm : ValidatableForm
             stats,
             appearanceBytes, null));
         CloseForm();
+        */
     }
     protected override void PassedValidation()
     {

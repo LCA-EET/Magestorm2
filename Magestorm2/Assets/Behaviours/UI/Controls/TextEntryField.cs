@@ -55,6 +55,7 @@ public class TextField : ValidateableObject
                 return false;
             }
         }
+        bool toReturn = CheckLength(input);
         return CheckLength(input);
     }
     protected bool CheckLength(string input)

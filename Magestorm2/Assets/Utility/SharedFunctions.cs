@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public static class SharedFunctions
 {
@@ -237,5 +238,23 @@ public static class SharedFunctions
             }
         }
         return false;
+    }
+
+    public static int DisciplineTableToInt(Dictionary<SpellDiscipline, byte> table)
+    {
+        bool[] skillsArray = new bool[32];
+        foreach(SpellDiscipline key in table.Keys)
+        {
+            ByteUtils.FillBooleanArray(ref skillsArray, table[key], (byte)key);
+        }
+        int skillsInteger = 0;
+        for(int i = 0; i < skillsArray.Length; i++)
+        {
+            if (skillsArray[i])
+            {
+                skillsInteger += (int)Math.Pow(2, i);
+            }
+        }
+        return skillsInteger;
     }
 }

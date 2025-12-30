@@ -176,7 +176,8 @@ public class Database {
         return toReturn;
     }
 
-    public static int AddCharacter(int accountID, String charname, byte classCode, byte[] stats, byte[] appearance, byte[] slots){
+    public static int AddCharacter(int accountID, String charname, byte classCode, byte[] stats, byte[] appearance,
+                                   byte[] slots, int skillsInt){
         int charID = -1;
         String sql = "INSERT INTO characters(accountid, charname, charclass, charstatus, statstr, statdex, statcon, statint, statcha, statwis, appsex, appskin, apphair, appface, apphead, level, " +
                 "slots, skills) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -212,14 +213,7 @@ public class Database {
                 sb.append(slot);
             }
             ps.setString(17, sb.toString());
-            boolean[] skillBits = new boolean[32];
-            byte[] baseSkills = CharacterClass.GetBaseSkills(classCode);
-            for(byte baseSkill : baseSkills){
-                int skillIndex = baseSkill * 2;
-                Main.LogMessage("Skill Index: " + skillIndex);
-                ByteUtils.FillBooleanArray(skillBits, 1, skillIndex);
-            }
-            ps.setInt(18, ByteUtils.BitsToInt(skillBits));
+            ps.setInt(18, skillsInt);
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {

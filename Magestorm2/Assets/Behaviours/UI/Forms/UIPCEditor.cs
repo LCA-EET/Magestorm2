@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+
 public class UIPCEditor : ValidatableForm, IToggleGroupOwner
 {
     public StatPanel StatPanel;
@@ -54,11 +55,13 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
         {
             byte[] stats = StatPanel.GetStats();
             byte[] appearanceBytes = new byte[5];
+            
             ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
                 ClassToggleGroup.GetSelectedIndex(),
                 stats,
                 appearanceBytes,
-                SlotSelectView.SlotSelections));
+                SlotSelectView.SlotSelections,
+                SharedFunctions.DisciplineTableToInt(SkillPanel.GetDisciplineTable())));
             CloseForm();
         }
     }
@@ -85,6 +88,10 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
                 }
                 else
                 {
+                    if(_validationFailureMessages == "")
+                    {
+                        _validationFailureMessages = Language.GetBaseString(20);
+                    }
                     Game.MessageBox(_validationFailureMessages);
                 }
                 break;

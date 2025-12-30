@@ -120,7 +120,14 @@ public class UICharacterSelectForm : ValidatableForm
 
                 break;
             case ButtonType.Misc2:
-
+                if (ValidateForm())
+                {
+                    ComponentRegister.UIPrefabManager.InstantiateCharacterEditor(PlayerAccount.SelectedCharacter);
+                }
+                else
+                {
+                    Game.MessageBox(Language.GetBaseString(36));
+                }
                 break;
         }
     }

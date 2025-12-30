@@ -86,41 +86,42 @@ public class ByteUtils {
 
     public static void FillBooleanArray(boolean[] toFill, int value, int startIndex){
         switch(value){
+            // higher index is the msb
             case 0:
-                toFill[startIndex]      = false;
                 toFill[startIndex + 1]  = false;
+                toFill[startIndex]      = false;
                 break;
             case 1:
-                toFill[startIndex]      = true;
                 toFill[startIndex + 1]  = false;
+                toFill[startIndex]      = true;
                 break;
             case 2:
-                toFill[startIndex]      = false;
                 toFill[startIndex + 1]  = true;
+                toFill[startIndex]      = false;
                 break;
             case 3:
-                toFill[startIndex]      = true;
                 toFill[startIndex + 1]  = true;
+                toFill[startIndex]      = true;
                 break;
             case 4:
-                toFill[startIndex]      = false;
-                toFill[startIndex + 1]  = false;
                 toFill[startIndex + 2]  = true;
+                toFill[startIndex + 1]  = false;
+                toFill[startIndex]      = false;
                 break;
             case 5:
-                toFill[startIndex]      = true;
-                toFill[startIndex + 1]  = false;
                 toFill[startIndex + 2]  = true;
+                toFill[startIndex + 1]  = false;
+                toFill[startIndex]      = true;
                 break;
             case 6:
-                toFill[startIndex]      = false;
-                toFill[startIndex + 1]  = true;
                 toFill[startIndex + 2]  = true;
+                toFill[startIndex + 1]  = true;
+                toFill[startIndex]      = false;
                 break;
             case 7:
-                toFill[startIndex]      = true;
-                toFill[startIndex + 1]  = true;
                 toFill[startIndex + 2]  = true;
+                toFill[startIndex + 1]  = true;
+                toFill[startIndex]      = true;
                 break;
         }
     }
