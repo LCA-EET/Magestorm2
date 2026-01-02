@@ -245,7 +245,7 @@ public static class SharedFunctions
         bool[] skillsArray = new bool[32];
         foreach(SpellDiscipline key in table.Keys)
         {
-            ByteUtils.FillBooleanArray(ref skillsArray, table[key], (byte)key);
+            ByteUtils.FillBooleanArray(ref skillsArray, table[key], ((byte)key) * 2);
         }
         int skillsInteger = 0;
         for(int i = 0; i < skillsArray.Length; i++)

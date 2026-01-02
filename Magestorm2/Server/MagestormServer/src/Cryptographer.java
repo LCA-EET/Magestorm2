@@ -87,7 +87,7 @@ public class Cryptographer {
         }
         byte[] payload = new byte[payloadLength];
         System.arraycopy(received,0,ivBytes,0,ivBytes.length);
-        System.arraycopy(received,17, payload, 0, payload.length);
+        System.arraycopy(received,17, payload, 0, payloadLength);
         try {
             IvParameterSpec iv = new IvParameterSpec(ivBytes);
             _decryptionCipher.init(Cipher.DECRYPT_MODE, _secretKey, iv);

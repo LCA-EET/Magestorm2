@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
 public class SkillLine : ValidatableForm
 {
     public TMP_Text SkillText;
@@ -21,11 +16,11 @@ public class SkillLine : ValidatableForm
     public void Init(byte skillLevel, SpellDiscipline skillID, byte characterLevel)
     {
         _skillLevel = skillLevel;
+        Debug.Log("Init: Skill level for skill " + (byte)skillID + " = " + skillLevel);
         _characterLevel = characterLevel;
         _skillID = skillID;
         _buttonsEnabled = true;
         gameObject.SetActive(true);
-        //Debug.Log("Checking for discipline: " + (byte)skillID);
         SkillText.text = Language.GetBaseString(SharedFunctions.SpellDisciplineStringReference(skillID));
         RefreshText();
     }
@@ -85,6 +80,7 @@ public class SkillLine : ValidatableForm
     }
     public void SetSkillLevel(byte skillLevel)
     {
+        Debug.Log("SetSkillLevel: Skill level for skill " + (byte)_skillID + " = " + skillLevel);
         _skillLevel = skillLevel;
         RefreshText();
     }

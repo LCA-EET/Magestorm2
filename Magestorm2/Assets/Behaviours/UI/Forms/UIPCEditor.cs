@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.TextCore.Text;
 
 public class UIPCEditor : ValidatableForm, IToggleGroupOwner
 {
@@ -9,7 +10,7 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
     public BitwiseToggleGroup ClassToggleGroup;
 
     private byte _characterLevel;
-
+    private PlayerCharacter _character;
     private void Awake()
     {
         ComponentRegister.UIPCEditor = this;
@@ -19,7 +20,7 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
     
     public void GroupToggleChange(byte groupID, byte selectedIndex)
     {
-        if(groupID == 0)
+        if(groupID == 0 && _character == null)
         {
             SlotSelectView.ClearSelections();
             SkillPanel.RefreshClass((PlayerClass)selectedIndex);
@@ -36,11 +37,12 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
         }
         else
         {
+            _character = character;
             _characterLevel = character.CharacterLevel;
             ClassToggleGroup.MarkSelected(character.CharacterClass);
             StatPanel.FillStats(character);
             StatPanel.DisablePanel();
-            SkillPanel.FillSkills(character);
+            SkillPanel.FillSkills(_character);
             SlotSelectView.Init(character.SlottedSpells, _characterLevel, SkillPanel);
         }
         

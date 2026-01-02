@@ -18,7 +18,10 @@ public class SkillPanel : ValidateableObject
     }
     private void Update()
     {
-        _counter.ProcessAction(Time.deltaTime);
+        if(_counter != null)
+        {
+            _counter.ProcessAction(Time.deltaTime);
+        }
     }
     private void UpdateRemainingPoints()
     {
@@ -46,12 +49,12 @@ public class SkillPanel : ValidateableObject
         for (int i = 0; i < SkillLines.Length; i++) 
         {
             SkillLine toUpdate = SkillLines[i];
-            if (toUpdate.gameObject.activeSelf)
-            {
+            //if (toUpdate.gameObject.activeSelf)
+            //{
                 byte skillLevel = pc.GetSkillLevel(toUpdate.SpellDiscipline);
                 Debug.Log("Updating skill level " + (byte)toUpdate.SpellDiscipline + ": " + skillLevel);
                 toUpdate.SetSkillLevel(skillLevel);
-            }
+            //}
         }
         if(GetUsedSkillPoints() == SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel))
         {
@@ -90,6 +93,11 @@ public class SkillPanel : ValidateableObject
             {
                 toReturn.Add(line.SpellDiscipline, line.SkillLevel);
             }
+        }
+        Debug.Log("DT");
+        foreach (SpellDiscipline key in toReturn.Keys)
+        {
+            Debug.Log((byte)key + ": " + toReturn[key].ToString());
         }
         return toReturn;
     }
