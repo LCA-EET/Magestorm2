@@ -58,6 +58,7 @@ public class SkillPanel : ValidateableObject
         }
         if(GetUsedSkillPoints() == SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel))
         {
+            RemainingText.gameObject.SetActive(false);
             for (int i = 0; i < SkillLines.Length; i++)
             {
                 SkillLines[i].DisableButtons();

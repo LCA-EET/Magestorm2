@@ -115,7 +115,19 @@ public static class Pregame_Packets
         }
         return toSend;
     }
-
+    public static byte[] UpdateSkillsAndSlotsPacket(int characterID, int skillsInt, byte[] slots)
+    {
+        byte[] accountIDBytes = PlayerAccount.AccountIDBytes;
+        byte[] characterIDBytes = BitConverter.GetBytes(characterID);
+        byte[] toSend = new byte[1 + 4 + 4 + 4 + slots.Length];
+        toSend[0] = Pregame_Send.UpdateSkillsAndSlotting;
+        accountIDBytes.CopyTo(toSend, 1);
+        characterIDBytes.CopyTo(toSend, 5);
+        byte[] skillsBytes = BitConverter.GetBytes(skillsInt);
+        skillsBytes.CopyTo(toSend, 9);
+        slots.CopyTo(toSend, 13);
+        return toSend;
+    }
     public static byte[] CreateCharacterPacket(string charname, byte charclass, byte[] stats, byte[] appearance, byte[] slots, int skills)
     {
         byte[] idBytes = PlayerAccount.AccountIDBytes;

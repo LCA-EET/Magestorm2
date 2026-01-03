@@ -52,6 +52,7 @@ public class StatPanel : ValidateableObject
         {
             FillStat((PlayerStats)b, stats[b]);
         }
+        TotalText.gameObject.SetActive(false);
     }
     public void DisablePanel()
     {

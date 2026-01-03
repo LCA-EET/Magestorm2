@@ -201,18 +201,7 @@ public class Database {
             ps.setByte(14, appearance[3]);
             ps.setByte(15, appearance[4]);
             ps.setByte(16, (byte)1);
-            StringBuilder sb = new StringBuilder();
-            boolean first = true;
-            for(byte slot : slots){
-                if(first){
-                    first = false;
-                }
-                else{
-                    sb.append(":");
-                }
-                sb.append(slot);
-            }
-            ps.setString(17, sb.toString());
+            ps.setString(17, GetSlotString(slots));
             ps.setInt(18, skillsInt);
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
@@ -226,12 +215,29 @@ public class Database {
         }
         return charID;
     }
+    public static boolean UpdateSkillsAndSlots(int characterID, int skillsInt, byte[] slots)
+    {
+        String sql = "UPDATE characters SET skills=?, slots=? WHERE id=?";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, skillsInt);
+            ps.setString(2, GetSlotString(slots));
+            ps.setInt(3, characterID);
+            ps.execute();
+            return true;
+        }
+        catch(Exception e){
+            Main.LogError("Database.UpdateSkillsAndSlots");
+        }
+        return false;
+    }
+
     public static boolean UpdateSkills(int characterID, int skillsInt){
         String sql = "UPDATE characters SET skills=? WHERE id=?";
         try(Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, characterID);
-            ps.setInt(2, skillsInt);
+            ps.setInt(1, skillsInt);
+            ps.setInt(2, characterID);
             ps.execute();
             return true;
         }
@@ -240,7 +246,20 @@ public class Database {
         }
         return false;
     }
-
+    private static String GetSlotString(byte[] slots){
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for(byte slot : slots){
+            if(first){
+                first = false;
+            }
+            else{
+                sb.append(":");
+            }
+            sb.append(slot);
+        }
+        return sb.toString();
+    }
     private static PlayerCharacter GetCharacter(int accountID, int characterID, Connection conn){
         PlayerCharacter toReturn = null;
         String sql = "SELECT id, charname, charclass, statstr, statdex, statcon, statint, statcha, statwis, appsex, " +

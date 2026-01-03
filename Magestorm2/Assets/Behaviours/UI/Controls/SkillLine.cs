@@ -59,6 +59,10 @@ public class SkillLine : ValidatableForm
     }
     public void DisableButtons()
     {
+        foreach(FormButton button in FormButtons)
+        {
+            button.gameObject.SetActive(false);
+        }
         _buttonsEnabled = false;
     }
     private void RefreshText()

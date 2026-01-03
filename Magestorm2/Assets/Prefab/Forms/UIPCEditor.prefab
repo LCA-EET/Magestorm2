@@ -2132,6 +2132,7 @@ MonoBehaviour:
   StatPanel: {fileID: 3065059814437102816}
   SkillPanel: {fileID: 6010546169695886885}
   SlotSelectView: {fileID: 2146668212897843324}
+  NameField: {fileID: 1048737100821727728}
   ClassToggleGroup: {fileID: 7129278700783091338}
 --- !u!1 &7165282664007584728
 GameObject:
@@ -2783,6 +2784,10 @@ PrefabInstance:
     - target: {fileID: 2304074668684741220, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: m_Name
       value: NameField
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952450636666636587, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
+      propertyPath: m_Text
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3366039408167537820, guid: 85fbd8b56df5bdc4bbb71efb200e9b3c, type: 3}
       propertyPath: TextFields.Array.size

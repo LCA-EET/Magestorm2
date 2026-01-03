@@ -58,11 +58,11 @@ public class PregamePacketProcessor extends UDPProcessor
                 case Pregame_Receive.RequestMatchList:
                     MatchManager.SendMatchListToClient(_remote);
                     break;
-                case Pregame_Receive.UpdateSlotting:
-                    HandleSlotUpdate();
-                    break;
                 case Pregame_Receive.UpdateSkills:
                     HandleSkillUpdate();
+                    break;
+                case Pregame_Receive.UpdateSkillsAndSlotting:
+                    HandleSlotAndSkillUpdate();
                     break;
             }
         }
@@ -85,10 +85,18 @@ public class PregamePacketProcessor extends UDPProcessor
             CharacterManager.GetCharacter(characterID).UpdateSkills(skills);
         }
     }
-    private void HandleSlotUpdate(){
+    private void HandleSlotAndSkillUpdate(){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);
         if(CharacterManager.CharacterBelongsToAccount(characterID, _accountID)){
-            CharacterManager.GetCharacter(characterID).UpdateSlottedSpells(_decrypted);
+            int skills = ByteUtils.ExtractInt(_decrypted, 9);
+            byte[] slots = new byte[10];
+            System.arraycopy(_decrypted, 13, slots, 0, slots.length);
+            Database.UpdateSkillsAndSlots(characterID, skills, slots);
+            PlayerCharacter toUpdate = CharacterManager.GetCharacter(characterID);
+            toUpdate.UpdateSkills(skills);
+            toUpdate.UpdateSlottedSpells(slots);
+            _decrypted[0] = Pregame_Send.UpdateSkillsAndSlots;
+            EnqueueForSend(Cryptographer.Encrypt(_decrypted), _remote);
         }
     }
     private void HandleJoinMatchPacket()

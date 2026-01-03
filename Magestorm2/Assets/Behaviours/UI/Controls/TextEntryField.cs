@@ -66,4 +66,10 @@ public class TextField : ValidateableObject
     {
         return TextInput.text;
     }
+
+    public void SetValue(string text, bool readOnly)
+    {
+        TextInput.text = text;
+        TextInput.enabled = !readOnly;
+    }
 }

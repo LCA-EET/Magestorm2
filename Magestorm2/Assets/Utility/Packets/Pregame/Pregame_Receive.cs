@@ -23,5 +23,6 @@
                         NameCheckResult = 21,
                         MatchEntryPacket = 22,
                         MatchIsFullPacket = 23,
-                        AcknowledgeSubscription = 24;
+                        AcknowledgeSubscription = 24,
+                        UpdateSkillsAndSlots = 25;
 }

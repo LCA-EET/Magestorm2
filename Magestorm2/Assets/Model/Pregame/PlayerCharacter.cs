@@ -36,6 +36,13 @@ public class PlayerCharacter
             return _slottedSpells;
         }
     }
+    public void UpdateSlottedSpells(byte[] decrypted, int offset)
+    {
+        for (int i = 0; i < _slottedSpells.Length; i++)
+        {
+            _slottedSpells[i] = decrypted[offset + i];
+        }
+    }
     public byte GetSkillLevel(SpellDiscipline discipline)
     {
         if (_skills.ContainsKey(discipline))

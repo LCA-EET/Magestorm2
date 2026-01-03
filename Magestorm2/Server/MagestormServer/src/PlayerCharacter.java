@@ -92,10 +92,8 @@ public class PlayerCharacter {
             Main.LogMessage(key + ":" + _skillsTable.get(key));
         }
     }
-    public void UpdateSlottedSpells(byte[] decrypted){
-        int offset = 9;
-        System.arraycopy(decrypted, offset, _characterBytes, _indexSlotStart, 10);
-        Database.UpdateSlotting(_characterID, decrypted, offset);
+    public void UpdateSlottedSpells(byte[] slots){
+        System.arraycopy(slots, 0, _characterBytes, _indexSlotStart, 10);
     }
     public byte GetMaxStamina(){
         return (byte)(85.0f + (_strength * 8.5f));

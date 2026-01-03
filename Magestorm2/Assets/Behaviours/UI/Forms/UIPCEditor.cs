@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.TextCore.Text;
-
 public class UIPCEditor : ValidatableForm, IToggleGroupOwner
 {
     public StatPanel StatPanel;
     public SkillPanel SkillPanel;
     public SlotSelectView SlotSelectView;
+    public TextField NameField;
     public BitwiseToggleGroup ClassToggleGroup;
 
     private byte _characterLevel;
@@ -40,6 +40,7 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
             _character = character;
             _characterLevel = character.CharacterLevel;
             ClassToggleGroup.MarkSelected(character.CharacterClass);
+            NameField.SetValue(_character.CharacterName, true);
             StatPanel.FillStats(character);
             StatPanel.DisablePanel();
             SkillPanel.FillSkills(_character);
@@ -55,15 +56,22 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
         }
         else
         {
-            byte[] stats = StatPanel.GetStats();
-            byte[] appearanceBytes = new byte[5];
-            
-            ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
-                ClassToggleGroup.GetSelectedIndex(),
-                stats,
-                appearanceBytes,
-                SlotSelectView.SlotSelections,
-                SharedFunctions.DisciplineTableToInt(SkillPanel.GetDisciplineTable())));
+            if (_character == null)
+            {
+                byte[] stats = StatPanel.GetStats();
+                byte[] appearanceBytes = new byte[5];
+                Game.SendPregameBytes(Pregame_Packets.CreateCharacterPacket(EntriesToValidate[0].GetValue().ToString(),
+                    ClassToggleGroup.GetSelectedIndex(),
+                    stats,
+                    appearanceBytes,
+                    SlotSelectView.SlotSelections,
+                    SharedFunctions.DisciplineTableToInt(SkillPanel.GetDisciplineTable())));
+                
+            }
+            else
+            {
+                Game.SendPregameBytes(Pregame_Packets.UpdateSkillsAndSlotsPacket(_character.CharacterID, SharedFunctions.DisciplineTableToInt(SkillPanel.GetDisciplineTable()), SlotSelectView.SlotSelections));
+            }
             CloseForm();
         }
     }
@@ -72,7 +80,14 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
         string proposedName = EntriesToValidate[0].GetValue().ToString();
         if (!ProfanityChecker.ContainsProhibitedLanguage(proposedName))
         {
-            ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.NameCheckPacket(proposedName));
+            if(_character == null)
+            {
+                Game.SendPregameBytes(Pregame_Packets.NameCheckPacket(proposedName));
+            }
+            else
+            {
+                NameCheckPassed();
+            }
         }
         else
         {

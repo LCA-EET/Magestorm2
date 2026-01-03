@@ -110,10 +110,21 @@ public class PregamePacketProcessor : UDPProcessor
                         case Pregame_Receive.AcknowledgeSubscription:
                             ComponentRegister.UIPrefabManager.InstantiateMatchList();
                             break;
+                        case Pregame_Receive.UpdateSkillsAndSlots:
+                            HandleSkillsSlotsUpdate();
+                            break;
                     }
                 }
             }
         }
+    }
+    private void HandleSkillsSlotsUpdate()
+    {
+        int characterID = BitConverter.ToInt32(_decrypted, 5);
+        int skillsInt = BitConverter.ToInt32(_decrypted, 9);
+        PlayerCharacter toUpdate = PlayerAccount.GetCharacter(characterID);
+        toUpdate.UpdateSkillsTable(skillsInt);
+        toUpdate.UpdateSlottedSpells(_decrypted, 13);
     }
     private void HandleMatchEntryPacket()
     {

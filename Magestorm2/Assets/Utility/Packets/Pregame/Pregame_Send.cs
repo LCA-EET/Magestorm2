@@ -19,6 +19,7 @@ public static class Pregame_Send
                         JoinMatch = 14,
                         RequestMatchList = 15,
                         UpdateSlotting = 16,
-                        UpdateSkills = 17;
+                        UpdateSkills = 17,
+                        UpdateSkillsAndSlotting = 18;
 }
         
