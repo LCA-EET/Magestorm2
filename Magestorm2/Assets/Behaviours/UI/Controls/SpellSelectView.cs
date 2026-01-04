@@ -24,6 +24,7 @@ public class SpellSelectView : ScrollSelectView
         }
         AssignKeys(options);
         _selectedOption = Labels[0].OptionID;
+        Labels[0].MarkSelected(true);
         ProcessSelection();
     }
 

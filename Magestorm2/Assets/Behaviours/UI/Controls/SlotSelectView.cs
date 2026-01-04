@@ -14,9 +14,13 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
     {
         for(byte slotID = 0; slotID < 10; slotID++)
         {
-            _slottedSpells[slotID] = 0;
-            Labels[slotID].UpdateText(_noSelectionRef);
+            ResetLine(slotID);
         }
+    }
+    private void ResetLine(byte slotID)
+    {
+        _slottedSpells[slotID] = 0;
+        Labels[slotID].UpdateText(_noSelectionRef);
     }
     public void Init(byte[] slottedSpells, byte characterLevel, SkillPanel skillPanel)
     {
@@ -59,6 +63,18 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
         get
         {
             return _slottedSpells;
+        }
+    }
+
+    public void CheckAvailability(byte characterLevel, Dictionary<SpellDiscipline, byte> disciplineLevels)
+    {
+        Dictionary<byte, SpellData> availableSpells = SpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
+        for (byte i = 0; i < _slottedSpells.Length; i++)
+        {
+            if (!availableSpells.ContainsKey(_slottedSpells[i]))
+            {
+                ResetLine(i);
+            }
         }
     }
 }

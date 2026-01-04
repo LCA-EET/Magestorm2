@@ -42,9 +42,9 @@ public static class SpellManager
         }
         return toReturn;
     }
-    public static List<SpellData> GetAvailableSpells(byte characterLevel, Dictionary<SpellDiscipline, byte> disciplineTable)
+    public static Dictionary<byte,SpellData> GetAvailableSpells(byte characterLevel, Dictionary<SpellDiscipline, byte> disciplineTable)
     {
-        List<SpellData> toReturn = new List<SpellData>();
+        Dictionary<byte, SpellData> toReturn = new Dictionary<byte, SpellData>();
         foreach(SpellDiscipline disciplineKey in disciplineTable.Keys)
         {
             List<SpellData> toCheck = GetSpellsOfDiscipline(new SpellDiscipline[] { disciplineKey });
@@ -52,7 +52,7 @@ public static class SpellManager
             {
                 if(data.GetByte(SpellAttributes.MINLEVEL) <= characterLevel &&
                     data.GetByte(SpellAttributes.SKILLNEEDED) <= disciplineTable[disciplineKey]){
-                    toReturn.Add(data);
+                    toReturn.Add((byte)data.GetInt(SpellAttributes.ID), data);
                 }
             }
         }

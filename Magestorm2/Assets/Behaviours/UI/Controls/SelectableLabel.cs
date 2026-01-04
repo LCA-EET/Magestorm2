@@ -10,17 +10,23 @@ public class SelectableLabel : MonoBehaviour
 
     private byte _optionID;
     private ILabelCollection _owner;
+    private bool _registered;
     public void Register(int referenceID, byte optionID, ILabelCollection owner)
     {
         _optionID = optionID;
         UpdateText(referenceID);
-        Button.onClick.AddListener(ButtonPressed);
+        if (!_registered)
+        {
+            Button.onClick.AddListener(ButtonPressed);
+            _registered = true;
+        }
         _owner = owner;
         Background.color = Colors.EntrySelected;
     }
     public void UpdateText(int newReferenceID)
     {
         Caption.text = Language.GetBaseString(newReferenceID);
+        gameObject.SetActive(true);
     }
     private void ButtonPressed()
     {

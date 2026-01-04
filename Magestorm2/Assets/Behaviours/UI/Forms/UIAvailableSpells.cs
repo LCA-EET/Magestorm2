@@ -20,11 +20,11 @@ public class UIAvailableSpells : ValidatableForm, ISpellProcessor
         _owner = owner;
         _characterLevel = characterLevel;
         FormHeader.text = Language.BuildString(277, slotID);
-        List<SpellData> availableSpells = SpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
+        Dictionary<byte, SpellData> availableSpells = SpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
         Dictionary<byte, int> options = new Dictionary<byte, int>();
-        foreach(SpellData spellData in availableSpells)
+        foreach(byte spellKey in availableSpells.Keys)
         {
-            options.Add((byte)spellData.GetInt(SpellAttributes.ID), spellData.GetInt(SpellAttributes.SPELL_NAME_REFERENCE));
+            options.Add(spellKey, availableSpells[spellKey].GetInt(SpellAttributes.SPELL_NAME_REFERENCE));
         }
         SpellSelectView.SetOwningForm(this);
         SpellSelectView.AssignKeys(options);

@@ -3,11 +3,13 @@ using TMPro;
 using UnityEngine;
 public class SkillPanel : ValidateableObject
 {
+    public SlotSelectView SlotSelectView;
     public SkillLine[] SkillLines;
     public TMP_Text RemainingText;
 
     private PeriodicAction _counter;
     private byte _characterLevel;
+    private int _pointsRemaining, _priorPointsRemaining;
     private void Start()
     {
         _counter = new PeriodicAction(0.1f, UpdateRemainingPoints, null);
@@ -25,8 +27,13 @@ public class SkillPanel : ValidateableObject
     }
     private void UpdateRemainingPoints()
     {
-        int pointsRemaining = (SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel) - GetUsedSkillPoints());
-        RemainingText.text = Language.BuildString(286, pointsRemaining);
+        _pointsRemaining = (SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel) - GetUsedSkillPoints());
+        RemainingText.text = Language.BuildString(286, _pointsRemaining);
+        if(_pointsRemaining != _priorPointsRemaining)
+        {
+            _priorPointsRemaining = _pointsRemaining;
+            SlotSelectView.CheckAvailability(_characterLevel, GetDisciplineTable()); 
+        }
     }
     public void RefreshClass(PlayerClass playerClass)
     {
@@ -49,12 +56,9 @@ public class SkillPanel : ValidateableObject
         for (int i = 0; i < SkillLines.Length; i++) 
         {
             SkillLine toUpdate = SkillLines[i];
-            //if (toUpdate.gameObject.activeSelf)
-            //{
-                byte skillLevel = pc.GetSkillLevel(toUpdate.SpellDiscipline);
-                Debug.Log("Updating skill level " + (byte)toUpdate.SpellDiscipline + ": " + skillLevel);
-                toUpdate.SetSkillLevel(skillLevel);
-            //}
+            byte skillLevel = pc.GetSkillLevel(toUpdate.SpellDiscipline);
+            Debug.Log("Updating skill level " + (byte)toUpdate.SpellDiscipline + ": " + skillLevel);
+            toUpdate.SetSkillLevel(skillLevel);
         }
         if(GetUsedSkillPoints() == SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel))
         {
