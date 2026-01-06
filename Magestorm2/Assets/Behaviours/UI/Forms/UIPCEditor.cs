@@ -8,6 +8,7 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
     public SlotSelectView SlotSelectView;
     public TextField NameField;
     public BitwiseToggleGroup ClassToggleGroup;
+    public ClassLevelPanel CLPanel;
 
     private byte _characterLevel;
     private PlayerCharacter _character;
@@ -34,12 +35,15 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
             SkillPanel.InitControl(1);
             SkillPanel.RefreshClass((PlayerClass)ClassToggleGroup.DefaultSelection);
             SlotSelectView.Init(new byte[10], _characterLevel, SkillPanel);
+            CLPanel.gameObject.SetActive(false);
         }
         else
         {
             _character = character;
             _characterLevel = character.CharacterLevel;
             ClassToggleGroup.MarkSelected(character.CharacterClass);
+            ClassToggleGroup.gameObject.SetActive(false);
+            CLPanel.Init(character);
             NameField.SetValue(_character.CharacterName, true);
             StatPanel.FillStats(character);
             StatPanel.DisablePanel();
