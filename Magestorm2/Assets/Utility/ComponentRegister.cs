@@ -36,7 +36,13 @@ public static class ComponentRegister
     private static Valhalla _valhalla;
     private static ValhallaNotice _valhallaNotice;
     private static UIPCEditor _uiPCEditor;
+    private static SpellPanel _spellPanel;
 
+    public static SpellPanel SpellPanel
+    {
+        get { return _spellPanel; }
+        set { _spellPanel = value; }
+    }
     public static UIPCEditor UIPCEditor
     {
         get { return _uiPCEditor; }

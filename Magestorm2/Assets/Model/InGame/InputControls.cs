@@ -120,6 +120,18 @@ public static class InputControls
         defaults.Add(InputControl.Crouch, KeyCode.LeftControl);
         return defaults;
     }
+    public static int GetSelectedSlotReference()
+    {
+        for(byte b = 28; b < 38; b++)
+        {
+            if (Input.GetKeyDown(_controls[(InputControl)b]) && Game.GameMode)
+            {
+                byte spellID = PlayerAccount.SelectedCharacter.SlottedSpells[b - 28];
+                return SpellManager.GetSpellNameReference(spellID);
+            }
+        }
+        return 0;
+    }
     public static bool Crouch
     {
         get

@@ -137,6 +137,11 @@ public class PC : MonoBehaviour
                 Tap();
             }
         }
+        int newSpellReference = InputControls.GetSelectedSlotReference();
+        if(newSpellReference > 0)
+        {
+            ComponentRegister.SpellPanel.UpdateSpellReference(newSpellReference);
+        }
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         MenuCheck();
     }

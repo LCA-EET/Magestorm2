@@ -31,7 +31,15 @@ public static class SpellManager
             }
         }
     }
-
+    public static int GetSpellNameReference(byte key)
+    {
+        int toReturn = 276;
+        if (_spells.ContainsKey(key))
+        {
+            return _spells[key].GetInt(SpellAttributes.SPELL_NAME_REFERENCE);
+        }
+        return toReturn;
+    }
     public static bool GetSpell(byte key, ref SpellData spellReference)
     {
         bool toReturn = false;
