@@ -4,6 +4,7 @@ using UnityEngine;
 public class SpellData
 {
     private Dictionary<string, object> _data;
+    private int _spellNameReference;
     public SpellData(string[] fields, string contents)
     {
         _data = new Dictionary<string, object>();
@@ -12,8 +13,12 @@ public class SpellData
         {
             _data.Add(fields[i], split[i+1]);
         }
+        _spellNameReference = GetInt(SpellAttributes.SPELL_NAME_REFERENCE);
     }
-
+    public int SpellNameReference
+    {
+        get { return _spellNameReference; }
+    }
     public object GetData(string key)
     {
         return _data[key];

@@ -28,11 +28,13 @@ public class PC : MonoBehaviour
     private HMLUpdater _hp, _mana, _ley, _stamina;
     private PeriodicAction _joinRerequest;
     private int _prPacketID = 0;
+    private float _coolDownRemaining = 0.0f;
     public bool InValhalla = false;
     public HashSet<int> _inTriggers;
     public HashSet<int> _priorInTriggers;
     
     private Dictionary<EffectCode, AppliedEffect> _effects;
+    private byte _primarySpellID, _secondarySpellID;
     public void Awake()
     {
         if (!Game.Running)
@@ -137,13 +139,56 @@ public class PC : MonoBehaviour
                 Tap();
             }
         }
-        int newSpellReference = InputControls.GetSelectedSlotReference();
-        if(newSpellReference > 0)
+        CheckSpellSlot();
+        if(_coolDownRemaining <= 0 && !InValhalla)
         {
-            ComponentRegister.SpellPanel.UpdateSpellReference(newSpellReference);
+            CheckCast();
         }
+        CheckCast();
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         MenuCheck();
+    }
+    private void CheckCast()
+    {
+        bool casted = false;
+        if (InputControls.ShootPrimary)
+        {
+            casted = true;
+        }
+        else if (InputControls.ShootSecondary)
+        {
+            casted = true;
+        }
+        if (casted)
+        {
+            _coolDownRemaining = 0.5f;
+        }
+    }
+    
+    private void CheckSpellSlot()
+    {
+        byte spellID = InputControls.GetSlottedSpellID();
+        if (spellID > 0)
+        {
+            SpellData spellData = null;
+            if (SpellManager.GetSpell(spellID, ref spellData))
+            {
+                _primarySpellID = spellID;
+                ComponentRegister.SpellPanel.UpdatePrimaryReference(spellData.SpellNameReference);
+            }
+        }
+        else
+        {
+            if (InputControls.SetSecondary)
+            {
+                SpellData spellData = null;
+                if (SpellManager.GetSpell(_primarySpellID, ref spellData))
+                {
+                    _secondarySpellID = _primarySpellID;
+                    ComponentRegister.SpellPanel.UpdateSecondaryReference(spellData.SpellNameReference);
+                }
+            }
+        }
     }
     private void Tap()
     {

@@ -40,12 +40,15 @@ public enum InputControl
     Slot9 = 36,
     Slot10 = 37,
     MouseMode = 38,
-    Crouch = 39
+    Crouch = 39,
+    SetSecondary = 40
 }
 public static class InputControls
 {
     private static Dictionary<InputControl, KeyCode> _controls;
     private static bool _init = false;
+    private static byte _slot1 = (byte)InputControl.Slot1;
+    private static byte _slot10 = (byte)InputControl.Slot10;
     public static void Init()
     {
         if (!_init)
@@ -118,19 +121,27 @@ public static class InputControls
         defaults.Add(InputControl.Slot10, KeyCode.Alpha0);
         defaults.Add(InputControl.MouseMode, KeyCode.P);
         defaults.Add(InputControl.Crouch, KeyCode.LeftControl);
+        defaults.Add(InputControl.SetSecondary, KeyCode.LeftAlt);
         return defaults;
     }
-    public static int GetSelectedSlotReference()
+    
+    public static byte GetSlottedSpellID()
     {
-        for(byte b = 28; b < 38; b++)
+        for(byte b = _slot1; b < _slot10; b++)
         {
             if (Input.GetKeyDown(_controls[(InputControl)b]) && Game.GameMode)
             {
-                byte spellID = PlayerAccount.SelectedCharacter.SlottedSpells[b - 28];
-                return SpellManager.GetSpellNameReference(spellID);
+                return PlayerAccount.SelectedCharacter.SlottedSpells[b - _slot1];
             }
         }
         return 0;
+    }
+    public static bool SetSecondary
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.SetSecondary])) && Game.GameMode;
+        }
     }
     public static bool Crouch
     {
@@ -215,6 +226,13 @@ public static class InputControls
         get
         {
             return Input.GetKey(_controls[InputControl.ShootPrimary]) && Game.GameMode;
+        }
+    }
+    public static bool ShootSecondary
+    {
+        get
+        {
+            return Input.GetKey(_controls[InputControl.ShootSecondary]) && Game.GameMode;
         }
     }
     public static bool Forward
