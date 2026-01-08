@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using UnityEngine;
 public static class InGame_Packets
 {
     public static byte[] InactivityResponsePacket() 
@@ -34,7 +35,15 @@ public static class InGame_Packets
         data.CopyTo(unencrypted, 8);
         return unencrypted;
     }
-    
+    public static byte[] ProjectileCastPacket(byte spellID)
+    {
+        byte[] cameraDirection = ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
+        byte[] unencrypted = new byte[14];
+        unencrypted[0] = InGame_Send.CastProjectile;
+        unencrypted[1] = spellID;
+        cameraDirection.CopyTo(unencrypted, 2);
+        return unencrypted;
+    }
     public static byte[] FlagCapturedPacket(byte flagCaptured)
     {
         return new byte[] { InGame_Send.FlagCaptured, MatchParams.IDinMatch, flagCaptured };

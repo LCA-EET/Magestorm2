@@ -40,7 +40,7 @@ public class UISpellInfo : ValidatableForm, ISpellProcessor
     public void SelectionMade(object[] args)
     {
         SpellData spellData = (SpellData)args[0];
-        SpellDescription.text = Language.GetBaseString(spellData.GetInt(SpellAttributes.SPELL_NAME_REFERENCE)) + "\n" +
-            Language.GetBaseString(spellData.GetInt(SpellAttributes.DESCRIPTION));
+        SpellDescription.text = Language.GetBaseString(spellData.SpellNameReference) + "\n" +
+            Language.GetBaseString(spellData.DescriptionReference);
     }
 }

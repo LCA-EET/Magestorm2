@@ -1,5 +1,11 @@
 using UnityEngine;
-
+public enum SpellType : byte
+{
+    Projectile = 0,
+    Bolt = 1,
+    SelfHeal = 2,
+    HealOther = 3
+}
 public enum SpellDiscipline: byte
 {
     FireLaw = 0,

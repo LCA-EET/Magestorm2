@@ -24,4 +24,8 @@ public class InGame_Receive {
     public static final byte LeyUpdate = 21;
     public static final byte Tap = 22;
     public static final byte PostureChange = 23;
+    public static final byte CastProjectile = 24;
+    public static final byte CastSelf = 25;
+    public static final byte CastOtherFriendly = 26;
+    public static final byte CastOtherEnemy = 27;
 }

@@ -28,5 +28,9 @@ public static class InGame_Send
                         FetchPlayer = 20,
                         UpdateLey = 21,
                         Tap = 22,
-                        PostureChange = 23;
+                        PostureChange = 23,
+                        CastProjectile = 24,
+                        CastSelf = 25,
+                        CastOtherFriendly = 26,
+                        CastOtherEnemy = 27;
 }

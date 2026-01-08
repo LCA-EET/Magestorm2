@@ -2,13 +2,13 @@
 public static class SpellManager
 {
     private static bool _init;
-    private static Dictionary<int, SpellData> _spells;
+    private static Dictionary<byte, SpellData> _spells;
     private static Dictionary<SpellDiscipline, List<SpellData>> _spellsOfDiscipline;
     public static void Init()
     {
         if (!_init)
         {
-            _spells = new Dictionary<int, SpellData>();
+            _spells = new Dictionary<byte, SpellData>();
             _spellsOfDiscipline = new Dictionary<SpellDiscipline, List<SpellData>>();
             string contents;
             if (SharedFunctions.GetPHPString("spells", out contents))
@@ -19,8 +19,8 @@ public static class SpellManager
                 for (int i = 0; i < spelldata.Length-1; i++)
                 {
                     SpellData toAdd = new SpellData(fields, spelldata[i]);
-                    _spells.Add(int.Parse(toAdd.GetData(SpellAttributes.ID).ToString()), toAdd);
-                    SpellDiscipline discipline = (SpellDiscipline)toAdd.GetByte(SpellAttributes.DISCIPLINE);
+                    _spells.Add(toAdd.SpellID, toAdd);
+                    SpellDiscipline discipline = toAdd.Discipline;
                     if (!_spellsOfDiscipline.ContainsKey(discipline))
                     {
                         _spellsOfDiscipline.Add(discipline, new List<SpellData>());
@@ -36,7 +36,7 @@ public static class SpellManager
         int toReturn = 276;
         if (_spells.ContainsKey(key))
         {
-            return _spells[key].GetInt(SpellAttributes.SPELL_NAME_REFERENCE);
+            return _spells[key].SpellNameReference;
         }
         return toReturn;
     }
@@ -58,9 +58,9 @@ public static class SpellManager
             List<SpellData> toCheck = GetSpellsOfDiscipline(new SpellDiscipline[] { disciplineKey });
             foreach(SpellData data in toCheck)
             {
-                if(data.GetByte(SpellAttributes.MINLEVEL) <= characterLevel &&
-                    data.GetByte(SpellAttributes.SKILLNEEDED) <= disciplineTable[disciplineKey]){
-                    toReturn.Add((byte)data.GetInt(SpellAttributes.ID), data);
+                if(data.MinLevel <= characterLevel &&
+                    data.SkillNeeded <= disciplineTable[disciplineKey]){
+                    toReturn.Add(data.SpellID, data);
                 }
             }
         }

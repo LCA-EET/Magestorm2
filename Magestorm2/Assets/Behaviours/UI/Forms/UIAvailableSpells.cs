@@ -24,7 +24,7 @@ public class UIAvailableSpells : ValidatableForm, ISpellProcessor
         Dictionary<byte, int> options = new Dictionary<byte, int>();
         foreach(byte spellKey in availableSpells.Keys)
         {
-            options.Add(spellKey, availableSpells[spellKey].GetInt(SpellAttributes.SPELL_NAME_REFERENCE));
+            options.Add(spellKey, availableSpells[spellKey].SpellNameReference);
         }
         SpellSelectView.SetOwningForm(this);
         SpellSelectView.AssignKeys(options);
@@ -43,7 +43,7 @@ public class UIAvailableSpells : ValidatableForm, ISpellProcessor
     public void SelectionMade(object[] args)
     {
         SpellData selected = (SpellData)args[0];
-        _owner.SelectionMade(new object[] { _slotID, selected.GetInt(SpellAttributes.SPELL_NAME_REFERENCE), selected.GetByte(SpellAttributes.ID)});
+        _owner.SelectionMade(new object[] { _slotID, selected.SpellNameReference, selected.SpellID});
         CloseForm();
     }
 }

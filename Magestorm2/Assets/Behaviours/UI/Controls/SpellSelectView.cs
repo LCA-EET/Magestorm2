@@ -20,7 +20,7 @@ public class SpellSelectView : ScrollSelectView
         Dictionary<byte, int> options = new Dictionary<byte, int>();
         foreach(SpellData sd in spellData)
         {
-            options.Add(sd.GetByte(SpellAttributes.ID), sd.GetInt(SpellAttributes.SPELL_NAME_REFERENCE));
+            options.Add(sd.SpellID, sd.SpellNameReference);
         }
         AssignKeys(options);
         _selectedOption = Labels[0].OptionID;

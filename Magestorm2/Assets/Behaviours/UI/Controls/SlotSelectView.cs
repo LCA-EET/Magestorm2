@@ -33,7 +33,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
             int referenceID = _noSelectionRef;
             if (SpellManager.GetSpell(spellID, ref slottedSpell))
             {
-                referenceID = slottedSpell.GetInt(SpellAttributes.SPELL_NAME_REFERENCE);
+                referenceID = slottedSpell.SpellNameReference;
             }
             _slottedSpells[i] = spellID;
             Labels[i].Register(referenceID, i, this);

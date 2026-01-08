@@ -144,7 +144,10 @@ public class PC : MonoBehaviour
         {
             CheckCast();
         }
-        CheckCast();
+        else
+        {
+            _coolDownRemaining -= Time.deltaTime;
+        }
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         MenuCheck();
     }
@@ -254,6 +257,7 @@ public class PC : MonoBehaviour
         }
         else if (MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
         {
+            
             Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, posture, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
         }
     }

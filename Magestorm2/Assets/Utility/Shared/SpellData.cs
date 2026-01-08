@@ -1,42 +1,85 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SpellData
 {
-    private Dictionary<string, object> _data;
-    private int _spellNameReference;
+    private int _spellNameReference, _descReference;
+    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll, _maxDamagePerRoll, _minHealPerRoll, _maxHealPerRoll;
+    private SpellDiscipline _discipline;
+
     public SpellData(string[] fields, string contents)
     {
-        _data = new Dictionary<string, object>();
         string[] split = contents.Split("<br>");
+        string fieldID, fieldValue;
         for (int i = 0; i < fields.Length; i++)
         {
-            _data.Add(fields[i], split[i+1]);
+            fieldID = fields[i];
+            fieldValue = split[i + 1];
+            switch (fieldID)
+            {
+                case SpellAttributes.ID:
+                    _spellID = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.MIN_DAMAGE_PER_ROLL:
+                    _minDamagePerRoll = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.MAX_DAMAGE_PER_ROLL:
+                    _maxDamagePerRoll = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.MIN_HEAL_PER_ROLL:
+                    _minHealPerRoll = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.MAX_HEAL_PER_ROLL:
+                    _maxHealPerRoll = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.SPELL_NAME_REFERENCE:
+                    _spellNameReference = int.Parse(fieldValue);
+                    break;
+                case SpellAttributes.COST:
+                    _cost = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.ROLLS:
+                    _rolls = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.MINLEVEL:
+                    _minLevel = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.SKILLNEEDED:
+                    _skillNeeded = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.DISCIPLINE:
+                    _discipline = (SpellDiscipline)byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.DESCRIPTION:
+                    _descReference = int.Parse(fieldValue);
+                    break;
+            }
         }
-        _spellNameReference = GetInt(SpellAttributes.SPELL_NAME_REFERENCE);
+    }
+    public SpellDiscipline Discipline
+    {
+        get { return _discipline; }
+    }
+    public byte MinLevel
+    {
+        get { return _minLevel; }
+    }
+    public byte SkillNeeded
+    {
+        get { return _skillNeeded; }
+    }
+    public byte SpellID
+    {
+        get { return _spellID; }
     }
     public int SpellNameReference
     {
         get { return _spellNameReference; }
     }
-    public object GetData(string key)
+    public int DescriptionReference
     {
-        return _data[key];
-    }
-
-    public string GetString(string key)
-    {
-        return _data[key].ToString();
-    }
-
-    public byte GetByte(string key)
-    {
-        return byte.Parse(_data[key].ToString());
-    }
-
-    public int GetInt(string key)
-    {
-        return int.Parse(_data[key].ToString());
+        get { return _descReference; }
     }
 
 }
