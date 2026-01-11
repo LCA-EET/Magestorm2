@@ -209,6 +209,17 @@ public class Packets {
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 
+    public static byte[] SpawnProjectilePacket(byte[] decrypted, short castID)
+    {
+        byte[] toEncrypt = new byte[decrypted.length + 2];
+        System.arraycopy(decrypted, 0, toEncrypt, 0, decrypted.length);
+        decrypted[0] = InGame_Send.SpawnProjectile;
+        byte[] castBytes = ByteUtils.ShortToByteArray(castID);
+        toEncrypt[decrypted.length] = castBytes[0];
+        toEncrypt[decrypted.length + 1] = castBytes[1];
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     public static byte[] ApplyEffectPacket(byte playerAppliedTo, byte applierID, byte effectCode, byte duration, byte degree){
         return Cryptographer.Encrypt(new byte[]{InGame_Send.ApplyEffect, playerAppliedTo, applierID, effectCode, duration, degree});
     }

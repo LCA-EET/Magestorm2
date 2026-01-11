@@ -172,4 +172,13 @@ public class PlayerCharacter {
     public CharacterClass GetCharacterClass(){
         return _characterClass;
     }
+    public byte GetSkillLevel(byte discipline)
+    {
+        byte skillLevel = 0;
+        if(_skillsTable.containsKey(discipline)){
+            skillLevel = _skillsTable.get(discipline);
+        }
+        return skillLevel;
+    }
+
 }

@@ -7,6 +7,7 @@ public class SpellData
     private int _spellNameReference, _descReference;
     private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll, _maxDamagePerRoll, _minHealPerRoll, _maxHealPerRoll;
     private SpellDiscipline _discipline;
+    private SpellType _spellType;
 
     public SpellData(string[] fields, string contents)
     {
@@ -54,8 +55,15 @@ public class SpellData
                 case SpellAttributes.DESCRIPTION:
                     _descReference = int.Parse(fieldValue);
                     break;
+                case SpellAttributes.SPELLTYPE:
+                    _spellType = (SpellType)byte.Parse(fieldValue);
+                    break;
             }
         }
+    }
+    public SpellType SpellType
+    {
+        get { return _spellType; }
     }
     public SpellDiscipline Discipline
     {
@@ -81,7 +89,21 @@ public class SpellData
     {
         get { return _descReference; }
     }
-
+    public void CastSpell()
+    {
+        byte[] toSend = null;
+        switch (SpellType)
+        {
+            case SpellType.Projectile:
+                toSend = InGame_Packets.ProjectileCastPacket(SpellID);
+                break;
+            case SpellType.SelfHeal:
+                break;
+        }
+        if(toSend != null)
+        {
+            Game.SendInGameBytes(toSend);
+        }
 }
 public static class SpellAttributes
 {

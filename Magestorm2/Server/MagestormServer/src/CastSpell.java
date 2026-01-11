@@ -1,12 +1,12 @@
 public class CastSpell {
-    protected final byte _casterID;
     protected final int _castID;
     protected Spell _baseReference;
+    protected MatchCharacter _casterReference;
 
-    public CastSpell(byte casterID, int castID, int baseSpellID){
-        _casterID = casterID;
+    public CastSpell(MatchCharacter caster, int castID, Spell baseReference){
+        _casterReference = caster;
         _castID = castID;
-        _baseReference = SpellManager.GetSpell(baseSpellID);
+        _baseReference = baseReference;
     }
 
     public Spell GetBaseSpell(){

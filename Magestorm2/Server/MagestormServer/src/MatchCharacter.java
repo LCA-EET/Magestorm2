@@ -228,8 +228,23 @@ public class MatchCharacter {
     public byte GetLevel(){
         return _INLCTA[_idxLevel];
     }
+    public short CastSpell(byte spellID){
+        short toReturn = -1;
+        if(IsAlive()){
+            Spell cast = SpellManager.GetSpell(spellID);
+            byte spellCost = cast.SpellCost();
+            byte skillRequired = cast.GetSkillRequired();
+            byte discipline = cast.GetDiscipline();
+            if(spellCost < _currentMana && skillRequired <= _pc.GetSkillLevel(discipline)){
+                _currentMana -= spellCost;
+                toReturn = _owningMatch.SpellCast(this, cast);
+            }
+        }
+        return toReturn;
+    }
     @Override
     public String toString(){
         return "MCID: " + _idInMatch + ", TeamID: " + _teamID;
     }
+
 }

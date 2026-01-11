@@ -1,8 +1,8 @@
 public class DamagingSpell extends CastSpell{
     protected short _damage;
 
-    public DamagingSpell(byte casterID, int castID, int baseSpellID){
-        super(casterID, castID, baseSpellID);
+    public DamagingSpell(MatchCharacter caster, int castID, Spell baseReference){
+        super(caster, castID, baseReference);
         CalculateDamage();
     }
 

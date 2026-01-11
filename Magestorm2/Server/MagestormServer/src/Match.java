@@ -18,16 +18,15 @@ public class Match {
     protected final ConcurrentHashMap<Integer, MatchCharacter> _unverifiedCharacters;
     protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     protected ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
+    protected final ConcurrentHashMap<Short, CastSpell> _castSpells;
     protected final ConcurrentHashMap<Byte, Integer> _playerScores;
-    protected final ConcurrentHashMap<Integer, CastSpell> _castSpells;
 
     protected byte _nextPlayerID;
     protected final int _matchPort;
     protected InGamePacketProcessor _processor;
     protected final byte _maxPlayers;
     protected byte _matchType;
-
-    private int _nextSpellID = 0;
+    protected short _nextCastID = 0;
 
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType, byte[] matchOptions){
         _matchOptions = new MatchOptions(matchOptions);
@@ -36,10 +35,10 @@ public class Match {
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
         _sceneID = sceneID;
+        _castSpells = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _unverifiedCharacters = new ConcurrentHashMap<>();
         _playerScores = new ConcurrentHashMap<>();
-        _castSpells = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
         _creatorName = creatorName;
         _nextPlayerID = 1;
@@ -304,6 +303,15 @@ public class Match {
     public void SendMatchEndPacket(){
         
     }
+    public short SpellCast(MatchCharacter caster, Spell spellReference){
+        short castID = IncrementCastID();
+        switch(spellReference.SpellType()){
+            case SpellTypes.Projectile:
+                _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference));
+                break;
+        }
+        return castID;
+    }
     public void SendToAll(byte[] encrypted){
         _processor.EnqueueForSend(encrypted, _verifiedClients.values());
     }
@@ -321,6 +329,10 @@ public class Match {
     public void Tick(long msElapsed){
         CountDownTimedObjects(msElapsed);
         RegeneratePlayerHM(msElapsed);
+    }
+    private short IncrementCastID(){
+        _nextCastID++;
+        return _nextCastID;
     }
     private void RegeneratePlayerHM(long msElapsed){
         for(MatchCharacter mc : _matchCharacters.values()){
@@ -407,7 +419,6 @@ public class Match {
             }
         }
     }
-
     public void ProcessSpellCast(byte[] decrypted){
         byte casterID = decrypted[1];
         byte spellID = decrypted[2];

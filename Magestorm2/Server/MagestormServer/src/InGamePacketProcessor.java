@@ -55,12 +55,23 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.PostureChange:
                     HandlePostureChange();
                     return true;
+                case InGame_Receive.CastProjectile:
+                    HandleProjectileCast();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
             return HandleJoinMatchPacket();
         }
         return false;
+    }
+    private void HandleProjectileCast(){
+        byte spellID = _decrypted[2];
+        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        short castID = mc.CastSpell(spellID);
+        if(castID >= 0){
+            _owningMatch.SendToAll(Packets.SpawnProjectilePacket(_decrypted, castID));
+        }
     }
     private void HandlePostureChange(){
         MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
