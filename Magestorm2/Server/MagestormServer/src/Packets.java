@@ -211,13 +211,11 @@ public class Packets {
 
     public static byte[] SpawnProjectilePacket(byte[] decrypted, short castID)
     {
-        byte[] toEncrypt = new byte[decrypted.length + 2];
-        System.arraycopy(decrypted, 0, toEncrypt, 0, decrypted.length);
-        decrypted[0] = InGame_Send.SpawnProjectile;
         byte[] castBytes = ByteUtils.ShortToByteArray(castID);
-        toEncrypt[decrypted.length] = castBytes[0];
-        toEncrypt[decrypted.length + 1] = castBytes[1];
-        return Cryptographer.Encrypt(toEncrypt);
+        int length = decrypted.length;
+        decrypted[0] = InGame_Send.SpawnProjectile;
+        System.arraycopy(castBytes, 0, decrypted, length-2, castBytes.length);
+        return Cryptographer.Encrypt(decrypted);
     }
 
     public static byte[] ApplyEffectPacket(byte playerAppliedTo, byte applierID, byte effectCode, byte duration, byte degree){

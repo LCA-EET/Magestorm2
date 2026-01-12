@@ -38,10 +38,11 @@ public static class InGame_Packets
     public static byte[] ProjectileCastPacket(byte spellID)
     {
         byte[] cameraDirection = ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
-        byte[] unencrypted = new byte[14];
+        byte[] unencrypted = new byte[17];
         unencrypted[0] = InGame_Send.CastProjectile;
-        unencrypted[1] = spellID;
-        cameraDirection.CopyTo(unencrypted, 2);
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = spellID;
+        cameraDirection.CopyTo(unencrypted, 3);
         return unencrypted;
     }
     public static byte[] FlagCapturedPacket(byte flagCaptured)

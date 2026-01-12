@@ -120,10 +120,18 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.ApplyEffect:
                             HandleEffect();
                             break;
+                        case InGame_Receive.SpawnProjectile:
+                            HandleProjectileSpawn();
+                            break;
                     }
                 }
             }
         }
+    }
+    private void HandleProjectileSpawn()
+    {
+        short castID = BitConverter.ToInt16(_decrypted, _decrypted.Length - 2);
+        Debug.Log("CastID: " + castID);
     }
     private void HandleEffect()
     {

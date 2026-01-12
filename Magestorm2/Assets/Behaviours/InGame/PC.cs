@@ -34,7 +34,7 @@ public class PC : MonoBehaviour
     public HashSet<int> _priorInTriggers;
     
     private Dictionary<EffectCode, AppliedEffect> _effects;
-    private byte _primarySpellID, _secondarySpellID;
+    private SpellData _primarySpell, _secondarySpell;
     public void Awake()
     {
         if (!Game.Running)
@@ -140,7 +140,7 @@ public class PC : MonoBehaviour
             }
         }
         CheckSpellSlot();
-        if(_coolDownRemaining <= 0 && !InValhalla)
+        if(_coolDownRemaining <= 0 && !InValhalla && IsAlive)
         {
             CheckCast();
         }
@@ -153,17 +153,18 @@ public class PC : MonoBehaviour
     }
     private void CheckCast()
     {
-        bool casted = false;
+        SpellData toCast = null ;
         if (InputControls.ShootPrimary)
         {
-            casted = true;
+            toCast = _primarySpell;
         }
         else if (InputControls.ShootSecondary)
         {
-            casted = true;
+            toCast = _secondarySpell;
         }
-        if (casted)
+        if (toCast != null)
         {
+            toCast.CastSpell();
             _coolDownRemaining = 0.5f;
         }
     }
@@ -176,7 +177,7 @@ public class PC : MonoBehaviour
             SpellData spellData = null;
             if (SpellManager.GetSpell(spellID, ref spellData))
             {
-                _primarySpellID = spellID;
+                _primarySpell = spellData;
                 ComponentRegister.SpellPanel.UpdatePrimaryReference(spellData.SpellNameReference);
             }
         }
@@ -184,12 +185,8 @@ public class PC : MonoBehaviour
         {
             if (InputControls.SetSecondary)
             {
-                SpellData spellData = null;
-                if (SpellManager.GetSpell(_primarySpellID, ref spellData))
-                {
-                    _secondarySpellID = _primarySpellID;
-                    ComponentRegister.SpellPanel.UpdateSecondaryReference(spellData.SpellNameReference);
-                }
+                _secondarySpell = _primarySpell;
+                ComponentRegister.SpellPanel.UpdateSecondaryReference(_secondarySpell.SpellNameReference);
             }
         }
     }

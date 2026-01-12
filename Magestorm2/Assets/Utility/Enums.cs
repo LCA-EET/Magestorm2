@@ -1,10 +1,10 @@
 using UnityEngine;
 public enum SpellType : byte
 {
-    Projectile = 0,
-    Bolt = 1,
-    SelfHeal = 2,
-    HealOther = 3
+    Projectile = 1,
+    Bolt = 2,
+    SelfHeal = 3,
+    HealOther = 4
 }
 public enum SpellDiscipline: byte
 {

@@ -43,5 +43,6 @@ public static class InGame_Receive
                         PlayerRevived = 34,
                         PlayerTapped = 35,
                         PostureChange = 36,
-                        ApplyEffect = 37;
+                        ApplyEffect = 37,
+                        SpawnProjectile = 38;
 }

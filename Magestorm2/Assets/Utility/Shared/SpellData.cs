@@ -69,6 +69,10 @@ public class SpellData
     {
         get { return _discipline; }
     }
+    public byte SpellCost
+    {
+        get { return _cost; }
+    }
     public byte MinLevel
     {
         get { return _minLevel; }
@@ -91,19 +95,44 @@ public class SpellData
     }
     public void CastSpell()
     {
-        byte[] toSend = null;
-        switch (SpellType)
+        if (ValidCast())
         {
-            case SpellType.Projectile:
-                toSend = InGame_Packets.ProjectileCastPacket(SpellID);
-                break;
-            case SpellType.SelfHeal:
-                break;
+            Debug.Log("Valid cast");
+            byte[] toSend = null;
+            switch (SpellType)
+            {
+                case SpellType.Projectile:
+                    toSend = InGame_Packets.ProjectileCastPacket(SpellID);
+                    break;
+                case SpellType.SelfHeal:
+                    break;
+            }
+            if (toSend != null)
+            {
+                Game.SendInGameBytes(toSend);
+            }
         }
-        if(toSend != null)
+        else
         {
-            Game.SendInGameBytes(toSend);
+            Debug.Log("Invalid cast");
         }
+    }
+    private bool ValidCast()
+    {
+        bool toReturn = false;
+        PlayerCharacter caster = PlayerAccount.SelectedCharacter;
+        if(caster.GetSkillLevel(Discipline) >= SkillNeeded)
+        {
+            if(caster.CharacterLevel >= MinLevel)
+            {
+                if(ComponentRegister.PC.CurrentMana >= SpellCost)
+                {
+                    toReturn = true;
+                }
+            }
+        } 
+        return toReturn;
+    }
 }
 public static class SpellAttributes
 {

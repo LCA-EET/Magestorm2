@@ -27,6 +27,7 @@ public class Match {
     protected final byte _maxPlayers;
     protected byte _matchType;
     protected short _nextCastID = 0;
+    private long _spellExpirationElapsed = 0;
 
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType, byte[] matchOptions){
         _matchOptions = new MatchOptions(matchOptions);
@@ -329,6 +330,25 @@ public class Match {
     public void Tick(long msElapsed){
         CountDownTimedObjects(msElapsed);
         RegeneratePlayerHM(msElapsed);
+        ClearExpiredSpells(msElapsed);
+    }
+    private void ClearExpiredSpells(long elapsed){
+        _spellExpirationElapsed += elapsed;
+        if(_spellExpirationElapsed >= 60000){
+            _spellExpirationElapsed = 0;
+            ArrayList<Short> expiredSpells = new ArrayList<>();
+            long currentTimeMillis= System.currentTimeMillis();
+            for(CastSpell spell : _castSpells.values()){
+                if(spell.IsExpired(currentTimeMillis)){
+                    expiredSpells.add(spell.ID());
+                }
+            }
+            if(!expiredSpells.isEmpty()){
+                for(short spellID : expiredSpells){
+                    _castSpells.remove(spellID);
+                }
+            }
+        }
     }
     private short IncrementCastID(){
         _nextCastID++;

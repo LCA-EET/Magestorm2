@@ -1,3 +1,3 @@
 public class SpellTypes {
-    public final static byte Projectile = 0;
+    public final static byte Projectile = 1;
 }
