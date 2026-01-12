@@ -3,7 +3,6 @@ public class DamagingSpell extends CastSpell{
 
     public DamagingSpell(MatchCharacter caster, short castID, Spell baseReference){
         super(caster, castID, baseReference);
-        CalculateDamage();
     }
 
     private void CalculateDamage()
@@ -14,6 +13,9 @@ public class DamagingSpell extends CastSpell{
     }
 
     public short GetDamage(){
+        if(_damage == 0){
+            CalculateDamage();
+        }
         return _damage;
     }
 }

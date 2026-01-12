@@ -43,12 +43,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _positionChange = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         if (_positionChange)
         {
-            if(SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform, false))
+            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform, false))
             {
                 _positionChange = false;
             }
@@ -60,6 +59,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
                 _rotationChange = false;
             }
         }
+    }
+    // Update is called once per frame
+    void Update()
+    {
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
     }
     private void EffectTick()

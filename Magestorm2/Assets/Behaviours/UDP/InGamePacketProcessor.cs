@@ -123,6 +123,7 @@ public class InGamePacketProcessor : UDPProcessor
                         case InGame_Receive.SpawnProjectile:
                             HandleProjectileSpawn();
                             break;
+                            
                     }
                 }
             }
@@ -131,6 +132,18 @@ public class InGamePacketProcessor : UDPProcessor
     private void HandleProjectileSpawn()
     {
         short castID = BitConverter.ToInt16(_decrypted, _decrypted.Length - 2);
+        byte casterID = _decrypted[1];
+        byte spellID = _decrypted[2];
+        Vector3 direction = ByteUtils.BytesToVector3(_decrypted, 3);
+        Avatar caster = null;
+        if(Match.PlayerExists(casterID, ref caster))
+        {
+            SpellSpawner spawner = null;
+            if(ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner))
+            {
+                spawner.InitializeSpell(casterID, caster.PlayerTeam, castID, caster.transform.position, direction);
+            }
+        }
         Debug.Log("CastID: " + castID);
     }
     private void HandleEffect()
