@@ -10,14 +10,11 @@ public class Projectile : SpawnedSpell
     }
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
-    }
-    private void OnDestroy()
-    {
         if (ImpactPrefab != null)
         {
             GameObject impactObject = Instantiate(ImpactPrefab);
             impactObject.transform.position = transform.position;
         }
+        Destroy(gameObject);
     }
 }
