@@ -5,6 +5,7 @@ public static class LayerManager
     private static int _playerLayer;
     private static int _surfaceMask;
     private static int _interactableMask;
+    private static int _projectileImpactMask;
     private static bool _init = false;
     public static void Init()
     {
@@ -13,8 +14,13 @@ public static class LayerManager
             _playerLayer = LayerMask.NameToLayer("Player");
             _surfaceMask = LayerMask.GetMask("Surface");
             _interactableMask = LayerMask.GetMask("Interactable");
+            _projectileImpactMask = LayerMask.GetMask(new string[] { "Surface", "Default", "RemotePlayer", "Interactable" });
             _init = true;
         }
+    }
+    public static int ProjectileImpactMask
+    {
+        get { return _projectileImpactMask; }
     }
     public static int PlayerLayer
     {

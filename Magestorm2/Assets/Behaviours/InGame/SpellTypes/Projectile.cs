@@ -8,10 +8,9 @@ public class Projectile : SpawnedSpell
     {
         transform.position += (Speed * transform.forward * Time.deltaTime);
     }
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collided");
+        Destroy(gameObject);
     }
     private void OnDestroy()
     {

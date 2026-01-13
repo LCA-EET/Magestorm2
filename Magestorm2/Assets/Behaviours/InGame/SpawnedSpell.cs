@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 public class SpawnedSpell : MonoBehaviour 
 {
+    public AudioClip CastClip;
     protected byte _casterID;
     protected short _castID;
     protected Team _castingTeam;
@@ -12,6 +13,10 @@ public class SpawnedSpell : MonoBehaviour
         _casterID = casterID;
         _castingTeam = castingTeam;
         _castID = castID;
+        if(casterID == MatchParams.IDinMatch && CastClip != null)
+        {
+            ComponentRegister.AudioPlayer.PlayClip(CastClip);
+        }
     }
     public virtual void Update()
     {

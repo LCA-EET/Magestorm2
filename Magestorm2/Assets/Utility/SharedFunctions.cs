@@ -66,6 +66,7 @@ public static class SharedFunctions
         RaycastHit hitInfo;
         return CastDown(origin, layerMask, distance, out hitInfo);
     }
+  
     public static bool CastForward(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
     {
         return DirectionalCast(origin, layerMask, distance, Vector3.forward, out hitInfo);
