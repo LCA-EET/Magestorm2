@@ -44,5 +44,6 @@ public static class InGame_Receive
                         PlayerTapped = 35,
                         PostureChange = 36,
                         ApplyEffect = 37,
-                        SpawnProjectile = 38;
+                        SpawnProjectile = 38,
+                        RedirectPort = 39;
 }

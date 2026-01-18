@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-public class InitialPoolData
+﻿public class InitialPoolData
 {
     private Team _team;
     private byte _biasAmount;
@@ -22,4 +16,5 @@ public class InitialPoolData
     {
         get { return _biasAmount; }
     }
+
 }

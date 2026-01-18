@@ -99,7 +99,7 @@ public class UIPrefabManager : MonoBehaviour
         instantiated.SetParams(new object[] { message });
         AddToStack(instantiated.gameObject);
     }
-    public void InstantiateCreateAccountForm(GameObject instantiator, int port)
+    public void InstantiateCreateAccountForm(GameObject instantiator)
     {
         AddToStack(Instantiate(PrefabCreateAccount));
     }

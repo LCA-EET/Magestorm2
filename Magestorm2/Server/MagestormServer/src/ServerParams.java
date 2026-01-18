@@ -9,7 +9,7 @@ public class ServerParams {
     public static String LogFilePath;
     public static String ErrorFilePath;
     public static String EmailCredsPath;
-    public static int ListeningPort;
+    public static short ListeningPort;
 
     public static void LoadParams(String paramFilePath){
         ExecutionDirectory = System.getProperty("user.dir");
@@ -19,7 +19,7 @@ public class ServerParams {
         Scanner paramScanner = null;
         try {
             paramScanner = new Scanner(paramFile);
-            ListeningPort = Integer.parseInt(paramScanner.nextLine());
+            ListeningPort = Short.parseShort(paramScanner.nextLine());
             Database.Init(paramScanner.nextLine(), paramScanner.nextLine(),
                     paramScanner.nextLine(), paramScanner.nextLine());
             EmailCredsPath = paramScanner.nextLine();

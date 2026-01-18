@@ -8,7 +8,7 @@ public static class MatchParams
     public static byte IDinMatch;
     public static byte SceneID;
     public static byte MatchType;
-    public static int ListeningPort;
+    public static int RemotePort;
     public static long ExpirationTime;
     public static bool ReturningFromMatch;
 
@@ -49,7 +49,7 @@ public static class MatchParams
         IDinMatch = decrypted[3];
         MatchTeamID = _decrypted[4];
         MatchID = _decrypted[5];
-        ListeningPort = BitConverter.ToInt32(_decrypted, 6);
+        RemotePort = BitConverter.ToInt32(_decrypted, 6);
         _maxHP = BitConverter.ToSingle(_decrypted, 10);
         _maxMana = BitConverter.ToSingle(_decrypted, 14);
         _maxStamina = _decrypted[18];

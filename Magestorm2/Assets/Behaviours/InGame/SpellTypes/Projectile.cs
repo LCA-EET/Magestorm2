@@ -15,6 +15,13 @@ public class Projectile : SpawnedSpell
             GameObject impactObject = Instantiate(ImpactPrefab);
             impactObject.transform.position = transform.position;
         }
+        if (SharedFunctions.WasPlayerHit(other))
+        {
+            if (ComponentRegister.PC.IsAlive)
+            {
+                Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
+            }
+        }
         Destroy(gameObject);
     }
 }

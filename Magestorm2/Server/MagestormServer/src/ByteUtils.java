@@ -25,6 +25,14 @@ public class ByteUtils {
         _shortBuffer.order(_order);
     }
 
+    public static short ExtractShort(byte[] decrypted, int index){
+        if((index + 2) <= decrypted.length){
+            return ByteBuffer.wrap(decrypted).order(_order).getShort(index);
+        }
+        else{
+            return -1;
+        }
+    }
     public static int ExtractInt(byte[] decrypted, int index){
         if((index + 4) <= decrypted.length){
             return ByteBuffer.wrap(decrypted).order(_order).getInt(index);
@@ -140,7 +148,7 @@ public class ByteUtils {
         int result = 0;
         for(int i = 0; i < bits.length; i++){
             double toAdd = bits[i] ? Math.pow(2,i) : 0;
-            Main.LogMessage("Bit " + i + " is " + bits[i] + ", adding " + toAdd);
+            //Main.LogMessage("Bit " + i + " is " + bits[i] + ", adding " + toAdd);
             result += toAdd;
         }
         return result;

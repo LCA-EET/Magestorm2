@@ -1,15 +1,12 @@
-using System.IO;
 using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
 
 public static class SharedFunctions
 {
+    private static System.Random _random = new System.Random();
     private static object[] _params;
 
     private static SpellDiscipline[] ArcanistDisciplines = new SpellDiscipline[] { 
@@ -49,10 +46,7 @@ public static class SharedFunctions
     {
         go.transform.LookAt(Camera.main.transform.position);
     }
-    public static int GameServerPort
-    {
-        get; set;
-    }
+
     public static bool DirectionalCast(Transform origin, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
     {
         return Physics.Raycast(origin.position, origin.TransformDirection(direction), out hitInfo, distance, layerMask);
@@ -87,6 +81,10 @@ public static class SharedFunctions
         return "Undefined";
     }
 
+    public static bool WasPlayerHit(Collider other)
+    {
+        return other.GetComponent<PC>() != null;
+    }
     public static SpellDiscipline[] DisciplinesByClass(PlayerClass playerClass)
     {
         switch (playerClass)
@@ -257,5 +255,10 @@ public static class SharedFunctions
             }
         }
         return skillsInteger;
+    }
+
+    public static int RandomInt(int min, int max)
+    {
+        return _random.Next(min, max);
     }
 }

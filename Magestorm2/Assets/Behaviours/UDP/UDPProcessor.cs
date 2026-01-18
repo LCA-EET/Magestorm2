@@ -1,25 +1,28 @@
 ﻿using System;
+using System.Net;
 using UnityEngine;
 
 public class UDPProcessor : MonoBehaviour
 {
-    protected int _listeningPort;
-    protected UDPGameClient _udp;
+    protected int _remotePort;
     protected byte[] _decrypted;
     protected byte _opCode;
 
-    public void Init(int port)
+    public void Init(int remotePort)
     {
-        Debug.Log("Initializing UDP client, listening on port " + port);
-        _listeningPort = port;
-        _udp = UDPBuilder.GetClient(port);
-        _udp.Listen();
+        Debug.Log("Initializing UDP client, remote port: " + remotePort);
+        Game.UDP = new UDPGameClient(new IPEndPoint(Game.GameServerAddress, remotePort));
+        _remotePort = remotePort;
     }
 
     public void SendBytes(byte[] unencrypted)
     {
         //Debug.Log("Sending in-game packet on port " + _udp.RemoteEnd().ToString());
-        Cryptography.EncryptAndSend(unencrypted, _udp);
+        if (unencrypted[0] == InGame_Send.JoinedMatch)
+        {
+            Debug.Log("Sending UDP packet to " + Game.UDP.RemoteEnd.Address.ToString() + ":" + Game.UDP.RemoteEnd.Port + " from " + Game.UDP.LocalPort);
+        }
+        Cryptography.EncryptAndSend(unencrypted);
     }
 
     protected byte[] FillSegment(byte[] source, int sourceIndex, int length)
@@ -33,10 +36,6 @@ public class UDPProcessor : MonoBehaviour
     {
         _decrypted = decrypted;
         _opCode = _decrypted[0];
-    }
-    public UDPGameClient GameClient
-    {
-        get { return _udp; }
     }
 }
 

@@ -1,6 +1,6 @@
 public class MatchCharacter {
     private final Match _owningMatch;
-
+    private RemoteClient _remote;
     private final PlayerCharacter _pc;
 
     private final byte _teamID;
@@ -127,9 +127,10 @@ public class MatchCharacter {
         return _pc.GetCharacterName();
     }
 
-    public void MarkVerified(){
+    public void MarkVerified(RemoteClient remote){
         Main.LogMessage("Player " + _idInMatch + " verified for team " + _teamID);
         MarkPacketReceived();
+        _remote = remote;
         _verified = true;
     }
 
@@ -138,7 +139,7 @@ public class MatchCharacter {
     }
 
     public RemoteClient GetRemoteClient(){
-        return _pc.GetRemoteClient();
+        return _remote;
     }
 
     public void MarkPacketReceived(){

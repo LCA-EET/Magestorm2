@@ -1,5 +1,4 @@
-﻿using UnityEditor.Build;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ManaPool : BiasableTrigger
 {
@@ -22,7 +21,8 @@ public class ManaPool : BiasableTrigger
     public void Start()
     {
         InitTrigger(TriggerType.ManaPool);
-        if(ComponentRegister.PC.CharacterClass == PlayerClass.Magician)
+        _poolPower = PoolManager.RegisterPool(this);
+        if (ComponentRegister.PC.CharacterClass == PlayerClass.Magician)
         {
             LeyInfluencer.AssignOwner(this, _poolPower, PoolID);
         }
@@ -31,7 +31,6 @@ public class ManaPool : BiasableTrigger
             Destroy(LeyInfluencer.gameObject);
         }
         new PeriodicAction(5.0f, BiasPool, _actionList);
-        _poolPower = PoolManager.RegisterPool(this);
         Debug.Log("Pool ID: " + PoolID + ", Power: " + _poolPower);
     }
     private void BiasPool()

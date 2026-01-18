@@ -161,7 +161,7 @@ public class Match {
     }
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
-        MatchCharacter toAdd = new MatchCharacter(rc.GetActiveCharacter(), teamID, playerID, this, _regenTick);
+        MatchCharacter toAdd = new MatchCharacter(GameServer.GetActiveCharacter(rc.AccountID()), teamID, playerID, this, _regenTick);
         _unverifiedCharacters.put(rc.AccountID(), toAdd);
         LogMessage("Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return toAdd;
@@ -214,7 +214,10 @@ public class Match {
         }
     }
     public void LeaveMatch(byte id, byte team, boolean send){
-        _matchCharacters.remove(id).PC().MarkRemovedFromMatch();
+        MatchCharacter departee = _matchCharacters.remove(id);
+        PlayerCharacter pc = departee.PC();
+        GameServer.GetClient(pc.GetAccountID()).MarkPortSwitchPending(true);
+        pc.MarkRemovedFromMatch();
         LogMessage("Player " + id + " has left the match. Players remaining: " + _matchCharacters.size());
         _verifiedClients.remove(id);
         _matchTeams.get(team).RemovePlayer(id);
@@ -287,11 +290,11 @@ public class Match {
         }
         return false;
     }
-    public void MarkPlayerVerified(byte playerID, byte teamID, int accountID){
+    public void MarkPlayerVerified(byte playerID, byte teamID, int accountID, RemoteClient remote){
         LogMessage("MarkPlayerVerified: Fetching player " + playerID);
         MatchCharacter toVerify = _unverifiedCharacters.get(accountID);
         if(toVerify != null){
-            toVerify.MarkVerified();
+            toVerify.MarkVerified(remote);
             _matchCharacters.put(playerID, toVerify);
             MatchTeam team = _matchTeams.get(teamID);
             _unverifiedCharacters.remove(accountID);
@@ -323,7 +326,9 @@ public class Match {
     public void SendToPlayer(byte[] encrypted, byte playerID){
         SendToPlayer(encrypted, _matchCharacters.get(playerID));
     }
-
+    public void SendToClient(byte[] encrypted, RemoteClient remote){
+        _processor.EnqueueForSend(encrypted, remote);
+    }
     protected void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
         _processor.EnqueueForSend(encrypted, recipients);
     }

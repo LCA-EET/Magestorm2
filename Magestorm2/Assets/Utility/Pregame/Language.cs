@@ -105,7 +105,7 @@ public static class Language
     }
     private static void IngestLanguageFiles()
     {
-        string path = "Assets\\Resources\\lang";
+        string path = Application.streamingAssetsPath +"\\lang";
         string[] files = Directory.GetFiles(path, "*.tra");
         _languageIndices = new Dictionary<int, string>();
         _languageStrings = new Dictionary<int, Dictionary<int, string>>();

@@ -1,10 +1,7 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using UnityEditorInternal;
-using UnityEngine;
 
 public static class Cryptography
 {
@@ -32,7 +29,7 @@ public static class Cryptography
         provider.Padding = PaddingMode.PKCS7;
         provider.Mode = CipherMode.CBC;
     }
-    public static void EncryptAndSend(byte[] payload, UDPGameClient udp)
+    public static void EncryptAndSend(byte[] payload)
     {
         _iv++; // not ideal from a security perspective, but it's a lot less expensive than generating a new random nonce for each packet
         byte[] ivBytes = PadBytes(8, _iv);
@@ -51,7 +48,7 @@ public static class Cryptography
         ivBytes.CopyTo(toSend, 0);
         toSend[_ivSize] = (byte)encryptedPayload.Length;
         encryptedPayload.CopyTo(toSend, _ivSize + 1);
-        udp.Send(toSend);
+        Game.UDP.Send(toSend);
     }
     public static byte[] DecryptReceived(byte[] received)
     {

@@ -46,8 +46,8 @@ public class DMPacketProcessor extends InGamePacketProcessor{
     }
 
     @Override
-    protected boolean HandleJoinMatchPacket(){
-        if(super.HandleJoinMatchPacket()){
+    protected boolean HandleJoinMatchPacket(RemoteClient remote){
+        if(super.HandleJoinMatchPacket(remote)){
             SendShrineHealthPacket();
         }
         return true;

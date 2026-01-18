@@ -65,7 +65,7 @@ public class PlayerCharacter {
     }
     public void UpdateSkills(int skills){
         _skills = ByteUtils.IntegerToBoolArray(skills);
-        Main.LogMessage("Skills int: " + skills + ", " + ByteUtils.BitsToInt(_skills));
+        //Main.LogMessage("Skills int: " + skills + ", " + ByteUtils.BitsToInt(_skills));
         _skillsTable.clear();
         byte[] classSkills = CharacterClass.GetBaseSkills(_characterClass.GetClass());
         for(byte classSkill : classSkills){
@@ -87,10 +87,12 @@ public class PlayerCharacter {
             }
             _skillsTable.put(classSkill, value);
         }
+        /*
         Main.LogMessage("Skills Table");
         for(Byte key : _skillsTable.keySet()){
             Main.LogMessage(key + ":" + _skillsTable.get(key));
         }
+        */
     }
     public void UpdateSlottedSpells(byte[] slots){
         System.arraycopy(slots, 0, _characterBytes, _indexSlotStart, 10);
@@ -148,7 +150,7 @@ public class PlayerCharacter {
         _currentMatchID = match;
         _currentTeam = team;
         _inMatch = true;
-        GameServer.AddActiveCharacter(_accountID, this);
+
     }
     public byte GetIDinMatch(){
         return _idInCurrentMatch;

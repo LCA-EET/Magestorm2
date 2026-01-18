@@ -32,7 +32,7 @@ public class InGamePacketProcessor extends UDPProcessor{
                     HandleQuitGame();
                     return true;
                 case InGame_Receive.HitPlayer:
-                    HandleHitPlayer();
+                    //HandleHitPlayer();
                     return true;
                 case InGame_Receive.CastSpell:
                     HandleSpellCast();
@@ -58,12 +58,19 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.CastProjectile:
                     HandleProjectileCast();
                     return true;
+                case InGame_Receive.ReportHit:
+                    HandleReportHitPacket();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
-            return HandleJoinMatchPacket();
+            return HandleJoinMatchPacket(_remote);
         }
         return false;
+    }
+    private void HandleReportHitPacket(){
+        short castID = ByteUtils.ExtractShort(_decrypted, 2);
+
     }
     private void HandleProjectileCast(){
         byte spellID = _decrypted[2];
@@ -96,9 +103,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     private void HandleSpellCast(){
         _owningMatch.ProcessSpellCast(_decrypted);
     }
-    private void HandleHitPlayer(){
-        _owningMatch.PlayerHit(_decrypted[1], _decrypted[2], ByteUtils.ExtractInt(_decrypted, 3));
-    }
+
     private void InactivityCheckResponse(){
         _owningMatch.GetMatchCharacter(_decrypted[1]).MarkPacketReceived();
     }
@@ -154,14 +159,14 @@ public class InGamePacketProcessor extends UDPProcessor{
         byte selfReset = _decrypted[4];
         _owningMatch.ChangeObjectState(objectID, state, _decrypted[1], selfReset);
     }
-    protected boolean HandleJoinMatchPacket(){
+    protected boolean HandleJoinMatchPacket(RemoteClient remote){
         int accountID = CheckAccountAndCharacter();
         if(accountID >= 0){
             byte idInMatch = _decrypted[9];
             byte teamID = _decrypted[10];
             Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.MatchID() + ", team " + teamID);
             if(_owningMatch.IsAwaitingVerification(accountID)){
-                _owningMatch.MarkPlayerVerified(idInMatch, teamID, accountID);
+                _owningMatch.MarkPlayerVerified(idInMatch, teamID, accountID, remote);
                 _owningMatch.SendToAll(Packets.PlayerDataPacket(_owningMatch.GetMatchCharacter(idInMatch).GetINLCTABytes()));
                 _owningMatch.ProcessObjectStatusPacket(_decrypted[9]);
                 Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);
@@ -180,7 +185,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     private int CheckAccountAndCharacter(){
         int accountID = IsLoggedIn();
         if(accountID > 0){
-            if(ByteUtils.ExtractInt(_decrypted, 5) == GameServer.GetClient(accountID).GetActiveCharacter().GetCharacterID()){
+            if(ByteUtils.ExtractInt(_decrypted, 5) == GameServer.GetActiveCharacter(accountID).GetCharacterID()){
                 Main.LogMessage("Account check passed: " + accountID + ", match " + _owningMatch.MatchID());
                 return accountID;
             }

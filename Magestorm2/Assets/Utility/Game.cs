@@ -1,13 +1,6 @@
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using System.Threading;
-using System.Net.Http;
-using System.Net;
-using System.Threading.Tasks;
 using System;
-using UnityEngine.InputSystem.Controls;
-using System.Text;
+using System.Net;
 public static class Game
 {
     public const float TickInterval = 0.01f; // 10ms
@@ -19,7 +12,9 @@ public static class Game
     public static bool ChatMode = false;
     public static bool ControlMode = false;
     public static bool MouseMode = false;
-    
+    public static UDPGameClient UDP;
+    public static int GameServerPort;
+    public static IPAddress GameServerAddress;
     public static bool GameMode
     {
         get
@@ -33,12 +28,11 @@ public static class Game
     }
     public static void Quit()
     {
-        if (!EditorApplication.isPlaying)
-        {
+        #if !(UNITY_EDITOR)
             Running = false;
             UDPBuilder.StopAllListeners();
             Application.Quit();
-        }
+        #endif
     }
     public static void SendPregameBytes(byte[] unencrypted)
     {
@@ -107,14 +101,12 @@ public static class Game
             if(SharedFunctions.GetPHPString("serverinfo", out contents))
             {
                 string[] returnedArray = contents.Split("<br>");
-                int portNumber = int.Parse(returnedArray[0]);
+                GameServerPort = int.Parse(returnedArray[0]);
                 string key64 = returnedArray[1];
-                Debug.Log("key64: " + key64);
                 byte[] key = Convert.FromBase64String(key64);
-                //Debug.Log("Key checksum: " + ComputeChecksum(key) + ", Key Length: " + key.Length);
-                UDPBuilder.Init("fosiemods.net");
+                AssignGameServerAddress("fosiemods.net");
                 Cryptography.Init(key);
-                return UDPBuilder.CreateClient(portNumber);
+                return GameServerPort;
             }
         }
         catch (Exception e)
@@ -122,5 +114,14 @@ public static class Game
             Debug.LogException(e);
         }
         return -1;
+    }
+    private static void AssignGameServerAddress(string hostname)
+    {
+        GameServerAddress = Dns.GetHostAddresses(hostname)[0];
+        if (GameServerAddress.ToString().StartsWith("192"))
+        {
+            GameServerAddress = Dns.GetHostAddresses("apps.home.lan")[0];
+        }
+        Debug.Log("Server IP: " + GameServerAddress.ToString());
     }
 }

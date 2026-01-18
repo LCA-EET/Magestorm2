@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf52c3604707ee4aa8e65c09fe47a7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CharacterController: {fileID: 5539272750606452207}
   PlayerMovement: {fileID: 5390107915583490957}
   DownwardCaster: {fileID: 306485030820218903}
   ForwardCaster: {fileID: 3065075244689392208}

@@ -1,130 +1,119 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class InGamePacketProcessor : UDPProcessor
 {
     private void Awake()
     {
         ComponentRegister.InGamePacketProcessor = this;
-        Init(MatchParams.ListeningPort);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Init(MatchParams.RemotePort);
         ComponentRegister.UIPrefabManager.ClearStack();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_listeningPort > 0)
+        if (Game.UDP.HasPacketsPending)
         {
-            if (_udp.HasPacketsPending)
+            Debug.Log("IGPP received, opcode " + _opCode);
+            List<byte[]> toProcess = Game.UDP.PacketsReceived();
+            foreach (byte[] decryptedPayload in toProcess)
             {
-                Debug.Log("IGPP received, opcode " + _opCode);
-                List<byte[]> toProcess = _udp.PacketsReceived();
-                foreach (byte[] decryptedPayload in toProcess)
+                PreProcess(decryptedPayload);
+                switch (_opCode)
                 {
-                    PreProcess(decryptedPayload);
-                    switch (_opCode)
-                    {
-                        case InGame_Receive.ObjectData:
-                            Match.ProcessObjectStates(_decrypted);
-                            break;
-                        case InGame_Receive.ObjectStateChange:
-                            ProcessObjectChangePacket();
-                            break;
-                            /*
-                        case InGame_Receive.ShrineHealth:
-                            ProcessShrineHealthPacket();
-                            break;
-                        case InGame_Receive.AllShrineHealth:
-                            ProcessAllShrineHealthPacket();
-                            break;
-                            */
-                        case InGame_Receive.BroadcastMessage:
-                            ProcessBroadcastMessagePacket();
-                            break;
-                        case InGame_Receive.MatchEnded:
-                            Match.LeaveMatch();
-                            break;
-                        case InGame_Receive.PlayerLeftMatch:
-                            ProcessPlayerLeftMatchPacket();
-                            break;
-                        case InGame_Receive.RemovedFromMatch:
-                            Match.LeaveMatch();
-                            break;
-                        case InGame_Receive.PlayerJoinedMatch:
-                            Match.ProcessPlayerJoinedPacket(_decrypted);
-                            break;
-                        case InGame_Receive.InactivityWarning:
-                            ProcessInactivityWarning();
-                            break;
-                        case InGame_Receive.PoolBiased:
-                            ProcessPoolBias();                    
-                            break;
-                        case InGame_Receive.PoolBiasFailure:
-                            ProcessPoolBiasFailure();
-                            break;
-                        case InGame_Receive.ShrineAdjusted:
-                            ShrineManager.ProcessShrineAdjustment(_decrypted[1], _decrypted[2], _decrypted[3]);
-                            break;
-                        case InGame_Receive.ShrineFailure:
-                            ProcessShrineFailure();
-                            break;
-                        case InGame_Receive.PlayerKilled:
-                            ProcessKilledPlayer();
-                            break;
-                        case InGame_Receive.FlagReturned:
-                            HandleFlagReturn();
-                            break;
-                        case InGame_Receive.FlagCaptured:
-                            HandleFlagCapture();
-                            break;
-                        case InGame_Receive.FlagDropped:
-                            HandleFlagDrop();
-                            break;
-                        case InGame_Receive.FlagTaken:
-                            HandleFlagTaken();
-                            break;
-                        case InGame_Receive.PlayerMoved:
-                            Match.UpdatePlayerLocation(_decrypted);
-                            break;
-                        case InGame_Receive.PlayerData:
-                            Match.ProcessPlayerJoinedPacket(_decrypted);
-                            break;
-                        case InGame_Receive.HPandManaUpdate:
-                            ComponentRegister.PC.HPandManaUpdate(_decrypted);
-                            break;
-                        case InGame_Receive.HPUpdate:
-                        case InGame_Receive.ManaUpdate:
-                        case InGame_Receive.LeyUpdate:
-                            ComponentRegister.PC.HPorManaorLeyUpdate(_decrypted);
-                            break;
-                        case InGame_Receive.TeamMessage:
-                            HandleTeamMessage();
-                            break;
-                        case InGame_Receive.PlayerRevived:
-                            HandleRevive();
-                            break;
-                        case InGame_Receive.PlayerTapped:
-                            HandleTap();
-                            break;
-                        case InGame_Receive.PostureChange:
-                            HandlePostureChange();
-                            break;
-                        case InGame_Receive.ApplyEffect:
-                            HandleEffect();
-                            break;
-                        case InGame_Receive.SpawnProjectile:
-                            HandleProjectileSpawn();
-                            break;
-                            
-                    }
+                    case InGame_Receive.ObjectData:
+                        Match.ProcessObjectStates(_decrypted);
+                        break;
+                    case InGame_Receive.ObjectStateChange:
+                        ProcessObjectChangePacket();
+                        break;
+                    case InGame_Receive.BroadcastMessage:
+                        ProcessBroadcastMessagePacket();
+                        break;
+                    case InGame_Receive.MatchEnded:
+                        Match.LeaveMatch();
+                        break;
+                    case InGame_Receive.PlayerLeftMatch:
+                        ProcessPlayerLeftMatchPacket();
+                        break;
+                    case InGame_Receive.RemovedFromMatch:
+                        Match.LeaveMatch();
+                        break;
+                    case InGame_Receive.PlayerJoinedMatch:
+                        Match.ProcessPlayerJoinedPacket(_decrypted);
+                        break;
+                    case InGame_Receive.InactivityWarning:
+                        ProcessInactivityWarning();
+                        break;
+                    case InGame_Receive.PoolBiased:
+                        ProcessPoolBias();                    
+                        break;
+                    case InGame_Receive.PoolBiasFailure:
+                        ProcessPoolBiasFailure();
+                        break;
+                    case InGame_Receive.ShrineAdjusted:
+                        ShrineManager.ProcessShrineAdjustment(_decrypted[1], _decrypted[2], _decrypted[3]);
+                        break;
+                    case InGame_Receive.ShrineFailure:
+                        ProcessShrineFailure();
+                        break;
+                    case InGame_Receive.PlayerKilled:
+                        ProcessKilledPlayer();
+                        break;
+                    case InGame_Receive.FlagReturned:
+                        HandleFlagReturn();
+                        break;
+                    case InGame_Receive.FlagCaptured:
+                        HandleFlagCapture();
+                        break;
+                    case InGame_Receive.FlagDropped:
+                        HandleFlagDrop();
+                        break;
+                    case InGame_Receive.FlagTaken:
+                        HandleFlagTaken();
+                        break;
+                    case InGame_Receive.PlayerMoved:
+                        Match.UpdatePlayerLocation(_decrypted);
+                        break;
+                    case InGame_Receive.PlayerData:
+                        Match.ProcessPlayerJoinedPacket(_decrypted);
+                        break;
+                    case InGame_Receive.HPandManaUpdate:
+                        ComponentRegister.PC.HPandManaUpdate(_decrypted);
+                        break;
+                    case InGame_Receive.HPUpdate:
+                    case InGame_Receive.ManaUpdate:
+                    case InGame_Receive.LeyUpdate:
+                        ComponentRegister.PC.HPorManaorLeyUpdate(_decrypted);
+                        break;
+                    case InGame_Receive.TeamMessage:
+                        HandleTeamMessage();
+                        break;
+                    case InGame_Receive.PlayerRevived:
+                        HandleRevive();
+                        break;
+                    case InGame_Receive.PlayerTapped:
+                        HandleTap();
+                        break;
+                    case InGame_Receive.PostureChange:
+                        HandlePostureChange();
+                        break;
+                    case InGame_Receive.ApplyEffect:
+                        HandleEffect();
+                        break;
+                    case InGame_Receive.SpawnProjectile:
+                        HandleProjectileSpawn();
+                        break;
+                    case InGame_Receive.RedirectPort:
+
+                        break;
                 }
             }
         }
@@ -413,18 +402,6 @@ public class InGamePacketProcessor : UDPProcessor
         MessageData md = new MessageData(message, name);
         
     }
-    /*
-    private void ProcessAllShrineHealthPacket()
-    {
-        Match.ChangeShrineHealth((byte)Team.Chaos, _decrypted[1]);
-        Match.ChangeShrineHealth((byte)Team.Balance, _decrypted[2]);
-        Match.ChangeShrineHealth((byte)Team.Order, _decrypted[3]);
-    }
-    private void ProcessShrineHealthPacket()
-    {
-        Match.ChangeShrineHealth(_decrypted[1], _decrypted[2]);
-    }
-    */
     private void ProcessObjectChangePacket()
     {
         Match.ChangeObjectState(_decrypted[1], _decrypted[2], false);

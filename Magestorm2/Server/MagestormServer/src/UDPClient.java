@@ -42,22 +42,11 @@ public class UDPClient extends Thread{
     }
 
     public void Send(byte[] encryptedPayload, RemoteClient rc){
-        DatagramPacket toSend = new DatagramPacket(encryptedPayload, encryptedPayload.length, rc.IPAddress(), _localPort);
+        DatagramPacket toSend = new DatagramPacket(encryptedPayload, encryptedPayload.length, rc.IPAddress(), rc.GetRemotePort());
         try{
             _udpSocket.send(toSend);
         }catch(Exception e){
             Main.LogError("UDPClient.Send(): " + e.getMessage());
         }
     }
-
-    public void Send(byte[] payload, InetAddress address, int remotePort){
-        DatagramPacket toSend = new DatagramPacket(payload, payload.length, address, remotePort);
-        try{
-            _udpSocket.send(toSend);
-        }catch(Exception e){
-            Main.LogError("UDPClient.Send(): " + e.getMessage());
-        }
-    }
-
-
 }

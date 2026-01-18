@@ -1,11 +1,7 @@
-using JetBrains.Annotations;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +12,7 @@ public class PregamePacketProcessor : UDPProcessor
     private void Awake()
     {
         ComponentRegister.PregamePacketProcessor = this;
-        Init(SharedFunctions.GameServerPort);
+        Init(Game.GameServerPort);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,93 +23,90 @@ public class PregamePacketProcessor : UDPProcessor
     // Update is called once per frame
     void Update()
     {
-        if(_listeningPort > 0)
+        if (Game.UDP.HasPacketsPending)
         {
-            if (_udp.HasPacketsPending)
+            List<byte[]> toProcess = Game.UDP.PacketsReceived();
+            foreach (byte[] decryptedPayload in toProcess)
             {
-                List<byte[]> toProcess = _udp.PacketsReceived();
-                foreach (byte[] decryptedPayload in toProcess)
+                PreProcess(decryptedPayload);
+                switch (_opCode)
                 {
-                    PreProcess(decryptedPayload);
-                    switch (_opCode)
-                    {
-                        case Pregame_Receive.CreationFailed:
-                            MessageBox(27);
-                            break;
-                        case Pregame_Receive.AccountCreated:
-                            MessageBox(25);
-                            break;
-                        case Pregame_Receive.AccountAlreadyExists:
-                            MessageBox(26);
-                            break;
-                        case Pregame_Receive.LogInFailed:
-                            MessageBox(28);
-                            break;
-                        case Pregame_Receive.LogInSucceeded:
-                            HandleLogInSuccessfulPacket();
-                            break;
-                        case Pregame_Receive.ProhibitedLanguage:
-                            MessageBox(30);
-                            break;
-                        case Pregame_Receive.AlreadyLoggedIn:
-                            MessageBox(31);
-                            break;
-                        case Pregame_Receive.RemovedFromServer:
-                        case Pregame_Receive.InactivityDisconnect:
-                            MessageBox(32);
-                            Game.Quit();
-                            break;
-                        case Pregame_Receive.CharacterExists:
-                            MessageBox(34);
-                            break;
-                        case Pregame_Receive.CharacterCreated:
-                            HandleCharacterCreatedPacket();
-                            break;
-                        case Pregame_Receive.CharacterDeleted:
-                            HandleCharacterDeletedPacket();
-                            break;
-                        case Pregame_Receive.MatchStillHasPlayers:
-                            MessageBox(49);
-                            break;
-                        case Pregame_Receive.MatchLimitReached:
-                            MessageBox(47);
-                            break;
-                        case Pregame_Receive.MatchAlreadyCreated:
-                            MessageBox(46);
-                            break;
-                        case Pregame_Receive.MatchData:
-                            HandleMatchDataPacket();
-                            break;
-                        case Pregame_Receive.LevelsList:
-                            HandleLevelListPacket();
-                            break;
-                        case Pregame_Receive.BannedForBehavior:
-                            MessageBox(71);
-                            Game.Quit();
-                            break;
-                        case Pregame_Receive.BannedForCheating:
-                            MessageBox(70);
-                            Game.Quit();
-                            break;
-                        case Pregame_Receive.MatchDetails:
-                            HandleMatchDetailsPacket();
-                            break;
-                        case Pregame_Receive.NameCheckResult:
-                            HandleNameCheckResultPacket();
-                            break;
-                        case Pregame_Receive.MatchIsFullPacket:
-                            HandleMatchIsFullPacket();
-                            break;
-                        case Pregame_Receive.MatchEntryPacket:
-                            HandleMatchEntryPacket();
-                            break;
-                        case Pregame_Receive.AcknowledgeSubscription:
-                            ComponentRegister.UIPrefabManager.InstantiateMatchList();
-                            break;
-                        case Pregame_Receive.UpdateSkillsAndSlots:
-                            HandleSkillsSlotsUpdate();
-                            break;
-                    }
+                    case Pregame_Receive.CreationFailed:
+                        MessageBox(27);
+                        break;
+                    case Pregame_Receive.AccountCreated:
+                        MessageBox(25);
+                        break;
+                    case Pregame_Receive.AccountAlreadyExists:
+                        MessageBox(26);
+                        break;
+                    case Pregame_Receive.LogInFailed:
+                        MessageBox(28);
+                        break;
+                    case Pregame_Receive.LogInSucceeded:
+                        HandleLogInSuccessfulPacket();
+                        break;
+                    case Pregame_Receive.ProhibitedLanguage:
+                        MessageBox(30);
+                        break;
+                    case Pregame_Receive.AlreadyLoggedIn:
+                        MessageBox(31);
+                        break;
+                    case Pregame_Receive.RemovedFromServer:
+                    case Pregame_Receive.InactivityDisconnect:
+                        MessageBox(32);
+                        Game.Quit();
+                        break;
+                    case Pregame_Receive.CharacterExists:
+                        MessageBox(34);
+                        break;
+                    case Pregame_Receive.CharacterCreated:
+                        HandleCharacterCreatedPacket();
+                        break;
+                    case Pregame_Receive.CharacterDeleted:
+                        HandleCharacterDeletedPacket();
+                        break;
+                    case Pregame_Receive.MatchStillHasPlayers:
+                        MessageBox(49);
+                        break;
+                    case Pregame_Receive.MatchLimitReached:
+                        MessageBox(47);
+                        break;
+                    case Pregame_Receive.MatchAlreadyCreated:
+                        MessageBox(46);
+                        break;
+                    case Pregame_Receive.MatchData:
+                        HandleMatchDataPacket();
+                        break;
+                    case Pregame_Receive.LevelsList:
+                        HandleLevelListPacket();
+                        break;
+                    case Pregame_Receive.BannedForBehavior:
+                        MessageBox(71);
+                        Game.Quit();
+                        break;
+                    case Pregame_Receive.BannedForCheating:
+                        MessageBox(70);
+                        Game.Quit();
+                        break;
+                    case Pregame_Receive.MatchDetails:
+                        HandleMatchDetailsPacket();
+                        break;
+                    case Pregame_Receive.NameCheckResult:
+                        HandleNameCheckResultPacket();
+                        break;
+                    case Pregame_Receive.MatchIsFullPacket:
+                        HandleMatchIsFullPacket();
+                        break;
+                    case Pregame_Receive.MatchEntryPacket:
+                        HandleMatchEntryPacket();
+                        break;
+                    case Pregame_Receive.AcknowledgeSubscription:
+                        ComponentRegister.UIPrefabManager.InstantiateMatchList();
+                        break;
+                    case Pregame_Receive.UpdateSkillsAndSlots:
+                        HandleSkillsSlotsUpdate();
+                        break;
                 }
             }
         }
@@ -129,7 +122,7 @@ public class PregamePacketProcessor : UDPProcessor
     private void HandleMatchEntryPacket()
     {
         MatchParams.Init(_decrypted);
-        UDPBuilder.TerminateClient(_listeningPort);
+        Game.UDP.StopListening();
         ComponentRegister.UIPrefabManager.ClearStack();
         Debug.Log("SceneID: " + MatchParams.SceneID);
         SceneManager.LoadScene(MatchParams.SceneID.ToString());
@@ -307,6 +300,7 @@ public class PregamePacketProcessor : UDPProcessor
     
     private void HandleLogInSuccessfulPacket()
     {
+        Debug.Log("Successful Login.");
         int accountID = BitConverter.ToInt32(_decrypted, 1);
         Game.SetServerTime(BitConverter.ToInt64(_decrypted, 5));
         PlayerAccount.Init(accountID);

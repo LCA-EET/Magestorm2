@@ -3,17 +3,17 @@ import java.net.InetAddress;
 
 public class RemoteClient {
 
-    private InetAddress _address;
+    private final InetAddress _address;
     private int _accountID;
+    private final int _remotePort;
     private String _username;
     private long _timeLastReceived = 0;
-    private boolean _subscribedToMatches;
-
-    private PlayerCharacter _activeCharacter;
+    private boolean _subscribedToMatches, _portSwitchPending;
 
     public RemoteClient(DatagramPacket received){
         _subscribedToMatches = false;
         _address = received.getAddress();
+        _remotePort = received.getPort();
         //Main.LogMessage("Remote client IP: " + _address.getHostAddress() + ":" + _emanatingPort);
     }
 
@@ -27,6 +27,14 @@ public class RemoteClient {
         _timeLastReceived = System.currentTimeMillis();
     }
 
+    public void MarkPortSwitchPending(boolean isPending){
+        _portSwitchPending = isPending;
+    }
+
+    public boolean PortSwitchPending(){
+        return _portSwitchPending;
+    }
+
     public int AccountID(){
         return _accountID;
     }
@@ -34,9 +42,8 @@ public class RemoteClient {
     public boolean TimeOut(){
         return (System.currentTimeMillis() - _timeLastReceived) > GameServer.TimeOut;
     }
-    public void SubscribeToMatches(int charID){
+    public void SubscribeToMatches(){
         _subscribedToMatches = true;
-        _activeCharacter = CharacterManager.GetCharacter(charID);
     }
     public void UnsubscribeFromMatches(){
         _subscribedToMatches = false;
@@ -44,7 +51,10 @@ public class RemoteClient {
     public boolean IsSubscribedToMatches(){
         return _subscribedToMatches;
     }
-    public PlayerCharacter GetActiveCharacter(){
-        return _activeCharacter;
+    public int GetRemotePort(){
+        return _remotePort;
+    }
+    public String GetUserName(){
+        return _username;
     }
 }

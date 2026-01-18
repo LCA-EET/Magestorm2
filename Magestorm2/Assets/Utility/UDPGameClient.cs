@@ -5,25 +5,46 @@ using System.Threading;
 using System;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 public class UDPGameClient
 {
     private ConcurrentQueue<byte[]> _received;
     private IPEndPoint _remote;
     private UdpClient _client;
     private bool _listening;
+    private int _localPort;
     public UDPGameClient(IPEndPoint remote)
     {
         _listening = false;
         _received = new ConcurrentQueue<byte[]>();
-        _client = new UdpClient(remote.Port);
-        Debug.Log("UDPClient created on port " + remote.Port);
         _remote = remote;
+        Listen();
     }
-    public void Listen()
+    private void Listen()
     {
-        _listening = true;
-        Debug.Log("Starting UDP Listener thread, port " + _remote.Port);
-        new Thread(ListenerThread).Start();
+        bool bound = false;
+        byte bindAttempts = 0;
+        while (!bound && bindAttempts < 10)
+        {
+            try
+            {
+                bindAttempts++;
+                _localPort = SharedFunctions.RandomInt(10000, 20000);
+                _client = new UdpClient(_localPort);
+                bound = true;
+            }
+            catch (SocketException) { }
+        }
+        if (bound)
+        {
+            _listening = true;
+            Debug.Log("Starting UDP Listener thread, remote port " + _remote.Port);
+            new Thread(ListenerThread).Start();
+        }
+        else
+        {
+            Game.Quit();
+        }
     }
     private void ListenerThread()
     {
@@ -48,7 +69,9 @@ public class UDPGameClient
     public void StopListening()
     {
         _listening = false;
+        _received.Clear();
         _client.Close();
+        _client.Dispose();
     }
     public void Send(byte[] toSend)
     {
@@ -74,8 +97,15 @@ public class UDPGameClient
         }
         return toReturn;
     }
-    public IPEndPoint RemoteEnd()
+    public IPEndPoint RemoteEnd
     {
-        return _remote;
+        get{
+            return _remote;
+        } 
+    }
+
+    public int LocalPort
+    {
+        get { return _localPort; }
     }
 }

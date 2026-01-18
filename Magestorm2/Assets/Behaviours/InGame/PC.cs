@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class PC : MonoBehaviour
 {
+    public CharacterController CharacterController;
     public PlayerMovement PlayerMovement;
     public RayCaster DownwardCaster;
     public RayCaster ForwardCaster;
     private float _positionLimit = 0.067f;
     private float _rotationLimit = 5f;
     private float _staminaRegen;
-    private BoxCollider _playerCollider;
     private Camera _camera;
     public SFXPlayer SFXPlayer;
     public MusicPlayer MusicPlayer;
@@ -39,6 +39,7 @@ public class PC : MonoBehaviour
     {
         if (!Game.Running)
         {
+            
             SceneManager.LoadScene("Pregame");
         }
         else
@@ -50,7 +51,6 @@ public class PC : MonoBehaviour
             ComponentRegister.PC = this;
             PlayerMovement.SetPC(this);
             _staminaRegen = MatchParams.MaxStamina / 8.0f;
-            _playerCollider = GetComponent<BoxCollider>();
             _hml = new Dictionary<PlayerIndicator, HMLUpdater>();
             _class = (PlayerClass)PlayerAccount.SelectedCharacter.CharacterClass;
             _actionList = new List<PeriodicAction>();
@@ -60,6 +60,7 @@ public class PC : MonoBehaviour
             {
                 if (_class == PlayerClass.Cleric || _class == PlayerClass.Magician)
                 {
+                    Debug.Log("Ley computation enabled.");
                     new PeriodicAction(1.0f, ComputeLey, _actionList);
                 }
             }
@@ -218,12 +219,13 @@ public class PC : MonoBehaviour
     }
     private void ComputeLey()
     {
+        Debug.Log("COMPUTING LEY, INFLUENCER COUNT: " + _activeInfluencers.Count);
         float newLey = 0.0f;
         foreach(LeyInfluencer influence in _activeInfluencers.Values)
         {
             newLey += influence.GetLeyContribution();
         }
-        newLey = (float)Math.Round(newLey, 1);
+        newLey = (float)Math.Round(newLey, 2);
         if(newLey > 1.0f)
         {
             newLey = 1.0f;
@@ -235,6 +237,7 @@ public class PC : MonoBehaviour
         if(newLey != _ley.Value)
         {
             Game.SendInGameBytes(InGame_Packets.UpdateLeyPacket(newLey));
+            _ley.UpdateValue(newLey);
         }
     }
     
@@ -296,17 +299,6 @@ public class PC : MonoBehaviour
             toProcess.EnterAction();
         }
     }
-    public void OnTriggerExit(Collider other)
-    {
-        /*
-        Trigger toProcess = null;
-        if (ObtainTrigger(other, ref toProcess))
-        {
-            toProcess.ExitAction();
-        }
-        */
-    }
-
     public void OnTriggerStay(Collider other)
     {
         Trigger toProcess = null;

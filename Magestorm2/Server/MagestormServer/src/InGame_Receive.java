@@ -28,4 +28,6 @@ public class InGame_Receive {
     public static final byte CastSelf = 25;
     public static final byte CastOtherFriendly = 26;
     public static final byte CastOtherEnemy = 27;
+    public static final byte ReportHit = 28;
+
 }

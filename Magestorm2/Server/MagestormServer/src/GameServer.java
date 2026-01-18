@@ -98,7 +98,7 @@ public class GameServer extends Thread {
         RemoteClient toReturn = null;
         if(_loggedInClients.containsKey(accountID)){
             toReturn = _loggedInClients.get(accountID);
-            Main.LogMessage("RemoteClient returned for account " + accountID);
+            Main.LogMessage("RemoteClient returned for account " + accountID + ", " + toReturn.IPAddress() + ":" + toReturn.GetRemotePort());
         }
         else{
             Main.LogMessage("RemoteClient is null for account " + accountID);
@@ -128,7 +128,6 @@ public class GameServer extends Thread {
             if(match != null){
                 if(match.IsPlayerOnTeam(idInMatch, teamID)){
                     match.LeaveMatch(idInMatch, teamID, true);
-
                 }
             }
         }

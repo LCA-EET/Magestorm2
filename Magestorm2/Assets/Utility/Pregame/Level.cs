@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using UnityEngine;
 public class Level
 {
     private byte _id;
@@ -18,6 +15,7 @@ public class Level
         for (int i = 0; i < poolData.Length; i+=2)
         {
             _poolData.Add(poolData[i], poolData[i+1]);
+            //Debug.Log("Assigned power " +  poolData[i+1] + " to pool " + poolData[i] );
         }
     }
 

@@ -49,6 +49,7 @@ public class PoolManager {
                 _biasData[trIndex] = pool.GetPoolID();
                 _biasData[trIndex + 1] = pool.GetPoolTeam();
                 _biasData[trIndex + 2] = pool.GetPoolBiasAmount();
+                //_biasData[trIndex + 3] = pool.GetPoolPower();
                 trIndex += 3;
             }
             _biasChange = false;

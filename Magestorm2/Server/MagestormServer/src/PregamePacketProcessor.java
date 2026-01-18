@@ -28,10 +28,10 @@ public class PregamePacketProcessor extends UDPProcessor
                     HandleDeleteCharacterPacket();
                     break;
                 case Pregame_Receive.SubscribeToMatches:
-                    HandleMatchSubscribePacket(true);
+                    HandleMatchSubscribePacket(true, _remote);
                     break;
                 case Pregame_Receive.UnsubscribeFromMatches:
-                    HandleMatchSubscribePacket(false);
+                    HandleMatchSubscribePacket(false, _remote);
                     break;
                 case Pregame_Receive.CreateMatch:
                     HandleMatchCreatedPacket();
@@ -146,9 +146,9 @@ public class PregamePacketProcessor extends UDPProcessor
         MatchManager.RequestMatchCreation(_accountID, sceneID, duration, matchType, matchOptions);
     }
 
-    public void HandleMatchSubscribePacket(boolean subscribe){
+    public void HandleMatchSubscribePacket(boolean subscribe, RemoteClient remote){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);
-        MatchManager.Subscribe(_accountID, subscribe, characterID);
+        MatchManager.Subscribe(_accountID, subscribe, characterID, remote);
     }
 
     public String[] LogInDetails(){

@@ -32,5 +32,7 @@ public static class InGame_Send
                         CastProjectile = 24,
                         CastSelf = 25,
                         CastOtherFriendly = 26,
-                        CastOtherEnemy = 27;
+                        CastOtherEnemy = 27,
+                        ReportHit = 28;
+                        
 }

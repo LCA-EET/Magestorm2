@@ -1586,6 +1586,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2022952413786677778, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2022952413786677778, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2022952413786677778, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 2298500576644464679, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1883,6 +1895,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3757165163785592636, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
+      propertyPath: CharacterController
+      value: 
+      objectReference: {fileID: 7368698380334257422}
     - target: {fileID: 4775328786490764483, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1949,6 +1965,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
+--- !u!143 &7368698380334257422 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 5539272750606452207, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
+  m_PrefabInstance: {fileID: 7368698380334257421}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7376151901078664380
 PrefabInstance:
   m_ObjectHideFlags: 0

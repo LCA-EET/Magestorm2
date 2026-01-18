@@ -18,4 +18,10 @@ public class DamagingSpell extends CastSpell{
         }
         return _damage;
     }
+
+    @Override
+    public void ProcessSpell(MatchCharacter affectedPlayer){
+        short damage = GetDamage();
+        affectedPlayer.TakeDamage(damage, _casterReference.GetIDinMatch());
+    }
 }

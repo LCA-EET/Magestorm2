@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 public static class ProfanityChecker
@@ -11,7 +7,7 @@ public static class ProfanityChecker
     public static void Init()
     {
         _prohibitedTerms = new HashSet<string>();
-        string path = Application.dataPath + "/prohibitedterms.txt";
+        string path = Application.streamingAssetsPath + "/prohibitedterms.txt";
         string[] terms = File.ReadAllLines(path);
         foreach (string term in terms)
         {

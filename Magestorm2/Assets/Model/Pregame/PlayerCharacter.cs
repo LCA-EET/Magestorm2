@@ -129,7 +129,7 @@ public class PlayerCharacter
         bool[] skillArray = new bool[32];
         int id = 0;
         string binary = "";
-        Debug.Log("Skills base 10: " + skills);
+        //Debug.Log("Skills base 10: " + skills);
         while(skills != 0)
         {
             bool result = skills % 2 != 0;
@@ -138,7 +138,7 @@ public class PlayerCharacter
             binary = (result ? "1" : "0") + binary;
             id++;
         }
-        Debug.Log("Skills base 2: " + binary +", length = " + binary.Length);
+        //Debug.Log("Skills base 2: " + binary +", length = " + binary.Length);
         _skills.Clear();
         foreach(SpellDiscipline discipline in SharedFunctions.DisciplinesByClass((PlayerClass)_characterClass))
         {
@@ -162,7 +162,7 @@ public class PlayerCharacter
             {
                 value = 3;
             }
-            Debug.Log("Adding skill " + (byte)discipline + ": " + value);
+            //Debug.Log("Adding skill " + (byte)discipline + ": " + value);
             _skills.Add(discipline, value);
         }
     }

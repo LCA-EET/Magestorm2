@@ -18,12 +18,20 @@ public class MatchManager{
         GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
     }
 
-    public static void Subscribe(int accountID, boolean subscribe, int charID){
+    public static void Subscribe(int accountID, boolean subscribe, int charID, RemoteClient remote){
         Main.LogMessage("MatchManager.Subscribe: " + charID +", " + subscribe);
         RemoteClient rc = GameServer.GetClient(accountID);
+
         if(rc != null){
             if(subscribe){
-                rc.SubscribeToMatches(charID);
+                if(rc.PortSwitchPending()){
+                    Main.LogMessage("RemoteClient port switch from " + rc.GetRemotePort() + " to " + remote.GetRemotePort() + ", for account: " + remote.AccountID());
+                    remote.SetNameAndID(rc.GetUserName(), rc.AccountID());
+                    rc = remote;
+                    GameServer.ClientLoggedIn(remote);
+                }
+                rc.SubscribeToMatches();
+                GameServer.AddActiveCharacter(accountID, CharacterManager.GetCharacter(charID));
                 GameServer.EnqueueForSend(Packets.AcknowledgeSubscriptionPacket(), rc);
             }
             else{
@@ -60,17 +68,18 @@ public class MatchManager{
                     byte matchID = NextMatchID();
                     Main.LogMessage("Attempting to create match " + matchID + ", scene " + sceneID + "...");
                     Match newlyCreated = null;
+                    PlayerCharacter activeCharacter = GameServer.GetActiveCharacter(accountID);
                     switch(matchType){
                         case MatchType.DeathMatch:
-                            newlyCreated = new DeathMatch(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
+                            newlyCreated = new DeathMatch(matchID, accountID, activeCharacter.GetNameBytes(),
                                     sceneID, System.currentTimeMillis(), duration, matchOptions);
                             break;
                         case MatchType.FreeForAll:
-                            newlyCreated = new FreeForAll(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
+                            newlyCreated = new FreeForAll(matchID, accountID, activeCharacter.GetNameBytes(),
                                     sceneID, System.currentTimeMillis(), duration, matchOptions);
                             break;
                         case MatchType.CaptureTheFlag:
-                            newlyCreated = new CaptureTheFlag(matchID, accountID, rc.GetActiveCharacter().GetNameBytes(),
+                            newlyCreated = new CaptureTheFlag(matchID, accountID, activeCharacter.GetNameBytes(),
                                     sceneID, System.currentTimeMillis(), duration, matchOptions);
                             break;
                     }
