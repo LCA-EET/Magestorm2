@@ -11,11 +11,13 @@ public class RemoteClientMonitor extends Thread{
                 Iterable<RemoteClient> clients = GameServer.ConnectedClients();
                 for(RemoteClient client : clients){
                     if(client.TimeOut()){
-                        GameServer.ClientLoggedOut(client.AccountID());
+                        int accountID = client.AccountID();
+                        GameServer.ClientLoggedOut(accountID);
+                        Main.LogMessage("Client " + accountID + " disconnected for inactivity.");
                         GameServer.EnqueueForSend(Packets.InactivityDisconnectPacket(), client);
                     }
                 }
-                Thread.sleep(60000);
+                Thread.sleep(30000);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

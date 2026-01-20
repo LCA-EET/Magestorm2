@@ -8,6 +8,7 @@ public class UICharacterSelectForm : ValidatableForm
     public RenderTexture[] RenderTextures;
     private void Awake()
     {
+        Game.LoggedIn = true;
         for (int i = 0; i < CharacterCards.Length; i++)
         {
             CharacterCards[i].SetOwningForm(this, RenderTextures[i]);

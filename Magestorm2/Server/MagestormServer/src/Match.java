@@ -427,6 +427,9 @@ public class Match {
     public MatchCharacter GetMatchCharacter(byte id){
         return _matchCharacters.get(id);
     }
+    public RemoteClient GetVerifiedClient(byte idInMatch){
+        return _verifiedClients.get(idInMatch);
+    }
     public Collection<RemoteClient> GetVerifiedClients(){
         return _verifiedClients.values();
     }

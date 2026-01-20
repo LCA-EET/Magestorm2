@@ -5,6 +5,7 @@ public class UILoginForm : ValidatableForm
     private bool _forceLogin = false;
     private void Awake()
     {
+        Game.LoggedIn = false;
         Game.FetchServerInfo();
         SpellManager.Init();
         ComponentRegister.UILoginForm = this;

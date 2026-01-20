@@ -14,6 +14,7 @@ public class RemoteClient {
         _subscribedToMatches = false;
         _address = received.getAddress();
         _remotePort = received.getPort();
+        MarkPacketReceived();
         //Main.LogMessage("Remote client IP: " + _address.getHostAddress() + ":" + _emanatingPort);
     }
 
@@ -24,7 +25,6 @@ public class RemoteClient {
     public void SetNameAndID(String username, int ID){
         _accountID = ID;
         _username = username;
-        _timeLastReceived = System.currentTimeMillis();
     }
 
     public void MarkPortSwitchPending(boolean isPending){
@@ -57,4 +57,9 @@ public class RemoteClient {
     public String GetUserName(){
         return _username;
     }
+    public void MarkPacketReceived()
+    {
+        _timeLastReceived = System.currentTimeMillis();
+    }
+
 }

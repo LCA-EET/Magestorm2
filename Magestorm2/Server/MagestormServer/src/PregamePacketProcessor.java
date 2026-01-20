@@ -14,10 +14,14 @@ public class PregamePacketProcessor extends UDPProcessor
     @Override
     protected boolean ProcessPacket(DatagramPacket received) {
         PreProcess(received);
-        _accountID = IsLoggedIn();
+        _remote = LoggedInClient();
 
-        if(_accountID > 0){
+        if(_remote != null){
+            _remote.MarkPacketReceived();
+            _accountID = _remote.AccountID();
             switch (_opCode) {
+                case Pregame_Receive.Heartbeat:
+                    return true;
                 case Pregame_Receive.CreateCharacter:
                     HandleCreateCharacterPacket();
                     break;
@@ -67,6 +71,7 @@ public class PregamePacketProcessor extends UDPProcessor
             }
         }
         else{
+            _remote = new RemoteClient(received);
             Main.LogMessage("OpCode: " + _opCode + ". Not logged in.");
             if(_opCode == Pregame_Receive.LogIn){
                 HandleLogInPacket();

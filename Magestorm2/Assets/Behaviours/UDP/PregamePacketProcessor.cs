@@ -8,10 +8,11 @@ using UnityEngine.SceneManagement;
 
 public class PregamePacketProcessor : UDPProcessor
 {
-
+    private PeriodicAction _heartbeat;
     private void Awake()
     {
         ComponentRegister.PregamePacketProcessor = this;
+        _heartbeat = new PeriodicAction(30.0f, Heartbeat, null);
         Init(Game.GameServerPort);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -110,6 +111,14 @@ public class PregamePacketProcessor : UDPProcessor
                 }
             }
         }
+        if (Game.LoggedIn)
+        {
+            _heartbeat.ProcessAction(Time.deltaTime);
+        }
+    }
+    private void Heartbeat()
+    {
+        Game.SendPregameBytes(Pregame_Packets.HeartbeatPacket());
     }
     private void HandleSkillsSlotsUpdate()
     {

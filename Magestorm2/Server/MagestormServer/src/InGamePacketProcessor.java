@@ -12,6 +12,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     protected boolean ProcessPacket(DatagramPacket received){
         PreProcess(received);
         if(IsVerified()){
+            _remote = _owningMatch.GetVerifiedClient(_decrypted[1]);
             switch(_opCode){
                 case InGame_Receive.ChangedObjectState:
                     HandleObjectStateChange();
@@ -64,6 +65,7 @@ public class InGamePacketProcessor extends UDPProcessor{
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
+            _remote = new RemoteClient(received);
             return HandleJoinMatchPacket(_remote);
         }
         return false;
@@ -183,14 +185,14 @@ public class InGamePacketProcessor extends UDPProcessor{
         return false;
     }
     private int CheckAccountAndCharacter(){
-        int accountID = IsLoggedIn();
-        if(accountID > 0){
+        RemoteClient remote = LoggedInClient();
+        if(remote != null){
+            int accountID = remote.AccountID();
             if(ByteUtils.ExtractInt(_decrypted, 5) == GameServer.GetActiveCharacter(accountID).GetCharacterID()){
                 Main.LogMessage("Account check passed: " + accountID + ", match " + _owningMatch.MatchID());
                 return accountID;
             }
         }
-        Main.LogMessage("Account check failure: " + accountID + ", match " + _owningMatch.MatchID());
         return -1;
     }
     protected boolean IsVerified(){

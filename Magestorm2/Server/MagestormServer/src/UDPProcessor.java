@@ -31,13 +31,13 @@ public class UDPProcessor extends Thread{
         _terminated = true;
     }
     protected void PreProcess(DatagramPacket received){
-        _remote = new RemoteClient(received);
         _decrypted = Cryptographer.Decrypt(received.getData());
         _opCode = _decrypted[0];
     }
-    protected int IsLoggedIn(){
+
+    protected RemoteClient LoggedInClient(){
         int accountID = ByteUtils.ExtractInt(_decrypted, 1);
-        return GameServer.IsLoggedIn(accountID) ? accountID: 0;
+        return GameServer.GetClient(accountID);
     }
     public ArrayList<OutgoingPacket> OutgoingPackets(){
         ArrayList<OutgoingPacket> toReturn = new ArrayList<>();

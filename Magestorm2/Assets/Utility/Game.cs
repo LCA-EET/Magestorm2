@@ -15,6 +15,7 @@ public static class Game
     public static UDPGameClient UDP;
     public static int GameServerPort;
     public static IPAddress GameServerAddress;
+    public static bool LoggedIn = false;
     public static bool GameMode
     {
         get
