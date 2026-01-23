@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
-
+using UnityEngine;
 public static class Pregame_Packets
 {
     public static byte[] HeartbeatPacket()
@@ -115,10 +114,11 @@ public static class Pregame_Packets
         toSend[5] = sceneID;
         toSend[6] = duration;
         toSend[7] = matchType;
+        Debug.Log("Match Creation Byte Length: " + toSend.Length);
         for(int i = 0; i < matchOptions.Length; i++)
         {
             toSend[8 + i] = matchOptions[i];
-            Debug.Print("Options Byte: " + matchOptions[i]);
+            Debug.Log("Options Byte: " + matchOptions[i]);
         }
         return toSend;
     }

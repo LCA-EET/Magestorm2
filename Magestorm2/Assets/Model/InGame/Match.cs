@@ -21,15 +21,17 @@ public static class Match
     {
         _matchPlayers.Add(avatar.PlayerID, avatar);
     }
-    public static void RemoveAvatar(byte ID)
+    public static Avatar RemoveAvatar(byte ID)
     {
         if (_matchPlayers.ContainsKey(ID))
         {
             Avatar toRemove = _matchPlayers[ID];
-            MessageData md = new MessageData(toRemove.Name + " has left the match.", "Server");
+            string message = Language.BuildString(299, toRemove.Name);
+            MessageData md = new MessageData(message, "Server");
             _matchPlayers.Remove(ID);
+            return toRemove;
         }
-        
+        return null;
     }
     public static void RegisterActivateableObject(ActivateableObject obj)
     {

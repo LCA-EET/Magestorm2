@@ -371,7 +371,11 @@ public class InGamePacketProcessor : UDPProcessor
         for (int i = 0; i < numDeparted; i++)
         {
             byte playerID = _decrypted[index];
-            Match.RemoveAvatar(playerID);
+            Avatar toDestroy = Match.RemoveAvatar(playerID);
+            if (toDestroy != null)
+            {
+                Destroy(toDestroy.gameObject);
+            }
             index++;
         }
     }

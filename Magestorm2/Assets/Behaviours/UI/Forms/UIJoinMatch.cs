@@ -26,8 +26,8 @@ public class UIJoinMatch : ValidatableForm
         AssociateFormToButtons();
         object[] matchParams = SharedFunctions.Params;
         _match = (ListedMatch)matchParams[0];
-        ChaosPlayerList.FillTeam((RemotePlayerData[])matchParams[2]);
-        BalancePlayerList.FillTeam((RemotePlayerData[])matchParams[1]);
+        ChaosPlayerList.FillTeam((RemotePlayerData[])matchParams[1]);
+        BalancePlayerList.FillTeam((RemotePlayerData[])matchParams[2]);
         OrderPlayerList.FillTeam((RemotePlayerData[])matchParams[3]);
 
         MatchIDText.text = Language.BuildString(98,_match.MatchID.ToString());  //

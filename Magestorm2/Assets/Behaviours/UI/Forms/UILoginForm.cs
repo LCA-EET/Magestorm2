@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class UILoginForm : ValidatableForm
 {
-    private bool _forceLogin = false;
     private void Awake()
     {
         Game.LoggedIn = false;
@@ -43,9 +42,9 @@ public class UILoginForm : ValidatableForm
     void Update()
     {
         #if UNITY_EDITOR
-        if (!_forceLogin)
+        if (Game.ForceLogin)
         {
-            _forceLogin = true;
+            Game.ForceLogin = false;
             string hashedPassword = Cryptography.SHA256Hash("Superman123");
             Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket("Superman", hashedPassword));
         }

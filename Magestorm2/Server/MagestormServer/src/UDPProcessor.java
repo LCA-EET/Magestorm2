@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class UDPProcessor extends Thread{
 
     protected RemoteClient _remote;
+    protected DatagramPacket _received;
     protected final UDPClient _udpClient;
     protected final PacketSender _sender;
     protected final ConcurrentLinkedQueue<OutgoingPacket> _outgoingPackets;
@@ -33,6 +34,7 @@ public class UDPProcessor extends Thread{
     protected void PreProcess(DatagramPacket received){
         _decrypted = Cryptographer.Decrypt(received.getData());
         _opCode = _decrypted[0];
+        _received = received;
     }
 
     protected RemoteClient LoggedInClient(){
@@ -70,9 +72,16 @@ public class UDPProcessor extends Thread{
     @Override
     public void run(){
         while(Main.Running){
-            if(!_toProcess.isEmpty()){
-                ProcessPacket(_toProcess.poll());
+            try{
+                if(!_toProcess.isEmpty()){
+                    ProcessPacket(_toProcess.poll());
+                }
             }
+            catch(Exception ex){
+                Main.LogError(ex.getMessage());
+                Main.LogStackTrace(ex);
+            }
+
         }
     }
 }

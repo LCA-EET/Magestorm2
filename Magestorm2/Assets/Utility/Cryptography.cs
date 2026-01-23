@@ -31,37 +31,51 @@ public static class Cryptography
     }
     public static void EncryptAndSend(byte[] payload)
     {
-        _iv++; // not ideal from a security perspective, but it's a lot less expensive than generating a new random nonce for each packet
-        byte[] ivBytes = PadBytes(8, _iv);
-
-        byte[] encryptedPayload = new byte[payload.Length];
-
-        using (MemoryStream memoryStream = new MemoryStream())
+        if (Game.SymmetricEncryption)
         {
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, _aesEncryptor.CreateEncryptor(_key, ivBytes), CryptoStreamMode.Write))
+            _iv++; // not ideal from a security perspective, but it's a lot less expensive than generating a new random nonce for each packet
+            byte[] ivBytes = PadBytes(8, _iv);
+
+            byte[] encryptedPayload = new byte[payload.Length];
+
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                cryptoStream.Write(payload, 0, payload.Length);
+                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, _aesEncryptor.CreateEncryptor(_key, ivBytes), CryptoStreamMode.Write))
+                {
+                    cryptoStream.Write(payload, 0, payload.Length);
+                }
+                encryptedPayload = memoryStream.ToArray();
             }
-            encryptedPayload = memoryStream.ToArray();
+            byte[] toSend = new byte[encryptedPayload.Length + 1 + _ivSize];
+            ivBytes.CopyTo(toSend, 0);
+            toSend[_ivSize] = (byte)encryptedPayload.Length;
+            encryptedPayload.CopyTo(toSend, _ivSize + 1);
+            Game.UDP.Send(toSend);
         }
-        byte[] toSend = new byte[encryptedPayload.Length + 1 + _ivSize];
-        ivBytes.CopyTo(toSend, 0);
-        toSend[_ivSize] = (byte)encryptedPayload.Length;
-        encryptedPayload.CopyTo(toSend, _ivSize + 1);
-        Game.UDP.Send(toSend);
+        else
+        {
+            Game.UDP.Send(payload);
+        }
     }
     public static byte[] DecryptReceived(byte[] received)
     {
-        byte[] iv = Packets.IVBytes(received);
-        byte[] encryptedPayload = Packets.EncryptedPayload(received);
-
-        using (MemoryStream memoryStream = new MemoryStream())
+        if (Game.SymmetricEncryption)
         {
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, _aesDecryptor.CreateDecryptor(_key, iv), CryptoStreamMode.Write))
+            byte[] iv = Packets.IVBytes(received);
+            byte[] encryptedPayload = Packets.EncryptedPayload(received);
+
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                cryptoStream.Write(encryptedPayload, 0, encryptedPayload.Length);
+                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, _aesDecryptor.CreateDecryptor(_key, iv), CryptoStreamMode.Write))
+                {
+                    cryptoStream.Write(encryptedPayload, 0, encryptedPayload.Length);
+                }
+                return memoryStream.ToArray();
             }
-            return memoryStream.ToArray();
+        }
+        else
+        {
+            return received;
         }
     }
     private static byte[] PadBytes(byte additionalBytes, long nonce)

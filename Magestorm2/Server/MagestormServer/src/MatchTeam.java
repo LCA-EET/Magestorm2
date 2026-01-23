@@ -40,9 +40,11 @@ public class MatchTeam {
 
     public void RemovePlayer(byte idToRemove){
         MatchCharacter mc = _teamPlayers.remove(idToRemove);
-        _totalLevel -= mc.GetLevel();
-        _clients.remove(idToRemove);
-        _listChanged = true;
+        if(mc!=null){
+            _totalLevel -= mc.GetLevel();
+            _clients.remove(idToRemove);
+            _listChanged = true;
+        }
     }
 
     public Collection<MatchCharacter> GetPlayers(){
@@ -63,14 +65,17 @@ public class MatchTeam {
 
     private byte[] RefreshPlayerBytes(){
         int length = 1;
+        byte numPlayers = 0;
         ArrayList<byte[]> players = new ArrayList<>();
         for(MatchCharacter player : _teamPlayers.values()){
             byte[] playerBytes = player.GetINLCTABytes();
             players.add(playerBytes);
             length += playerBytes.length;
+            numPlayers++;
         }
         byte[] toReturn = ByteUtils.ArrayListToByteArray(players, length, 1);
-        toReturn[0] = (byte)players.size();
+        toReturn[0] = numPlayers;
+        Main.LogMessage("Team " + _teamID + " has " + numPlayers + " players. TRL = " + toReturn.length);
         return toReturn;
     }
     public int GetTotalLevel(){

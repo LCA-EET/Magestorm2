@@ -19,7 +19,8 @@ public class RemoteClientMonitor extends Thread{
                 }
                 Thread.sleep(30000);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                Main.LogError(e.getMessage());
+                Main.LogStackTrace(e);
             }
         }
     }

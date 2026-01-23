@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine;
 public static class MatchOption
 {
     public const byte FastRegen = 0;
@@ -30,12 +30,15 @@ public static class MatchOption
         return _stringRefs[optionCode];
     }
 
-    public static string BuildOptionsString(byte[] matchOptions)
+    public static string BuildOptionsString(byte matchOptions)
     {
         string toReturn = "";
-        BitArray ba = new BitArray(matchOptions);
+        Debug.Log("Match Option Byte: " + matchOptions);
+        BitArray ba = new BitArray(new byte[] { matchOptions });
+        
         for (byte i = 0; i < ba.Length; i++)
         {
+            Debug.Log("Bit " + i + ": " + ba[i]);
             if (_stringRefs.ContainsKey(i))
             {
                 if (ba[i])

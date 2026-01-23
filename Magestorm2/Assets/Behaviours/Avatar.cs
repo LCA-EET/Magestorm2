@@ -246,7 +246,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     }
     public bool IsAlive 
     {
-        get { return _isAlive; }
+        get { return MatchParams.IDinMatch == _playerID?ComponentRegister.PC.IsAlive:_isAlive; }
     }
     public bool UpdateNeeded
     {

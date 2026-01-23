@@ -2,6 +2,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GameServer extends Thread {
+    public static final boolean SymmetricEncryption = false;
     public static final long TimeOut = 120000; // two minutes
     public static final long Tick = 10;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
@@ -70,7 +71,7 @@ public class GameServer extends Thread {
     public static void ClientLoggedIn(RemoteClient rc)
     {
         int accountID = rc.AccountID();
-        Main.LogMessage("Client logged in: " + accountID);
+        Main.LogMessage("Client logged in: " + accountID + rc.IPAddress().toString() + ":" + rc.GetRemotePort());
         _loggedInClients.put(accountID, rc);
     }
 

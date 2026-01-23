@@ -162,8 +162,8 @@ public class PregamePacketProcessor : UDPProcessor
         byte matchID = _decrypted[1];
         int index = 2;
         RemotePlayerData[] neutralPlayers = ProcessMatchPlayers(ref index);
-        RemotePlayerData[] balancePlayers = ProcessMatchPlayers(ref index);
         RemotePlayerData[] chaosPlayers = ProcessMatchPlayers(ref index);
+        RemotePlayerData[] balancePlayers = ProcessMatchPlayers(ref index);
         RemotePlayerData[] orderPlayers = ProcessMatchPlayers(ref index);
         ListedMatch match = null;
         if(ActiveMatches.GetMatch(matchID, ref match))
@@ -175,29 +175,36 @@ public class PregamePacketProcessor : UDPProcessor
     private RemotePlayerData[] ProcessMatchPlayers(ref int index)
     {
         byte numPlayers = _decrypted[index];
+        Debug.Log("Index: " + index);
         RemotePlayerData[] toReturn = new RemotePlayerData[numPlayers];
         index++;
         int playerIndex = 0;
-        while (playerIndex < numPlayers)
+        Debug.Log("NumPlayers: " + numPlayers);
+        
+        
+        if (playerIndex < numPlayers)
         {
+            Debug.Log("Processing player: " + playerIndex);
             byte idInMatch = _decrypted[index];
             index++;
             byte teamID = _decrypted[index];
             index++;
             byte[] appearanceBytes = new byte[5];
-            Array.Copy(_decrypted, index, appearanceBytes, 0, 5);
+            Array.Copy(_decrypted, index, appearanceBytes, 0, appearanceBytes.Length);
             index += 5;
-            byte playerClass = _decrypted[index];
-            index++;
             byte playerLevel = _decrypted[index];
+            index++;
+            byte playerClass = _decrypted[index];
             index++;
             byte nameLength = _decrypted[index];
             index++;
             string playerName = ByteUtils.BytesToUTF8(_decrypted, index, nameLength);
+            Debug.Log(playerName);
             index += nameLength;
             toReturn[playerIndex] = new RemotePlayerData(idInMatch, teamID, playerName, playerLevel, (PlayerClass)playerClass);
             playerIndex++;
         }
+        
         return toReturn;
     }
     private void HandleLevelListPacket()
@@ -246,11 +253,8 @@ public class PregamePacketProcessor : UDPProcessor
             index++;
             byte matchType = _decrypted[index];
             index++;
-            byte matchOptionsLength = _decrypted[index];
+            byte matchOptions = _decrypted[index];
             index++;
-            byte[] matchOptions = new byte[matchOptionsLength];
-            Array.Copy(_decrypted, index, matchOptions, 0, matchOptionsLength);
-            index += matchOptionsLength;
             Array.Copy(_decrypted, index, nameBytes, 0, nameLength);
             string creatorName = Encoding.UTF8.GetString(nameBytes);
             index += nameLength;

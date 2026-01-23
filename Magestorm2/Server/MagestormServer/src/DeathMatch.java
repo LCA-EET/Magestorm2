@@ -4,7 +4,7 @@ public class DeathMatch extends Match{
     private final PoolManager _poolManager;
     private final ConcurrentHashMap<Byte, Shrine> _shrines;
 
-    public DeathMatch(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte[] matchOptions) {
+    public DeathMatch(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchOptions) {
         super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.DeathMatch, matchOptions);
         _poolManager = new PoolManager(this);
         _shrines = new ConcurrentHashMap<>();

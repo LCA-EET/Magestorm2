@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 public class ListedMatch
 {
     private byte _matchID, _sceneID, _matchType;
-    private byte[] _matchOptions;
+    private byte _matchOptions;
     private long _expiration;
     private int _creatorID;
     private string _sceneName;
     private String _creatorName;
-    public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration, int creatorID, byte matchType, byte[] matchOptions)
+    public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration, int creatorID, byte matchType, byte matchOptions)
     {
         _matchType = matchType;
         _matchID = matchID;
@@ -22,7 +22,7 @@ public class ListedMatch
         _sceneName = LevelData.GetLevel(sceneID).LevelName;
         _matchOptions = matchOptions;
     }
-    public byte[] MatchOptions
+    public byte MatchOptions
     {
         get { return _matchOptions; }
     }

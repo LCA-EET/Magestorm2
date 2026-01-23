@@ -3,10 +3,12 @@ using System;
 using System.Net;
 public static class Game
 {
+    public const bool SymmetricEncryption = false;
     public const float TickInterval = 0.01f; // 10ms
     public static bool Running;
     private static long _serverTime;
     private static bool _init = false;
+    public static bool ForceLogin = true;
 
     public static bool MenuMode = false;
     public static bool ChatMode = false;
@@ -31,7 +33,7 @@ public static class Game
     {
         #if !(UNITY_EDITOR)
             Running = false;
-            UDPBuilder.StopAllListeners();
+            UDP.StopListening();
             Application.Quit();
         #endif
     }

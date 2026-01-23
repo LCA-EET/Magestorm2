@@ -5,7 +5,7 @@ public class RemoteClient {
 
     private final InetAddress _address;
     private int _accountID;
-    private final int _remotePort;
+    private int _remotePort;
     private String _username;
     private long _timeLastReceived = 0;
     private boolean _subscribedToMatches, _portSwitchPending;
@@ -27,8 +27,13 @@ public class RemoteClient {
         _username = username;
     }
 
-    public void MarkPortSwitchPending(boolean isPending){
-        _portSwitchPending = isPending;
+    public void MarkPortSwitchPending(){
+        _portSwitchPending = true;
+    }
+
+    public void UpdateRemotePort(int newPort){
+        _remotePort = newPort;
+        _portSwitchPending = false;
     }
 
     public boolean PortSwitchPending(){

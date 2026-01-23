@@ -35,4 +35,10 @@ public class Main {
     public static void LogError(String toLog){
         _serverLog.LogError(toLog);
     }
+    public static void LogStackTrace(Exception ex){
+        StackTraceElement[] toPrint = ex.getStackTrace();
+        for(StackTraceElement element : toPrint){
+            Main.LogError(element.toString());
+        }
+    }
 }

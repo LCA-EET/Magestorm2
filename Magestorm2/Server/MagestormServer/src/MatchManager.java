@@ -54,7 +54,7 @@ public class MatchManager{
         GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), subscribedClients);
         UpdatesNeeded = false;
     }
-    public static void RequestMatchCreation(int accountID, byte sceneID, byte duration, byte matchType, byte[] matchOptions){
+    public static void RequestMatchCreation(int accountID, byte sceneID, byte duration, byte matchType, byte matchOptions){
         RemoteClient rc = GameServer.GetClient(accountID);
         if(rc != null){
             if(CheckOtherMatchesCreatedByAccount(accountID)){

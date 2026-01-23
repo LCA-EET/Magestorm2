@@ -153,7 +153,7 @@ public class MatchCharacter {
         return _posture;
     }
     public boolean InactivityExceededMaximumThreshold(){
-        Main.LogMessage("Inactivity check: " + _lastPacketReceived + ", " + _inactivityMaximumThreshold);
+        //Main.LogMessage("Inactivity check: " + _lastPacketReceived + ", " + _inactivityMaximumThreshold);
         return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityMaximumThreshold;
     }
     public boolean RegenerateHP(long msElapsed){

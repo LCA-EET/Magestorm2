@@ -52,21 +52,26 @@ public class Cryptographer {
         return toReturn;
     }
     public static byte[] Encrypt(byte[] payload){
-        byte[] toReturn = new byte[0];
-        _iv++;
-        byte[] ivBytes = LongToBytes(_iv);
-        IvParameterSpec iv = new IvParameterSpec(ivBytes);
-        try{
-            _encryptionCipher.init(Cipher.ENCRYPT_MODE, _secretKey, iv);
-            byte[] encryptedPayload = _encryptionCipher.doFinal(payload);
-            toReturn = new byte[17 + encryptedPayload.length];
-            System.arraycopy(ivBytes,0, toReturn,0, ivBytes.length);
-            toReturn[16] = (byte)encryptedPayload.length;
-            System.arraycopy(encryptedPayload, 0, toReturn, 17, encryptedPayload.length);
-        } catch (Exception e) {
-            Main.LogError("Cryptographer.Encrypt(): " + e.getMessage());
+        if(GameServer.SymmetricEncryption){
+            byte[] toReturn = new byte[0];
+            _iv++;
+            byte[] ivBytes = LongToBytes(_iv);
+            IvParameterSpec iv = new IvParameterSpec(ivBytes);
+            try{
+                _encryptionCipher.init(Cipher.ENCRYPT_MODE, _secretKey, iv);
+                byte[] encryptedPayload = _encryptionCipher.doFinal(payload);
+                toReturn = new byte[17 + encryptedPayload.length];
+                System.arraycopy(ivBytes,0, toReturn,0, ivBytes.length);
+                toReturn[16] = (byte)encryptedPayload.length;
+                System.arraycopy(encryptedPayload, 0, toReturn, 17, encryptedPayload.length);
+            } catch (Exception e) {
+                Main.LogError("Cryptographer.Encrypt(): " + e.getMessage());
+            }
+            return toReturn;
         }
-        return toReturn;
+        else{
+            return payload;
+        }
     }
     public static String MD5(String input){
         String toReturn = "";
@@ -79,23 +84,26 @@ public class Cryptographer {
     }
 
     public static byte[] Decrypt(byte[] received){
-        byte[] ivBytes = new byte[16];
-        int payloadLength = received[16];
+        if(GameServer.SymmetricEncryption){
+            byte[] ivBytes = new byte[16];
+            int payloadLength = received[16];
 
-        if(payloadLength < 0){
-            payloadLength += 256;
+            if(payloadLength < 0){
+                payloadLength += 256;
+            }
+            byte[] payload = new byte[payloadLength];
+            System.arraycopy(received,0,ivBytes,0,ivBytes.length);
+            System.arraycopy(received,17, payload, 0, payloadLength);
+            try {
+                IvParameterSpec iv = new IvParameterSpec(ivBytes);
+                _decryptionCipher.init(Cipher.DECRYPT_MODE, _secretKey, iv);
+                return _decryptionCipher.doFinal(payload);
+            } catch (Exception e) {
+                Main.LogError("Cryptographer.Decrypt(): Decryption error: " + e.getMessage());
+            }
+            return new byte[0];
         }
-        byte[] payload = new byte[payloadLength];
-        System.arraycopy(received,0,ivBytes,0,ivBytes.length);
-        System.arraycopy(received,17, payload, 0, payloadLength);
-        try {
-            IvParameterSpec iv = new IvParameterSpec(ivBytes);
-            _decryptionCipher.init(Cipher.DECRYPT_MODE, _secretKey, iv);
-            return _decryptionCipher.doFinal(payload);
-        } catch (Exception e) {
-            Main.LogError("Cryptographer.Decrypt(): Decryption error: " + e.getMessage());
-        }
-        return new byte[0];
+        return received;
     }
 
     public static byte[] generateRandomBytes(SecureRandom random, int numBytes) {
