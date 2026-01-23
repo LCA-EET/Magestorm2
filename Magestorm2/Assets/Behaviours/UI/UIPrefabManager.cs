@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 public class UIPrefabManager : MonoBehaviour
 {
     private Stack<GameObject> _uiStack;
@@ -97,6 +98,12 @@ public class UIPrefabManager : MonoBehaviour
     {
         MessageBox instantiated = Instantiate(PrefabMessageBox).GetComponent<MessageBox>();
         instantiated.SetParams(new object[] { message });
+        AddToStack(instantiated.gameObject);
+    }
+    public void InstantiateMessageBox_Function(string message, Action toPerform)
+    {
+        MessageBox instantiated = Instantiate(PrefabMessageBox).GetComponent<MessageBox>();
+        instantiated.SetParams(new object[] { message, toPerform });
         AddToStack(instantiated.gameObject);
     }
     public void InstantiateCreateAccountForm(GameObject instantiator)

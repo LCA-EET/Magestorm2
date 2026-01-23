@@ -8,10 +8,11 @@ public class RemoteClient {
     private int _remotePort;
     private String _username;
     private long _timeLastReceived = 0;
-    private boolean _subscribedToMatches, _portSwitchPending;
+    private boolean _subscribedToMatches, _portSwitchPending, _inGame;
 
     public RemoteClient(DatagramPacket received){
         _subscribedToMatches = false;
+        _inGame = false;
         _address = received.getAddress();
         _remotePort = received.getPort();
         MarkPacketReceived();
@@ -27,6 +28,9 @@ public class RemoteClient {
         _username = username;
     }
 
+    public void MarkInGame(){
+        _inGame = true;
+    }
     public void MarkPortSwitchPending(){
         _portSwitchPending = true;
     }
@@ -34,6 +38,7 @@ public class RemoteClient {
     public void UpdateRemotePort(int newPort){
         _remotePort = newPort;
         _portSwitchPending = false;
+        _inGame = false;
     }
 
     public boolean PortSwitchPending(){
@@ -45,7 +50,10 @@ public class RemoteClient {
     }
 
     public boolean TimeOut(){
-        return (System.currentTimeMillis() - _timeLastReceived) > GameServer.TimeOut;
+        if(_inGame){
+            _timeLastReceived = System.currentTimeMillis();
+        }
+        return (System.currentTimeMillis() - _timeLastReceived) > GameServer.PregameTimeOut;
     }
     public void SubscribeToMatches(){
         _subscribedToMatches = true;

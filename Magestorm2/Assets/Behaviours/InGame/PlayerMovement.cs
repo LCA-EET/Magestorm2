@@ -49,6 +49,10 @@ public class PlayerMovement : MonoBehaviour
     {
         _pc = pc;
     }
+    public bool IsRunning
+    {
+        get { return _running; }
+    }
     private void UprightMovement()
     {
         float forwardAcceleration = _forwardAcceleration;

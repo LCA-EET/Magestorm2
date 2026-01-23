@@ -11,7 +11,8 @@ public class Packets {
     private static final byte[] AlreadyLoggedInPacket_Bytes = new byte[]{Pregame_Send.AlreadyLoggedIn};
     private static final byte[] LoginFailedPacket_Bytes = new byte[]{Pregame_Send.LogInFailed};
     private static final byte[] CharacterExistsPacket_Bytes = new byte[]{Pregame_Send.CharacterExists};
-    private static final byte[] InactivityDisconnect_Bytes = new byte[]{Pregame_Send.InactivityDisconnect};
+    private static final byte[] PGInactivityDisconnect_Bytes = new byte[]{Pregame_Send.InactivityDisconnect};
+
     private static final byte[] MatchAlreadyCreated_Bytes = new byte[]{Pregame_Send.MatchAlreadyCreated};
     private static final byte[] MatchLimitReached_Bytes = new byte[]{Pregame_Send.MatchLimitReached};
     private static final byte[] MatchStillHasPlayers_Bytes = new byte[]{Pregame_Send.MatchStillHasPlayers};
@@ -31,7 +32,8 @@ public class Packets {
     public static byte[] BannedForBehaviorPacket() {return Cryptographer.Encrypt(BannedForBehavior_Bytes);}
 
     public static byte[] MatchStillHasPlayersPacket() {return Cryptographer.Encrypt(MatchStillHasPlayers_Bytes);}
-    public static byte[] InactivityDisconnectPacket() { return Cryptographer.Encrypt(InactivityDisconnect_Bytes);}
+    public static byte[] PGInactivityDisconnectPacket() { return Cryptographer.Encrypt(PGInactivityDisconnect_Bytes);}
+
     public static byte[] LoginFailedPacket(){
         return Cryptographer.Encrypt(LoginFailedPacket_Bytes);
     }
@@ -204,10 +206,13 @@ public class Packets {
     private static final byte[] MatchEnded_Bytes = new byte[]{InGame_Send.MatchEnded};
     private static final byte[] InactivityWarning_Bytes = new byte[]{InGame_Send.InactivityWarning};
     private static final byte[] PoolBiasFailure_Bytes = new byte[]{InGame_Send.PoolBiasFailure};
+    private static final byte[] IGInactivityDisconnect_Bytes = new byte[]{InGame_Send.InactivityDisconnect};
 
     public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
+
+    public static byte[] IGInactivityDisconnectPacket() { return Cryptographer.Encrypt(IGInactivityDisconnect_Bytes);}
 
     public static byte[] SpawnProjectilePacket(byte[] decrypted, short castID)
     {

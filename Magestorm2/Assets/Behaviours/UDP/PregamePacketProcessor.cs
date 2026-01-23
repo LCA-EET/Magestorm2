@@ -55,8 +55,7 @@ public class PregamePacketProcessor : UDPProcessor
                         break;
                     case Pregame_Receive.RemovedFromServer:
                     case Pregame_Receive.InactivityDisconnect:
-                        MessageBox(32);
-                        Game.Quit();
+                        QuitWithMessage(32);
                         break;
                     case Pregame_Receive.CharacterExists:
                         MessageBox(34);
@@ -83,12 +82,10 @@ public class PregamePacketProcessor : UDPProcessor
                         HandleLevelListPacket();
                         break;
                     case Pregame_Receive.BannedForBehavior:
-                        MessageBox(71);
-                        Game.Quit();
+                        QuitWithMessage(71);
                         break;
                     case Pregame_Receive.BannedForCheating:
-                        MessageBox(70);
-                        Game.Quit();
+                        QuitWithMessage(70);
                         break;
                     case Pregame_Receive.MatchDetails:
                         HandleMatchDetailsPacket();
@@ -115,6 +112,10 @@ public class PregamePacketProcessor : UDPProcessor
         {
             _heartbeat.ProcessAction(Time.deltaTime);
         }
+    }
+    private void QuitWithMessage(int messageReference)
+    {
+        ComponentRegister.UIPrefabManager.InstantiateMessageBox_Function(Language.GetBaseString(messageReference), Game.Quit);
     }
     private void Heartbeat()
     {

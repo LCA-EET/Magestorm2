@@ -38,4 +38,5 @@ public class InGame_Send {
     public static final byte PostureChange = 36;
     public static final byte ApplyEffect = 37;
     public static final byte SpawnProjectile = 38;
+    public static final byte InactivityDisconnect = 39;
 }

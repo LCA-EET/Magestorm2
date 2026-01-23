@@ -124,6 +124,10 @@ public class PC : MonoBehaviour
     }
     public void Update()
     {
+        if (Game.Disconnected)
+        {
+            return;
+        }
         if (!JoinedMatch)
         {
             _joinRerequest.ProcessAction(Time.deltaTime);
@@ -141,7 +145,7 @@ public class PC : MonoBehaviour
             }
         }
         CheckSpellSlot();
-        if(_coolDownRemaining <= 0 && !InValhalla && IsAlive)
+        if(_coolDownRemaining <= 0 && !InValhalla && IsAlive && !PlayerMovement.IsRunning)
         {
             CheckCast();
         }

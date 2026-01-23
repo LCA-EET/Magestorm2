@@ -111,12 +111,17 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.SpawnProjectile:
                         HandleProjectileSpawn();
                         break;
-                    case InGame_Receive.RedirectPort:
-
+                    case InGame_Receive.InactivityDisconnect:
+                        HandleInactivityDisconnect();
                         break;
                 }
             }
         }
+    }
+    private void HandleInactivityDisconnect()
+    {
+        Game.Disconnected = true;
+        ComponentRegister.UIPrefabManager.InstantiateMessageBox_Function(Language.GetBaseString(300), Game.Quit);
     }
     private void HandleProjectileSpawn()
     {

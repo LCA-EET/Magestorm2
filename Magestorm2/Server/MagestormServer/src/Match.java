@@ -402,16 +402,16 @@ public class Match {
                 _inactiveClients.add(mc.GetRemoteClient());
                 _departedCharacters.add(mc);
             }
-            else if (mc.InactivityExceededWarningThreshold()){
-                _warningClients.add(mc.GetRemoteClient());
-            }
+            //else if (mc.InactivityExceededWarningThreshold()){
+            //    _warningClients.add(mc.GetRemoteClient());
+            //}
         }
-        if(!_warningClients.isEmpty()){
-            LogMessage("Sending inactivity warning.");
-            SendToCollection(Packets.InactivityWarningPacket(), _warningClients);
-        }
+        //if(!_warningClients.isEmpty()){
+        //    LogMessage("Sending inactivity warning.");
+        //    SendToCollection(Packets.InactivityWarningPacket(), _warningClients);
+        //}
         if(!_inactiveClients.isEmpty()){
-            SendToCollection(Packets.InactivityDisconnectPacket(), _inactiveClients);
+            SendToCollection(Packets.IGInactivityDisconnectPacket(), _inactiveClients);
             for(MatchCharacter mc : _departedCharacters){
                 LeaveMatch(mc.GetIDinMatch(), mc.GetTeamID(), false);
             }

@@ -19,7 +19,7 @@ public static class Cryptography
         _iv = RandomNumberGenerator.GetInt32(Int32.MaxValue);
         _ivSize = 16;
         _paddedIV = new byte[16];
-        _sha256 = SHA256.Create();
+        
         InitAES(ref _aesEncryptor);
         InitAES(ref _aesDecryptor);
     }
@@ -85,6 +85,10 @@ public static class Cryptography
     }
     public static string SHA256Hash(string toHash)
     {
+        if(_sha256 == null)
+        {
+            _sha256 = SHA256.Create();
+        }
         byte[] utf8 = Encoding.UTF8.GetBytes(toHash);
         byte[] hashed = _sha256.ComputeHash(utf8);
         return Convert.ToBase64String(hashed);

@@ -3,7 +3,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GameServer extends Thread {
     public static final boolean SymmetricEncryption = false;
-    public static final long TimeOut = 120000; // two minutes
+    public static final long PregameTimeOut = 60000; // ten minutes
     public static final long Tick = 10;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     public static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
@@ -95,6 +95,7 @@ public class GameServer extends Thread {
         Main.LogMessage("Client logged out: " + accountID);
         RemoteClient removed = _loggedInClients.remove(accountID);
         PlayerCharacter removedCharacter = _activeCharacters.remove(accountID);
+        /*
         if(removedCharacter != null){
             byte idInMatch = removedCharacter.GetIDinMatch();
             byte matchID = removedCharacter.GetMatchID();
@@ -106,6 +107,7 @@ public class GameServer extends Thread {
                 }
             }
         }
+        */
         return removed;
     }
     public static void EnqueueForSend(byte[] encrypted, RemoteClient recipient){

@@ -9,7 +9,7 @@ public static class Game
     private static long _serverTime;
     private static bool _init = false;
     public static bool ForceLogin = true;
-
+    public static bool Disconnected = false;
     public static bool MenuMode = false;
     public static bool ChatMode = false;
     public static bool ControlMode = false;
@@ -31,10 +31,12 @@ public static class Game
     }
     public static void Quit()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         #if !(UNITY_EDITOR)
-            Running = false;
-            UDP.StopListening();
-            Application.Quit();
+                    Running = false;
+                    UDP.StopListening();
+                    Application.Quit();
         #endif
     }
     public static void SendPregameBytes(byte[] unencrypted)

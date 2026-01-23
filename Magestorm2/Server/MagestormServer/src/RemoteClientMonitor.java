@@ -14,7 +14,7 @@ public class RemoteClientMonitor extends Thread{
                         int accountID = client.AccountID();
                         GameServer.ClientLoggedOut(accountID);
                         Main.LogMessage("Client " + accountID + " disconnected for inactivity.");
-                        GameServer.EnqueueForSend(Packets.InactivityDisconnectPacket(), client);
+                        GameServer.EnqueueForSend(Packets.PGInactivityDisconnectPacket(), client);
                     }
                 }
                 Thread.sleep(30000);

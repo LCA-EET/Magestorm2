@@ -22,6 +22,9 @@ public class PacketSender extends Thread{
                             if(rc != null){
                                 _udp.Send(packetBytes, rc);
                             }
+                            else{
+                                Main.LogError("Attempted to send to null RC associated with account " + rc.AccountID());
+                            }
                         }
                     }
                 }

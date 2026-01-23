@@ -168,10 +168,10 @@ public class InGamePacketProcessor extends UDPProcessor{
             byte teamID = _decrypted[10];
             Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.MatchID() + ", team " + teamID);
             if(_owningMatch.IsAwaitingVerification(accountID)){
+                GameServer.GetClient(accountID).MarkInGame();
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID, accountID, remote);
                 _owningMatch.SendToAll(Packets.PlayerDataPacket(_owningMatch.GetMatchCharacter(idInMatch).GetINLCTABytes()));
                 _owningMatch.ProcessObjectStatusPacket(_decrypted[9]);
-                Main.LogMessage("Player " + idInMatch + " verified for match " + _owningMatch.MatchID() + ", team " + teamID);
                 return true;
             }
             else if (_owningMatch.IsPlayerVerified(idInMatch)){
