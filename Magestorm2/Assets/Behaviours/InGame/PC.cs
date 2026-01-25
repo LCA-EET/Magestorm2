@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 public class PC : MonoBehaviour
 {
     public CharacterController CharacterController;
@@ -32,7 +31,8 @@ public class PC : MonoBehaviour
     public bool InValhalla = false;
     public HashSet<int> _inTriggers;
     public HashSet<int> _priorInTriggers;
-    
+    private Vector3 _moveCheck, _rotateCheck;
+    private byte _postureCheck;
     private Dictionary<EffectCode, AppliedEffect> _effects;
     private SpellData _primarySpell, _secondarySpell;
     public void Awake()
@@ -247,27 +247,35 @@ public class PC : MonoBehaviour
     
     private void ReportMovement()
     {
-        byte posture = Game.PCAvatar.Posture;
-        if (MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit) && MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
+        if (_moveCheck != transform.position || _rotateCheck != transform.eulerAngles || _postureCheck != Game.PCAvatar.Posture)
         {
-            byte[] prData = new byte[28];
-            ByteUtils.FillArray(ref prData, 0, _priorPosition);
-            ByteUtils.FillArray(ref prData, 12, _priorRotation);
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, posture, prData, ref _prPacketID));
+            _moveCheck = transform.position;
+            _rotateCheck = transform.eulerAngles;
+            _postureCheck = Game.PCAvatar.Posture;
+            bool positionExceedance = MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit);
+            bool rotationExceedance = MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit);
+            if (positionExceedance && rotationExceedance)
+            {
+                byte[] prData = new byte[24];
+                ByteUtils.FillArray(ref prData, 0, _priorPosition);
+                ByteUtils.FillArray(ref prData, 12, _priorRotation);
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, _postureCheck, prData, ref _prPacketID));
+            }
+            else if (positionExceedance)
+            {
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, _postureCheck, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
+            }
+            else
+            {
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, _postureCheck, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
+            }
         }
-        else if (MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit))
-        {
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, posture, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
-        }
-        else if (MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit))
-        {
-            
-            Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, posture, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
-        }
+        
     }
     private bool MinimumReportingExceedance(Vector3 current, ref Vector3 prior, float limit)
     {
-        if (Vector3.Distance(current, prior) > limit)
+        float distance = Vector3.Distance(current, prior);
+        if (distance > limit)
         {
             prior = current;
             return true;

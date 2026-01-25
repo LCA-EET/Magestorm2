@@ -64,6 +64,7 @@ public static class Game
     {
         if (!_init)
         {
+            Application.runInBackground = true;
             IconLibrary.Init();
             Colors.Init();
             Language.Init();

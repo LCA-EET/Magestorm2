@@ -173,6 +173,7 @@ public class Match {
             int packetID = ByteUtils.ExtractInt(decrypted, 2);
             if(packetID > toUpdate.GetLastPRPacketID()){
                 toUpdate.SetPosture(decrypted[6]);
+                toUpdate.UpdateLastMovementPacketID(packetID);
                 byte controlCode = decrypted[7];
                 switch(controlCode){
                     case 0: // position only

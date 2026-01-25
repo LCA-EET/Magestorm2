@@ -209,6 +209,9 @@ public class MatchCharacter {
     public void SetPosture (byte posture){
         _posture = posture;
     }
+    public void UpdateLastMovementPacketID(int packetID){
+        _lastPRPacketID = packetID;
+    }
     protected void UpdatePosition(byte[] decrypted){
         System.arraycopy(decrypted, 8, _position, 0, 12);
     }

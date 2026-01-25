@@ -170,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
             a = start;
             b = end;
         }
-        if(SharedFunctions.ProcessVector3Lerp(ref _csElapsed, _csInterval, a, b, Camera.main.transform, true))
+        if(SharedFunctions.ProcessVector3Lerp(ref _csElapsed, _csInterval, a, b, Camera.main.transform, true, true))
         {
             _csChanging = false;
             
