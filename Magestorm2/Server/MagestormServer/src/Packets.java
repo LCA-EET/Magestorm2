@@ -241,10 +241,7 @@ public class Packets {
         System.arraycopy(ByteUtils.FloatToByteArray(hp), 0, toEncrypt, 3, 4);
         return Cryptographer.Encrypt(toEncrypt);
     }
-    public static byte[] PlayerMovedPacket(byte[] decrypted){
-        decrypted[0] = InGame_Send.PlayerMoved;
-        return Cryptographer.Encrypt(decrypted);
-    }
+
 
     public static byte[] ObjectStatusBytes(ArrayList<Byte> status){
         byte[] toEncrypt = new byte[1 + status.size()];

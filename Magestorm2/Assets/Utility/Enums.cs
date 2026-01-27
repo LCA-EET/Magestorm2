@@ -1,4 +1,19 @@
 using UnityEngine;
+
+public class Postures
+{
+    public const byte Standing = 0, 
+        Crouched = 1, 
+        Airborne = 2, 
+        Jump = 3;
+}
+public class AnimationKeys
+{
+    public const byte Idle = 0, 
+        Jump = 1, 
+        Walk = 2, 
+        None = 99;
+}
 public enum SpellType : byte
 {
     Projectile = 1,

@@ -27,6 +27,9 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private List<PeriodicAction> _actionList;
     private PeriodicAction _lookAtCamera, _effectsTick;
     private byte _posture;
+    private Animator _animator;
+    public AvatarAnimation AvatarAnimation;
+    
     void Awake()
     {
         _actionList = new List<PeriodicAction>();  
@@ -37,9 +40,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
         _appliedEffects = new Dictionary<EffectCode, AppliedEffect>();
         _moveElapsed = 0.0f;
         _positionChange = false;
+        
     }
 
     private void FixedUpdate()
@@ -49,6 +54,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform, false, true))
             {
                 _positionChange = false;
+                AvatarAnimation.SetAnimation(AnimationKeys.Idle, true);
             }
         }
         if (_rotationChange)
@@ -63,6 +69,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     void Update()
     {
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
+        AvatarAnimation.SetElapsed(Time.deltaTime);
     }
     private void EffectTick()
     {
@@ -165,7 +172,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
     {
         _name = name;
-        _posture = ControlCodes.Posture_Standing;
+        _posture = Postures.Standing;
         _class = playerClass;
         _level = level;
         _playerClassString = PlayerCharacter.ClassToString((PlayerClass)playerClass);
@@ -175,6 +182,9 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _playerID = id;
         Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
         _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
+        _animator = _model.GetComponentInChildren<Animator>();
+        Debug.Log("ANIMATOR GO: "+ _animator.gameObject.name);
+        AvatarAnimation.Init(_animator, appearance[0] == 0);
         gameObject.transform.localPosition = new Vector3(0, -0.08f, 0);
         
         if(MatchParams.IDinMatch == id)
@@ -199,7 +209,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         float x = BitConverter.ToSingle(decrypted, 8);
         float y = BitConverter.ToSingle(decrypted, 12);
         float z = BitConverter.ToSingle(decrypted, 16);
-        Debug.Log("New position x: " + x + ", y: " + y + ", z: " + z);
+
         if (instant)
         {
             gameObject.transform.position = new Vector3(x, y, z);
@@ -209,6 +219,19 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             _startPostion = transform.position;
             _newPosition = new Vector3(x, y, z);
             _positionChange = true;
+            switch (Posture)
+            {
+                case Postures.Jump:
+                    AvatarAnimation.SetAnimation(AnimationKeys.Jump, true);
+                    break;
+                case Postures.Standing:
+                    AvatarAnimation.SetAnimation(AnimationKeys.Walk, true);
+                    break;
+                case Postures.Airborne:
+                    break;
+                case Postures.Crouched:
+                    break;
+            }
         }
     }
 
@@ -233,17 +256,24 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         get { return _posture; }
         set { _posture = value; }
     }
+    public bool IsMidJump
+    {
+        get
+        {
+            return _posture == Postures.Jump;
+        }
+    }
     public bool IsCrouched
     {
-        get { return _posture == ControlCodes.Posture_Crouched; }
+        get { return _posture == Postures.Crouched; }
     }
     public bool IsStanding
     {
-        get { return _posture == ControlCodes.Posture_Standing; }
+        get { return _posture == Postures.Standing; }
     }
     public bool IsAirborne
     {
-        get { return _posture == ControlCodes.Posture_Airborne; } 
+        get { return _posture == Postures.Airborne; } 
     }
     public bool IsAlive 
     {

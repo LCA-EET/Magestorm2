@@ -19,7 +19,7 @@ public class InGame_Receive {
     public static final byte HitPlayer = 16;
     public static final byte CastSpell = 17;
     public static final byte ObjectStatus = 18;
-    public static final byte PlayerMoved = 19;
+
     public static final byte FetchPlayer = 20;
     public static final byte LeyUpdate = 21;
     public static final byte Tap = 22;
@@ -29,5 +29,5 @@ public class InGame_Receive {
     public static final byte CastOtherFriendly = 26;
     public static final byte CastOtherEnemy = 27;
     public static final byte ReportHit = 28;
-
+    public static final byte PlayerMoved = 29;
 }

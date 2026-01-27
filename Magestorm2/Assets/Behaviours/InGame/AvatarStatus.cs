@@ -25,9 +25,10 @@ public class AvatarStatus : MonoBehaviour
         Name.text = updated.Name;
         Level.text = updated.Level.ToString();
         PlayerClass.text = updated.PlayerClassString;
-        Teams.SetTextColor(Name);
-        Teams.SetTextColor(Level);
-        Teams.SetTextColor(PlayerClass);
+        Team playerTeam = updated.PlayerTeam;
+        Teams.SetTextColor(Name, playerTeam);
+        Teams.SetTextColor(Level, playerTeam);
+        Teams.SetTextColor(PlayerClass, playerTeam);
         Show(true);
     }
     private void Show(bool showStatus)

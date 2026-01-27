@@ -186,7 +186,8 @@ public class ModelBuilder : MonoBehaviour
         GameObject hair = Instantiate(hairPrefab);
         GameObject face = Instantiate(facePrefab);
         GameObject body = Instantiate(bodyPrefab);
-        head.transform.parent = body.transform;
+        CharacterModel modelScript = body.GetComponent<CharacterModel>();
+        head.transform.parent = modelScript.HeadConnector;
         face.transform.parent = head.transform;
         hair.transform.parent = head.transform;
         body.transform.parent = parent.transform;

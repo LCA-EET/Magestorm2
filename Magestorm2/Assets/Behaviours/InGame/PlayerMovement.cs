@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _priorPosition;
     private RaycastHit _hitInfo;
     private PC _pc;
-    private byte _priorPosture = ControlCodes.Posture_Standing;
+    private byte _priorPosture = Postures.Standing;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -88,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
             _verticalSpeed = _verticalSpeed + _jumpSpeed;
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
             _midJump = true;
+            Game.PCAvatar.Posture = Postures.Jump;
         }
 
         UpdateGroundedStatus();
@@ -143,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 CrouchStandLerp(_cameraLocalPosition, _cameraCrouchedPosition);
             }
-            if (_csChanging || Game.PCAvatar.Posture == ControlCodes.Posture_Crouched)
+            if (_csChanging || Game.PCAvatar.Posture == Postures.Crouched)
             {
                 CrouchedMovement();
             }
@@ -176,12 +177,12 @@ public class PlayerMovement : MonoBehaviour
             
             if (Game.PCAvatar.IsCrouched)
             {
-                Game.PCAvatar.Posture = ControlCodes.Posture_Standing;
+                Game.PCAvatar.Posture = Postures.Standing;
                 SetControllerHC(_controllerCenter, _controllerHeight);
             }
             else
             {
-                Game.PCAvatar.Posture = ControlCodes.Posture_Crouched;
+                Game.PCAvatar.Posture = Postures.Crouched;
                 SetControllerHC(_controllerCrouchCenter, _controllerCrouchHeight);
             }
             Game.SendInGameBytes(InGame_Packets.PostureChangePacket(Game.PCAvatar.Posture));
@@ -194,7 +195,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public void DeathResetCameraAndController()
     {
-        Game.PCAvatar.Posture = ControlCodes.Posture_Airborne;
+        Game.PCAvatar.Posture = Postures.Airborne;
         _csChanging = false;
         Camera.main.transform.localPosition = _cameraLocalPosition;
         SetControllerHC(_controllerCenter, _controllerHeight);
@@ -214,6 +215,10 @@ public class PlayerMovement : MonoBehaviour
         _grounded = isGrounded(out _hitInfo);
         if (_grounded)
         {
+            if(Game.PCAvatar.Posture == Postures.Jump)
+            {
+                Game.PCAvatar.Posture = Postures.Standing;
+            }
             _midJump = false;
             _verticalAcceleration = 0.0f;
             _verticalSpeed = 0.0f;

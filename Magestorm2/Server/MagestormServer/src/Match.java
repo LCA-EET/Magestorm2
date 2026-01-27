@@ -187,7 +187,7 @@ public class Match {
                         toUpdate.UpdateDirection(decrypted, 20);
                         break;
                 }
-                SendToAll(Packets.PlayerMovedPacket(decrypted));
+                SendToAll(Cryptographer.Encrypt(decrypted));
             }
         }
     }
@@ -211,14 +211,19 @@ public class Match {
             SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.LeyUpdate, newLey), mc);
         }
     }
-    public void LeaveMatch(byte id, byte team, boolean send){
+    public void LeaveMatch(byte id, byte team, boolean send, boolean quitGame){
         MatchCharacter departee = _matchCharacters.remove(id);
         if(departee != null){
             PlayerCharacter pc = departee.PC();
-            GameServer.GetClient(pc.GetAccountID()).MarkPortSwitchPending();
-            pc.MarkRemovedFromMatch();
             _verifiedClients.remove(id);
             _matchTeams.get(team).RemovePlayer(id);
+            if(quitGame){
+                GameServer.ClientLoggedOut(pc.GetAccountID());
+            }
+            else{
+                GameServer.GetClient(pc.GetAccountID()).MarkPortSwitchPending();
+                pc.MarkRemovedFromMatch();
+            }
         }
         LogMessage("Player " + id + " has left the match. Players remaining: " + _matchCharacters.size());
         if(send){
@@ -403,18 +408,11 @@ public class Match {
                 _inactiveClients.add(mc.GetRemoteClient());
                 _departedCharacters.add(mc);
             }
-            //else if (mc.InactivityExceededWarningThreshold()){
-            //    _warningClients.add(mc.GetRemoteClient());
-            //}
         }
-        //if(!_warningClients.isEmpty()){
-        //    LogMessage("Sending inactivity warning.");
-        //    SendToCollection(Packets.InactivityWarningPacket(), _warningClients);
-        //}
         if(!_inactiveClients.isEmpty()){
             SendToCollection(Packets.IGInactivityDisconnectPacket(), _inactiveClients);
             for(MatchCharacter mc : _departedCharacters){
-                LeaveMatch(mc.GetIDinMatch(), mc.GetTeamID(), false);
+                LeaveMatch(mc.GetIDinMatch(), mc.GetTeamID(), false, true);
             }
             SendToAll(Packets.PlayersLeftMatchPacket(_departedCharacters));
         }

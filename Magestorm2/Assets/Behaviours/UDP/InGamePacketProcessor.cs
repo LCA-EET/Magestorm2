@@ -21,7 +21,7 @@ public class InGamePacketProcessor : UDPProcessor
     {
         if (Game.UDP.HasPacketsPending)
         {
-            Debug.Log("IGPP received, opcode " + _opCode);
+            //Debug.Log("IGPP received, opcode " + _opCode);
             List<byte[]> toProcess = Game.UDP.PacketsReceived();
             foreach (byte[] decryptedPayload in toProcess)
             {

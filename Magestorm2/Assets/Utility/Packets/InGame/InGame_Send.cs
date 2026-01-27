@@ -24,7 +24,7 @@ public static class InGame_Send
                         HitPlayer = 16,
                         CastSpell = 17,
                         ObjectStatus = 18,
-                        PlayerMoved = 19,
+
                         FetchPlayer = 20,
                         UpdateLey = 21,
                         Tap = 22,
@@ -33,6 +33,6 @@ public static class InGame_Send
                         CastSelf = 25,
                         CastOtherFriendly = 26,
                         CastOtherEnemy = 27,
-                        ReportHit = 28;
-                        
+                        ReportHit = 28,
+                        PlayerMoved = 29;
 }
