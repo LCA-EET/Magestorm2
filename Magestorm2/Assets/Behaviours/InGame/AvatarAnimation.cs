@@ -8,7 +8,7 @@ public class AvatarAnimation : MonoBehaviour{
     private Animator _animator;
     private PeriodicAction _action;
     private bool _isDone, _male;
-    private byte _nextAnimation;
+    private byte _nextAnimation, _currentAnimation;
 
     public void Init(Animator animator, bool male)
     {
@@ -16,7 +16,7 @@ public class AvatarAnimation : MonoBehaviour{
         _isDone = false;
         _male = male;
         _nextAnimation = AnimationKeys.None;
-        _animator.runtimeAnimatorController = _male ? MaleAnimations[AnimationKeys.Idle] : FemaleAnimations[AnimationKeys.Idle];
+        SwitchRTAC(AnimationKeys.Idle);
         _action = new PeriodicAction(0.05f, CheckComplete, null);
     }
     public void SetAnimation(byte key, bool stopCurrent)
@@ -24,8 +24,11 @@ public class AvatarAnimation : MonoBehaviour{
         _isDone = false;
         if (stopCurrent)
         {
-            _animator.runtimeAnimatorController = _male ? MaleAnimations[key] : FemaleAnimations[key];
-            _animator.StartPlayback();
+            if(_currentAnimation != key)
+            {
+                SwitchRTAC(key);
+                _animator.StartPlayback();
+            }
         }
         else
         {
@@ -36,7 +39,11 @@ public class AvatarAnimation : MonoBehaviour{
     {
         _action.ProcessAction(deltaTime);
     }
-
+    private void SwitchRTAC(byte key)
+    {
+        _currentAnimation = key;
+        _animator.runtimeAnimatorController = _male ? MaleAnimations[key] : FemaleAnimations[key];
+    }
     private void CheckComplete()
     {
         _isDone = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f;
