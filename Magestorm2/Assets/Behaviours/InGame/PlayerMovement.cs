@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController Controller;
-
+    private PeriodicAction _reportMovement;
     private float _jumpSpeed = 6.0f;
     private float gravityValue = 9.81f;
     private float _lateralSpeed = 0.0f;
@@ -17,17 +17,24 @@ public class PlayerMovement : MonoBehaviour
     private float _verticalAcceleration = 6.0f;
     private float _distanceTravelled = 0.0f;
     private float _distanceTravelledSinceLastStep = 0.0f;
+    private float _positionLimit = 0.067f;
+    private float _rotationLimit = 5f;
+    private float _csElapsed = 0.0f;
+    private float _csInterval = 0.33f;
     private float _controllerHeight, _controllerCrouchHeight;
+    private int _prPacketID = 0;
     private Vector3 _controllerCenter, _controllerCrouchCenter, _cameraLocalPosition, _cameraCrouchedPosition;
+    private Vector3 _moveCheck, _rotateCheck;
+    private Vector3 _priorPosition, _priorRotation;
 
     private bool _positionChanged = false;
     private bool _midJump = false;
     private bool _grounded = false;
     private bool _running = false;
     private bool _csChanging = false;
-    private float _csElapsed = 0.0f;
-    private float _csInterval = 0.33f;
-    private Vector3 _priorPosition;
+    private bool _moving = false;
+    private bool _priorMoving = false;
+    private byte _postureCheck;
     private RaycastHit _hitInfo;
     private PC _pc;
     private byte _priorPosture = Postures.Standing;
@@ -35,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         _priorPosition = transform.position;
+        _reportMovement = new PeriodicAction(Game.TickInterval, ReportMovement, null);
         ComponentRegister.PlayerTransform = transform;
         ComponentRegister.PlayerMovement = this;
         ComponentRegister.PlayerController = Controller;
@@ -45,6 +53,44 @@ public class PlayerMovement : MonoBehaviour
         _cameraLocalPosition = Camera.main.transform.localPosition;
         _cameraCrouchedPosition = new Vector3(_cameraLocalPosition.x, _cameraLocalPosition.y / 1.66f, _cameraCrouchedPosition.z);
     }
+    private void ReportMovement()
+    {
+        
+        if (_moveCheck != transform.position || _rotateCheck != transform.eulerAngles || _postureCheck != Game.PlayerPMDByte.Posture)
+        {
+            _moveCheck = transform.position;
+            _rotateCheck = transform.eulerAngles;
+            _postureCheck = Game.PlayerPMDByte.Posture;
+            bool positionExceedance = MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit);
+            bool rotationExceedance = MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit);
+            if (positionExceedance && rotationExceedance)
+            {
+                byte[] prData = new byte[24];
+                ByteUtils.FillArray(ref prData, 0, _priorPosition);
+                ByteUtils.FillArray(ref prData, 12, _priorRotation);
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, _postureCheck, prData, ref _prPacketID));
+            }
+            else if (positionExceedance)
+            {
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, _postureCheck, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
+            }
+            else
+            {
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, _postureCheck, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
+            }
+        }
+
+    }
+    private bool MinimumReportingExceedance(Vector3 current, ref Vector3 prior, float limit)
+    {
+        float distance = Vector3.Distance(current, prior);
+        if (distance > limit)
+        {
+            prior = current;
+            return true;
+        }
+        return false;
+    }
     public void SetPC(PC pc)
     {
         _pc = pc;
@@ -53,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
     {
         get { return _running; }
     }
-    private void UprightMovement()
+    private bool UprightMovement()
     {
         float forwardAcceleration = _forwardAcceleration;
         float lateralAcceleration = _lateralAcceleration;
@@ -66,9 +112,8 @@ public class PlayerMovement : MonoBehaviour
             forwardAcceleration *= 3;
             maxForwardSpeed *= 3;
         }
-
         bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
-
+        
         if (_running && moving)
         {
             _pc.UseStamina(Time.deltaTime * 10.0f);
@@ -88,19 +133,18 @@ public class PlayerMovement : MonoBehaviour
             _verticalSpeed = _verticalSpeed + _jumpSpeed;
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
             _midJump = true;
-            Game.PCAvatar.Posture = Postures.Jump;
+            Game.PlayerPMDByte.SetLocalPosture(Postures.Jump);
         }
-
         UpdateGroundedStatus();
+        return moving;
     }
-    private void CrouchedMovement()
+    private bool CrouchedMovement()
     {
         float forwardAcceleration = _forwardAcceleration * 0.35f;
         float lateralAcceleration = _lateralAcceleration * 0.35f;
         float maxForwardSpeed = _maxForwardSpeed * 0.35f;
         float maxLateralSpeed = _maxLateralSpeed * 0.35f;
-
-        MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
+        bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
         _pc.RegenStamina(Time.deltaTime, false);
 
         if (!_grounded)
@@ -109,6 +153,7 @@ public class PlayerMovement : MonoBehaviour
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
         }
         UpdateGroundedStatus();
+        return moving;
     }
     private void DeadMovement()
     {
@@ -122,9 +167,11 @@ public class PlayerMovement : MonoBehaviour
 
     private bool MoveAlongAxes(ref float lateralSpeed, ref float forwardSpeed, float maxLateralSpeed, float maxForwardSpeed, float lateralAcceleration, float forwardAcceleration)
     {
-        bool xAxisInput = MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
-        bool zAxisInput = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, SpeedModifier);
-        return xAxisInput || zAxisInput;
+        float xAxisInput = MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
+        float zDirection = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, SpeedModifier);
+        bool moving = (xAxisInput != 0) || (zDirection != 0);
+        Game.PlayerPMDByte.SetMovingAndDirection(moving, zDirection > 0);
+        return moving;
     }
     void Update()
     {
@@ -144,24 +191,31 @@ public class PlayerMovement : MonoBehaviour
             {
                 CrouchStandLerp(_cameraLocalPosition, _cameraCrouchedPosition);
             }
-            if (_csChanging || Game.PCAvatar.Posture == Postures.Crouched)
+            if (_csChanging || Game.PlayerPMDByte.IsCrouched)
             {
-                CrouchedMovement();
+                _moving = CrouchedMovement();
             }
             else
             {
-                UprightMovement();
+                _moving = UprightMovement();
             }
         }
         else
         {
             DeadMovement();
         }
+        _reportMovement.ProcessAction(Time.deltaTime);
+        //if(_priorMoving != _moving)
+        //{
+            _priorMoving = _moving;
+        Game.PlayerPMDByte.SetMoving(_moving);
+            //Game.SetPCAnimation(_moving, Game.PCAvatar.Posture);
+        //}
     }
     private void CrouchStandLerp(Vector3 start, Vector3 end)
     {
         Vector3 a, b;
-        if (Game.PCAvatar.IsCrouched)
+        if (Game.PlayerPMDByte.IsCrouched)
         {
             a = end;
             b = start;
@@ -175,17 +229,17 @@ public class PlayerMovement : MonoBehaviour
         {
             _csChanging = false;
             
-            if (Game.PCAvatar.IsCrouched)
+            if (Game.PlayerPMDByte.IsCrouched)
             {
-                Game.PCAvatar.Posture = Postures.Standing;
+                Game.PlayerPMDByte.SetLocalPosture(Postures.Standing);
                 SetControllerHC(_controllerCenter, _controllerHeight);
             }
             else
             {
-                Game.PCAvatar.Posture = Postures.Crouched;
+                Game.PlayerPMDByte.SetLocalPosture(Postures.Crouched); 
                 SetControllerHC(_controllerCrouchCenter, _controllerCrouchHeight);
             }
-            Game.SendInGameBytes(InGame_Packets.PostureChangePacket(Game.PCAvatar.Posture));
+            Game.SendInGameBytes(InGame_Packets.PostureChangePacket(Game.PlayerPMDByte.ToByte()));
         }
     }
     private void SetControllerHC(Vector3 center, float height)
@@ -195,19 +249,10 @@ public class PlayerMovement : MonoBehaviour
     }
     public void DeathResetCameraAndController()
     {
-        Game.PCAvatar.Posture = Postures.Airborne;
+        Game.PlayerPMDByte.SetLocalPosture(Postures.Airborne);
         _csChanging = false;
         Camera.main.transform.localPosition = _cameraLocalPosition;
         SetControllerHC(_controllerCenter, _controllerHeight);
-    }
-    public bool PostureChanged
-    {
-        get
-        {
-            bool toReturn = (_priorPosture == Game.PCAvatar.Posture);
-            _priorPosture = Game.PCAvatar.Posture;
-            return toReturn;
-        }
     }
     private void UpdateGroundedStatus()
     {
@@ -215,9 +260,9 @@ public class PlayerMovement : MonoBehaviour
         _grounded = isGrounded(out _hitInfo);
         if (_grounded)
         {
-            if(Game.PCAvatar.Posture == Postures.Jump)
+            if(Game.PlayerPMDByte.IsJumping)
             {
-                Game.PCAvatar.Posture = Postures.Standing;
+                Game.PlayerPMDByte.SetLocalPosture(Postures.Standing);
             }
             _midJump = false;
             _verticalAcceleration = 0.0f;
@@ -275,9 +320,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
    
-    private bool MoveAlongAxis(ref float speed, float maxSpeed, Vector3 directionVector, InputControl negative, InputControl positive, float acceleration, float speedModifier)
+    private float MoveAlongAxis(ref float speed, float maxSpeed, Vector3 directionVector, InputControl negative, InputControl positive, float acceleration, float speedModifier)
     {
-        bool movementInput = false;
         float directionFactor = 0.0f;
         if (_midJump)
         {
@@ -291,24 +335,16 @@ public class PlayerMovement : MonoBehaviour
         else if (InputControls.IsPressed(negative) || InputControls.IsPressed(positive))
         {
             directionFactor = InputControls.IsPressed(negative) ? -1.0f : 1.0f;
-            movementInput = true;
         }
         Accelerate(ref speed, maxSpeed, directionFactor, acceleration);
         Controller.Move(directionVector * speed * Time.deltaTime * speedModifier);
-        return movementInput;
+        return directionFactor;
     }
 
     private bool MovingOnMultipleAxes
     {
         get{
-            if ((InputControls.Forward || InputControls.Backward) && (InputControls.StrafeLeft || InputControls.StrafeRight))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (InputControls.Forward || InputControls.Backward) && (InputControls.StrafeLeft || InputControls.StrafeRight);
         }
     }
     

@@ -100,10 +100,12 @@ public class PregamePacketProcessor extends UDPProcessor
     }
     private void AssignRC(){
         _remote = LoggedInClient();
-        if(_remote.PortSwitchPending()){
-            _remote.UpdateRemotePort(_received.getPort());
+        if(_remote != null){
+            if(_remote.PortSwitchPending()){
+                _remote.UpdateRemotePort(_received.getPort());
+            }
+            _accountID = _remote.AccountID();
         }
-        _accountID = _remote.AccountID();
     }
     private void HandleSkillUpdate(){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);

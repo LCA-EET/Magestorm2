@@ -26,8 +26,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private TMP_Text _nameText;
     private List<PeriodicAction> _actionList;
     private PeriodicAction _lookAtCamera, _effectsTick;
-    private byte _posture;
     private Animator _animator;
+    private PMDByte _pmd; // posture, movement, direction
     public AvatarAnimation AvatarAnimation;
     
     void Awake()
@@ -36,6 +36,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _lookAtCamera = new PeriodicAction(0.2f, NameRotate, _actionList);
         _effectsTick = new PeriodicAction(_effectTick, EffectTick, _actionList);
         _nameText = CharacterName.GetComponent<TMP_Text>();
+        _pmd = new PMDByte();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -172,7 +173,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
     {
         _name = name;
-        _posture = Postures.Standing;
         _class = playerClass;
         _level = level;
         _playerClassString = PlayerCharacter.ClassToString((PlayerClass)playerClass);
@@ -180,16 +180,16 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _nameText.text = name;
         _nameText.color = Teams.GetTeamColor(_team);
         _playerID = id;
-        Debug.Log("Avatar name: " + _name + ", class: " + _class + ", level: " + _level);
         _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
         _animator = _model.GetComponentInChildren<Animator>();
-        Debug.Log("ANIMATOR GO: "+ _animator.gameObject.name);
+        _animator.applyRootMotion = false;
         AvatarAnimation.Init(_animator, appearance[0] == 0);
         gameObject.transform.localPosition = new Vector3(0, -0.08f, 0);
         
         if(MatchParams.IDinMatch == id)
         {
             ComponentRegister.PlayerAvatar = this;
+            Game.PlayerPMDByte = _pmd;
             gameObject.layer = LayerMask.NameToLayer("Player");
             gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
             SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
@@ -198,6 +198,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         {
             gameObject.layer = LayerMask.NameToLayer("RemotePlayer");
         }
+    }
+    public PMDByte PMD
+    {
+        get { return _pmd; }
     }
     public int LastPRPacketID
     {
@@ -219,7 +223,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             _startPostion = transform.position;
             _newPosition = new Vector3(x, y, z);
             _positionChange = true;
-            switch (Posture)
+            switch (_pmd.Posture)
             {
                 case Postures.Jump:
                     AvatarAnimation.SetAnimation(AnimationKeys.Jump, true);
@@ -251,30 +255,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             _rotationChange = true;
         }
     }
-    public byte Posture
-    {
-        get { return _posture; }
-        set { _posture = value; }
-    }
-    public bool IsMidJump
-    {
-        get
-        {
-            return _posture == Postures.Jump;
-        }
-    }
-    public bool IsCrouched
-    {
-        get { return _posture == Postures.Crouched; }
-    }
-    public bool IsStanding
-    {
-        get { return _posture == Postures.Standing; }
-    }
-    public bool IsAirborne
-    {
-        get { return _posture == Postures.Airborne; } 
-    }
+   
     public bool IsAlive 
     {
         get { return MatchParams.IDinMatch == _playerID?ComponentRegister.PC.IsAlive:_isAlive; }
@@ -323,4 +304,5 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             return _name.CompareTo(other.Name);
         }
     }
+    
 }

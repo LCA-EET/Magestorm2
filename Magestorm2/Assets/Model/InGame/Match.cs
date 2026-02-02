@@ -119,7 +119,7 @@ public static class Match
             if (_matchPlayers.ContainsKey(playerID))
             {
                 Avatar toUpdate = _matchPlayers[playerID];
-                toUpdate.Posture = posture;
+                toUpdate.PMD.SetPMD(posture);
                 int packetID = BitConverter.ToInt32(decrypted, 2);
                 if(packetID > toUpdate.LastPRPacketID)
                 {

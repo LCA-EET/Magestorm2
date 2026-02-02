@@ -9,14 +9,13 @@ public class AvatarAnimation : MonoBehaviour{
     private PeriodicAction _action;
     private bool _isDone, _male;
     private byte _nextAnimation, _currentAnimation;
-
+    private int _animationID;
     public void Init(Animator animator, bool male)
     {
         _animator = animator;
         _isDone = false;
         _male = male;
         _nextAnimation = AnimationKeys.None;
-        SwitchRTAC(AnimationKeys.Idle);
         _action = new PeriodicAction(0.05f, CheckComplete, null);
     }
     public void SetAnimation(byte key, bool stopCurrent)
@@ -27,7 +26,6 @@ public class AvatarAnimation : MonoBehaviour{
             if(_currentAnimation != key)
             {
                 SwitchRTAC(key);
-                _animator.StartPlayback();
             }
         }
         else
@@ -41,8 +39,11 @@ public class AvatarAnimation : MonoBehaviour{
     }
     private void SwitchRTAC(byte key)
     {
+        _animationID++;
         _currentAnimation = key;
         _animator.runtimeAnimatorController = _male ? MaleAnimations[key] : FemaleAnimations[key];
+        //_animator.StartPlayback();
+        Debug.Log("AnimationID: " + _animationID + ", " + key);
     }
     private void CheckComplete()
     {
@@ -54,6 +55,7 @@ public class AvatarAnimation : MonoBehaviour{
                 _nextAnimation = AnimationKeys.Idle;
             }
             SetAnimation(_nextAnimation, true);
+            _nextAnimation = AnimationKeys.None;
         }
     }
 }

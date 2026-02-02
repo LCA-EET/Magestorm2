@@ -26,11 +26,9 @@ public class MatchCharacter {
     private float _priorHP, _priorMana;
     private float _ley;
     private int _lastPRPacketID;
-    private byte _posture;
 
     public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match, long hpRegenTick){
         MarkPacketReceived();
-        _posture = ControlCodes.Posture_Standing;
         _lastPRPacketID = 0;
         _hpRegenElapsed = 0;
         _hpRegenTick = hpRegenTick;
@@ -149,9 +147,6 @@ public class MatchCharacter {
     public boolean InactivityExceededWarningThreshold(){
         return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityWarningThreshold;
     }
-    public byte GetPosture(){
-        return _posture;
-    }
     public boolean InactivityExceededMaximumThreshold(){
         //Main.LogMessage("Inactivity check: " + _lastPacketReceived + ", " + _inactivityMaximumThreshold);
         return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityMaximumThreshold;
@@ -206,9 +201,6 @@ public class MatchCharacter {
         return _position;
     }
 
-    public void SetPosture (byte posture){
-        _posture = posture;
-    }
     public void UpdateLastMovementPacketID(int packetID){
         _lastPRPacketID = packetID;
     }

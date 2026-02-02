@@ -4,14 +4,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MatchManager{
     private static ConcurrentHashMap<Byte, Match> _activeMatches;
     private static byte _nextMatchID = 1;
-    private static final byte _maxMatches = 10;
-    private static MatchMonitor _monitor;
+    private static byte _maxMatches;
     public static boolean UpdatesNeeded;
 
-    public static void init(){
+    public static void init(byte maxMatches){
         UpdatesNeeded = false;
-        _activeMatches = new ConcurrentHashMap();
-        _monitor = new MatchMonitor();
+        _maxMatches = maxMatches;
+        _activeMatches = new ConcurrentHashMap<>();
+        new MatchMonitor();
     }
 
     public static void SendMatchListToClient(RemoteClient rc){
@@ -136,7 +136,8 @@ public class MatchManager{
     }
 
     public static void RemoveMatch(byte matchID){
-        _activeMatches.remove(matchID);
+        Match removed = _activeMatches.remove(matchID);
+        GameServer.RemoveUsedPort(removed.GetMatchPort());
         UpdatesNeeded = true;
     }
 

@@ -166,11 +166,13 @@ public class InGamePacketProcessor : UDPProcessor
     private void HandlePostureChange()
     {
         byte avatarID = _decrypted[1];
-        Avatar avatar = null;
-        if(Match.GetAvatar(avatarID, ref avatar))
+        if(avatarID != MatchParams.IDinMatch)
         {
-            avatar.Posture = _decrypted[2];
-            Debug.Log("Posture Change, Avatar: " + avatarID + ", Posture: " + Game.PCAvatar.Posture);
+            Avatar avatar = null;
+            if (Match.GetAvatar(avatarID, ref avatar))
+            {
+                avatar.PMD.SetPMD(_decrypted[2]);
+            }
         }
     }
     private void HandleTap()

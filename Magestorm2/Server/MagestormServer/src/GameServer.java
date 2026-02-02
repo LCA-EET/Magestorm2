@@ -5,6 +5,7 @@ public class GameServer extends Thread {
     public static final boolean SymmetricEncryption = false;
     public static final long PregameTimeOut = 60000; // ten minutes
     public static final long Tick = 10;
+    public static final byte MaxMatches = 20;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     public static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
@@ -24,7 +25,7 @@ public class GameServer extends Thread {
         _poolData = new ConcurrentHashMap<>();
         _objectData = new ConcurrentHashMap<>();
         SpellManager.init();
-        MatchManager.init();
+        MatchManager.init(MaxMatches);
         _rcMonitor = new RemoteClientMonitor();
         _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
         _levelData = Database.GetLevelsList((byte)1);
@@ -67,7 +68,9 @@ public class GameServer extends Thread {
         _usedMatchPorts.add(nextAvailablePort);
         return nextAvailablePort;
     }
-
+    public static void RemoveUsedPort(int portNumber){
+        _usedMatchPorts.remove(portNumber);
+    }
     public static void ClientLoggedIn(RemoteClient rc)
     {
         int accountID = rc.AccountID();
@@ -95,19 +98,6 @@ public class GameServer extends Thread {
         Main.LogMessage("Client logged out: " + accountID);
         RemoteClient removed = _loggedInClients.remove(accountID);
         PlayerCharacter removedCharacter = _activeCharacters.remove(accountID);
-        /*
-        if(removedCharacter != null){
-            byte idInMatch = removedCharacter.GetIDinMatch();
-            byte matchID = removedCharacter.GetMatchID();
-            byte teamID = removedCharacter.GetCurrentTeam();
-            Match match = MatchManager.GetMatch(matchID);
-            if(match != null){
-                if(match.IsPlayerOnTeam(idInMatch, teamID)){
-                    match.LeaveMatch(idInMatch, teamID, true);
-                }
-            }
-        }
-        */
         return removed;
     }
     public static void EnqueueForSend(byte[] encrypted, RemoteClient recipient){

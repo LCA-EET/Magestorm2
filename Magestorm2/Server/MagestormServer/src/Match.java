@@ -172,7 +172,6 @@ public class Match {
             MatchCharacter toUpdate = _matchCharacters.get(playerID);
             int packetID = ByteUtils.ExtractInt(decrypted, 2);
             if(packetID > toUpdate.GetLastPRPacketID()){
-                toUpdate.SetPosture(decrypted[6]);
                 toUpdate.UpdateLastMovementPacketID(packetID);
                 byte controlCode = decrypted[7];
                 switch(controlCode){
@@ -248,6 +247,9 @@ public class Match {
         if(_matchCharacters.containsKey(requestorID)){
             SendToPlayer(Packets.PlayerDataPacket(_matchCharacters.get(idInMatch).GetINLCTABytes()), requestorID);
         }
+    }
+    public int GetMatchPort(){
+        return _matchPort;
     }
     public byte ObtainNextPlayerID(){
         boolean idUsed = false;

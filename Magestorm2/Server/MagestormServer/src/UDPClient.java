@@ -1,7 +1,5 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class UDPClient extends Thread{
     private DatagramSocket _udpSocket;

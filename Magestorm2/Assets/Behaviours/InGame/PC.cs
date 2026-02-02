@@ -8,8 +8,7 @@ public class PC : MonoBehaviour
     public PlayerMovement PlayerMovement;
     public RayCaster DownwardCaster;
     public RayCaster ForwardCaster;
-    private float _positionLimit = 0.067f;
-    private float _rotationLimit = 5f;
+    
     private float _staminaRegen;
     private Camera _camera;
     public SFXPlayer SFXPlayer;
@@ -17,8 +16,6 @@ public class PC : MonoBehaviour
     public bool JoinedMatch;
 
     private PlayerClass _class;
-    
-    private Vector3 _priorPosition, _priorRotation;
     private List<PeriodicAction> _actionList;
 
     private ManaPool _enteredPool;
@@ -26,20 +23,18 @@ public class PC : MonoBehaviour
     private Dictionary<byte, LeyInfluencer> _activeInfluencers;
     private HMLUpdater _hp, _mana, _ley, _stamina;
     private PeriodicAction _joinRerequest;
-    private int _prPacketID = 0;
+    
     private float _coolDownRemaining = 0.0f;
     public bool InValhalla = false;
     public HashSet<int> _inTriggers;
     public HashSet<int> _priorInTriggers;
-    private Vector3 _moveCheck, _rotateCheck;
-    private byte _postureCheck;
+    
     private Dictionary<EffectCode, AppliedEffect> _effects;
     private SpellData _primarySpell, _secondarySpell;
     public void Awake()
     {
         if (!Game.Running)
         {
-            
             SceneManager.LoadScene("Pregame");
         }
         else
@@ -54,7 +49,6 @@ public class PC : MonoBehaviour
             _hml = new Dictionary<PlayerIndicator, HMLUpdater>();
             _class = (PlayerClass)PlayerAccount.SelectedCharacter.CharacterClass;
             _actionList = new List<PeriodicAction>();
-            new PeriodicAction(Game.TickInterval, ReportMovement, _actionList);
             new PeriodicAction(Game.TickInterval, UpdateIndicators, _actionList);
             if(MatchParams.MatchTeam != Team.Neutral)
             {
@@ -245,43 +239,7 @@ public class PC : MonoBehaviour
         }
     }
     
-    private void ReportMovement()
-    {
-        if (_moveCheck != transform.position || _rotateCheck != transform.eulerAngles || _postureCheck != Game.PCAvatar.Posture)
-        {
-            _moveCheck = transform.position;
-            _rotateCheck = transform.eulerAngles;
-            _postureCheck = Game.PCAvatar.Posture;
-            bool positionExceedance = MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit);
-            bool rotationExceedance = MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit);
-            if (positionExceedance && rotationExceedance)
-            {
-                byte[] prData = new byte[24];
-                ByteUtils.FillArray(ref prData, 0, _priorPosition);
-                ByteUtils.FillArray(ref prData, 12, _priorRotation);
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, _postureCheck, prData, ref _prPacketID));
-            }
-            else if (positionExceedance)
-            {
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, _postureCheck, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
-            }
-            else
-            {
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, _postureCheck, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
-            }
-        }
-        
-    }
-    private bool MinimumReportingExceedance(Vector3 current, ref Vector3 prior, float limit)
-    {
-        float distance = Vector3.Distance(current, prior);
-        if (distance > limit)
-        {
-            prior = current;
-            return true;
-        }
-        return false;
-    }
+    
     private void MenuCheck()
     {
         if (InputControls.InGameMenu && !Game.ControlMode)
@@ -335,15 +293,12 @@ public class PC : MonoBehaviour
         switch (decrypted[0])
         {
             case InGame_Receive.HPUpdate:
-                Debug.Log("HP Update");
                 _hp.UpdateValue(value);
                 break;
             case InGame_Receive.ManaUpdate:
-                Debug.Log("Mana Update");
                 _mana.UpdateValue(value);
                 break;
             case InGame_Receive.LeyUpdate:
-                Debug.Log("Ley Update");
                 _ley.UpdateValue(value);
                 break;
         }

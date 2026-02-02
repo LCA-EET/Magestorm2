@@ -84,7 +84,6 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void HandlePostureChange(){
         MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        mc.SetPosture(_decrypted[2]);
         _owningMatch.SendToAll(Packets.PostureChangePacket(_decrypted));
     }
     private void HandleTap(){

@@ -9,9 +9,12 @@ public class Postures
 }
 public class AnimationKeys
 {
-    public const byte Idle = 0, 
-        Jump = 1, 
-        Walk = 2, 
+    public const byte Idle = 0,
+        Jump = 1,
+        Walk = 2,
+        Run = 3,
+        Crouch = 4,
+        CrouchWalk = 5,
         None = 99;
 }
 public enum SpellType : byte

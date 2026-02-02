@@ -18,6 +18,7 @@ public static class Game
     public static int GameServerPort;
     public static IPAddress GameServerAddress;
     public static bool LoggedIn = false;
+    public static PMDByte PlayerPMDByte;
     public static bool GameMode
     {
         get
@@ -77,23 +78,8 @@ public static class Game
             _init = true;
         }
     }
-    private static int ComputeChecksum(byte[] data)
-    {
-        int toReturn = 0;
-        for (int i = 0; i < data.Length; i++)
-        {
-            if (data[i] > 127)
-            {
-                toReturn += data[i] - 256;
-                // In Java, the first bit of the byte is the sign byte. Java bytes range from -128 to 127. The bytes in C# in contrast are unsigned, so the first bit adds 2^7 (128) to the total. So, I have to subtract 128 * 2 for the checksum on the client (C#) to match that of the server (Java).
-            }
-            else
-            {
-                toReturn += data[i];
-            }
-        }
-        return toReturn;
-    }
+    
+    
     public static void SetServerTime(long serverTime)
     {
         _serverTime = serverTime;
