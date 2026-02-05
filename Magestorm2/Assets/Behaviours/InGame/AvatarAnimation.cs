@@ -7,9 +7,9 @@ public class AvatarAnimation : MonoBehaviour{
 
     private Animator _animator;
     private PeriodicAction _action;
-    private bool _isDone, _male;
-    private byte _nextAnimation, _currentAnimation;
-    private int _animationID;
+    private bool _isDone, _male, _priorMove;
+    private byte _nextAnimation, _currentAnimation, _priorPosture;
+    
     public void Init(Animator animator, bool male)
     {
         _animator = animator;
@@ -18,8 +18,59 @@ public class AvatarAnimation : MonoBehaviour{
         _nextAnimation = AnimationKeys.None;
         _action = new PeriodicAction(0.05f, CheckComplete, null);
     }
+    public void Animate(PMDByte pmd)
+    {
+        byte animationKey = AnimationKeys.None;
+        byte currentPosture = pmd.Posture;
+        bool currentlyMoving = pmd.IsMoving;
+        if (currentlyMoving)
+        {
+            switch (currentPosture)
+            {
+                case Postures.Standing:
+                    if (pmd.IsMovingForward)
+                    {
+                        animationKey = pmd.IsRunning ? AnimationKeys.Run : AnimationKeys.Walk_Forward;
+                    }
+                    else
+                    {
+                        animationKey = AnimationKeys.Walk_Backward;
+                    }
+                    break;
+                case Postures.Jump:
+                    animationKey = AnimationKeys.Jump;
+                    break;
+                case Postures.Crouched:
+                    animationKey = pmd.IsMovingForward ? AnimationKeys.CrouchWalk_Forward : AnimationKeys.CrouchWalk_Backward;
+                    break;
+            }
+        }
+        else
+        {
+            switch (currentPosture)
+            {
+                case Postures.Standing:
+                    animationKey = AnimationKeys.Idle_Standing;
+                    break;
+                case Postures.Jump:
+                    animationKey = AnimationKeys.Jump;
+                    break;
+                case Postures.Crouched:
+                    animationKey = AnimationKeys.Idle_Crouching;
+                    break;
+                
+            }
+        }
+        SetAnimation(animationKey, currentlyMoving != _priorMove || currentPosture != _priorPosture);
+        _priorPosture = currentPosture;
+        _priorMove = pmd.IsMoving;
+    }
     public void SetAnimation(byte key, bool stopCurrent)
     {
+        if(key == AnimationKeys.None)
+        {
+            return;
+        }
         _isDone = false;
         if (stopCurrent)
         {
@@ -39,11 +90,9 @@ public class AvatarAnimation : MonoBehaviour{
     }
     private void SwitchRTAC(byte key)
     {
-        _animationID++;
         _currentAnimation = key;
         _animator.runtimeAnimatorController = _male ? MaleAnimations[key] : FemaleAnimations[key];
-        //_animator.StartPlayback();
-        Debug.Log("AnimationID: " + _animationID + ", " + key);
+        //Debug.Log("AnimationID: " + _animationID + ", " + key);
     }
     private void CheckComplete()
     {
@@ -52,7 +101,14 @@ public class AvatarAnimation : MonoBehaviour{
         {
             if(_nextAnimation == AnimationKeys.None)
             {
-                _nextAnimation = AnimationKeys.Idle;
+                if(_priorPosture == Postures.Standing)
+                {
+                    _nextAnimation = AnimationKeys.Idle_Standing;
+                }
+                else if(_priorPosture == Postures.Crouched)
+                {
+                    _nextAnimation = AnimationKeys.Idle_Crouching;
+                }
             }
             SetAnimation(_nextAnimation, true);
             _nextAnimation = AnimationKeys.None;

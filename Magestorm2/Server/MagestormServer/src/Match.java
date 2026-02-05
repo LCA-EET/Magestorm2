@@ -45,7 +45,7 @@ public class Match {
         _matchID = matchID;
         _creatorID = creatorID;
         _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
-        LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime);
+        LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime + " on port " + _matchPort);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + 1 + nameBytesLength + 1];
         _lastIndex = (byte)(_matchBytes.length-1);

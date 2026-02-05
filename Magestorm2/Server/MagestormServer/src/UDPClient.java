@@ -16,7 +16,7 @@ public class UDPClient extends Thread{
             new Thread(this).start();
         }
         catch(Exception e){
-            Main.LogError("Could not open datagram socket: " + e.getMessage());
+            Main.LogError("Could not open datagram socket on port: " + _localPort + ", " + e.getMessage());
         }
     }
     @Override
@@ -32,11 +32,12 @@ public class UDPClient extends Thread{
             }catch (Exception e){ }
             receivedBuffer = new byte[bufferSize];
         }
-        _udpSocket.close();
         Main.LogMessage("UDP client on port " + _localPort + " is no longer listening.");
     }
     public void StopListening() {
+        Main.LogMessage("UDPClient.StopListening()");
         _listening = false;
+        _udpSocket.close();
     }
 
     public void Send(byte[] encryptedPayload, RemoteClient rc){

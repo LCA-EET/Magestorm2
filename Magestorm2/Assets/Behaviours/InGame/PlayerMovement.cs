@@ -30,14 +30,10 @@ public class PlayerMovement : MonoBehaviour
     private bool _positionChanged = false;
     private bool _midJump = false;
     private bool _grounded = false;
-    private bool _running = false;
     private bool _csChanging = false;
-    private bool _moving = false;
-    private bool _priorMoving = false;
     private byte _postureCheck;
     private RaycastHit _hitInfo;
     private PC _pc;
-    private byte _priorPosture = Postures.Standing;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -68,16 +64,17 @@ public class PlayerMovement : MonoBehaviour
                 byte[] prData = new byte[24];
                 ByteUtils.FillArray(ref prData, 0, _priorPosition);
                 ByteUtils.FillArray(ref prData, 12, _priorRotation);
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, _postureCheck, prData, ref _prPacketID));
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData, ref _prPacketID));
             }
             else if (positionExceedance)
             {
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, _postureCheck, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
             }
             else
             {
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, _postureCheck, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
             }
+            //Game.PCAvatar.PMD.SetMoving(positionExceedance || rotationExceedance);
         }
 
     }
@@ -95,10 +92,6 @@ public class PlayerMovement : MonoBehaviour
     {
         _pc = pc;
     }
-    public bool IsRunning
-    {
-        get { return _running; }
-    }
     private bool UprightMovement()
     {
         float forwardAcceleration = _forwardAcceleration;
@@ -108,17 +101,17 @@ public class PlayerMovement : MonoBehaviour
 
         if (InputControls.Run && _pc.CurrentStamina > 0)
         {
-            _running = true;
+            Game.PlayerPMDByte.SetRunning(true);
             forwardAcceleration *= 3;
             maxForwardSpeed *= 3;
         }
         bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
         
-        if (_running && moving)
+        if (Game.PlayerPMDByte.IsRunning && moving)
         {
             _pc.UseStamina(Time.deltaTime * 10.0f);
         }
-        if (!_running)
+        if (!Game.PlayerPMDByte.IsRunning)
         {
             _pc.RegenStamina(Time.deltaTime, moving);
         }
@@ -169,7 +162,9 @@ public class PlayerMovement : MonoBehaviour
     {
         float xAxisInput = MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
         float zDirection = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, SpeedModifier);
-        bool moving = (xAxisInput != 0) || (zDirection != 0);
+        //Debug.Log("X-Axis Input: " + xAxisInput + ", Z-Direction: " + zDirection);
+        //Debug.Log("Lateral Speed: " + _lateralSpeed + ", Forward Speed: " + _forwardSpeed);
+        bool moving = Mathf.Abs(_lateralSpeed) >= 0.2f || Mathf.Abs(_forwardSpeed) >= 0.2f;
         Game.PlayerPMDByte.SetMovingAndDirection(moving, zDirection > 0);
         return moving;
     }
@@ -179,8 +174,8 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        
-        _running = false;
+
+        Game.PlayerPMDByte.SetRunning(false);
         if (_pc.IsAlive)
         {
             if (InputControls.Crouch && !_csChanging)
@@ -193,11 +188,11 @@ public class PlayerMovement : MonoBehaviour
             }
             if (_csChanging || Game.PlayerPMDByte.IsCrouched)
             {
-                _moving = CrouchedMovement();
+                CrouchedMovement();
             }
             else
             {
-                _moving = UprightMovement();
+                UprightMovement();
             }
         }
         else
@@ -205,12 +200,6 @@ public class PlayerMovement : MonoBehaviour
             DeadMovement();
         }
         _reportMovement.ProcessAction(Time.deltaTime);
-        //if(_priorMoving != _moving)
-        //{
-            _priorMoving = _moving;
-        Game.PlayerPMDByte.SetMoving(_moving);
-            //Game.SetPCAnimation(_moving, Game.PCAvatar.Posture);
-        //}
     }
     private void CrouchStandLerp(Vector3 start, Vector3 end)
     {
@@ -239,7 +228,7 @@ public class PlayerMovement : MonoBehaviour
                 Game.PlayerPMDByte.SetLocalPosture(Postures.Crouched); 
                 SetControllerHC(_controllerCrouchCenter, _controllerCrouchHeight);
             }
-            Game.SendInGameBytes(InGame_Packets.PostureChangePacket(Game.PlayerPMDByte.ToByte()));
+            Game.SendInGameBytes(InGame_Packets.PostureChangePacket(Game.PlayerPMDByte));
         }
     }
     private void SetControllerHC(Vector3 center, float height)
@@ -288,7 +277,7 @@ public class PlayerMovement : MonoBehaviour
                 Surface standingOn = _hitInfo.collider.gameObject.GetComponent<Surface>();
                 if (standingOn != null)
                 {
-                    if (_running)
+                    if (Game.PlayerPMDByte.IsRunning)
                     {
                         ComponentRegister.PC.PlaySFX(standingOn.FootstepClip);
                         Debug.Log("Play Footstep");
@@ -314,7 +303,7 @@ public class PlayerMovement : MonoBehaviour
         {
             speed = maxSpeed;
         }
-        if(speed < -maxSpeed)
+        else if(speed < -maxSpeed)
         {
             speed = -maxSpeed;
         }
@@ -337,7 +326,12 @@ public class PlayerMovement : MonoBehaviour
             directionFactor = InputControls.IsPressed(negative) ? -1.0f : 1.0f;
         }
         Accelerate(ref speed, maxSpeed, directionFactor, acceleration);
-        Controller.Move(directionVector * speed * Time.deltaTime * speedModifier);
+        Vector3 movementVector = directionVector * speed * Time.deltaTime * speedModifier;
+        if(movementVector.magnitude >= 0.001)
+        {
+            Controller.Move(movementVector);
+            //Debug.Log("Vector Magnitude: " + movementVector.magnitude);
+        }
         return directionFactor;
     }
 

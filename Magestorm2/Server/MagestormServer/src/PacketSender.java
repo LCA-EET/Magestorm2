@@ -33,6 +33,5 @@ public class PacketSender extends Thread{
                 throw new RuntimeException(e);
             }
         }
-        _udp.StopListening();
     }
 }

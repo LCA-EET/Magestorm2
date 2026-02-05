@@ -139,7 +139,7 @@ public class PC : MonoBehaviour
             }
         }
         CheckSpellSlot();
-        if(_coolDownRemaining <= 0 && !InValhalla && IsAlive && !PlayerMovement.IsRunning)
+        if(_coolDownRemaining <= 0 && !InValhalla && IsAlive && !Game.PlayerPMDByte.IsRunning)
         {
             CheckCast();
         }

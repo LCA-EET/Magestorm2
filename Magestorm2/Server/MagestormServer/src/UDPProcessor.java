@@ -71,7 +71,7 @@ public class UDPProcessor extends Thread{
 
     @Override
     public void run(){
-        while(Main.Running){
+        while(!_terminated){
             try{
                 if(!_toProcess.isEmpty()){
                     ProcessPacket(_toProcess.poll());
@@ -81,7 +81,8 @@ public class UDPProcessor extends Thread{
                 Main.LogError(ex.getMessage());
                 Main.LogStackTrace(ex);
             }
-
         }
+        _udpClient.StopListening();
+        Main.LogMessage("UDPProcessor on port " + _listeningPort + " has terminated.");
     }
 }

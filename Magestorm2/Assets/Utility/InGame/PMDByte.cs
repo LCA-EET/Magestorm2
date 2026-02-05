@@ -6,6 +6,7 @@ public class PMDByte
     private static byte idxPostureLSB = 0;
     private static byte idxMoving = 2;
     private static byte idxDirection = 3;
+    private static byte idxRunning = 4;
     private byte _postureByte = Postures.Standing;
     
     private BitArray _bitArray;
@@ -41,6 +42,11 @@ public class PMDByte
     {
         _bitArray[idxDirection] = forward;
     }
+    public void SetRunning(bool running)
+    {
+        _bitArray[idxRunning] = running;
+    }
+
     public void SetMovingAndDirection(bool moving, bool forward)
     {
         SetMoving(moving);
@@ -131,7 +137,13 @@ public class PMDByte
             return _bitArray[idxMoving];
         }
     }
-
+    public bool IsRunning
+    {
+        get
+        {
+            return _bitArray[idxRunning];
+        }
+    }
     public byte ToByte()
     {
         byte[] byteArray = new byte[1]; // Ensure enough space for all bits

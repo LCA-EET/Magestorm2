@@ -94,18 +94,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AvatarAnimation
   MaleAnimations:
   - {fileID: 9100000, guid: 084ed73b7e7c0754eb337259e9209468, type: 2}
-  - {fileID: 9100000, guid: 2041c0db49de8e94ea644176ce03232c, type: 2}
-  - {fileID: 9100000, guid: 27625ccad7bdcec42b99626637b8d1cc, type: 2}
-  - {fileID: 9100000, guid: a760f31009ba80249abbf70da8383e49, type: 2}
   - {fileID: 9100000, guid: 45004eb772573974792374166d4b1167, type: 2}
+  - {fileID: 9100000, guid: 27625ccad7bdcec42b99626637b8d1cc, type: 2}
+  - {fileID: 9100000, guid: 86eebe318b1b80940a9e05f142407895, type: 2}
+  - {fileID: 9100000, guid: a760f31009ba80249abbf70da8383e49, type: 2}
+  - {fileID: 9100000, guid: 2041c0db49de8e94ea644176ce03232c, type: 2}
   - {fileID: 9100000, guid: 82f8da7f268b3fb4093dddca66a1b3e8, type: 2}
+  - {fileID: 9100000, guid: 6f2743d364b224d4aab2e466d9231a3d, type: 2}
   FemaleAnimations:
   - {fileID: 22100000, guid: 4f9800672af7570478f085a3023ace57, type: 2}
-  - {fileID: 9100000, guid: 3a52e43da1b6b604c8ed63485967953f, type: 2}
-  - {fileID: 9100000, guid: ff038c74276096843a4b1cdc5645ceb0, type: 2}
-  - {fileID: 9100000, guid: 54b97aa90e8bf7d49981d3dc9a71582f, type: 2}
   - {fileID: 9100000, guid: 8af41b1ac289a904ca2bcf0c1d8a5b40, type: 2}
+  - {fileID: 9100000, guid: ff038c74276096843a4b1cdc5645ceb0, type: 2}
+  - {fileID: 9100000, guid: fa16faf6cef43c7498d6468dc4b1507f, type: 2}
+  - {fileID: 9100000, guid: 54b97aa90e8bf7d49981d3dc9a71582f, type: 2}
+  - {fileID: 9100000, guid: 3a52e43da1b6b604c8ed63485967953f, type: 2}
   - {fileID: 9100000, guid: 27a935ce9a81cbc4ca8b5da8a3188f47, type: 2}
+  - {fileID: 9100000, guid: 95f23a1d6e2b9b042adcac1b5a5576ee, type: 2}
 --- !u!1 &4332805042833251275
 GameObject:
   m_ObjectHideFlags: 0

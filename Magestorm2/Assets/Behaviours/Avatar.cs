@@ -55,7 +55,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform, false, true))
             {
                 _positionChange = false;
-                AvatarAnimation.SetAnimation(AnimationKeys.Idle, true);
             }
         }
         if (_rotationChange)
@@ -71,6 +70,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     {
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         AvatarAnimation.SetElapsed(Time.deltaTime);
+        AvatarAnimation.Animate(_pmd);
     }
     private void EffectTick()
     {
@@ -223,19 +223,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             _startPostion = transform.position;
             _newPosition = new Vector3(x, y, z);
             _positionChange = true;
-            switch (_pmd.Posture)
-            {
-                case Postures.Jump:
-                    AvatarAnimation.SetAnimation(AnimationKeys.Jump, true);
-                    break;
-                case Postures.Standing:
-                    AvatarAnimation.SetAnimation(AnimationKeys.Walk, true);
-                    break;
-                case Postures.Airborne:
-                    break;
-                case Postures.Crouched:
-                    break;
-            }
         }
     }
 
