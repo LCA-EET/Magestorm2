@@ -44,7 +44,8 @@ public class Match {
         _nextPlayerID = 1;
         _matchID = matchID;
         _creatorID = creatorID;
-        _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
+        //_expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
+        _expirationTime = creationTime+30000;
         LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime + " on port " + _matchPort);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + 1 + nameBytesLength + 1];
@@ -210,12 +211,21 @@ public class Match {
             SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.LeyUpdate, newLey), mc);
         }
     }
-    public void LeaveMatch(byte id, byte team, boolean send, boolean quitGame){
+    private void RemoveAllPlayers(){
+        ArrayList<Byte> playerIDs = new ArrayList<>();
+        for (MatchCharacter matchCharacter : _matchCharacters.values()){
+            playerIDs.add(matchCharacter.GetIDinMatch());
+        }
+        for (byte id : playerIDs){
+            LeaveMatch(id, false, false);
+        }
+    }
+    public void LeaveMatch(byte id, boolean send, boolean quitGame){
         MatchCharacter departee = _matchCharacters.remove(id);
         if(departee != null){
             PlayerCharacter pc = departee.PC();
             _verifiedClients.remove(id);
-            _matchTeams.get(team).RemovePlayer(id);
+            _matchTeams.get(departee.GetTeamID()).RemovePlayer(id);
             if(quitGame){
                 GameServer.ClientLoggedOut(pc.GetAccountID());
             }
@@ -280,7 +290,9 @@ public class Match {
     public void MarkExpired(){
         MatchManager.RemoveMatch(_matchID);
         LogMessage("The match has ended. Notifying players...");
-        SendToAll(Packets.MatchEndedPacket());
+        ArrayList<RemoteClient> remainingClients = new ArrayList<>(_verifiedClients.values());
+        SendToCollection(Packets.MatchEndedPacket(), remainingClients);
+        RemoveAllPlayers();
         _processor.TerminateProcessor();
     }
     public boolean IsPlayerOnTeam(byte idInMatch, byte teamID){
@@ -311,9 +323,6 @@ public class Match {
         }
 
     }
-    public void SendMatchEndPacket(){
-        
-    }
     public short SpellCast(MatchCharacter caster, Spell spellReference){
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
@@ -323,6 +332,7 @@ public class Match {
         }
         return castID;
     }
+
     public void SendToAll(byte[] encrypted){
         _processor.EnqueueForSend(encrypted, _verifiedClients.values());
     }
@@ -414,7 +424,7 @@ public class Match {
         if(!_inactiveClients.isEmpty()){
             SendToCollection(Packets.IGInactivityDisconnectPacket(), _inactiveClients);
             for(MatchCharacter mc : _departedCharacters){
-                LeaveMatch(mc.GetIDinMatch(), mc.GetTeamID(), false, true);
+                LeaveMatch(mc.GetIDinMatch(), false, true);
             }
             SendToAll(Packets.PlayersLeftMatchPacket(_departedCharacters));
         }

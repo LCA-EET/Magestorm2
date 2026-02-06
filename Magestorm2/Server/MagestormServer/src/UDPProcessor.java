@@ -82,7 +82,6 @@ public class UDPProcessor extends Thread{
                 Main.LogStackTrace(ex);
             }
         }
-        _udpClient.StopListening();
         Main.LogMessage("UDPProcessor on port " + _listeningPort + " has terminated.");
     }
 }

@@ -109,12 +109,12 @@ public class InGamePacketProcessor extends UDPProcessor{
         _owningMatch.GetMatchCharacter(_decrypted[1]).MarkPacketReceived();
     }
     private void HandleQuitGame(){
-        _owningMatch.LeaveMatch(_decrypted[1], _decrypted[2], true, true);
+        _owningMatch.LeaveMatch(_decrypted[1], true, true);
         int accountID = ByteUtils.ExtractInt(_decrypted, 3);
         GameServer.ClientLoggedOut(accountID);
     }
     private void HandleLeaveMatch(){
-        _owningMatch.LeaveMatch(_decrypted[1], _decrypted[2], true, false);
+        _owningMatch.LeaveMatch(_decrypted[1], true, false);
     }
 
     private void HandleBroadcastMessage(){

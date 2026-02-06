@@ -33,5 +33,7 @@ public class PacketSender extends Thread{
                 throw new RuntimeException(e);
             }
         }
+        Main.LogMessage("No longer sending from port " + _processor._listeningPort);
+        _udp.StopListening();
     }
 }

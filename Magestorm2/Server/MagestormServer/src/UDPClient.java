@@ -35,11 +35,10 @@ public class UDPClient extends Thread{
         Main.LogMessage("UDP client on port " + _localPort + " is no longer listening.");
     }
     public void StopListening() {
-        Main.LogMessage("UDPClient.StopListening()");
         _listening = false;
         _udpSocket.close();
+        Main.LogMessage("UDP socket on port " + _localPort + " is closed.");
     }
-
     public void Send(byte[] encryptedPayload, RemoteClient rc){
         DatagramPacket toSend = new DatagramPacket(encryptedPayload, encryptedPayload.length, rc.IPAddress(), rc.GetRemotePort());
         try{
