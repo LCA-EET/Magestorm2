@@ -114,12 +114,12 @@ public static class Match
         byte playerID = decrypted[1];
         if(playerID != MatchParams.IDinMatch)
         {
-            byte posture = decrypted[6];
+            byte pmd = decrypted[6];
             byte controlCode = decrypted[7];
             if (_matchPlayers.ContainsKey(playerID))
             {
                 Avatar toUpdate = _matchPlayers[playerID];
-                toUpdate.PMD.SetPMD(posture);
+                toUpdate.PMD.SetPMD(pmd);
                 int packetID = BitConverter.ToInt32(decrypted, 2);
                 if(packetID > toUpdate.LastPRPacketID)
                 {

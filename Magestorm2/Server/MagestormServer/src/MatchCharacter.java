@@ -13,14 +13,12 @@ public class MatchCharacter {
     private boolean _verified;
 
     private long _lastPacketReceived;
-    private long _manaRegenTick;
+    private final long _manaRegenTick;
     private long _manaRegenElapsed;
-    private long _hpRegenTick;
+    private final long _hpRegenTick;
     private long _hpRegenElapsed;
-    private long _waitForHPRegen;
+    private final long _waitForHPRegen;
     private long _hpRegenWaitElapsed;
-    private final long _inactivityWarningThreshold = 30000;
-    private final long _inactivityMaximumThreshold = 61000;
     private final byte[] _position, _direction;
     private float _currentHP, _currentMana, _maxHP, _maxMana;
     private float _priorHP, _priorMana;
@@ -145,11 +143,10 @@ public class MatchCharacter {
     }
 
     public boolean InactivityExceededWarningThreshold(){
-        return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityWarningThreshold;
+        return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityWarning;
     }
     public boolean InactivityExceededMaximumThreshold(){
-        //Main.LogMessage("Inactivity check: " + _lastPacketReceived + ", " + _inactivityMaximumThreshold);
-        return (System.currentTimeMillis() - _lastPacketReceived) >= _inactivityMaximumThreshold;
+        return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityDisconnect;
     }
     public boolean RegenerateHP(long msElapsed){
         if(_hpRegenWaitElapsed >= _waitForHPRegen){

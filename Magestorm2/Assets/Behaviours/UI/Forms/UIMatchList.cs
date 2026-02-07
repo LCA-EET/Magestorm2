@@ -12,6 +12,8 @@ public class UIMatchList : ValidatableForm
     {
         Game.SendPregameBytes(Pregame_Packets.RequestMatchListPacket());
         Debug.Log("Match List Request Sent.");
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     

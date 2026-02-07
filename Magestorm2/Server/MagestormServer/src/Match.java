@@ -44,8 +44,8 @@ public class Match {
         _nextPlayerID = 1;
         _matchID = matchID;
         _creatorID = creatorID;
-        //_expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
-        _expirationTime = creationTime+30000;
+        _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
+        //_expirationTime = creationTime+30000;
         LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime + " on port " + _matchPort);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + 1 + nameBytesLength + 1];
@@ -420,6 +420,13 @@ public class Match {
                 _inactiveClients.add(mc.GetRemoteClient());
                 _departedCharacters.add(mc);
             }
+            else if (mc.InactivityExceededWarningThreshold()){
+                LogMessage("Sending inactivity warning.");
+                _warningClients.add(mc.GetRemoteClient());
+            }
+        }
+        if(!_warningClients.isEmpty()){
+            SendToCollection(Packets.InactivityWarningPacket(), _warningClients);
         }
         if(!_inactiveClients.isEmpty()){
             SendToCollection(Packets.IGInactivityDisconnectPacket(), _inactiveClients);

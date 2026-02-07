@@ -52,14 +52,14 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     {
         if (_positionChange)
         {
-            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startPostion, _newPosition, transform, false, true))
+            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.MovementPolling, _startPostion, _newPosition, transform, false, true))
             {
                 _positionChange = false;
             }
         }
         if (_rotationChange)
         {
-            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.TickInterval, _startRotation, _newRotation, transform, false, false))
+            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.MovementPolling, _startRotation, _newRotation, transform, false, false))
             {
                 _rotationChange = false;
             }

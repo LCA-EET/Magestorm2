@@ -15,6 +15,8 @@ public class UICharacterSelectForm : ValidatableForm
         }
         RefreshCards();
         ReselectExisting();
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
     private void ReselectExisting()
     {

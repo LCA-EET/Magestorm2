@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private int _prPacketID = 0;
     private Vector3 _controllerCenter, _controllerCrouchCenter, _cameraLocalPosition, _cameraCrouchedPosition;
     private Vector3 _moveCheck, _rotateCheck;
-    private Vector3 _priorPosition, _priorRotation;
+    private Vector3 _priorStep, _priorPosition, _priorRotation;
 
     private bool _positionChanged = false;
     private bool _midJump = false;
@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         _priorPosition = transform.position;
-        _reportMovement = new PeriodicAction(Game.TickInterval, ReportMovement, null);
+        _reportMovement = new PeriodicAction(Game.MovementPolling, ReportMovement, null);
         ComponentRegister.PlayerTransform = transform;
         ComponentRegister.PlayerMovement = this;
         ComponentRegister.PlayerController = Controller;
@@ -74,7 +74,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
             }
-            //Game.PCAvatar.PMD.SetMoving(positionExceedance || rotationExceedance);
         }
 
     }
@@ -160,11 +159,11 @@ public class PlayerMovement : MonoBehaviour
 
     private bool MoveAlongAxes(ref float lateralSpeed, ref float forwardSpeed, float maxLateralSpeed, float maxForwardSpeed, float lateralAcceleration, float forwardAcceleration)
     {
-        float xAxisInput = MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
-        float zDirection = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, SpeedModifier);
+        float xAxisInput = MoveAlongAxis(ref lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
+        float zDirection = MoveAlongAxis(ref forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, SpeedModifier);
         //Debug.Log("X-Axis Input: " + xAxisInput + ", Z-Direction: " + zDirection);
         //Debug.Log("Lateral Speed: " + _lateralSpeed + ", Forward Speed: " + _forwardSpeed);
-        bool moving = Mathf.Abs(_lateralSpeed) >= 0.2f || Mathf.Abs(_forwardSpeed) >= 0.2f;
+        bool moving = Mathf.Abs(lateralSpeed) >= 0.2f || Mathf.Abs(forwardSpeed) >= 0.2f;
         Game.PlayerPMDByte.SetMovingAndDirection(moving, zDirection > 0);
         return moving;
     }
@@ -256,8 +255,8 @@ public class PlayerMovement : MonoBehaviour
             _midJump = false;
             _verticalAcceleration = 0.0f;
             _verticalSpeed = 0.0f;
-            _distanceTravelled += Vector3.Distance(transform.position, _priorPosition);
-            _priorPosition = transform.position;
+            _distanceTravelled += Vector3.Distance(transform.position, _priorStep);
+            _priorStep = transform.position;
             PlayStepSound();
         }
         if (priorState != _grounded)
@@ -330,7 +329,6 @@ public class PlayerMovement : MonoBehaviour
         if(movementVector.magnitude >= 0.001)
         {
             Controller.Move(movementVector);
-            //Debug.Log("Vector Magnitude: " + movementVector.magnitude);
         }
         return directionFactor;
     }

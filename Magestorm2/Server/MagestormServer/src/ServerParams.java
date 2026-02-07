@@ -1,7 +1,5 @@
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.InetAddress;
 import java.util.Scanner;
 
 public class ServerParams {
@@ -9,6 +7,10 @@ public class ServerParams {
     public static String LogFilePath;
     public static String ErrorFilePath;
     public static String EmailCredsPath;
+    public static long InactivityWarning = 60000;
+    public static long InactivityDisconnect = 120000;
+    public static long PregameInactivity = 60000;
+    public static boolean SymmetricEncryption = false;
     public static short ListeningPort;
 
     public static void LoadParams(String paramFilePath){
@@ -26,6 +28,10 @@ public class ServerParams {
             ProfanityChecker.Init(paramScanner.nextLine());
             ErrorFilePath = paramScanner.nextLine();
             LogFilePath = paramScanner.nextLine();
+            InactivityWarning = Long.parseLong(paramScanner.nextLine());
+            InactivityDisconnect = Long.parseLong(paramScanner.nextLine());
+            SymmetricEncryption = Boolean.parseBoolean(paramScanner.nextLine());
+            PregameInactivity = Long.parseLong(paramScanner.nextLine());
             System.out.println("Log file: " + LogFilePath);
             System.out.println("Error file: " + ErrorFilePath);
             Main.InitLog();

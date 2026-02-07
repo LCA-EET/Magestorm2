@@ -186,11 +186,11 @@ public class InGamePacketProcessor : UDPProcessor
             {
                 ComponentRegister.Valhalla.EnterValhalla();
                 ComponentRegister.PC.UpdateHP(MatchParams.MaxHP);
-                new MessageData(Language.BuildString(213, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), "Server");
+                new MessageData(Language.BuildString(213, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), Language.GetBaseString(304));
             }
             else
             {
-                new MessageData(Language.BuildString(214, tapper.Name, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), "Server");
+                new MessageData(Language.BuildString(214, tapper.Name, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), Language.GetBaseString(304));
             }
             tapper.SetAlive(true);
         }
@@ -208,11 +208,11 @@ public class InGamePacketProcessor : UDPProcessor
             {
                 float hp = BitConverter.ToSingle(_decrypted, 3);
                 ComponentRegister.PC.UpdateHP(hp);
-                new MessageData(reviver == null ? Language.GetBaseString(210) : Language.BuildString(208, reviver.Name), "Server");
+                new MessageData(reviver == null ? Language.GetBaseString(210) : Language.BuildString(208, reviver.Name), Language.GetBaseString(304));
             }
             else
             {
-                new MessageData(reviver == null ? Language.BuildString(211, revived.Name) : Language.BuildString(212, revived.Name, reviver.Name), "Server");
+                new MessageData(reviver == null ? Language.BuildString(211, revived.Name) : Language.BuildString(212, revived.Name, reviver.Name), Language.GetBaseString(304));
             }
             revived.SetAlive(true);
         }
@@ -227,7 +227,7 @@ public class InGamePacketProcessor : UDPProcessor
         Array.Copy(_decrypted, 7, messageBytes, 0, messageLength);
         string message = ByteUtils.BytesToUTF8(messageBytes, 0, messageLength);
         Avatar sender = null;
-        string senderName = "Server";
+        string senderName = Language.GetBaseString(304);
         if(senderID == MatchParams.IDinMatch)
         {
             senderName = Language.GetBaseString(206) + " " + Teams.GetTeamName(recipientTeam);
@@ -246,7 +246,7 @@ public class InGamePacketProcessor : UDPProcessor
         FlagManager.FlagTaken(flagTaken);
         if (takerID == MatchParams.IDinMatch)
         {
-            new MessageData(Language.BuildString(193, teamName), "Server"); //
+            new MessageData(Language.BuildString(193, teamName), Language.GetBaseString(304)); //
             FlagManager.FlagHeldByPlayer = flagTaken;
         }
         else
@@ -254,11 +254,11 @@ public class InGamePacketProcessor : UDPProcessor
             Avatar flagTaker = null;
             if (Match.GetAvatar(takerID, ref flagTaker))
             {
-                new MessageData(Language.BuildString(192, teamName, flagTaker.Name), "Server"); //
+                new MessageData(Language.BuildString(192, teamName, flagTaker.Name), Language.GetBaseString(304)); //
             }
             else
             {
-                new MessageData(Language.BuildString(191, teamName), "Server"); //
+                new MessageData(Language.BuildString(191, teamName), Language.GetBaseString(304)); //
             }
         }
     }
@@ -266,7 +266,7 @@ public class InGamePacketProcessor : UDPProcessor
     {
         Team flagReturned = (Team)_decrypted[1];
         FlagManager.ReturnFlag(flagReturned);
-        new MessageData(Language.BuildString(190, Teams.GetTeamName(flagReturned)), "Server"); //
+        new MessageData(Language.BuildString(190, Teams.GetTeamName(flagReturned)), Language.GetBaseString(304)); //
     }
     private void HandleFlagCapture()
     {
@@ -280,7 +280,7 @@ public class InGamePacketProcessor : UDPProcessor
         FlagManager.SetScore(flagCaptured, scoreCaptured);
         ComponentRegister.CTFScorePanel.RefreshScores();
         FlagManager.ReturnFlag(flagCaptured);
-        new MessageData(Language.BuildString(189, Teams.GetTeamName(flagCaptured), Teams.GetTeamName(capturingTeam)), "Server"); //
+        new MessageData(Language.BuildString(189, Teams.GetTeamName(flagCaptured), Teams.GetTeamName(capturingTeam)), Language.GetBaseString(304)); //
     }
     private void HandleFlagDrop()
     {
@@ -303,7 +303,7 @@ public class InGamePacketProcessor : UDPProcessor
         Team flagTeam = (Team)_decrypted[3];
         Vector3 position = ByteUtils.BytesToVector3(_decrypted, 5);
         FlagManager.RepositionFlag(flagTeam, position);
-        new MessageData(Language.BuildString(188, Teams.GetTeamName(flagTeam)), "Server"); //
+        new MessageData(Language.BuildString(188, Teams.GetTeamName(flagTeam)), Language.GetBaseString(304)); //
     }
     private void ProcessKilledPlayer()
     {
@@ -319,21 +319,21 @@ public class InGamePacketProcessor : UDPProcessor
                 ComponentRegister.PC.UpdateHP(0.0f);
                 if (Match.GetAvatar(killerID, ref playerKiller))
                 {
-                    new MessageData(Language.BuildString(186, playerKiller.Name), "Server"); //
+                    new MessageData(Language.BuildString(186, playerKiller.Name), Language.GetBaseString(304)); //
                 }
             }
             else
             {
                 if (killerID == MatchParams.IDinMatch) // player killed someone
                 {
-                    new MessageData(Language.BuildString(185, killedPlayer.Name), "Server"); //
+                    new MessageData(Language.BuildString(185, killedPlayer.Name), Language.GetBaseString(304)); //
                 }
                 else // someone else killed someone
                 {
                     Avatar killer = null;
                     if (Match.GetAvatar(killerID, ref killer))
                     {
-                        new MessageData(Language.BuildString(187, killedPlayer.Name), "Server"); //
+                        new MessageData(Language.BuildString(187, killedPlayer.Name), Language.GetBaseString(304)); //
                     }
                 }
             }
@@ -368,7 +368,7 @@ public class InGamePacketProcessor : UDPProcessor
     }
     private void ProcessInactivityWarning()
     {
-        Game.SendInGameBytes(InGame_Packets.InactivityResponsePacket());
+        new MessageData(Language.GetBaseString(301), Language.GetBaseString(304));
     }
 
     private void ProcessPlayerLeftMatchPacket()
@@ -397,7 +397,7 @@ public class InGamePacketProcessor : UDPProcessor
         string name;
         if(playerID == MatchParams.IDinMatch)
         {
-            name = "You";
+            name = Language.GetBaseString(302); // You
         }
         else
         {
@@ -407,7 +407,7 @@ public class InGamePacketProcessor : UDPProcessor
             }
             else
             {
-                name = "Player " + playerID;
+                name = Language.GetBaseString(303) + playerID;
             }
         }
         MessageData md = new MessageData(message, name);

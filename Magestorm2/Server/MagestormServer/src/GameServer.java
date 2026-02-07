@@ -3,7 +3,6 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GameServer extends Thread {
     public static final boolean SymmetricEncryption = false;
-    public static final long PregameTimeOut = 60000; // ten minutes
     public static final long Tick = 10;
     public static final byte MaxMatches = 20;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
