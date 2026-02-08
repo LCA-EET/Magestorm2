@@ -10,6 +10,9 @@ public class ServerParams {
     public static long InactivityWarning = 60000;
     public static long InactivityDisconnect = 120000;
     public static long PregameInactivity = 60000;
+    public static byte TickInterval = 10;
+    public static byte MaxMatches = 20;
+    public static byte PollingFactor = 5;
     public static boolean SymmetricEncryption = false;
     public static short ListeningPort;
 
@@ -32,6 +35,9 @@ public class ServerParams {
             InactivityDisconnect = Long.parseLong(paramScanner.nextLine());
             SymmetricEncryption = Boolean.parseBoolean(paramScanner.nextLine());
             PregameInactivity = Long.parseLong(paramScanner.nextLine());
+            TickInterval = Byte.parseByte(paramScanner.nextLine());
+            MaxMatches = Byte.parseByte(paramScanner.nextLine());
+            PollingFactor = Byte.parseByte(paramScanner.nextLine());
             System.out.println("Log file: " + LogFilePath);
             System.out.println("Error file: " + ErrorFilePath);
             Main.InitLog();

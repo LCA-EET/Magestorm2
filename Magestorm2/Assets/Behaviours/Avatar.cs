@@ -15,10 +15,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private bool _isAlive;
     private bool _updatedNeeded;
     private byte _playerID;
-    private Vector3 _startPostion, _newPosition;
-    private Vector3 _startRotation, _newRotation;
+    private Vector3 _startPostion, _nextPosition;
+    private Vector3 _startRotation, _nextRotation;
     private bool _positionChange, _rotationChange;
-    private float _moveElapsed;
+    private float _positionElapsed, _rotationElapsed;
     private float _effectTick = 0.5f;
     private Renderer[] _renderers;
     private Dictionary<EffectCode, AppliedEffect> _appliedEffects;
@@ -41,25 +41,23 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
         _appliedEffects = new Dictionary<EffectCode, AppliedEffect>();
-        _moveElapsed = 0.0f;
-        _positionChange = false;
-        
+        _positionElapsed = 0.0f;
+        _rotationElapsed = 0.0f;
     }
 
     private void FixedUpdate()
     {
         if (_positionChange)
         {
-            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.MovementPolling, _startPostion, _newPosition, transform, false, true))
+            if (SharedFunctions.ProcessVector3Lerp(ref _positionElapsed, Game.MovementPolling, _startPostion, _nextPosition, transform, false, true))
             {
                 _positionChange = false;
             }
         }
         if (_rotationChange)
         {
-            if (SharedFunctions.ProcessVector3Lerp(ref _moveElapsed, Game.MovementPolling, _startRotation, _newRotation, transform, false, false))
+            if (SharedFunctions.ProcessVector3Lerp(ref _rotationElapsed, Game.MovementPolling, _startRotation, _nextRotation, transform, false, false))
             {
                 _rotationChange = false;
             }
@@ -216,12 +214,16 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
 
         if (instant)
         {
-            gameObject.transform.position = new Vector3(x, y, z);
+            transform.position = new Vector3(x, y, z);
         }
         else
         {
             _startPostion = transform.position;
-            _newPosition = new Vector3(x, y, z);
+            _nextPosition = new Vector3(x, y, z);
+            if(_positionElapsed > 0.0f)
+            {
+                _positionElapsed = 0.0f -  (Game.MovementPolling - _positionElapsed);
+            }
             _positionChange = true;
         }
     }
@@ -238,7 +240,23 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         else
         {
             _startRotation = transform.eulerAngles;
-            _newRotation = new Vector3(x, y, z);
+            _nextRotation = new Vector3(x, y, z);
+            if(Mathf.Abs(_nextRotation.x - _startRotation.x) >= 180)
+            {
+                _nextRotation.x -= 360;
+            }
+            if (Mathf.Abs(_nextRotation.y - _startRotation.y) >= 180)
+            {
+                _nextRotation.y -= 360;
+            }
+            if (Mathf.Abs(_nextRotation.z - _startRotation.z) >= 180)
+            {
+                _nextRotation.z -= 360;
+            }
+            if (_rotationElapsed > 0.0f)
+            {
+                _rotationElapsed = 0.0f - (Game.MovementPolling - _rotationElapsed);
+            }
             _rotationChange = true;
         }
     }

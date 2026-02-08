@@ -3,8 +3,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GameServer extends Thread {
     public static final boolean SymmetricEncryption = false;
-    public static final long Tick = 10;
-    public static final byte MaxMatches = 20;
+
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     public static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
@@ -24,7 +23,7 @@ public class GameServer extends Thread {
         _poolData = new ConcurrentHashMap<>();
         _objectData = new ConcurrentHashMap<>();
         SpellManager.init();
-        MatchManager.init(MaxMatches);
+        MatchManager.init(ServerParams.MaxMatches);
         _rcMonitor = new RemoteClientMonitor();
         _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
         _levelData = Database.GetLevelsList((byte)1);

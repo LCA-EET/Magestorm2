@@ -159,17 +159,19 @@ public class Packets {
         //Main.LogMessage("Character bytes retrieved: " + characterBytes.length);
         byte[] toSend;
         if(characterBytes.length > 0){
-            toSend = new byte[1 + 4 + 8 + characterBytes.length];
-            System.arraycopy(characterBytes, 0, toSend, 13, characterBytes.length);
+            toSend = new byte[1 + 4 + 8 + 1 + 1 + characterBytes.length];
+            System.arraycopy(characterBytes, 0, toSend, 15, characterBytes.length);
         }
         else{
-            toSend = new byte[1 + 4 + 8];
+            toSend = new byte[1 + 4 + 8 + 1 + 1];
         }
         toSend[0] = Pregame_Send.LogInSucceeded;
         byte[] accountBytes = ByteUtils.IntToByteArray(accountID);
         byte[] timeBytes = ByteUtils.LongToByteArray(System.currentTimeMillis());
         System.arraycopy(accountBytes, 0, toSend, 1, 4);
         System.arraycopy(timeBytes, 0, toSend, 5, 8);
+        toSend[13] = ServerParams.TickInterval;
+        toSend[14] = ServerParams.PollingFactor;
         return Cryptographer.Encrypt(toSend);
     }
 
@@ -180,20 +182,6 @@ public class Packets {
         toEncrypt[0] = Pregame_Send.CharacterCreated;
         System.arraycopy(characterBytes, 0, toEncrypt, 1, characterBytes.length);
         return Cryptographer.Encrypt(toEncrypt);
-        /*
-        byte[] nameBytes = charname.getBytes(StandardCharsets.UTF_8);
-        byte nameLength = (byte)nameBytes.length;
-        byte[] toReturn = new byte[1 + 1 + 4 + 5 + 6 + 1 + nameLength];
-        toReturn[0] = Pregame_Send.CharacterCreated;
-        toReturn[1] = classCode;
-        byte[] idBytes = ByteUtils.IntToByteArray(characterID);
-        System.arraycopy(idBytes,0,toReturn, 2, 4);
-        System.arraycopy(appearance, 0, toReturn, 6, 5);
-        System.arraycopy(stats, 0, toReturn, 11, 6);
-        toReturn[17] = nameLength;
-        System.arraycopy(nameBytes,0,toReturn,18,nameLength);
-        return Cryptographer.Encrypt(toReturn);
-        */
     }
 
     public static byte[] RemovedFromServerPacket(byte reasonCode){

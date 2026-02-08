@@ -53,7 +53,7 @@ public class RemoteClient {
         if(_inGame){
             _timeLastReceived = System.currentTimeMillis();
         }
-        return (System.currentTimeMillis() - _timeLastReceived) > GameServer.PregameTimeOut;
+        return (System.currentTimeMillis() - _timeLastReceived) > ServerParams.PregameInactivity;
     }
     public void SubscribeToMatches(){
         _subscribedToMatches = true;

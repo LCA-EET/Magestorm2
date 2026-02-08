@@ -28,7 +28,7 @@ public class PacketSender extends Thread{
                         }
                     }
                 }
-                Thread.sleep(GameServer.Tick);
+                Thread.sleep(ServerParams.TickInterval);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

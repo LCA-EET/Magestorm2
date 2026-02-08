@@ -202,6 +202,7 @@ public static class SharedFunctions
             elapsed = 0.0f;
         }
         Vector3 result = Vector3.Lerp(starting, ending, percentComplete);
+        
         if (local)
         {
             if (position)

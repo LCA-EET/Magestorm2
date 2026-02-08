@@ -4,8 +4,8 @@ using System.Net;
 public static class Game
 {
     public const bool SymmetricEncryption = false;
-    public const float TickInterval = 0.01f; // 10ms
-    public const float MovementPolling = TickInterval * 10.0f;
+    public static float TickInterval; 
+    public static float MovementPolling;
     public static bool Running;
     private static long _serverTime;
     private static bool _init = false;
