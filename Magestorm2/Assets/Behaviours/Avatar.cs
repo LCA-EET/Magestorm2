@@ -252,6 +252,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             if (Mathf.Abs(_nextRotation.z - _startRotation.z) >= 180)
             {
                 _nextRotation.z -= 360;
+                
             }
             if (_rotationElapsed > 0.0f)
             {
