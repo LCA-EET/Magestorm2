@@ -46,7 +46,7 @@ public static class SharedFunctions
     {
         go.transform.LookAt(Camera.main.transform.position);
     }
-
+    
     public static bool DirectionalCast(Transform origin, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
     {
         return Physics.Raycast(origin.position, origin.TransformDirection(direction), out hitInfo, distance, layerMask);
@@ -231,7 +231,19 @@ public static class SharedFunctions
         }
         return false;
     }
-
+    public static bool ProcessRotation(Vector3 rotationAmount, Transform toRotate, ref float elapsed, float lerpPeriod)
+    {
+        elapsed += Time.deltaTime;
+        Vector3 frameRotation = rotationAmount * (Time.deltaTime / lerpPeriod);
+        if(elapsed >= lerpPeriod)
+        {
+            toRotate.eulerAngles = rotationAmount;
+            elapsed = 0.0f;
+            return true;
+        }
+        //toRotate.RotateAround()
+        return false;
+    }
     public static bool GetPHPString(string function, out string contents)
     {
         contents = "";

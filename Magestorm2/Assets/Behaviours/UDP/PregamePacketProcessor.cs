@@ -324,6 +324,7 @@ public class PregamePacketProcessor : UDPProcessor
         Game.MovementPolling = Game.TickInterval * pollingFactor;
         Debug.Log("Tick Interval: " + Game.TickInterval);
         Debug.Log("Movement Polling Interval: " + Game.MovementPolling);
+       
         byte characterBytesStart = 15;
         if (_decrypted.Length > characterBytesStart)
         {

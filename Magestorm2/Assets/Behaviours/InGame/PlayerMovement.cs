@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -21,11 +22,12 @@ public class PlayerMovement : MonoBehaviour
     private float _rotationLimit = 5f;
     private float _csElapsed = 0.0f;
     private float _csInterval = 0.33f;
+    private float _yRotateCheck, _priorY;
     private float _controllerHeight, _controllerCrouchHeight;
     private int _prPacketID = 0;
     private Vector3 _controllerCenter, _controllerCrouchCenter, _cameraLocalPosition, _cameraCrouchedPosition;
-    private Vector3 _moveCheck, _rotateCheck;
-    private Vector3 _priorStep, _priorPosition, _priorRotation;
+    private Vector3 _moveCheck;
+    private Vector3 _priorStep, _priorPosition;
 
     private bool _positionChanged = false;
     private bool _midJump = false;
@@ -52,18 +54,18 @@ public class PlayerMovement : MonoBehaviour
     private void ReportMovement()
     {
         
-        if (_moveCheck != transform.position || _rotateCheck != transform.eulerAngles || _postureCheck != Game.PlayerPMDByte.Posture)
+        if (_moveCheck != transform.position || _yRotateCheck != transform.eulerAngles.y || _postureCheck != Game.PlayerPMDByte.Posture)
         {
             _moveCheck = transform.position;
-            _rotateCheck = transform.eulerAngles;
+            _yRotateCheck = transform.eulerAngles.y;
             _postureCheck = Game.PlayerPMDByte.Posture;
             bool positionExceedance = MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit);
-            bool rotationExceedance = MinimumReportingExceedance(transform.eulerAngles, ref _priorRotation, _rotationLimit);
+            bool rotationExceedance = MinimumReportingExceedance(_yRotateCheck, ref _priorY, _rotationLimit);
             if (positionExceedance && rotationExceedance)
             {
-                byte[] prData = new byte[24];
+                byte[] prData = new byte[16];
                 ByteUtils.FillArray(ref prData, 0, _priorPosition);
-                ByteUtils.FillArray(ref prData, 12, _priorRotation);
+                ByteUtils.FillArray(ref prData, 12, _yRotateCheck);
                 Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData, ref _prPacketID));
             }
             else if (positionExceedance)
@@ -72,10 +74,20 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, ByteUtils.Vector3ToBytes(_priorRotation), ref _prPacketID));
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, BitConverter.GetBytes(_priorY), ref _prPacketID));
             }
         }
 
+    }
+    private bool MinimumReportingExceedance(float current, ref float prior, float limit)
+    {
+        float distance = Mathf.Abs(current - prior);
+        if (distance > limit)
+        {
+            prior = current;
+            return true;
+        }
+        return false;
     }
     private bool MinimumReportingExceedance(Vector3 current, ref Vector3 prior, float limit)
     {

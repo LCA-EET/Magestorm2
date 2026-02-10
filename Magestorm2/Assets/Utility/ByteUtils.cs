@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public static class ByteUtils
 {
+
     public static byte BitArrayToByte(BitArray toConvert)
     {
         byte[] temp = new byte[1];
@@ -31,6 +32,10 @@ public static class ByteUtils
             BitConverter.ToSingle(decrypted, index + 4),
             BitConverter.ToSingle(decrypted, index + 8));
 
+    }
+    public static void FillArray(ref byte[] toFill, int index, float data)
+    {
+        BitConverter.GetBytes(data).CopyTo(toFill, index);
     }
     public static void FillArray(ref byte[] toFill, int index, Vector3 data)
     {

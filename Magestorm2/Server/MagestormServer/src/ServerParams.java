@@ -33,8 +33,8 @@ public class ServerParams {
             LogFilePath = paramScanner.nextLine();
             InactivityWarning = Long.parseLong(paramScanner.nextLine());
             InactivityDisconnect = Long.parseLong(paramScanner.nextLine());
-            SymmetricEncryption = Boolean.parseBoolean(paramScanner.nextLine());
             PregameInactivity = Long.parseLong(paramScanner.nextLine());
+            SymmetricEncryption = Boolean.parseBoolean(paramScanner.nextLine());
             TickInterval = Byte.parseByte(paramScanner.nextLine());
             MaxMatches = Byte.parseByte(paramScanner.nextLine());
             PollingFactor = Byte.parseByte(paramScanner.nextLine());

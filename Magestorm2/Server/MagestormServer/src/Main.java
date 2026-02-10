@@ -15,6 +15,8 @@ public class Main {
         Mailer = new Emailer(ServerParams.EmailCredsPath);
 
         new Thread(_serverLog).start();
+        Main.LogMessage("Pregame Inactivity Timeout: " + ServerParams.PregameInactivity);
+        Main.LogMessage("Ingame Inactivity Timeout: " + ServerParams.InactivityDisconnect);
         Cryptographer.GenerateKeyAndIV();
         if(Database.TestDBConnection()){
             Database.UpdateServerInfo();

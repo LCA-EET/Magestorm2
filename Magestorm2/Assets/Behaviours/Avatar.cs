@@ -16,7 +16,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private bool _updatedNeeded;
     private byte _playerID;
     private Vector3 _startPostion, _nextPosition;
-    private Vector3 _startRotation, _nextRotation;
+    private Vector3 _startRotation, _nextRotation, _rotationAmount;
     private bool _positionChange, _rotationChange;
     private float _positionElapsed, _rotationElapsed;
     private float _effectTick = 0.5f;
@@ -57,6 +57,13 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         }
         if (_rotationChange)
         {
+            /*
+            if(SharedFunctions.ProcessRotation(_rotationAmount, transform, ref _rotationElapsed, Game.MovementPolling))
+            {
+                _rotationChange = false;
+            }
+            */
+            
             if (SharedFunctions.ProcessVector3Lerp(ref _rotationElapsed, Game.MovementPolling, _startRotation, _nextRotation, transform, false, false))
             {
                 _rotationChange = false;
@@ -241,6 +248,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         {
             _startRotation = transform.eulerAngles;
             _nextRotation = new Vector3(x, y, z);
+            //_rotationAmount = _nextPosition - _startRotation;
+            
             if(Mathf.Abs(_nextRotation.x - _startRotation.x) >= 180)
             {
                 _nextRotation.x -= 360;
@@ -254,6 +263,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
                 _nextRotation.z -= 360;
                 
             }
+            
             if (_rotationElapsed > 0.0f)
             {
                 _rotationElapsed = 0.0f - (Game.MovementPolling - _rotationElapsed);

@@ -34,7 +34,7 @@ public class MatchCharacter {
         _manaRegenTick = 1000;
         _waitForHPRegen = 10000;
         _position = new byte[12];
-        _direction = new byte[12];
+        _direction = new byte[4];
         _currentHP = 1;
         _currentMana = 1;
         _verified = false;
@@ -206,7 +206,7 @@ public class MatchCharacter {
     }
 
     protected void UpdateDirection(byte[] decrypted, int index){
-        System.arraycopy(decrypted, index, _direction, 0, 12);
+        System.arraycopy(decrypted, index, _direction, 0, 4);
     }
 
     protected void PlayerDied(MatchCharacter deadPlayer){
