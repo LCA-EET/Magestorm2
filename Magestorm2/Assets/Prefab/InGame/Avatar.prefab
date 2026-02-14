@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 7603161775604613210}
   - component: {fileID: 8477289358390454360}
   - component: {fileID: 7478960471936496322}
+  - component: {fileID: 6788024647315458982}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Untagged
@@ -80,6 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Avatar
   CharacterName: {fileID: 4332805042833251275}
   AvatarAnimation: {fileID: 7478960471936496322}
+  RPCollider: {fileID: 6788024647315458982}
 --- !u!114 &7478960471936496322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +112,27 @@ MonoBehaviour:
   - {fileID: 9100000, guid: 3a52e43da1b6b604c8ed63485967953f, type: 2}
   - {fileID: 9100000, guid: 27a935ce9a81cbc4ca8b5da8a3188f47, type: 2}
   - {fileID: 9100000, guid: 95f23a1d6e2b9b042adcac1b5a5576ee, type: 2}
+--- !u!65 &6788024647315458982
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3074665814257248548}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 1.8, z: 0.8}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!1 &4332805042833251275
 GameObject:
   m_ObjectHideFlags: 0

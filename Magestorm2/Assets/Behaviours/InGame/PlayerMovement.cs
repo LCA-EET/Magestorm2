@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private float _distanceTravelled = 0.0f;
     private float _distanceTravelledSinceLastStep = 0.0f;
     private float _positionLimit = 0.067f;
-    private float _rotationLimit = 5f;
+    private float _rotationLimit = 10f;
     private float _csElapsed = 0.0f;
     private float _csInterval = 0.33f;
     private float _yRotateCheck, _priorY;
@@ -81,8 +81,16 @@ public class PlayerMovement : MonoBehaviour
     }
     private bool MinimumReportingExceedance(float current, ref float prior, float limit)
     {
-        float distance = Mathf.Abs(current - prior);
-        if (distance > limit)
+        float distance = current - prior;
+        if (distance < -180)
+        {
+            distance += 365;
+        }
+        else if (distance > 180)
+        {
+            distance -= 365;
+        }
+        if (Mathf.Abs(distance) > limit)
         {
             prior = current;
             return true;

@@ -10,18 +10,28 @@ public class Projectile : SpawnedSpell
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (ImpactPrefab != null)
+        bool impact = true;
+        // The target will report on being hit.
+        // The shooter does NOT report on what it hit.
+        // Shooter's projectile cannot impact themself
+        
+        if (SharedFunctions.WasPCHit(other))
+        {
+            //Debug.Log("WPH is true");
+            if (CasterID == MatchParams.IDinMatch)
+            {
+                impact = false;
+            }
+        }
+
+        if (ImpactPrefab != null && impact)
         {
             GameObject impactObject = Instantiate(ImpactPrefab);
             impactObject.transform.position = transform.position;
         }
-        if (SharedFunctions.WasPlayerHit(other))
+        if (impact)
         {
-            if (ComponentRegister.PC.IsAlive)
-            {
-                Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
-            }
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Avatar : MonoBehaviour, IComparable<Avatar>
 {
@@ -16,9 +17,9 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private bool _updatedNeeded;
     private byte _playerID;
     private Vector3 _startPostion, _nextPosition;
-    private Vector3 _startRotation, _nextRotation, _rotationAmount;
+    private Vector3 _nextRotation;
     private bool _positionChange, _rotationChange;
-    private float _positionElapsed, _rotationElapsed;
+    private float _positionElapsed, _rotationElapsed, _rotationAmount;
     private float _effectTick = 0.5f;
     private Renderer[] _renderers;
     private Dictionary<EffectCode, AppliedEffect> _appliedEffects;
@@ -29,7 +30,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private Animator _animator;
     private PMDByte _pmd; // posture, movement, direction
     public AvatarAnimation AvatarAnimation;
-    
+    public BoxCollider RPCollider;
     void Awake()
     {
         _actionList = new List<PeriodicAction>();  
@@ -57,14 +58,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         }
         if (_rotationChange)
         {
-            /*
             if(SharedFunctions.ProcessRotation(_rotationAmount, transform, ref _rotationElapsed, Game.MovementPolling))
-            {
-                _rotationChange = false;
-            }
-            */
-            
-            if (SharedFunctions.ProcessVector3Lerp(ref _rotationElapsed, Game.MovementPolling, _startRotation, _nextRotation, transform, false, false))
             {
                 _rotationChange = false;
             }
@@ -198,6 +192,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             gameObject.layer = LayerMask.NameToLayer("Player");
             gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
             SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
+            RPCollider.enabled = false;
         }
         else
         {
@@ -213,11 +208,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         get { return _lastPRPacketID; }
         set { _lastPRPacketID = value; }
     }
-    public void UpdatePosition(byte[] decrypted, bool instant)
+    public void UpdatePosition(byte[] decrypted, int index, bool instant)
     {
-        float x = BitConverter.ToSingle(decrypted, 8);
-        float y = BitConverter.ToSingle(decrypted, 12);
-        float z = BitConverter.ToSingle(decrypted, 16);
+        float x = BitConverter.ToSingle(decrypted, index);
+        float y = BitConverter.ToSingle(decrypted, index + 4);
+        float z = BitConverter.ToSingle(decrypted, index + 8);
 
         if (instant)
         {
@@ -237,31 +232,22 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
 
     public void UpdateDirection(byte[] decrypted, int index, bool instant)
     {
-        float x = BitConverter.ToSingle(decrypted, index);
-        float y = BitConverter.ToSingle(decrypted, index + 4);
-        float z = BitConverter.ToSingle(decrypted, index + 8);
+        float y = BitConverter.ToSingle(decrypted, index);
+        _nextRotation = new Vector3(0, y, 0);
         if (instant)
         {
-            transform.eulerAngles = new Vector3(x, y, z);
+            transform.eulerAngles = _nextRotation;
         }
         else
         {
-            _startRotation = transform.eulerAngles;
-            _nextRotation = new Vector3(x, y, z);
-            //_rotationAmount = _nextPosition - _startRotation;
-            
-            if(Mathf.Abs(_nextRotation.x - _startRotation.x) >= 180)
+            _rotationAmount = y - transform.eulerAngles.y;
+            if(_rotationAmount < -180)
             {
-                _nextRotation.x -= 360;
+                _rotationAmount += 365;
             }
-            if (Mathf.Abs(_nextRotation.y - _startRotation.y) >= 180)
+            else if(_rotationAmount > 180)
             {
-                _nextRotation.y -= 360;
-            }
-            if (Mathf.Abs(_nextRotation.z - _startRotation.z) >= 180)
-            {
-                _nextRotation.z -= 360;
-                
+                _rotationAmount -= 365;
             }
             
             if (_rotationElapsed > 0.0f)

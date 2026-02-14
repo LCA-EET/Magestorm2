@@ -100,6 +100,10 @@ public static class Match
         byte[] nameBytes = new byte[decrypted[10]];
         System.Array.Copy(decrypted, 11, nameBytes, 0, nameBytes.Length);
         string name = ByteUtils.BytesToUTF8(nameBytes, 0, nameBytes.Length);
+        byte[] positionBytes = new byte[12];
+        byte[] directionBytes = new byte[4];
+        Array.Copy(decrypted, decrypted.Length - 16, positionBytes, 0, 12);
+        Array.Copy(decrypted, decrypted.Length - 4, directionBytes, 0, 4);
         Avatar added = ComponentRegister.Spawner.SpawnAvatar();
         added.SetAttributes(playerID, name, level, characterClass, (Team)teamID, appearance);
         MessageData md = new MessageData(name + " has joined the match.", "Server");
@@ -107,6 +111,13 @@ public static class Match
         if (playerID == MatchParams.IDinMatch)
         {
             ComponentRegister.PC.JoinedMatch = true;
+            Debug.Log("MaxHP: " + MatchParams.MaxHP);
+            Debug.Log("MaxMana: " + MatchParams.MaxMana);
+        }
+        else
+        {
+            added.UpdatePosition(positionBytes, 0, true);
+            //added.UpdateDirection(directionBytes, 0, true);
         }
     }
     public static void UpdatePlayerLocation(byte[] decrypted)
@@ -127,13 +138,13 @@ public static class Match
                     switch (controlCode)
                     {
                         case 0: // position only
-                            toUpdate.UpdatePosition(decrypted, false);
+                            toUpdate.UpdatePosition(decrypted, 8, false);
                             break;
                         case 1: // direction only
                             toUpdate.UpdateDirection(decrypted, 8, false);
                             break;
                         case 2: // position and direction
-                            toUpdate.UpdatePosition(decrypted, false);
+                            toUpdate.UpdatePosition(decrypted, 8, false);
                             toUpdate.UpdateDirection(decrypted, 20, false);
                             break;
                     }

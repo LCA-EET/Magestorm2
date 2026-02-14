@@ -40,11 +40,11 @@ public class UDPClient extends Thread{
         Main.LogMessage("UDP socket on port " + _localPort + " is closed.");
     }
     public void Send(byte[] encryptedPayload, RemoteClient rc){
-        DatagramPacket toSend = new DatagramPacket(encryptedPayload, encryptedPayload.length, rc.IPAddress(), rc.GetRemotePort());
         try{
+            DatagramPacket toSend = new DatagramPacket(encryptedPayload, encryptedPayload.length, rc.IPAddress(), rc.GetRemotePort());
             _udpSocket.send(toSend);
         }catch(Exception e){
-            Main.LogError("UDPClient.Send(): " + e.getMessage());
+            Main.LogStackTrace(e);
         }
     }
 }

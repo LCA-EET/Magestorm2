@@ -81,9 +81,14 @@ public static class SharedFunctions
         return "Undefined";
     }
 
-    public static bool WasPlayerHit(Collider other)
+    public static bool WasPCHit(Collider other)
     {
         return other.GetComponent<PC>() != null;
+    }
+    public static bool WasRemoteHit(Collider other, out Avatar remote)
+    {
+        remote = other.GetComponent<Avatar>();
+        return remote != null;
     }
     public static SpellDiscipline[] DisciplinesByClass(PlayerClass playerClass)
     {
@@ -231,17 +236,26 @@ public static class SharedFunctions
         }
         return false;
     }
-    public static bool ProcessRotation(Vector3 rotationAmount, Transform toRotate, ref float elapsed, float lerpPeriod)
+    public static bool ProcessRotation(float rotationAmount, Transform toRotate, ref float elapsed, float lerpPeriod)
     {
-        elapsed += Time.deltaTime;
-        Vector3 frameRotation = rotationAmount * (Time.deltaTime / lerpPeriod);
-        if(elapsed >= lerpPeriod)
+        float delta = Time.deltaTime;
+        if((elapsed + delta) >= lerpPeriod)
         {
-            toRotate.eulerAngles = rotationAmount;
+            delta = lerpPeriod - elapsed;
+            elapsed = lerpPeriod;
+        }
+        else
+        {
+            elapsed += delta;
+        }
+        float frameRotation = rotationAmount * (delta / lerpPeriod);
+        //Debug.Log("Frame Rotation: " + frameRotation);
+        toRotate.Rotate(0, frameRotation, 0);
+        if (elapsed == lerpPeriod)
+        {
             elapsed = 0.0f;
             return true;
         }
-        //toRotate.RotateAround()
         return false;
     }
     public static bool GetPHPString(string function, out string contents)

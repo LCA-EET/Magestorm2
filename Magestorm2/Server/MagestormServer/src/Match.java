@@ -19,7 +19,7 @@ public class Match {
     protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     protected ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
     protected final ConcurrentHashMap<Short, CastSpell> _castSpells;
-    protected final ConcurrentHashMap<Byte, Integer> _playerScores;
+    protected final ConcurrentHashMap<Integer, Score> _playerScores;
 
     protected byte _nextPlayerID;
     protected final int _matchPort;
@@ -83,17 +83,24 @@ public class Match {
             _objectStatus.put(objectKey, new ActivatableObject(this,objectKey, objectData[i+1]));
         }
     }
-    protected void AdjustPlayerScore(byte playerID, int adjustment)
-    {
-        if(!_playerScores.containsKey(playerID)){
-            _playerScores.put(playerID, adjustment);
+    public void IncrementPlayerDeaths(int characterID){
+        if(!_playerScores.containsKey(characterID)){
+            _playerScores.put(characterID, new Score());
         }
-        else{
-            int newScore = _playerScores.get(playerID) + adjustment;
-            _playerScores.put(playerID, newScore);
-        }
+        _playerScores.get(characterID).IncrementDeaths();
     }
-
+    public void IncrementPlayerKills(int characterID){
+        if(!_playerScores.containsKey(characterID)){
+            _playerScores.put(characterID, new Score());
+        }
+        _playerScores.get(characterID).IncrementKills();
+    }
+    public void IncrementPlayerRaises(int characterID){
+        if(!_playerScores.containsKey(characterID)){
+            _playerScores.put(characterID, new Score());
+        }
+        _playerScores.get(characterID).IncrementRaises();
+    }
     public MatchTeam GetMatchTeam(byte teamID){
         return _matchTeams.get(teamID);
     }
@@ -159,7 +166,8 @@ public class Match {
     }
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
-        MatchCharacter toAdd = new MatchCharacter(GameServer.GetActiveCharacter(rc.AccountID()), teamID, playerID, this, _regenTick);
+        MatchCharacter toAdd = new MatchCharacter(GameServer.GetActiveCharacter(rc.AccountID()), playerID, this,
+                _regenTick, _matchTeams.get(teamID));
         _unverifiedCharacters.put(rc.AccountID(), toAdd);
         LogMessage("Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return toAdd;
@@ -230,8 +238,11 @@ public class Match {
                 GameServer.ClientLoggedOut(pc.GetAccountID());
             }
             else{
-                GameServer.GetClient(pc.GetAccountID()).MarkPortSwitchPending();
-                pc.MarkRemovedFromMatch();
+                RemoteClient rc = GameServer.GetClient(pc.GetAccountID());
+                if(rc != null){
+                    rc.MarkPortSwitchPending();
+                    pc.MarkRemovedFromMatch();
+                }
             }
         }
         LogMessage("Player " + id + " has left the match. Players remaining: " + _matchCharacters.size());
@@ -252,10 +263,9 @@ public class Match {
         toReturn[1] = _matchID;
         return toReturn;
     }
-
-    public void SendPlayerData(byte requestorID, byte idInMatch){
-        if(_matchCharacters.containsKey(requestorID)){
-            SendToPlayer(Packets.PlayerDataPacket(_matchCharacters.get(idInMatch).GetINLCTABytes()), requestorID);
+    public void SendPlayerData(byte requesterID, byte idInMatch){
+        if(_matchCharacters.containsKey(requesterID)){
+            SendToPlayer(Packets.PlayerDataPacket(_matchCharacters.get(idInMatch).GetPlayerData()), requesterID);
         }
     }
     public int GetMatchPort(){
@@ -437,7 +447,7 @@ public class Match {
         }
 
     }
-    public CastSpell GetCastSpell(int id)
+    public CastSpell GetCastSpell(short id)
     {
         return _castSpells.get(id);
     }
@@ -454,14 +464,21 @@ public class Match {
         return _sceneID;
     }
 
-    public void PlayerHit(byte hitterID, byte hitPlayerID, int spellID){
+    public void PlayerHit(byte hitPlayerID, short spellID){
+        Main.LogMessage("Match.PlayerHit checking " + hitPlayerID);
         MatchCharacter hitPlayer = GetMatchCharacter(hitPlayerID);
+        Main.LogMessage("Player " + hitPlayerID + ", " + hitPlayer.GetCharacterName() + ", was hit by spell " + spellID);
         if(hitPlayer != null){
             CastSpell spell = GetCastSpell(spellID);
             if(spell != null){
-                short damageAmount = ((DamagingSpell)spell).GetDamage();
-                hitPlayer.TakeDamage(damageAmount, hitterID);
+                spell.ProcessSpell(hitPlayer);
             }
+            else{
+                Main.LogError("Match.PlayerHit: Spell " + spellID + " is null.");
+            }
+        }
+        else{
+            Main.LogError("Match.PlayerHit: Player " + hitPlayerID + " is null.");
         }
     }
     public void ProcessSpellCast(byte[] decrypted){
@@ -491,9 +508,12 @@ public class Match {
         return false;
     }
 
-    protected void PlayerKilled(byte idInMatch, byte damageSource){
-        SendToAll(Packets.PlayerKilledPacket(idInMatch, damageSource));
-        AdjustPlayerScore(idInMatch, -1);
+    protected void PlayerKilled(MatchCharacter killed, MatchCharacter killer){
+        SendToAll(Packets.PlayerKilledPacket(killed.GetIDinMatch(), killer.GetIDinMatch()));
+        IncrementPlayerKills(killer.GetCharacterID());
+        IncrementPlayerDeaths(killed.GetCharacterID());
+        killed.GetTeam().GetScore().IncrementDeaths();
+        killer.GetTeam().GetScore().IncrementKills();
     }
 
     public byte GetMatchType(){
@@ -507,7 +527,7 @@ public class Match {
                 _matchCharacters.get(senderID).Revive(senderID, 1);
                 return true;
             case "killself":
-                _matchCharacters.get(senderID).TakeDamage((short)30000, senderID);
+                //_matchCharacters.get(senderID).TakeDamage((short)30000, senderID);
                 return true;
             case "effect":
                 byte effectCode = Byte.parseByte(params[1]);

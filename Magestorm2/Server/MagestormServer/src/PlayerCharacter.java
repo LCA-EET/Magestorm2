@@ -26,6 +26,7 @@ public class PlayerCharacter {
     private final Hashtable<Byte, Byte> _skillsTable;
 
     private byte _currentMatchID, _idInCurrentMatch, _currentTeam;
+
     private boolean _inMatch;
     private boolean[] _skills;
     public PlayerCharacter(byte[] fetched, int accountID){

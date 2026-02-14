@@ -138,7 +138,7 @@ public class InGamePacketProcessor : UDPProcessor
                 spawner.InitializeSpell(casterID, caster.PlayerTeam, castID, caster.transform.position, direction);
             }
         }
-        Debug.Log("CastID: " + castID);
+        //Debug.Log("CastID: " + castID);
     }
     private void HandleEffect()
     {

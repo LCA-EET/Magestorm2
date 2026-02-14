@@ -32,9 +32,6 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.QuitGame:
                     HandleQuitGame();
                     return true;
-                case InGame_Receive.HitPlayer:
-                    //HandleHitPlayer();
-                    return true;
                 case InGame_Receive.CastSpell:
                     HandleSpellCast();
                     return true;
@@ -71,8 +68,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         return false;
     }
     private void HandleReportHitPacket(){
-        short castID = ByteUtils.ExtractShort(_decrypted, 2);
-
+        _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2));
     }
     private void HandleProjectileCast(){
         byte spellID = _decrypted[2];
@@ -83,7 +79,6 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
     }
     private void HandlePostureChange(){
-        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
         _owningMatch.SendToAll(Packets.PostureChangePacket(_decrypted));
     }
     private void HandleTap(){

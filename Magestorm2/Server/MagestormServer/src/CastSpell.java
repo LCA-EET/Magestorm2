@@ -19,6 +19,9 @@ public class CastSpell {
     public short ID(){
         return _castID;
     }
+    public MatchCharacter GetCasterReference(){
+        return _casterReference;
+    }
     public void ProcessSpell(MatchCharacter affectedPlayer){
 
     }

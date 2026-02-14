@@ -1,4 +1,5 @@
 public class MatchCharacter {
+    private final MatchTeam _team;
     private final Match _owningMatch;
     private RemoteClient _remote;
     private final PlayerCharacter _pc;
@@ -10,6 +11,7 @@ public class MatchCharacter {
     private final byte[] _INLCTA;
     private final int _idxLevel = 7;
     private final int _idxClass = 8;
+    private final int _positionIndex, _directionIndex;
     private boolean _verified;
 
     private long _lastPacketReceived;
@@ -19,22 +21,21 @@ public class MatchCharacter {
     private long _hpRegenElapsed;
     private final long _waitForHPRegen;
     private long _hpRegenWaitElapsed;
-    private final byte[] _position, _direction;
+    private final byte[] _playerData;
     private float _currentHP, _currentMana, _maxHP, _maxMana;
     private float _priorHP, _priorMana;
     private float _ley;
     private int _lastPRPacketID;
 
-    public MatchCharacter(PlayerCharacter pc, byte teamID, byte idInMatch, Match match, long hpRegenTick){
+    public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team){
         MarkPacketReceived();
+        _team = team;
         _lastPRPacketID = 0;
         _hpRegenElapsed = 0;
         _hpRegenTick = hpRegenTick;
         _manaRegenElapsed = 0;
         _manaRegenTick = 1000;
         _waitForHPRegen = 10000;
-        _position = new byte[12];
-        _direction = new byte[4];
         _currentHP = 1;
         _currentMana = 1;
         _verified = false;
@@ -46,16 +47,23 @@ public class MatchCharacter {
         _maxMana = _pc.GetMaxMana();
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
-        _pc.SetMatchDetails(idInMatch, match.MatchID(), teamID);
-        _teamID = teamID;
+        _teamID = team.GetTeamID();
+        _pc.SetMatchDetails(idInMatch, match.MatchID(), _teamID);
         _idInMatch = idInMatch;
         byte[] nameLevelClass = _pc.GetNameLevelClassBytes();
         _INLCTA = new byte[nameLevelClass.length + 7];
         _INLCTA[0] = idInMatch;
-        _INLCTA[1] = teamID;
+        _INLCTA[1] = _teamID;
         byte[] appearanceBytes = pc.GetAppearanceBytes();
         System.arraycopy(appearanceBytes, 0, _INLCTA, 2, appearanceBytes.length);
         System.arraycopy(nameLevelClass, 0, _INLCTA, 7, nameLevelClass.length);
+        _playerData = new byte[_INLCTA.length + 16];
+        _positionIndex = _INLCTA.length;
+        _directionIndex = _positionIndex + 12;
+        System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
+    }
+    public int GetCharacterID(){
+        return _pc.GetCharacterID();
     }
     public int GetLastPRPacketID(){
         return _lastPRPacketID;
@@ -73,16 +81,17 @@ public class MatchCharacter {
     public void SetToMaxHP(){
         _currentHP = _maxHP;
     }
-    public void TakeDamage(short damageAmount, byte damageSource){
+    public void TakeDamage(short damageAmount, MatchCharacter attacker){
         _hpRegenWaitElapsed = 0;
         _currentHP -= damageAmount;
         if(_currentHP <= 0){
-            _owningMatch.PlayerKilled(_idInMatch, damageSource);
-            _owningMatch.AdjustPlayerScore(damageSource, 1);
+            _owningMatch.PlayerKilled(this, attacker);
         }
+        /*
         else{
             _owningMatch.SendToPlayer(Packets.PlayerDamagedPacket(_idInMatch, damageSource, _currentHP), this);
         }
+        */
     }
 
     public float GetRemainingMana(){
@@ -109,6 +118,12 @@ public class MatchCharacter {
 
     public byte[] GetINLCTABytes(){
         return _INLCTA;
+    }
+    public byte[] GetPlayerData(){
+        return _playerData;
+    }
+    public MatchTeam GetTeam(){
+        return _team;
     }
 
     public byte GetTeamID(){
@@ -195,18 +210,20 @@ public class MatchCharacter {
     }
 
     public byte[] GetPosition(){
-        return _position;
+        byte[] toReturn = new byte[12];
+        System.arraycopy(_playerData, _positionIndex, toReturn, 0, 12);
+        return toReturn;
     }
 
     public void UpdateLastMovementPacketID(int packetID){
         _lastPRPacketID = packetID;
     }
     protected void UpdatePosition(byte[] decrypted){
-        System.arraycopy(decrypted, 8, _position, 0, 12);
+        System.arraycopy(decrypted, 8, _playerData, _positionIndex, 12);
     }
 
     protected void UpdateDirection(byte[] decrypted, int index){
-        System.arraycopy(decrypted, index, _direction, 0, 4);
+        System.arraycopy(decrypted, index, _playerData, _directionIndex, 4);
     }
 
     protected void PlayerDied(MatchCharacter deadPlayer){

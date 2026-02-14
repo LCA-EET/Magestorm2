@@ -15,11 +15,13 @@ public class MatchTeam {
     private byte[] _playerListBytes;
     private final ConcurrentHashMap<Byte, MatchCharacter> _teamPlayers;
     private final ConcurrentHashMap<Byte, RemoteClient> _clients;
+    private final Score _score;
     private final Match _owningMatch;
     private int _totalLevel;
 
     public MatchTeam(byte teamID, Match owningMatch)
     {
+        _score = new Score();
         _totalLevel = 0;
         _teamID = teamID;
         _listChanged = true;
@@ -75,7 +77,6 @@ public class MatchTeam {
         }
         byte[] toReturn = ByteUtils.ArrayListToByteArray(players, length, 1);
         toReturn[0] = numPlayers;
-        Main.LogMessage("Team " + _teamID + " has " + numPlayers + " players. TRL = " + toReturn.length);
         return toReturn;
     }
     public int GetTotalLevel(){
@@ -86,5 +87,12 @@ public class MatchTeam {
     }
     public void RegisterVerifiedClient(byte id, RemoteClient verified){
         _clients.put(id, verified);
+    }
+    public Score GetScore(){
+        return _score;
+    }
+
+    public byte GetTeamID(){
+        return _teamID;
     }
 }

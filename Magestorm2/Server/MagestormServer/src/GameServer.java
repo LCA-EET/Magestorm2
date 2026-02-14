@@ -96,6 +96,14 @@ public class GameServer extends Thread {
         Main.LogMessage("Client logged out: " + accountID);
         RemoteClient removed = _loggedInClients.remove(accountID);
         PlayerCharacter removedCharacter = _activeCharacters.remove(accountID);
+        if(removedCharacter != null){
+            byte matchID = removedCharacter.GetMatchID();
+            byte idInMatch = removedCharacter.GetIDinMatch();
+            Match match = MatchManager.GetMatch(matchID);
+            if(match != null){
+                match.LeaveMatch(idInMatch, true, false);
+            }
+        }
         return removed;
     }
     public static void EnqueueForSend(byte[] encrypted, RemoteClient recipient){

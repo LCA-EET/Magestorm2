@@ -21,7 +21,9 @@ public class DamagingSpell extends CastSpell{
 
     @Override
     public void ProcessSpell(MatchCharacter affectedPlayer){
+        Main.LogMessage("PriorHP: " + affectedPlayer.GetCurrentHP());
         short damage = GetDamage();
-        affectedPlayer.TakeDamage(damage, _casterReference.GetIDinMatch());
+        affectedPlayer.TakeDamage(damage, _casterReference);
+        Main.LogMessage("CurrentHP: " + affectedPlayer.GetCurrentHP());
     }
 }

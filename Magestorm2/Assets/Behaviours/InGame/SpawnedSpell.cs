@@ -27,4 +27,8 @@ public class SpawnedSpell : MonoBehaviour
         Debug.Log("Destroying expired spell: " + _castID);
         Destroy(gameObject);
     }
+    public byte CasterID
+    {
+        get { return _casterID; }
+    }
 }

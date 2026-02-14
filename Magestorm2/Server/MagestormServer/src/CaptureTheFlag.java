@@ -6,17 +6,17 @@ public class CaptureTheFlag extends Match{
     private final ConcurrentHashMap<Byte, Flag> _flags;
     private final ConcurrentHashMap<Byte, Byte> _score;
     private byte[] _flagBytes;
-    private final byte[] _scores;
+    private final byte[] _currentScores;
     private boolean _flagsChanged;
 
 
     public CaptureTheFlag(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchOptions) {
         super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.CaptureTheFlag, matchOptions);
         _flagsChanged = true;
+        _currentScores = new byte[3];
         _poolManager = new PoolManager(this);
         _flags = new ConcurrentHashMap<>();
         _score = new ConcurrentHashMap<>();
-        _scores = new byte[3];
         for(byte teamID : MatchTeam.TeamCodes_NonNeutral){
             _flags.put(teamID, new Flag(teamID));
             _score.put(teamID, (byte)0);
@@ -35,8 +35,11 @@ public class CaptureTheFlag extends Match{
             if(captured != null){
                 if(captured.IsHeld()){
                     if(IsCharacterAlive(capturedBy)){
-                        AdjustTeamScore(capturingTeam, (byte)1);
-                        AdjustTeamScore(flagCaptured, (byte)-1);
+                        MatchCharacter capturer = _matchCharacters.get(capturedBy);
+                        _playerScores.get(capturer.GetCharacterID()).IncrementCapturesFor();
+                        _matchTeams.get(capturingTeam).GetScore().IncrementCapturesFor();
+                        _matchTeams.get(flagCaptured).GetScore().IncrementCapturesAgainst();
+                        RefreshScores();
                         captured.FlagReturned();
                         _flagsChanged = true;
                         SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, capturedBy,
@@ -56,11 +59,16 @@ public class CaptureTheFlag extends Match{
             }
         }
     }
-
-    private void FlagDropped(Flag droppedFlag, MatchCharacter killedPlayer, byte killerID){
+    private void RefreshScores(){
+        _currentScores[0] = _matchTeams.get(MatchTeam.Chaos).GetScore().GetCTFScore();
+        _currentScores[1] = _matchTeams.get(MatchTeam.Balance).GetScore().GetCTFScore();
+        _currentScores[2] = _matchTeams.get(MatchTeam.Order).GetScore().GetCTFScore();
+    }
+    private void FlagDropped(Flag droppedFlag, MatchCharacter killedPlayer, MatchCharacter killer){
+        byte killerID = killer.GetIDinMatch();
         Main.LogMessage("FlagDropped: " + killedPlayer.GetIDinMatch() + ", " + killerID);
         if(droppedFlag.IsHeld()){
-            AdjustPlayerScore(killedPlayer.GetIDinMatch(), -1);
+
             droppedFlag.FlagDropped(killedPlayer.GetPosition());
             _flagsChanged = true;
             SendToAll(Packets.FlagDroppedPacket(killedPlayer.GetIDinMatch(), droppedFlag.GetFlagBytes(), killerID));
@@ -76,12 +84,6 @@ public class CaptureTheFlag extends Match{
                 SendToAll(Packets.FlagReturnedPacket(flag));
             }
         }
-    }
-    private void AdjustTeamScore(byte team, byte adjustment){
-        byte currentScore = _score.get(team);
-        currentScore += adjustment;
-        _score.put(team, currentScore);
-        _scores[team-1] = currentScore;
     }
     public byte[] FlagsStatus(){
         if(_flagsChanged){
@@ -110,19 +112,21 @@ public class CaptureTheFlag extends Match{
     }
 
     public byte[] GetScores(){
-        return _scores;
+        return _currentScores;
     }
 
     private boolean SeeIfFlagDropped(byte characterID, byte killerID){
-        if(_matchCharacters.containsKey(characterID)){
-            return SeeIfFlagDropped(_matchCharacters.get(characterID), killerID);
+        MatchCharacter killed = GetMatchCharacter(characterID);
+        MatchCharacter killer = GetMatchCharacter(killerID);
+        if(killed != null){
+            return SeeIfFlagDropped(killed, killer);
         }
         return false;
     }
-    private boolean SeeIfFlagDropped(MatchCharacter character, byte killerID){
+    private boolean SeeIfFlagDropped(MatchCharacter character, MatchCharacter killer){
         for(Flag flag : _flags.values()){
             if(flag.GetHolderID() == character.GetIDinMatch()){
-                FlagDropped(flag, character, killerID);
+                FlagDropped(flag, character, killer);
                 return true;
             }
         }
@@ -167,9 +171,9 @@ public class CaptureTheFlag extends Match{
     }
 
     @Override
-    protected void PlayerKilled(byte idInMatch, byte damageSource){
-        if(!SeeIfFlagDropped(idInMatch, damageSource)){
-            super.PlayerKilled(idInMatch, damageSource);
+    protected void PlayerKilled(MatchCharacter killed, MatchCharacter killer){
+        if(!SeeIfFlagDropped(killed, killer)){
+            super.PlayerKilled(killed, killer);
         };
     }
 

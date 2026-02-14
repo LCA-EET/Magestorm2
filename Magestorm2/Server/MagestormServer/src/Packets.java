@@ -276,6 +276,7 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
     public static byte[] PlayerDamagedPacket(byte playerID, byte damageSourceID, float newHP){
+
         return null;
     }
 
@@ -341,10 +342,10 @@ public class Packets {
         return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerLeftMatch, 1, playerID});
     }
 
-    public static byte[] PlayerDataPacket(byte[] INCTLA){
-        byte[] toEncrypt = new byte[INCTLA.length + 1];
+    public static byte[] PlayerDataPacket(byte[] playerData){
+        byte[] toEncrypt = new byte[playerData.length + 1];
         toEncrypt[0] = InGame_Send.PlayerData;
-        System.arraycopy(INCTLA, 0, toEncrypt, 1, INCTLA.length);
+        System.arraycopy(playerData, 0, toEncrypt, 1, playerData.length);
         return Cryptographer.Encrypt(toEncrypt);
     }
 
