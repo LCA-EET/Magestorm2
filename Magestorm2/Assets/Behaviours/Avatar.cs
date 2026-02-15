@@ -121,15 +121,17 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     {
         SwapMaterials(alive);
         _isAlive = alive;
+        int layer;
         if (!_isAlive)
         {
             RemoveAllEffects();
-            gameObject.layer = LayerManager.DeadPlayerLayer;
+            layer = LayerManager.DeadPlayerLayer;
         }
         else
         {
-            gameObject.layer = _playersAvatar? LayerManager.PlayerLayer : LayerManager.RemotePlayerLayer;
+            layer = _playersAvatar? LayerManager.PlayerLayer : LayerManager.RemotePlayerLayer;
         }
+        SharedFunctions.SetLayerRecursive(gameObject, layer);
     }
     public void AddEffect(AppliedEffect effect)
     {

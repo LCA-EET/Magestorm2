@@ -310,7 +310,8 @@ public class InGamePacketProcessor : UDPProcessor
         byte killedPlayerID = _decrypted[1];
         byte killerID = _decrypted[2];
         Avatar killedPlayer = null;
-        if(Match.GetAvatar(killedPlayerID, ref killedPlayer))
+        
+        if (Match.GetAvatar(killedPlayerID, ref killedPlayer))
         {
             if(killedPlayerID == MatchParams.IDinMatch)
             {
@@ -333,7 +334,8 @@ public class InGamePacketProcessor : UDPProcessor
                     Avatar killer = null;
                     if (Match.GetAvatar(killerID, ref killer))
                     {
-                        new MessageData(Language.BuildString(187, killedPlayer.Name), Language.GetBaseString(304)); //
+
+                        new MessageData(Language.BuildString(187, killedPlayer.Name, killer.Name), Language.GetBaseString(304)); //
                     }
                 }
             }
@@ -344,14 +346,7 @@ public class InGamePacketProcessor : UDPProcessor
     {
         byte shrineID = _decrypted[1];
         string notificationText = "";
-        if(shrineID == MatchParams.MatchTeamID)
-        {
-            notificationText = Language.BuildString(182, Language.GetBaseString(183), Teams.GetTeamName((Team)shrineID)); //
-        }
-        else
-        {
-            notificationText = Language.BuildString(182, Language.GetBaseString(184), Teams.GetTeamName((Team)shrineID)); //
-        }
+        notificationText = Language.BuildString(182, Language.GetBaseString(shrineID == MatchParams.MatchTeamID ? 183 : 184), Teams.GetTeamName((Team)shrineID));
         ComponentRegister.Notifier.DisplayNotification(notificationText);
     }
     private void ProcessPoolBiasFailure()

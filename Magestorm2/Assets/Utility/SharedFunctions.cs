@@ -90,6 +90,14 @@ public static class SharedFunctions
         remote = other.GetComponent<Avatar>();
         return remote != null;
     }
+    public static void SetLayerRecursive(GameObject gameObject, LayerMask newLayer)
+    {
+        gameObject.layer = newLayer;
+        foreach(Transform child in gameObject.transform)
+        {
+            SetLayerRecursive(child.gameObject, newLayer);
+        }
+    }
     public static SpellDiscipline[] DisciplinesByClass(PlayerClass playerClass)
     {
         switch (playerClass)
