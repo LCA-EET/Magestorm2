@@ -8,8 +8,8 @@ public class MainCamera : MonoBehaviour
         if(ComponentRegister.PC.CharacterClass == PlayerClass.Cleric)
         {
             Debug.Log("Changing culling masks");
-            Camera.cullingMask |= LayerManager.DeadPlayerLayer;
-            MinimapCamera.cullingMask |= LayerManager.DeadPlayerLayer;
+            Camera.cullingMask |= LayerManager.DeadPlayerLayerMask;
+            MinimapCamera.cullingMask |= LayerManager.DeadPlayerLayerMask;
         }
     }
 }
