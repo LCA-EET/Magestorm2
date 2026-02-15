@@ -13,6 +13,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private byte _level, _class;
     private string _playerClassString;
     private Team _team;
+    private bool _playersAvatar;
     private bool _isAlive;
     private bool _updatedNeeded;
     private byte _playerID;
@@ -123,6 +124,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         if (!_isAlive)
         {
             RemoveAllEffects();
+            gameObject.layer = LayerManager.DeadPlayerLayer;
+        }
+        else
+        {
+            gameObject.layer = _playersAvatar? LayerManager.PlayerLayer : LayerManager.RemotePlayerLayer;
         }
     }
     public void AddEffect(AppliedEffect effect)
@@ -187,6 +193,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         
         if(MatchParams.IDinMatch == id)
         {
+            _playersAvatar = true;
             ComponentRegister.PlayerAvatar = this;
             Game.PlayerPMDByte = _pmd;
             gameObject.layer = LayerMask.NameToLayer("Player");

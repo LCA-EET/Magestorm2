@@ -34,11 +34,11 @@ public class UIIngameMenu : ValidatableForm
                 ComponentRegister.UIPrefabManager.InstantiateKeyMapper();
                 break;
             case ButtonType.Misc2:
-                ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.LeaveMatchPacket());
+                Game.SendInGameBytes(InGame_Packets.LeaveMatchPacket());
                 Match.LeaveMatch();
                 break;
             case ButtonType.Misc3:
-                ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.QuitGamePacket());
+                Game.SendInGameBytes(InGame_Packets.QuitGamePacket());
                 Game.Quit();
                 break;
         }

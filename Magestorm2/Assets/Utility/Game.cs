@@ -45,9 +45,16 @@ public static class Game
     {
         ComponentRegister.PregamePacketProcessor.SendBytes(unencrypted);
     }
+    public static void SendJoinMatchPacket()
+    {
+        ComponentRegister.InGamePacketProcessor.SendBytes(InGame_Packets.MatchJoinedPacket(InGame_Send.JoinedMatch));
+    }
     public static void SendInGameBytes(byte[] unencrypted)
     {
-        ComponentRegister.InGamePacketProcessor.SendBytes(unencrypted);
+        if (ComponentRegister.PC.JoinedMatch)
+        {
+            ComponentRegister.InGamePacketProcessor.SendBytes(unencrypted);
+        }
     }
     public static void MessageBoxReference(int referenceID)
     {

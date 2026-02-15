@@ -74,7 +74,7 @@ public class PC : MonoBehaviour
         }
         if (!JoinedMatch)
         {
-            _joinRerequest = new PeriodicAction(1.0f, JoinRerequest, null);
+            _joinRerequest = new PeriodicAction(0.25f, Game.SendJoinMatchPacket, null);
         }
     }
     public void ApplyEffect(AppliedEffect effect)
@@ -201,10 +201,7 @@ public class PC : MonoBehaviour
             return _class;
         }
     }
-    private void JoinRerequest()
-    {
-        Game.SendInGameBytes(InGame_Packets.MatchJoinedPacket(InGame_Send.JoinedMatch));
-    }
+
     private void UpdateIndicators()
     {
         foreach(HMLUpdater updater in _hml.Values)

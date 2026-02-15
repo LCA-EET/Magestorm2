@@ -527,7 +527,8 @@ public class Match {
                 _matchCharacters.get(senderID).Revive(senderID, 1);
                 return true;
             case "killself":
-                //_matchCharacters.get(senderID).TakeDamage((short)30000, senderID);
+                MatchCharacter selfkilled = _matchCharacters.get(senderID);
+                selfkilled.TakeDamage((short)30000, selfkilled);
                 return true;
             case "effect":
                 byte effectCode = Byte.parseByte(params[1]);

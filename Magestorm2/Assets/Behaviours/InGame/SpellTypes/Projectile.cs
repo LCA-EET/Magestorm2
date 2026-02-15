@@ -6,6 +6,7 @@ public class Projectile : SpawnedSpell
     
     private void FixedUpdate()
     {
+        
         transform.position += (Speed * transform.forward * Time.deltaTime);
     }
     private void OnTriggerEnter(Collider other)
@@ -21,6 +22,10 @@ public class Projectile : SpawnedSpell
             if (CasterID == MatchParams.IDinMatch)
             {
                 impact = false;
+            }
+            else
+            {
+                Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
             }
         }
 
