@@ -46,6 +46,9 @@ public class AvatarAnimation : MonoBehaviour{
                 case Postures.Crouched:
                     animationKey = pmd.IsMovingForward ? AnimationKeys.CrouchWalk_Forward : AnimationKeys.CrouchWalk_Backward;
                     break;
+                case Postures.Airborne:
+                    animationKey = AnimationKeys.Airborne;
+                    break;
             }
         }
         else
@@ -61,7 +64,9 @@ public class AvatarAnimation : MonoBehaviour{
                 case Postures.Crouched:
                     animationKey = AnimationKeys.Idle_Crouching;
                     break;
-                
+                case Postures.Airborne:
+                    animationKey = AnimationKeys.Airborne;
+                    break;
             }
         }
         SetAnimation(animationKey, currentlyMoving != _priorMove || currentPosture != _priorPosture);
@@ -111,6 +116,10 @@ public class AvatarAnimation : MonoBehaviour{
                 else if(_priorPosture == Postures.Crouched)
                 {
                     _nextAnimation = AnimationKeys.Idle_Crouching;
+                }
+                else if (_priorPosture == Postures.Airborne)
+                {
+                    _nextAnimation = AnimationKeys.Airborne;
                 }
             }
             SetAnimation(_nextAnimation, true);

@@ -6,16 +6,38 @@ public class Spawner : MonoBehaviour
     public GameObject AvatarPrefab;
     public GameObject DeadbodyPrefab;
     private Dictionary<byte, SpellSpawner> _spellPrefabs;
+    private Dictionary<short, SpawnedSpell> _spellRegistry;
+    private PeriodicAction _expirationCheck;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private void Awake()
     {
+        _expirationCheck = new PeriodicAction(30.0f, ExpirationCheck, null);
+        _spellRegistry = new Dictionary<short, SpawnedSpell>();
         ComponentRegister.Spawner = this;
         LoadSpellPrefabs();
     }
     void Start()
     {
         
+    }
+    private void ExpirationCheck()
+    {
+        List<short> expired = new List<short>();
+        float currentTime = Time.realtimeSinceStartup;
+        foreach(SpawnedSpell spell in _spellRegistry.Values)
+        {
+            if (spell.IsExpired(currentTime))
+            {
+                expired.Add(spell.CastID);
+            }
+        }
+        foreach(short castID in expired)
+        {
+            SpawnedSpell expiredSpell = _spellRegistry[castID];
+            Destroy(expiredSpell.gameObject);
+            _spellRegistry.Remove(castID);
+        }
     }
     private void LoadSpellPrefabs()
     {
@@ -29,9 +51,12 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        _expirationCheck.ProcessAction(Time.deltaTime);
     }
-
+    public void RegisterSpawnedSpell(SpawnedSpell toRegister)
+    {
+        _spellRegistry.Add(toRegister.CastID, toRegister);
+    }
     public bool SpawnSpellPrefab(byte spellKey, ref SpellSpawner spawner)
     {
         if (_spellPrefabs.ContainsKey(spellKey))
@@ -57,4 +82,6 @@ public class Spawner : MonoBehaviour
         anim.runtimeAnimatorController = deathAnim;
         return deadBody;
     }
+
+
 }

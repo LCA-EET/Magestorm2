@@ -103,6 +103,7 @@ MonoBehaviour:
   - {fileID: 9100000, guid: 2041c0db49de8e94ea644176ce03232c, type: 2}
   - {fileID: 9100000, guid: 82f8da7f268b3fb4093dddca66a1b3e8, type: 2}
   - {fileID: 9100000, guid: 6f2743d364b224d4aab2e466d9231a3d, type: 2}
+  - {fileID: 9100000, guid: f6a7e0442553cad4ca39c8df29411dc7, type: 2}
   FemaleAnimations:
   - {fileID: 22100000, guid: 4f9800672af7570478f085a3023ace57, type: 2}
   - {fileID: 9100000, guid: 8af41b1ac289a904ca2bcf0c1d8a5b40, type: 2}
@@ -112,6 +113,7 @@ MonoBehaviour:
   - {fileID: 9100000, guid: 3a52e43da1b6b604c8ed63485967953f, type: 2}
   - {fileID: 9100000, guid: 27a935ce9a81cbc4ca8b5da8a3188f47, type: 2}
   - {fileID: 9100000, guid: 95f23a1d6e2b9b042adcac1b5a5576ee, type: 2}
+  - {fileID: 9100000, guid: 5042a66b3246fc840a4e683091267504, type: 2}
   MaleDeath: {fileID: 9100000, guid: c2349e3c3690d1c43b661ebffc58d3dd, type: 2}
   FemaleDeath: {fileID: 9100000, guid: 8e1256d58d4baad439ab206b70cffb3f, type: 2}
 --- !u!65 &6788024647315458982

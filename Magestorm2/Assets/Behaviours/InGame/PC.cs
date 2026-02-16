@@ -184,8 +184,11 @@ public class PC : MonoBehaviour
         {
             if (InputControls.SetSecondary)
             {
-                _secondarySpell = _primarySpell;
-                ComponentRegister.SpellPanel.UpdateSecondaryReference(_secondarySpell.SpellNameReference);
+                if(_primarySpell != null)
+                {
+                    _secondarySpell = _primarySpell;
+                    ComponentRegister.SpellPanel.UpdateSecondaryReference(_secondarySpell.SpellNameReference);
+                }
             }
         }
     }

@@ -184,6 +184,7 @@ public class InGamePacketProcessor : UDPProcessor
         {
             if(tapperID == MatchParams.IDinMatch)
             {
+                Game.PlayerPMDByte.SetLocalPosture(Postures.Standing);
                 ComponentRegister.Valhalla.EnterValhalla();
                 ComponentRegister.PC.UpdateHP(MatchParams.MaxHP);
                 new MessageData(Language.BuildString(213, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), Language.GetBaseString(304));
