@@ -16,10 +16,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     private bool _playersAvatar;
     private bool _isAlive;
     private bool _updatedNeeded;
+    private bool _isMale;
     private byte _playerID;
     private Vector3 _startPostion, _nextPosition;
     private Vector3 _nextRotation;
-    private bool _positionChange, _rotationChange;
+    private bool _positionChange, _rotationChange, _bodyShown;
     private float _positionElapsed, _rotationElapsed, _rotationAmount;
     private float _effectTick = 0.5f;
     private Renderer[] _renderers;
@@ -34,7 +35,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
     public BoxCollider RPCollider;
     void Awake()
     {
-        _actionList = new List<PeriodicAction>();  
+        _actionList = new List<PeriodicAction>();
         _lookAtCamera = new PeriodicAction(0.2f, NameRotate, _actionList);
         _effectsTick = new PeriodicAction(_effectTick, EffectTick, _actionList);
         _nameText = CharacterName.GetComponent<TMP_Text>();
@@ -71,6 +72,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         AvatarAnimation.SetElapsed(Time.deltaTime);
         AvatarAnimation.Animate(_pmd);
+    }
+    public void CreateDeadBody()
+    {
+        ComponentRegister.Spawner.SpawnDeadBody(_model, transform.position, transform.eulerAngles.y, _isMale?AvatarAnimation.MaleDeath: AvatarAnimation.FemaleDeath);
     }
     private void EffectTick()
     {
@@ -187,7 +192,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
         _nameText.text = name;
         _nameText.color = Teams.GetTeamColor(_team);
         _playerID = id;
-        _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject);
+        _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject, ref _isMale);
         _animator = _model.GetComponentInChildren<Animator>();
         _animator.applyRootMotion = false;
         AvatarAnimation.Init(_animator, appearance[0] == 0);

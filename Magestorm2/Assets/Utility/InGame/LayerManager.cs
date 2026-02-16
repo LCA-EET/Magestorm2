@@ -5,10 +5,12 @@ public static class LayerManager
     public const string Layer_Player = "Player";
     public const string Layer_DeadPlayer = "DeadPlayer";
     public const string Layer_RemotePlayer = "RemotePlayer";
+    public const string Layer_DeadBody = "DeadBody";
 
     private static int _playerLayer, _playerLayerMask;
     private static int _remotePlayerLayer, _remotePlayerLayerMask;
     private static int _deadPlayerLayer, _deadPlayerLayerMask;
+    private static int _deadBodyLayer;
     private static int _surfaceMask;
     private static int _interactableMask;
     private static int _projectileImpactMask;
@@ -19,6 +21,7 @@ public static class LayerManager
         {
             _playerLayer = LayerMask.NameToLayer(Layer_Player);
             _deadPlayerLayer = LayerMask.NameToLayer(Layer_DeadPlayer);
+            _deadBodyLayer = LayerMask.NameToLayer(Layer_DeadBody);
             _remotePlayerLayer = LayerMask.NameToLayer(Layer_RemotePlayer);
             _playerLayerMask = LayerMask.GetMask(Layer_Player);
             _deadPlayerLayerMask = LayerMask.GetMask(Layer_DeadPlayer);
@@ -29,6 +32,10 @@ public static class LayerManager
            
             _init = true;
         }
+    }
+    public static int DeadBodyLayer
+    {
+        get { return _deadBodyLayer; }
     }
     public static int ProjectileImpactMask
     {

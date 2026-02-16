@@ -320,6 +320,7 @@ public class PC : MonoBehaviour
 
     public void RegisterLeyInfluencer(byte id, LeyInfluencer influencer)
     {
+        
         _activeInfluencers.Add(id, influencer);
     }
 
@@ -344,6 +345,10 @@ public class PC : MonoBehaviour
     public void UpdateHP(float value)
     {
         _hp.UpdateValue(value);
+        if(value <= 0)
+        {
+            _activeInfluencers.Clear();
+        }
     }
     public void UseStamina(float amount)
     {

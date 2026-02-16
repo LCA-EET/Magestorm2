@@ -9,7 +9,10 @@ public class AvatarAnimation : MonoBehaviour{
     private PeriodicAction _action;
     private bool _isDone, _male, _priorMove;
     private byte _nextAnimation, _currentAnimation, _priorPosture;
-    
+
+    public RuntimeAnimatorController MaleDeath, FemaleDeath;
+
+
     public void Init(Animator animator, bool male)
     {
         _animator = animator;

@@ -339,6 +339,7 @@ public class InGamePacketProcessor : UDPProcessor
                     }
                 }
             }
+            killedPlayer.CreateDeadBody();
             killedPlayer.SetAlive(false);
         }
     }

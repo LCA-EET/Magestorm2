@@ -112,6 +112,8 @@ MonoBehaviour:
   - {fileID: 9100000, guid: 3a52e43da1b6b604c8ed63485967953f, type: 2}
   - {fileID: 9100000, guid: 27a935ce9a81cbc4ca8b5da8a3188f47, type: 2}
   - {fileID: 9100000, guid: 95f23a1d6e2b9b042adcac1b5a5576ee, type: 2}
+  MaleDeath: {fileID: 9100000, guid: c2349e3c3690d1c43b661ebffc58d3dd, type: 2}
+  FemaleDeath: {fileID: 9100000, guid: 8e1256d58d4baad439ab206b70cffb3f, type: 2}
 --- !u!65 &6788024647315458982
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ public class AnimationKeys
         Jump = 5,
         CrouchWalk_Forward = 6,
         CrouchWalk_Backward = 7,
+        KO = 8,
         None = 99;
 }
 public enum SpellType : byte

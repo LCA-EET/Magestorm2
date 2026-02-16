@@ -166,6 +166,12 @@ public class ModelBuilder : MonoBehaviour
     {
         
     }
+    public GameObject ConstructModel(byte[] appearance, byte team, byte level, GameObject parent, ref bool male)
+    {
+        GameObject toReturn = ConstructModel(appearance, team, level, parent);
+        male = appearance[IndexModelSex] == MaleSex;
+        return toReturn;
+    }
     public GameObject ConstructModel(byte[] appearance, byte team, byte level, GameObject parent)
     {
         byte sex = appearance[IndexModelSex];
