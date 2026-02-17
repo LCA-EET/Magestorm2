@@ -323,12 +323,15 @@ public class PC : MonoBehaviour
 
     public void RegisterLeyInfluencer(byte id, LeyInfluencer influencer)
     {
-        
-        _activeInfluencers.Add(id, influencer);
+        if (!_activeInfluencers.ContainsKey(id))
+        {
+            _activeInfluencers.Add(id, influencer);
+        }
     }
 
     public void DeregisterLeyInfluencer(byte id)
     {
+        Debug.Log("De-registering Ley Influencer " + id);
         _activeInfluencers.Remove(id);
     }
     public float CurrentMana
