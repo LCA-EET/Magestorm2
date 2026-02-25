@@ -1,31 +1,34 @@
 public class Spell {
     private final int _spellID;
 
-    private final byte _minDamagePerRoll, _maxDamagePerRoll, _minHealPerRoll, _maxHealPerRoll, _element, _spellCost,
-            _spellType, _discipline, _skillRequired, _numRolls, _minlevel;
+    private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
+            _spellType, _discipline, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1;
 
     public Spell(int id, byte[] params){
         _spellID = id;
-        _minDamagePerRoll = params[0];
-        _maxDamagePerRoll = params[1];
+        _minDamagePerRoll0 = params[0];
+        _maxDamagePerRoll0 = params[1];
         _minHealPerRoll = params[2];
         _maxHealPerRoll = params[3];
-        _element = params[4];
+        _element0 = params[4];
         _spellCost = params[5];
         _spellType = params[6];
         _discipline = params[7];
         _skillRequired = params[8];
         _numRolls = params[9];
         _minlevel = params[10];
+        _minDamagePerRoll1 = params[11];
+        _maxDamagePerRoll1 = params[12];
+        _element1 = params[13];
     }
     public int GetSpellID(){
         return _spellID;
     }
-    public byte GetMinDamagePerRoll(){
-        return _minDamagePerRoll;
+    public byte GetMinDamagePerRoll0(){
+        return _minDamagePerRoll0;
     }
-    public byte GetMaxDamagePerRoll(){
-        return _maxDamagePerRoll;
+    public byte GetMaxDamagePerRoll0(){
+        return _maxDamagePerRoll0;
     }
     public byte GetMinHealPerRoll(){
         return _minHealPerRoll;
@@ -33,8 +36,8 @@ public class Spell {
     public byte GetMaxHealPerRoll(){
         return _maxHealPerRoll;
     }
-    public byte GetElement(){
-        return _element;
+    public byte GetElement0(){
+        return _element0;
     }
     public byte SpellCost(){
         return _spellCost;
@@ -52,4 +55,13 @@ public class Spell {
         return _numRolls;
     }
     public byte GetMinLevel() {return _minlevel;}
+    public byte GetMinDamagePerRoll1(){
+        return _minDamagePerRoll1;
+    }
+    public byte GetMaxDamagePerRoll1(){
+        return _maxDamagePerRoll1;
+    }
+    public byte GetElement1(){
+        return _element1;
+    }
 }

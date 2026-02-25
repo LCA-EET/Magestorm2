@@ -22,7 +22,14 @@ public class UIKeyMapper : ValidatableForm
     }
     public KeyCode GetKeyCode(InputControl control)
     {
-        return _controlTable[control];
+        if (_controlTable.ContainsKey(control))
+        {
+            return _controlTable[control];
+        }
+        else
+        {
+            return KeyCode.None;
+        }
     }
     public void RemapControl(string desc, InputControl control, int index)
     {
@@ -54,6 +61,10 @@ public class UIKeyMapper : ValidatableForm
             Debug.Log("Setting key preference: " + PlayerAccount.AccountID + "key:" + keySelector.InputKey + ", " + (int)keySelector.KeyCode);
             InputControls.SetKey(keySelector.InputKey, keySelector.KeyCode);
         }
+        if(ComponentRegister.AvailableSpellsPanel != null)
+        {
+            ComponentRegister.AvailableSpellsPanel.RefeshPanel();
+        }
     }
     private void ApplyDefaults()
     {
@@ -65,9 +76,12 @@ public class UIKeyMapper : ValidatableForm
     }
     void Update()
     {
-        if (InputControls.InGameMenu)
+        if (Game.GameMode)
         {
-            CloseForm();
+            if (InputControls.InGameMenu)
+            {
+                CloseForm();
+            }
         }
         else
         {

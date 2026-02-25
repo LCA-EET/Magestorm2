@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class Colors
 {
+    public static Color UnavailableSpell;
     public static Color TextBackground;
     public static Color Neutral, Order, Balance, Chaos;
     public static Color TeamSelected, TeamUnselected;
@@ -15,6 +16,7 @@ public static class Colors
             Order = Color.blue;
             Chaos = Color.red;
             Balance = Color.green;
+            UnavailableSpell = new Color(1f, 1f, 1f, 0.25f);
             EntrySelected = new Color(0f, 1f, 0.125f, 0.4313f);
             EntryUnselected = new Color(0f, 0f, 0f, 0f);
             CardUnselected = new Color(1f, 1f, 1f, 1f);

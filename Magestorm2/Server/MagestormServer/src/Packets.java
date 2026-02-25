@@ -202,6 +202,13 @@ public class Packets {
 
     public static byte[] IGInactivityDisconnectPacket() { return Cryptographer.Encrypt(IGInactivityDisconnect_Bytes);}
 
+    public static byte[] HitNotificationPacket(byte hitPlayerID, byte hitterID){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.HitNotification;
+        toEncrypt[1] = hitPlayerID;
+        toEncrypt[2] = hitterID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] SpawnProjectilePacket(byte[] decrypted, short castID)
     {
         byte[] castBytes = ByteUtils.ShortToByteArray(castID);
@@ -342,10 +349,11 @@ public class Packets {
         return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerLeftMatch, 1, playerID});
     }
 
-    public static byte[] PlayerDataPacket(byte[] playerData){
-        byte[] toEncrypt = new byte[playerData.length + 1];
+    public static byte[] PlayerDataPacket(byte[] playerData, byte joinAlive){
+        byte[] toEncrypt = new byte[playerData.length + 2];
         toEncrypt[0] = InGame_Send.PlayerData;
         System.arraycopy(playerData, 0, toEncrypt, 1, playerData.length);
+        toEncrypt[toEncrypt.length-1] = joinAlive;
         return Cryptographer.Encrypt(toEncrypt);
     }
 

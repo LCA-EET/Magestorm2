@@ -1,3 +1,5 @@
+import java.util.Hashtable;
+
 public class MatchCharacter {
     private final MatchTeam _team;
     private final Match _owningMatch;
@@ -7,6 +9,7 @@ public class MatchCharacter {
     private final byte _teamID;
     private final byte _idInMatch;
     private final float _hpRegenAmount, _spRegenAmount;
+    private byte _pmd;
 
     private final byte[] _INLCTA;
     private final int _idxLevel = 7;
@@ -26,25 +29,30 @@ public class MatchCharacter {
     private float _priorHP, _priorMana;
     private float _ley;
     private int _lastPRPacketID;
+    private final byte[] _resistance;
 
-    public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team){
+    public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
         MarkPacketReceived();
         _team = team;
+        _resistance = new byte[8];
         _lastPRPacketID = 0;
         _hpRegenElapsed = 0;
         _hpRegenTick = hpRegenTick;
         _manaRegenElapsed = 0;
         _manaRegenTick = 1000;
         _waitForHPRegen = 10000;
-        _currentHP = 1;
-        _currentMana = 1;
-        _verified = false;
-        _owningMatch = match;
+        boolean joinAlive = match.JoinAlive(team.GetTeamID());
         _pc = pc;
-        _ley = _pc.GetCharacterClass().GetClass() == CharacterClass.Mentalist? 0.6f : 0.0f;
-
         _maxHP = _pc.GetMaxHP();
         _maxMana = _pc.GetMaxMana();
+        _currentHP = newToMatch && joinAlive?_maxHP:0;
+        _currentMana = newToMatch && joinAlive?_maxMana:0;
+        _verified = false;
+        _owningMatch = match;
+
+        _ley = _pc.GetCharacterClass().GetClass() == CharacterClass.Mentalist? 0.6f : 0.0f;
+
+
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
         _teamID = team.GetTeamID();
@@ -61,6 +69,9 @@ public class MatchCharacter {
         _positionIndex = _INLCTA.length;
         _directionIndex = _positionIndex + 12;
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
+    }
+    public byte GetResistance(byte elementID){
+        return _resistance[elementID];
     }
     public int GetCharacterID(){
         return _pc.GetCharacterID();
@@ -81,7 +92,7 @@ public class MatchCharacter {
     public void SetToMaxHP(){
         _currentHP = _maxHP;
     }
-    public void TakeDamage(short damageAmount, MatchCharacter attacker){
+    public void TakeDamage(float damageAmount, MatchCharacter attacker){
         _hpRegenWaitElapsed = 0;
         _currentHP -= damageAmount;
         if(_currentHP <= 0){
@@ -200,6 +211,7 @@ public class MatchCharacter {
             }
         }
         if(_priorMana != _currentMana){
+            //Main.LogMessage("Player " + _idInMatch + " mana increased from " + _priorMana + " to " + _currentMana);
             _priorMana = _currentMana;
             return true;
         }
@@ -215,13 +227,13 @@ public class MatchCharacter {
         return toReturn;
     }
 
-    public void UpdateLastMovementPacketID(int packetID){
+    public void UpdateLastMovementPacketID(int packetID, byte pmd){
+        _pmd = pmd;
         _lastPRPacketID = packetID;
     }
     protected void UpdatePosition(byte[] decrypted){
         System.arraycopy(decrypted, 8, _playerData, _positionIndex, 12);
     }
-
     protected void UpdateDirection(byte[] decrypted, int index){
         System.arraycopy(decrypted, index, _playerData, _directionIndex, 4);
     }

@@ -45,7 +45,7 @@ public class PC : MonoBehaviour
             _activeInfluencers = new Dictionary<byte, LeyInfluencer>();
             ComponentRegister.PC = this;
             PlayerMovement.SetPC(this);
-            _staminaRegen = MatchParams.MaxStamina / 8.0f;
+            _staminaRegen = MatchParams.MaxStamina / 1.67f;
             _hml = new Dictionary<PlayerIndicator, HMLUpdater>();
             _class = (PlayerClass)PlayerAccount.SelectedCharacter.CharacterClass;
             _actionList = new List<PeriodicAction>();
@@ -215,9 +215,14 @@ public class PC : MonoBehaviour
             }
         }
     }
+    public void RestoreHPandMana()
+    {
+        _hp.UpdateValue(MatchParams.MaxHP);
+        _mana.UpdateValue(MatchParams.MaxMana);
+    }
     private void ComputeLey()
     {
-        Debug.Log("COMPUTING LEY, INFLUENCER COUNT: " + _activeInfluencers.Count);
+        //Debug.Log("COMPUTING LEY, INFLUENCER COUNT: " + _activeInfluencers.Count);
         float newLey = 0.0f;
         foreach(LeyInfluencer influence in _activeInfluencers.Values)
         {
@@ -331,8 +336,10 @@ public class PC : MonoBehaviour
 
     public void DeregisterLeyInfluencer(byte id)
     {
-        Debug.Log("De-registering Ley Influencer " + id);
-        _activeInfluencers.Remove(id);
+        if (_activeInfluencers.ContainsKey(id))
+        {
+            _activeInfluencers.Remove(id);
+        }
     }
     public float CurrentMana
     {

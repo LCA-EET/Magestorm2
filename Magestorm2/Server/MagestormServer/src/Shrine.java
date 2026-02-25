@@ -20,8 +20,12 @@ public class Shrine {
         if(newHealth > 100){
             newHealth = 100;
         }
-        _shrineHealth = (byte)newHealth;
-        _owningMatch.SendToAll(Packets.ShrineAdjustmentPacket(_shrineHealth, _teamID, adjuster.GetIDinMatch()));
+        SetShrineHealth((byte)newHealth, adjuster.GetIDinMatch());
+    }
+
+    public void SetShrineHealth(byte newHealth, byte adjusterID){
+        _shrineHealth = newHealth;
+        _owningMatch.SendToAll(Packets.ShrineAdjustmentPacket(_shrineHealth, _teamID, adjusterID));
     }
 
     public byte ShrineHealth(){

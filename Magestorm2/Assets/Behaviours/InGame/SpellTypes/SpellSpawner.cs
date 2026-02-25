@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 public class SpellSpawner : MonoBehaviour 
 {
     public byte SpellKey;
@@ -24,5 +25,13 @@ public class SpellSpawner : MonoBehaviour
         adjustedPosition.y += 1.4f;
         transform.position = adjustedPosition;
         transform.forward = direction;
+        if(_casterID == MatchParams.IDinMatch)
+        {
+            SpellData data = null;
+            if(SpellManager.GetSpell(SpellKey, ref data))
+            {
+                ComponentRegister.PC.UseStamina(data.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel));
+            }
+        }
     }
 }

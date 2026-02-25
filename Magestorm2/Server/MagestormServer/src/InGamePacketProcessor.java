@@ -69,6 +69,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void HandleReportHitPacket(){
         _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2));
+
     }
     private void HandleProjectileCast(){
         byte spellID = _decrypted[2];
@@ -164,12 +165,12 @@ public class InGamePacketProcessor extends UDPProcessor{
             if(_owningMatch.IsAwaitingVerification(accountID)){
                 GameServer.GetClient(accountID).MarkInGame();
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID, accountID, remote);
-                _owningMatch.SendToAll(Packets.PlayerDataPacket(_owningMatch.GetMatchCharacter(idInMatch).GetINLCTABytes()));
+                SendPlayerDataForJoinee(_owningMatch.GetMatchCharacter(idInMatch));
                 _owningMatch.ProcessObjectStatusPacket(_decrypted[9]);
                 return true;
             }
             else if (_owningMatch.IsPlayerVerified(idInMatch)){
-                _owningMatch.SendToPlayer(Packets.PlayerDataPacket(_owningMatch.GetMatchCharacter(idInMatch).GetINLCTABytes()), idInMatch);
+                SendPlayerDataForJoinee(_owningMatch.GetMatchCharacter(idInMatch));
                 return true;
             }
             else{
@@ -177,6 +178,10 @@ public class InGamePacketProcessor extends UDPProcessor{
             }
         }
         return false;
+    }
+    private void SendPlayerDataForJoinee(MatchCharacter joinee){
+        byte alive = joinee.IsAlive()?(byte)1:(byte)0;
+        _owningMatch.SendToAll(Packets.PlayerDataPacket(joinee.GetPlayerData(), alive));
     }
     private int CheckAccountAndCharacter(){
         RemoteClient remote = LoggedInClient();

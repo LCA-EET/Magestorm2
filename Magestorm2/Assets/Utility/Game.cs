@@ -83,6 +83,7 @@ public static class Game
             MatchOption.Init();
             ActiveMatches.Init();
             ProfanityChecker.Init();
+            SpellIcons.Init();
             _init = true;
         }
     }

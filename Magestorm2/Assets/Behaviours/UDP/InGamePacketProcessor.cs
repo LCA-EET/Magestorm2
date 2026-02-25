@@ -46,9 +46,6 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.RemovedFromMatch:
                         Match.LeaveMatch();
                         break;
-                    case InGame_Receive.PlayerJoinedMatch:
-                        Match.ProcessPlayerJoinedPacket(_decrypted);
-                        break;
                     case InGame_Receive.InactivityWarning:
                         ProcessInactivityWarning();
                         break;
@@ -114,8 +111,21 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.InactivityDisconnect:
                         HandleInactivityDisconnect();
                         break;
+                    case InGame_Receive.HitNotification:
+                        HandleHitNotification();
+                        break;
                 }
             }
+        }
+    }
+    private void HandleHitNotification()
+    {
+        byte hitByID = _decrypted[2];
+        Avatar hitBy = null;
+        if(Match.GetAvatar(hitByID, ref hitBy))
+        {
+            float angle = SharedFunctions.AngleBetween(Camera.main.transform, hitBy.transform);
+            ComponentRegister.DDIPanel.InstantiateDDI(angle);
         }
     }
     private void HandleInactivityDisconnect()

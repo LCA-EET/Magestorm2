@@ -45,5 +45,6 @@ public static class InGame_Receive
                         PostureChange = 36,
                         ApplyEffect = 37,
                         SpawnProjectile = 38,
-                        InactivityDisconnect = 39;
+                        InactivityDisconnect = 39,
+                        HitNotification = 40;
 }

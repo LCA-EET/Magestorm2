@@ -204,6 +204,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8181409036871605129, guid: f728cda6d1df6fd4aa7f947141b0ed9e, type: 3}
+      propertyPath: Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: eb20a6633a89fb744b3061955e4a80c1, type: 3}
+    - target: {fileID: 8181409036871605129, guid: f728cda6d1df6fd4aa7f947141b0ed9e, type: 3}
       propertyPath: SpellKey
       value: 1
       objectReference: {fileID: 0}

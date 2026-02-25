@@ -37,7 +37,14 @@ public static class ComponentRegister
     private static ValhallaNotice _valhallaNotice;
     private static UIPCEditor _uiPCEditor;
     private static SpellPanel _spellPanel;
+    private static AvailableSpellsPanel _availableSpellsPanel;
+    private static DamageDirectionPanel _ddiPanel;
 
+    public static DamageDirectionPanel DDIPanel
+    {
+        get { return _ddiPanel; }
+        set { _ddiPanel = value; }
+    }
     public static SpellPanel SpellPanel
     {
         get { return _spellPanel; }
@@ -272,6 +279,18 @@ public static class ComponentRegister
         set
         {
             _hud = value;
+        }
+    }
+
+    public static AvailableSpellsPanel AvailableSpellsPanel
+    {
+        get
+        {
+            return _availableSpellsPanel;
+        }
+        set
+        {
+            _availableSpellsPanel = value;
         }
     }
 }

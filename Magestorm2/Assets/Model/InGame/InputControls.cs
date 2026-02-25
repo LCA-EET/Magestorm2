@@ -29,26 +29,29 @@ public enum InputControl
     MiniMapZoomDefault=24,
     InGameMenu = 25,
     //Tap = 26,
-    Slot1 = 28,
-    Slot2 = 29,
-    Slot3 = 30,
-    Slot4 = 31,
-    Slot5 = 32,
-    Slot6 = 33,
-    Slot7 = 34,
-    Slot8 = 35,
-    Slot9 = 36,
-    Slot10 = 37,
+    Slot1 = 100,
+    Slot2 = 101,
+    Slot3 = 102,
+    Slot4 = 103,
+    Slot5 = 104,
+    Slot6 = 105,
+    Slot7 = 106,
+    Slot8 = 107,
+    Slot9 = 108,
+    Slot10 = 109,
+    Slot11 = 110,
+    Slot12 = 111,
     MouseMode = 38,
     Crouch = 39,
-    SetSecondary = 40
+    SetSecondary = 40,
+    Unset = 255
 }
 public static class InputControls
 {
     private static Dictionary<InputControl, KeyCode> _controls;
     private static bool _init = false;
     private static byte _slot1 = (byte)InputControl.Slot1;
-    private static byte _slot10 = (byte)InputControl.Slot10;
+    private static byte _slot12 = (byte)InputControl.Slot12;
     public static void Init()
     {
         if (!_init)
@@ -76,6 +79,18 @@ public static class InputControls
             _init = true;
         }
     }
+    public static KeyCode GetKeyCode(byte controlCode)
+    {
+        InputControl key = (InputControl)controlCode;
+        if (_controls.ContainsKey(key))
+        {
+            return _controls[key];
+        }
+        else
+        {
+            return KeyCode.None;
+        }
+    }
     public static void SetKey(InputControl control, KeyCode key)
     {
         _controls[control] = key;
@@ -98,8 +113,8 @@ public static class InputControls
         defaults.Add(InputControl.ChatMode, KeyCode.Quote);
         defaults.Add(InputControl.CancelChat, KeyCode.Escape); //Escape
         defaults.Add(InputControl.SendMessage, KeyCode.Return);
-        defaults.Add(InputControl.PreviousTrack, KeyCode.Minus);
-        defaults.Add(InputControl.NextTrack, KeyCode.Plus);
+        defaults.Add(InputControl.PreviousTrack, KeyCode.B); 
+        defaults.Add(InputControl.NextTrack, KeyCode.N);
         defaults.Add(InputControl.ToggleMusic, KeyCode.M);
         defaults.Add(InputControl.ChatScrollUp, KeyCode.PageUp);
         defaults.Add(InputControl.ChatScrollDown, KeyCode.PageDown);
@@ -119,6 +134,8 @@ public static class InputControls
         defaults.Add(InputControl.Slot8, KeyCode.Alpha8);
         defaults.Add(InputControl.Slot9, KeyCode.Alpha9);
         defaults.Add(InputControl.Slot10, KeyCode.Alpha0);
+        defaults.Add(InputControl.Slot11, KeyCode.Minus);
+        defaults.Add(InputControl.Slot12, KeyCode.Equals);
         defaults.Add(InputControl.MouseMode, KeyCode.P);
         defaults.Add(InputControl.Crouch, KeyCode.LeftControl);
         defaults.Add(InputControl.SetSecondary, KeyCode.LeftAlt);
@@ -127,7 +144,7 @@ public static class InputControls
     
     public static byte GetSlottedSpellID()
     {
-        for(byte b = _slot1; b < _slot10; b++)
+        for(byte b = _slot1; b < _slot12; b++)
         {
             if (Input.GetKeyDown(_controls[(InputControl)b]) && Game.GameMode)
             {

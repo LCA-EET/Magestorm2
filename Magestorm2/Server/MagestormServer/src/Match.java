@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Match {
@@ -20,7 +21,7 @@ public class Match {
     protected ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
     protected final ConcurrentHashMap<Short, CastSpell> _castSpells;
     protected final ConcurrentHashMap<Integer, Score> _playerScores;
-
+    protected final HashSet<Integer> _playersJoined;
     protected byte _nextPlayerID;
     protected final int _matchPort;
     protected InGamePacketProcessor _processor;
@@ -30,6 +31,7 @@ public class Match {
     private long _spellExpirationElapsed = 0;
 
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType, byte matchOptions){
+        _playersJoined = new HashSet<>();
         _matchOptions = new MatchOptions(matchOptions);
         _regenTick = _matchOptions.IsOptionSet(MatchOptions.FastRegen)?1000:5000;
         _matchPort = GameServer.GetNextMatchPort();
@@ -166,8 +168,18 @@ public class Match {
     }
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
-        MatchCharacter toAdd = new MatchCharacter(GameServer.GetActiveCharacter(rc.AccountID()), playerID, this,
-                _regenTick, _matchTeams.get(teamID));
+        PlayerCharacter joining = GameServer.GetActiveCharacter(rc.AccountID());
+        int characterID = joining.GetCharacterID();
+        boolean newToMatch;
+        if(_playersJoined.contains(characterID)){
+            newToMatch = false;
+        }
+        else{
+            newToMatch = true;
+            _playersJoined.add(characterID);
+        }
+        MatchCharacter toAdd = new MatchCharacter(joining, playerID, this,
+                _regenTick, _matchTeams.get(teamID), newToMatch);
         _unverifiedCharacters.put(rc.AccountID(), toAdd);
         LogMessage("Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return toAdd;
@@ -181,7 +193,8 @@ public class Match {
             MatchCharacter toUpdate = _matchCharacters.get(playerID);
             int packetID = ByteUtils.ExtractInt(decrypted, 2);
             if(packetID > toUpdate.GetLastPRPacketID()){
-                toUpdate.UpdateLastMovementPacketID(packetID);
+                byte pmd = decrypted[6];
+                toUpdate.UpdateLastMovementPacketID(packetID, pmd);
                 byte controlCode = decrypted[7];
                 switch(controlCode){
                     case 0: // position only
@@ -198,6 +211,9 @@ public class Match {
                 SendToAll(Cryptographer.Encrypt(decrypted));
             }
         }
+    }
+    public boolean JoinAlive(byte teamID){
+        return true;
     }
     public void PlayerTapped(byte playerID){
         MatchCharacter mc = _matchCharacters.get(playerID);
@@ -265,7 +281,12 @@ public class Match {
     }
     public void SendPlayerData(byte requesterID, byte idInMatch){
         if(_matchCharacters.containsKey(requesterID)){
-            SendToPlayer(Packets.PlayerDataPacket(_matchCharacters.get(idInMatch).GetPlayerData()), requesterID);
+            MatchCharacter subject = _matchCharacters.get(idInMatch);
+            if(subject != null){
+                byte alive = subject.IsAlive()?(byte)1:(byte)0;
+                SendToPlayer(Packets.PlayerDataPacket(subject.GetPlayerData(), alive), requesterID);
+            }
+
         }
     }
     public int GetMatchPort(){
@@ -396,10 +417,7 @@ public class Match {
             if(mc.IsAlive() && !mc.HasFullSP()){
                 manaChanged = mc.RegenerateSP(msElapsed);
             }
-            if(!hpChanged && !manaChanged){
-                return;
-            }
-            else{
+            if(hpChanged || manaChanged){
                 if(hpChanged && manaChanged){
                     SendToPlayer(Packets.HPandManaUpdatePacket(mc.GetCurrentHP(), mc.GetCurrentMana()), mc);
                 }
@@ -465,13 +483,15 @@ public class Match {
     }
 
     public void PlayerHit(byte hitPlayerID, short spellID){
-        Main.LogMessage("Match.PlayerHit checking " + hitPlayerID);
+        //Main.LogMessage("Match.PlayerHit checking " + hitPlayerID);
         MatchCharacter hitPlayer = GetMatchCharacter(hitPlayerID);
-        Main.LogMessage("Player " + hitPlayerID + ", " + hitPlayer.GetCharacterName() + ", was hit by spell " + spellID);
+        //Main.LogMessage("Player " + hitPlayerID + ", " + hitPlayer.GetCharacterName() + ", was hit by spell " + spellID);
         if(hitPlayer != null){
             CastSpell spell = GetCastSpell(spellID);
             if(spell != null){
                 spell.ProcessSpell(hitPlayer);
+                byte[] packet = Packets.HitNotificationPacket(hitPlayerID, spell.GetCasterID());
+                SendToPlayer(packet, hitPlayer);
             }
             else{
                 Main.LogError("Match.PlayerHit: Spell " + spellID + " is null.");

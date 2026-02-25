@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using System.Xml.Linq;
 
 public static class SharedFunctions
 {
@@ -46,7 +48,11 @@ public static class SharedFunctions
     {
         go.transform.LookAt(Camera.main.transform.position);
     }
-    
+    public static float AngleBetween(Transform objectA, Transform objectB)
+    {
+        Vector3 direction = (objectB.position - objectA.position).normalized;
+        return Vector3.SignedAngle(direction, objectA.forward, Vector3.up);
+    }
     public static bool DirectionalCast(Transform origin, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
     {
         return Physics.Raycast(origin.position, origin.TransformDirection(direction), out hitInfo, distance, layerMask);

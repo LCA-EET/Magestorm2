@@ -4,7 +4,7 @@ public class HUD : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public GameObject componentContainer;
-    
+
     private bool _hudActive;
     void Start()
     {
@@ -21,4 +21,6 @@ public class HUD : MonoBehaviour
             componentContainer.SetActive(_hudActive);
         }
     }
+
+    
 }

@@ -38,6 +38,7 @@ public class ManaPool : BiasableTrigger
         if ((MatchParams.MatchTeamID != (byte)BiasedToward) || (BiasAmount < 100))
         {
             Game.SendInGameBytes(InGame_Packets.BiasPoolPacket(PoolID));
+            ComponentRegister.PC.UseStamina(255);
             Debug.Log("Bias packet sent.");
         }
     }

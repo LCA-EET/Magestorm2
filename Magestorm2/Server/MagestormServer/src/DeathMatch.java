@@ -31,6 +31,7 @@ public class DeathMatch extends Match{
         };
     }
 
+
     public void AdjustShrineHealth(byte adjusterID,byte shrineID){
         if(_shrines.containsKey(shrineID)){
             MatchCharacter adjuster = GetMatchCharacter(adjusterID);
@@ -62,6 +63,24 @@ public class DeathMatch extends Match{
         }
     }
 
+    @Override
+    public boolean ParseCommand(String command, String[] params, byte senderID) {
+        if(!super.ParseCommand(command, params, senderID)){
+            switch(command){
+                case "killshrine":
+                    _shrines.get(Byte.parseByte(params[1])).SetShrineHealth((byte)0, senderID);
+                    return true;
+                case "restoreshrine":
+                    _shrines.get(Byte.parseByte(params[1])).SetShrineHealth((byte)100, senderID);
+                    return true;
+            }
+        }
+        return false;
+    }
+    @Override
+    public boolean JoinAlive(byte teamID){
+        return _shrines.get(teamID).IsAlive();
+    }
     @Override
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID) {
         MatchCharacter mc = super.JoinMatch(rc, teamID);

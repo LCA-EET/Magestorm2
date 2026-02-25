@@ -16,7 +16,10 @@ public class SpawnedSpell : MonoBehaviour
         ComponentRegister.Spawner.RegisterSpawnedSpell(this);
         if(casterID == MatchParams.IDinMatch && CastClip != null)
         {
-            ComponentRegister.AudioPlayer.PlayClip(CastClip);
+            if(CastClip!= null)
+            {
+                ComponentRegister.AudioPlayer.PlayClip(CastClip);
+            }
         }
     }
     public bool IsExpired(float currentTime)

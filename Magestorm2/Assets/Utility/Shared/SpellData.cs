@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpellData
 {
     private int _spellNameReference, _descReference;
-    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll, _maxDamagePerRoll, _minHealPerRoll, _maxHealPerRoll;
+    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost;
     private SpellDiscipline _discipline;
     private SpellType _spellType;
 
@@ -19,14 +19,20 @@ public class SpellData
             fieldValue = split[i + 1];
             switch (fieldID)
             {
+                case SpellAttributes.ELEMENT0:
+                    _element0 = byte.Parse(fieldValue); 
+                    break;
+                case SpellAttributes.ELEMENT1:
+                    _element1 = byte.Parse(fieldValue);
+                    break;
                 case SpellAttributes.ID:
                     _spellID = byte.Parse(fieldValue);
                     break;
-                case SpellAttributes.MIN_DAMAGE_PER_ROLL:
-                    _minDamagePerRoll = byte.Parse(fieldValue);
+                case SpellAttributes.MIN_DAMAGE_PER_ROLL0:
+                    _minDamagePerRoll0 = byte.Parse(fieldValue);
                     break;
-                case SpellAttributes.MAX_DAMAGE_PER_ROLL:
-                    _maxDamagePerRoll = byte.Parse(fieldValue);
+                case SpellAttributes.MAX_DAMAGE_PER_ROLL0:
+                    _maxDamagePerRoll0 = byte.Parse(fieldValue);
                     break;
                 case SpellAttributes.MIN_HEAL_PER_ROLL:
                     _minHealPerRoll = byte.Parse(fieldValue);
@@ -59,6 +65,19 @@ public class SpellData
                     _spellType = (SpellType)byte.Parse(fieldValue);
                     break;
             }
+        }
+    }
+    public float GetStaminaCost(byte characterLevel)
+    {
+        int difference = characterLevel - MinLevel;
+        float staminaCost = 170 - (difference * 8.5f);
+        if(staminaCost < 17)
+        {
+            return 17;
+        }
+        else
+        {
+            return staminaCost;
         }
     }
     public SpellType SpellType
@@ -123,9 +142,12 @@ public class SpellData
         PlayerCharacter caster = PlayerAccount.SelectedCharacter;
         if(caster.GetSkillLevel(Discipline) >= SkillNeeded)
         {
-            if(caster.CharacterLevel >= MinLevel)
+            PC pc = ComponentRegister.PC;
+            byte casterLevel = caster.CharacterLevel;
+            if(casterLevel >= MinLevel)
             {
-                if(ComponentRegister.PC.CurrentMana >= SpellCost)
+                if(pc.CurrentMana >= SpellCost && 
+                    pc.CurrentStamina >= GetStaminaCost(casterLevel))
                 {
                     toReturn = true;
                 }
@@ -138,11 +160,11 @@ public static class SpellAttributes
 {
     public const string ID = "id";
     public const string NAME = "spellname";
-    public const string MIN_DAMAGE_PER_ROLL = "mindamageperroll";
-    public const string MAX_DAMAGE_PER_ROLL = "maxdamageperroll";
+    public const string MIN_DAMAGE_PER_ROLL0 = "mindamageperroll0";
+    public const string MAX_DAMAGE_PER_ROLL0 = "maxdamageperroll0";
     public const string MIN_HEAL_PER_ROLL = "minhealperroll";
     public const string MAX_HEAL_PER_ROLL = "maxhealperroll";
-    public const string ELEMENT = "element";
+    public const string ELEMENT = "element0";
     public const string COST = "cost";
     public const string SPELLTYPE = "spelltype";
     public const string DESCRIPTION = "description";
@@ -151,4 +173,8 @@ public static class SpellAttributes
     public const string ROLLS = "rolls";
     public const string SPELL_NAME_REFERENCE = "spellnameref";
     public const string MINLEVEL = "minlevel";
+    public const string MIN_DAMAGE_PER_ROLL1 = "mindamageperroll1";
+    public const string MAX_DAMAGE_PER_ROLL1 = "maxdamageperroll1";
+    public const string ELEMENT0 = "element0";
+    public const string ELEMENT1 = "element1";
 }

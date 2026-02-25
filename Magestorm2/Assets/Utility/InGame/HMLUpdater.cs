@@ -31,6 +31,10 @@ public class HMLUpdater
     
     public void UpdateValue(float newValue)
     {
+        if(newValue < 0)
+        {
+            _newValue = 0;
+        }
         _priorValue = _currentValue;
         _newValue = newValue;
         _updateNeeded = newValue != _currentValue;

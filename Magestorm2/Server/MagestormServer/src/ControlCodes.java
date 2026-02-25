@@ -37,4 +37,15 @@ public class ControlCodes {
         public static final byte EffectCode_Bleed = 10;
         public static final byte EffectCode_Prayer = 11;
     //endregion
+
+    //region ElementCodes
+        public static final byte Element_None = 0;
+        public static final byte Element_Fire = 1;
+        public static final byte Element_Ice = 2;
+        public static final byte Element_Earth = 3;
+        public static final byte Element_Electric = 4;
+        public static final byte Element_Light = 5;
+        public static final byte Element_Dark = 6;
+        public static final byte Element_Physical = 7;
+    //endregion
 }

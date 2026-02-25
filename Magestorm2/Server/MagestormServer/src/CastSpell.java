@@ -19,6 +19,9 @@ public class CastSpell {
     public short ID(){
         return _castID;
     }
+    public byte GetCasterID(){
+        return _casterReference.GetIDinMatch();
+    }
     public MatchCharacter GetCasterReference(){
         return _casterReference;
     }
