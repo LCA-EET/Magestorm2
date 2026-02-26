@@ -30,6 +30,7 @@ public class MatchCharacter {
     private float _ley;
     private int _lastPRPacketID;
     private final byte[] _resistance;
+    private final boolean _newToMatch;
 
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
         MarkPacketReceived();
@@ -42,17 +43,15 @@ public class MatchCharacter {
         _manaRegenTick = 1000;
         _waitForHPRegen = 10000;
         boolean joinAlive = match.JoinAlive(team.GetTeamID());
+        _newToMatch = newToMatch;
         _pc = pc;
         _maxHP = _pc.GetMaxHP();
         _maxMana = _pc.GetMaxMana();
-        _currentHP = newToMatch && joinAlive?_maxHP:0;
-        _currentMana = newToMatch && joinAlive?_maxMana:0;
+        _currentHP = joinAlive?_maxHP:0;
+        _currentMana = joinAlive?_maxMana:0;
         _verified = false;
         _owningMatch = match;
-
         _ley = _pc.GetCharacterClass().GetClass() == CharacterClass.Mentalist? 0.6f : 0.0f;
-
-
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
         _teamID = team.GetTeamID();
@@ -69,6 +68,9 @@ public class MatchCharacter {
         _positionIndex = _INLCTA.length;
         _directionIndex = _positionIndex + 12;
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
+    }
+    public byte IsNewToMatch(){
+        return _newToMatch?(byte)1:(byte)0;
     }
     public byte GetResistance(byte elementID){
         return _resistance[elementID];

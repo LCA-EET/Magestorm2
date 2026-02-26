@@ -102,9 +102,10 @@ public static class Match
         string name = ByteUtils.BytesToUTF8(nameBytes, 0, nameBytes.Length);
         byte[] positionBytes = new byte[12];
         byte[] directionBytes = new byte[4];
-        Array.Copy(decrypted, decrypted.Length - 17, positionBytes, 0, 12);
-        Array.Copy(decrypted, decrypted.Length - 5, directionBytes, 0, 4);
-        byte alive = decrypted[decrypted.Length - 1];
+        Array.Copy(decrypted, decrypted.Length - 18, positionBytes, 0, 12);
+        Array.Copy(decrypted, decrypted.Length - 6, directionBytes, 0, 4);
+        byte alive = decrypted[decrypted.Length - 2];
+        byte newToMatch = decrypted[decrypted.Length - 1];
         Avatar added = ComponentRegister.Spawner.SpawnAvatar();
         added.SetAttributes(playerID, name, level, characterClass, (Team)teamID, appearance);
         MessageData md = new MessageData(name + " has joined the match.", "Server");
@@ -114,13 +115,19 @@ public static class Match
             if(alive == 1)
             {
                 ComponentRegister.PC.RestoreHPandMana();
+                if(newToMatch == 0)
+                {
+                    ComponentRegister.Valhalla.EnterValhalla();
+                }
             }
+            
             ComponentRegister.PC.JoinedMatch = true;
             Debug.Log("MaxHP: " + MatchParams.MaxHP);
             Debug.Log("MaxMana: " + MatchParams.MaxMana);
         }
         else
         {
+            added.SetAlive(alive == 1);
             added.UpdatePosition(positionBytes, 0, true);
             added.UpdateDirection(directionBytes, 0, true);
         }

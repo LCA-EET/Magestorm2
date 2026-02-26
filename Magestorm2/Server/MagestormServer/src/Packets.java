@@ -349,11 +349,12 @@ public class Packets {
         return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerLeftMatch, 1, playerID});
     }
 
-    public static byte[] PlayerDataPacket(byte[] playerData, byte joinAlive){
-        byte[] toEncrypt = new byte[playerData.length + 2];
+    public static byte[] PlayerDataPacket(byte[] playerData, byte joinAlive, byte newToMatch){
+        byte[] toEncrypt = new byte[playerData.length + 3];
         toEncrypt[0] = InGame_Send.PlayerData;
         System.arraycopy(playerData, 0, toEncrypt, 1, playerData.length);
-        toEncrypt[toEncrypt.length-1] = joinAlive;
+        toEncrypt[toEncrypt.length-2] = joinAlive;
+        toEncrypt[toEncrypt.length-1] = newToMatch;
         return Cryptographer.Encrypt(toEncrypt);
     }
 

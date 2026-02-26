@@ -369,8 +369,11 @@ public class PC : MonoBehaviour
     }
     public void RegenStamina(float deltaTime, bool moving)
     {
-        float regen = moving ? _staminaRegen / 2.0f : _staminaRegen;
-        _stamina.UpdateValue(_stamina.Value + (deltaTime * regen));
+        if (_stamina.IsLessThanMax)
+        {
+            float regen = moving ? _staminaRegen / 2.0f : _staminaRegen;
+            _stamina.UpdateValue(_stamina.Value + (deltaTime * regen));
+        }
     }
     public void UpdatePosition(Vector3 position)
     {

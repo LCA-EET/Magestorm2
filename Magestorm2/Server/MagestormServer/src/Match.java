@@ -284,7 +284,7 @@ public class Match {
             MatchCharacter subject = _matchCharacters.get(idInMatch);
             if(subject != null){
                 byte alive = subject.IsAlive()?(byte)1:(byte)0;
-                SendToPlayer(Packets.PlayerDataPacket(subject.GetPlayerData(), alive), requesterID);
+                SendToPlayer(Packets.PlayerDataPacket(subject.GetPlayerData(), alive, subject.IsNewToMatch()), requesterID);
             }
 
         }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using UnityEngine;
 public class HMLUpdater
 {
     private float _elapsed;
@@ -35,12 +35,20 @@ public class HMLUpdater
         {
             _newValue = 0;
         }
+        else if(newValue > _maxValue)
+        {
+            newValue = _maxValue;
+        }
         _priorValue = _currentValue;
         _newValue = newValue;
         _updateNeeded = newValue != _currentValue;
         if (_updateNeeded)
         {
             _elapsed = 0.0f;
+        }
+        if(_barIndicator == PlayerIndicator.Stamina)
+        {
+            Debug.Log("Prior stamina: " + _priorValue + ", new: " + _newValue);
         }
     }
     public float Value
@@ -53,5 +61,12 @@ public class HMLUpdater
     public bool UpdateNeeded
     {
         get { return _updateNeeded; }
+    }
+    public bool IsLessThanMax
+    {
+        get
+        {
+            return _currentValue < _maxValue;
+        }
     }
 }

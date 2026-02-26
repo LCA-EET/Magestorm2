@@ -181,7 +181,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void SendPlayerDataForJoinee(MatchCharacter joinee){
         byte alive = joinee.IsAlive()?(byte)1:(byte)0;
-        _owningMatch.SendToAll(Packets.PlayerDataPacket(joinee.GetPlayerData(), alive));
+        _owningMatch.SendToAll(Packets.PlayerDataPacket(joinee.GetPlayerData(), alive, joinee.IsNewToMatch()));
     }
     private int CheckAccountAndCharacter(){
         RemoteClient remote = LoggedInClient();
