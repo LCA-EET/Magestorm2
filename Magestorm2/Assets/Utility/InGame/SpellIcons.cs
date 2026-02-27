@@ -17,6 +17,13 @@ public static class SpellIcons
     }
     public static Sprite GetIcon(byte spellKey)
     {
-        return _spellIcons[spellKey];
+        if (!_spellIcons.ContainsKey(spellKey))
+        {
+            return _spellIcons[0];
+        }
+        else
+        {
+            return _spellIcons[spellKey];
+        }
     }
 }

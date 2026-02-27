@@ -23,9 +23,7 @@ public class AnimationKeys
 public enum SpellType : byte
 {
     Projectile = 1,
-    Bolt = 2,
-    SelfHeal = 3,
-    HealOther = 4
+    Self = 2
 }
 public enum SpellDiscipline: byte
 {

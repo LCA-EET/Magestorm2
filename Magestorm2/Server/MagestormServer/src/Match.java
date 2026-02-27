@@ -357,8 +357,18 @@ public class Match {
     public short SpellCast(MatchCharacter caster, Spell spellReference){
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
-            case SpellTypes.Projectile:
-                _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference));
+            case ControlCodes.SpellTypes_Projectile:
+                if(spellReference.IsDamaging()){
+                    _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference));
+                }
+                else if(spellReference.IsHealing()){
+                    _castSpells.put(castID, new HealingSpell(caster, castID, spellReference));
+                }
+                break;
+            case ControlCodes.SpellTypes_Self:
+                if(spellReference.IsHealing()){
+                    _castSpells.put(castID, new HealingSpell(caster, castID, spellReference));
+                }
                 break;
         }
         return castID;
@@ -542,13 +552,15 @@ public class Match {
 
     public boolean ParseCommand(String command, String[] params, byte senderID){
         Main.LogMessage("Command: " + command);
+        MatchCharacter sender = _matchCharacters.get(senderID);
         switch(command){
+            case "1hp":
+                sender.TakeDamage(sender.GetCurrentHP() - 1, sender);
             case "revive":
-                _matchCharacters.get(senderID).Revive(senderID, 1);
+                sender.Revive(senderID, 1);
                 return true;
             case "killself":
-                MatchCharacter selfkilled = _matchCharacters.get(senderID);
-                selfkilled.TakeDamage((short)30000, selfkilled);
+                sender.TakeDamage((short)30000, sender);
                 return true;
             case "effect":
                 byte effectCode = Byte.parseByte(params[1]);

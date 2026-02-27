@@ -106,7 +106,10 @@ public class MatchCharacter {
         }
         */
     }
-
+    public void Heal(float healAmount, MatchCharacter healer){
+        _hpRegenWaitElapsed = 0;
+        _currentHP = Math.min(_currentHP + healAmount, _maxHP);
+    }
     public float GetRemainingMana(){
         return _currentMana;
     }

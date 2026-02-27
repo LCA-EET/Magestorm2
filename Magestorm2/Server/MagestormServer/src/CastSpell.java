@@ -3,9 +3,11 @@ public class CastSpell {
     protected Spell _baseReference;
     protected MatchCharacter _casterReference;
     protected long _expiration;
+    protected byte _castingTeam;
 
     public CastSpell(MatchCharacter caster, short castID, Spell baseReference){
         _casterReference = caster;
+        _castingTeam = caster.GetTeamID();
         _castID = castID;
         _baseReference = baseReference;
         _expiration = System.currentTimeMillis() + 60000;
@@ -24,6 +26,9 @@ public class CastSpell {
     }
     public MatchCharacter GetCasterReference(){
         return _casterReference;
+    }
+    public byte GetCastingTeam(){
+        return _castingTeam;
     }
     public void ProcessSpell(MatchCharacter affectedPlayer){
 

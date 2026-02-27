@@ -1,5 +1,10 @@
 public class ControlCodes {
 
+    //region SpellTypes
+        public static final byte SpellTypes_Projectile = 1;
+        public static final byte SpellTypes_Self = 2;
+    //endregion
+
     //region Discipline
         public static final byte Discipline_FireLaw = 0;
         public static final byte Discipline_IceLaw = 1;

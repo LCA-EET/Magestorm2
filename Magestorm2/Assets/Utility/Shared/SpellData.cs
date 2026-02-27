@@ -123,8 +123,8 @@ public class SpellData
                 case SpellType.Projectile:
                     toSend = InGame_Packets.ProjectileCastPacket(SpellID);
                     break;
-                case SpellType.SelfHeal:
-                    break;
+                //case SpellType.SelfHeal:
+                 //   break;
             }
             if (toSend != null)
             {

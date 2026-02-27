@@ -21,6 +21,12 @@ public class Spell {
         _maxDamagePerRoll1 = params[12];
         _element1 = params[13];
     }
+    public boolean IsDamaging(){
+        return _minDamagePerRoll0 > 0;
+    }
+    public boolean IsHealing(){
+        return _minHealPerRoll > 0;
+    }
     public int GetSpellID(){
         return _spellID;
     }

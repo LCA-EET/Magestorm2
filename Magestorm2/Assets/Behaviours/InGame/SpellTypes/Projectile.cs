@@ -3,7 +3,7 @@ public class Projectile : SpawnedSpell
 {
     public float Speed;
     public GameObject ImpactPrefab;
-    
+    public float ImpactScaling = 1.0f;
     private void FixedUpdate()
     {
         
@@ -32,6 +32,7 @@ public class Projectile : SpawnedSpell
         if (ImpactPrefab != null && impact)
         {
             GameObject impactObject = Instantiate(ImpactPrefab);
+            impactObject.transform.localScale = Vector3.one * ImpactScaling;
             impactObject.transform.position = transform.position;
         }
         if (impact)
