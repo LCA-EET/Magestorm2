@@ -367,7 +367,8 @@ public class Match {
                 break;
             case ControlCodes.SpellTypes_Self:
                 if(spellReference.IsHealing()){
-                    _castSpells.put(castID, new HealingSpell(caster, castID, spellReference));
+                    HealingSpell healingSpell = new HealingSpell(caster, castID, spellReference);
+                    healingSpell.ProcessSpell(caster);
                 }
                 break;
         }
@@ -403,7 +404,7 @@ public class Match {
             long currentTimeMillis= System.currentTimeMillis();
             for(CastSpell spell : _castSpells.values()){
                 if(spell.IsExpired(currentTimeMillis)){
-                    expiredSpells.add(spell.ID());
+                    expiredSpells.add(spell.CastID());
                 }
             }
             if(!expiredSpells.isEmpty()){
@@ -492,40 +493,26 @@ public class Match {
         return _sceneID;
     }
 
-    public void PlayerHit(byte hitPlayerID, short spellID){
+    public void PlayerHit(byte hitPlayerID, short castID){
         //Main.LogMessage("Match.PlayerHit checking " + hitPlayerID);
         MatchCharacter hitPlayer = GetMatchCharacter(hitPlayerID);
         //Main.LogMessage("Player " + hitPlayerID + ", " + hitPlayer.GetCharacterName() + ", was hit by spell " + spellID);
         if(hitPlayer != null){
-            CastSpell spell = GetCastSpell(spellID);
+            CastSpell spell = GetCastSpell(castID);
             if(spell != null){
                 spell.ProcessSpell(hitPlayer);
                 byte[] packet = Packets.HitNotificationPacket(hitPlayerID, spell.GetCasterID());
                 SendToPlayer(packet, hitPlayer);
             }
             else{
-                Main.LogError("Match.PlayerHit: Spell " + spellID + " is null.");
+                Main.LogError("Match.PlayerHit: Spell " + castID + " is null.");
             }
         }
         else{
             Main.LogError("Match.PlayerHit: Player " + hitPlayerID + " is null.");
         }
     }
-    public void ProcessSpellCast(byte[] decrypted){
-        byte casterID = decrypted[1];
-        byte spellID = decrypted[2];
-        MatchCharacter caster = _matchCharacters.get(casterID);
-        if(caster != null){
-            Spell toCast = SpellManager.GetSpell(spellID);
-            if(toCast != null){
-                byte spellCost = toCast.SpellCost();
-                if(caster.GetRemainingMana() >= spellCost){
-                    caster.AdjustMana(-spellCost);
-                    SendToAll(Packets.SpellCastPacket(decrypted));
-                }
-            }
-        }
-    }
+
 
     public boolean IsCharacterAlive(byte idInMatch){
         if(idInMatch == 0){

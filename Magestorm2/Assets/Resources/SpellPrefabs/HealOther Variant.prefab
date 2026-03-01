@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CFXR3 Lightball A + Trail
       objectReference: {fileID: 0}
+    - target: {fileID: 1392161911835332170, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 1392161911835332212, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
@@ -60,9 +64,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1392161911878890125, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 1392161911878890126, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
       propertyPath: m_Intensity
-      value: 0
+      value: 17.375223
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392161912207195856, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1392161912207195858, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
       propertyPath: m_Materials.Array.size
@@ -71,6 +83,14 @@ PrefabInstance:
     - target: {fileID: 3455398819449401246, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3508728427965514257, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6933318562950285604, guid: d403771064e2ffa47a047b649fd2b4b6, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

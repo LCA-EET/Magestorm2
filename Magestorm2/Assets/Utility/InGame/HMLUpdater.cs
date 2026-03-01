@@ -46,10 +46,6 @@ public class HMLUpdater
         {
             _elapsed = 0.0f;
         }
-        if(_barIndicator == PlayerIndicator.Stamina)
-        {
-            Debug.Log("Prior stamina: " + _priorValue + ", new: " + _newValue);
-        }
     }
     public float Value
     {

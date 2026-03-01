@@ -36,6 +36,14 @@ public static class InGame_Packets
         data.CopyTo(unencrypted, 8);
         return unencrypted;
     }
+    public static byte[] SelfCastPacket(byte spellID)
+    {
+        byte[] unencrypted = new byte[3];
+        unencrypted[0] = InGame_Send.CastSelf;
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = spellID;
+        return unencrypted;
+    }
     public static byte[] ProjectileCastPacket(byte spellID)
     {
         byte[] cameraDirection = ByteUtils.Vector3ToBytes(Camera.main.transform.forward);

@@ -32,9 +32,6 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.QuitGame:
                     HandleQuitGame();
                     return true;
-                case InGame_Receive.CastSpell:
-                    HandleSpellCast();
-                    return true;
                 case InGame_Receive.ObjectStatus:
                     HandleObjectStatusRequest();
                     return true;
@@ -56,6 +53,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.CastProjectile:
                     HandleProjectileCast();
                     return true;
+                case InGame_Receive.CastSelf:
+                    HandleSelfCast();
+                    return true;
                 case InGame_Receive.ReportHit:
                     HandleReportHitPacket();
                     return true;
@@ -71,13 +71,22 @@ public class InGamePacketProcessor extends UDPProcessor{
         _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2));
 
     }
-    private void HandleProjectileCast(){
+    private void HandleSelfCast(){
         byte spellID = _decrypted[2];
-        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        short castID = mc.CastSpell(spellID);
+        short castID = GetCastID(spellID);
+        if(castID >= 0){
+            _owningMatch.SendToAll(Packets.SpawnSelfCastPacket(spellID, castID, _decrypted[1]));
+        }
+    }
+    private void HandleProjectileCast(){
+        short castID = GetCastID(_decrypted[2]);
         if(castID >= 0){
             _owningMatch.SendToAll(Packets.SpawnProjectilePacket(_decrypted, castID));
         }
+    }
+    private short GetCastID(byte spellID){
+        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        return mc.CastSpell(spellID);
     }
     private void HandlePostureChange(){
         _owningMatch.SendToAll(Packets.PostureChangePacket(_decrypted));
@@ -96,9 +105,6 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void HandleObjectStatusRequest(){
         _owningMatch.ProcessObjectStatusPacket(_decrypted[1]);
-    }
-    private void HandleSpellCast(){
-        _owningMatch.ProcessSpellCast(_decrypted);
     }
 
     private void InactivityCheckResponse(){

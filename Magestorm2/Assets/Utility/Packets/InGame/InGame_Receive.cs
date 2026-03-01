@@ -46,5 +46,6 @@ public static class InGame_Receive
                         ApplyEffect = 37,
                         SpawnProjectile = 38,
                         InactivityDisconnect = 39,
-                        HitNotification = 40;
+                        HitNotification = 40,
+                        SpawnSelfCast = 41;
 }

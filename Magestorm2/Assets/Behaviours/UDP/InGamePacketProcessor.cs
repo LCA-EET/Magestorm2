@@ -114,7 +114,25 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.HitNotification:
                         HandleHitNotification();
                         break;
+                    case InGame_Receive.SpawnSelfCast:
+                        HandleSelfCast();
+                        break;
                 }
+            }
+        }
+    }
+    private void HandleSelfCast()
+    {
+        byte casterID = _decrypted[1];
+        Avatar caster = null;
+        Debug.Log("HandleSelfCast");
+        if(Match.GetAvatar(casterID, ref caster)){
+            byte spellID = _decrypted[2];
+            short castID = BitConverter.ToInt16(_decrypted, 3);
+            SpellSpawner spawner = null;
+            if (ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner))
+            {
+                spawner.InitializeSelfCast(caster, castID);
             }
         }
     }
@@ -145,7 +163,7 @@ public class InGamePacketProcessor : UDPProcessor
             SpellSpawner spawner = null;
             if(ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner))
             {
-                spawner.InitializeSpell(casterID, caster.PlayerTeam, castID, caster.transform.position, direction);
+                spawner.InitializeProjectile(casterID, caster.PlayerTeam, castID, caster.transform.position, direction);
             }
         }
         //Debug.Log("CastID: " + castID);

@@ -40,4 +40,5 @@ public class InGame_Send {
     public static final byte SpawnProjectile = 38;
     public static final byte InactivityDisconnect = 39;
     public static final byte HitNotification = 40;
+    public static final byte SpawnSelfCast = 41;
 }

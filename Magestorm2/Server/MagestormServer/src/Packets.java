@@ -209,6 +209,15 @@ public class Packets {
         toEncrypt[2] = hitterID;
         return Cryptographer.Encrypt(toEncrypt);
     }
+    public static byte[] SpawnSelfCastPacket(byte spellID, short castID, byte casterID){
+        byte[] toEncrypt = new byte[5];
+        toEncrypt[0] = InGame_Send.SpawnSelfCast;
+        toEncrypt[1] = casterID;
+        toEncrypt[2] = spellID;
+        byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
+        System.arraycopy(castIDBytes, 0, toEncrypt, 3, 2);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] SpawnProjectilePacket(byte[] decrypted, short castID)
     {
         byte[] castBytes = ByteUtils.ShortToByteArray(castID);
@@ -278,10 +287,6 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] SpellCastPacket(byte[] toEncrypt){
-        toEncrypt[0] = InGame_Send.SpellCast;
-        return Cryptographer.Encrypt(toEncrypt);
-    }
     public static byte[] PlayerDamagedPacket(byte playerID, byte damageSourceID, float newHP){
 
         return null;

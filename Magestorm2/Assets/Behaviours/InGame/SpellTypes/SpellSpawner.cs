@@ -16,7 +16,19 @@ public class SpellSpawner : MonoBehaviour
         }
         Destroy(gameObject);
     }
-    public virtual void InitializeSpell(byte casterID, Team castingTeam, short castID, Vector3 position, Vector3 direction)
+    public virtual void InitializeSelfCast(Avatar caster, short castID)
+    {
+        Debug.Log("InitializedSelfCast");
+        _castID = castID;
+        transform.parent = caster.transform;
+        transform.position = caster.transform.position;
+        transform.localPosition = new Vector3(0, 0, 0);
+        if(caster.PlayerID == MatchParams.IDinMatch)
+        {
+            UseStamina();
+        }
+    }
+    public virtual void InitializeProjectile(byte casterID, Team castingTeam, short castID, Vector3 position, Vector3 direction)
     {
         _casterID = casterID;
         _castingTeam = castingTeam;
@@ -27,11 +39,15 @@ public class SpellSpawner : MonoBehaviour
         transform.forward = direction;
         if(_casterID == MatchParams.IDinMatch)
         {
-            SpellData data = null;
-            if(SpellManager.GetSpell(SpellKey, ref data))
-            {
-                ComponentRegister.PC.UseStamina(data.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel));
-            }
+            UseStamina();
+        }
+    }
+    private void UseStamina()
+    {
+        SpellData data = null;
+        if (SpellManager.GetSpell(SpellKey, ref data))
+        {
+            ComponentRegister.PC.UseStamina(data.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel));
         }
     }
 }
