@@ -30,8 +30,8 @@ public static class InGame_Receive
                         FlagReturned = 21,
                         FlagDropped = 22,
                         PlayerDamaged = 23,
-                        PlayerKilled = 24,
-                        SpellCast = 25,
+                        Cast = 24,
+                        PlayerKilled = 25,
                         HMLUpdate = 26,
                         FlagTaken = 27,
                         UpdateLocation = 28,
@@ -44,8 +44,6 @@ public static class InGame_Receive
                         PlayerTapped = 35,
                         PostureChange = 36,
                         ApplyEffect = 37,
-                        SpawnProjectile = 38,
                         InactivityDisconnect = 39,
-                        HitNotification = 40,
-                        SpawnSelfCast = 41;
+                        HitNotification = 40;
 }

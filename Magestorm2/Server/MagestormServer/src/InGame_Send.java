@@ -23,8 +23,8 @@ public class InGame_Send {
     public static final byte FlagReturned = 21;
     public static final byte FlagDropped = 22;
     public static final byte PlayerDamaged = 23;
-    public static final byte PlayerKilled = 24;
-    public static final byte SpellCast = 25;
+    public static final byte Cast = 24;
+    public static final byte PlayerKilled = 25;
     public static final byte HMLUpdate = 26;
     public static final byte FlagTaken = 27;
     public static final byte UpdateLocation = 28;
@@ -37,8 +37,6 @@ public class InGame_Send {
     public static final byte PlayerTapped = 35;
     public static final byte PostureChange = 36;
     public static final byte ApplyEffect = 37;
-    public static final byte SpawnProjectile = 38;
     public static final byte InactivityDisconnect = 39;
     public static final byte HitNotification = 40;
-    public static final byte SpawnSelfCast = 41;
 }

@@ -7,7 +7,7 @@ public class SpellData
     private int _spellNameReference, _descReference;
     private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost;
     private SpellDiscipline _discipline;
-    private SpellType _spellType;
+    private byte _spellType;
 
     public SpellData(string[] fields, string contents)
     {
@@ -62,7 +62,7 @@ public class SpellData
                     _descReference = int.Parse(fieldValue);
                     break;
                 case SpellAttributes.SPELLTYPE:
-                    _spellType = (SpellType)byte.Parse(fieldValue);
+                    _spellType = byte.Parse(fieldValue);
                     break;
             }
         }
@@ -80,7 +80,7 @@ public class SpellData
             return staminaCost;
         }
     }
-    public SpellType SpellType
+    public byte SpellType
     {
         get { return _spellType; }
     }
@@ -120,11 +120,14 @@ public class SpellData
             byte[] toSend = null;
             switch (SpellType)
             {
-                case SpellType.Projectile:
+                case ControlCodes.SpellTypes_Projectile:
                     toSend = InGame_Packets.ProjectileCastPacket(SpellID);
                     break;
-                case SpellType.Self:
-                    toSend = InGame_Packets.SelfCastPacket(SpellID);
+                case ControlCodes.SpellTypes_Self:
+                    toSend = InGame_Packets.GenericCastPacket(0, SpellID, ControlCodes.SpellTypes_Self);
+                    break;
+                case ControlCodes.SpellTypes_Summon:
+                    toSend = ComponentRegister.PC.Summon(SpellID);
                     break;
             }
             if (toSend != null)
@@ -137,6 +140,7 @@ public class SpellData
             Debug.Log("Invalid cast");
         }
     }
+    
     private bool ValidCast()
     {
         bool toReturn = false;

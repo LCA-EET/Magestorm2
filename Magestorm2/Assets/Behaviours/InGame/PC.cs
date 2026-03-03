@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class PC : MonoBehaviour
@@ -31,6 +32,7 @@ public class PC : MonoBehaviour
     
     private Dictionary<EffectCode, AppliedEffect> _effects;
     private SpellData _primarySpell, _secondarySpell;
+    private DistanceSorter _distanceSorter;
     public void Awake()
     {
         if (!Game.Running)
@@ -39,6 +41,7 @@ public class PC : MonoBehaviour
         }
         else
         {
+            _distanceSorter = new DistanceSorter(transform, false);
             _effects = new Dictionary<EffectCode, AppliedEffect>();
             _inTriggers = new HashSet<int>();
             _priorInTriggers = new HashSet<int>();
@@ -325,7 +328,16 @@ public class PC : MonoBehaviour
             hitInfo.collider.gameObject.GetComponent<ActivateableObject>().StateChangeRequest();
         }
     }
-
+    public byte[] Summon(byte spellID)
+    {
+        List<Avatar> deadTeammates = Match.DeadAvatars;
+        if (deadTeammates.Count > 0)
+        {
+            deadTeammates.Sort(_distanceSorter);
+            return InGame_Packets.SummonPacket(spellID, deadTeammates[0].PlayerID);
+        }
+        return null;
+    }
     public void RegisterLeyInfluencer(byte id, LeyInfluencer influencer)
     {
         if (!_activeInfluencers.ContainsKey(id))

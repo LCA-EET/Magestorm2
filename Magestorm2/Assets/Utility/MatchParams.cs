@@ -1,5 +1,5 @@
 ﻿using System;
-
+using UnityEngine;
 public static class MatchParams
 {
     public static Team MatchTeam;
@@ -47,6 +47,7 @@ public static class MatchParams
         MatchType = decrypted[1];
         SceneID = decrypted[2];
         IDinMatch = decrypted[3];
+        Debug.Log("ID IN MATCH: " + IDinMatch);
         MatchTeamID = _decrypted[4];
         MatchID = _decrypted[5];
         RemotePort = BitConverter.ToInt32(_decrypted, 6);

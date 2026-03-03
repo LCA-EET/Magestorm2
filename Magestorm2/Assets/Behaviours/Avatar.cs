@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class Avatar : MonoBehaviour, IComparable<Avatar>
+public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
 {
     public GameObject CharacterName;
     private int _lastPRPacketID = 0;
@@ -137,6 +137,19 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             layer = _playersAvatar? LayerManager.PlayerLayer : LayerManager.RemotePlayerLayer;
         }
         SharedFunctions.SetLayerRecursive(gameObject, layer);
+        if(PlayerAccount.SelectedCharacter.CharacterClass == (byte)PlayerClass.Cleric 
+            && PlayerTeam == MatchParams.MatchTeam
+            && MatchParams.MatchTeam != Team.Neutral)
+        {
+            if (_isAlive)
+            {
+                Match.RemoveDeadAvatar(PlayerID);
+            }
+            else
+            {
+                Match.AddDeadAvatar(this);
+            }
+        }
     }
     public void AddEffect(AppliedEffect effect)
     {
@@ -320,5 +333,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>
             return _name.CompareTo(other.Name);
         }
     }
-    
+    public float DetermineDistance(Transform remote)
+    {
+        return Vector3.Distance(remote.position, transform.position);
+    }
 }

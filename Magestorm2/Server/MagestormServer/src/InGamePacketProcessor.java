@@ -50,11 +50,8 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.PostureChange:
                     HandlePostureChange();
                     return true;
-                case InGame_Receive.CastProjectile:
-                    HandleProjectileCast();
-                    return true;
-                case InGame_Receive.CastSelf:
-                    HandleSelfCast();
+                case InGame_Receive.Cast:
+                    HandleCast();
                     return true;
                 case InGame_Receive.ReportHit:
                     HandleReportHitPacket();
@@ -67,23 +64,27 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
         return false;
     }
+    private void HandleCast(){
+        byte casterID = _decrypted[1];
+        byte spellID = _decrypted[3];
+        if(_owningMatch.IsCharacterAlive(casterID) ){
+            if(SpellManager.ContainsSpell(spellID)){
+                short castID = GetCastID(spellID);
+                _owningMatch.SendToAll(Packets.CastPacket(_decrypted, castID));
+            }
+            else{
+                Main.LogError("IGPP.HandleCast: Invalid spell key. SpellID: " + spellID);
+            }
+        }
+        else{
+            Main.LogError("IGPP.HandleCast: Invalid caster. CasterID: " + casterID);
+        }
+    }
     private void HandleReportHitPacket(){
         _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2));
 
     }
-    private void HandleSelfCast(){
-        byte spellID = _decrypted[2];
-        short castID = GetCastID(spellID);
-        if(castID >= 0){
-            _owningMatch.SendToAll(Packets.SpawnSelfCastPacket(spellID, castID, _decrypted[1]));
-        }
-    }
-    private void HandleProjectileCast(){
-        short castID = GetCastID(_decrypted[2]);
-        if(castID >= 0){
-            _owningMatch.SendToAll(Packets.SpawnProjectilePacket(_decrypted, castID));
-        }
-    }
+
     private short GetCastID(byte spellID){
         MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
         return mc.CastSpell(spellID);

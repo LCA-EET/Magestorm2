@@ -29,10 +29,7 @@ public static class InGame_Send
                         UpdateLey = 21,
                         Tap = 22,
                         PostureChange = 23,
-                        CastProjectile = 24,
-                        CastSelf = 25,
-                        CastOtherFriendly = 26,
-                        CastOtherEnemy = 27,
+                        Cast = 24,
                         ReportHit = 28,
                         PlayerMoved = 29;
 }

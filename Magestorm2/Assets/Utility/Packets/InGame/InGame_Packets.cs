@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 public static class InGame_Packets
 {
+    
     public static byte[] InactivityResponsePacket() 
     {
         return new byte[] { InGame_Send.InactivityCheckResponse, MatchParams.IDinMatch };
@@ -36,22 +36,27 @@ public static class InGame_Packets
         data.CopyTo(unencrypted, 8);
         return unencrypted;
     }
-    public static byte[] SelfCastPacket(byte spellID)
+    public static byte[] GenericCastPacket(byte payloadLength, byte spellID, byte spellType)
     {
-        byte[] unencrypted = new byte[3];
-        unencrypted[0] = InGame_Send.CastSelf;
+        byte[] unencrypted = new byte[5 + payloadLength];
+        unencrypted[0] = InGame_Send.Cast;
         unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = spellID;
+        unencrypted[2] = spellType;
+        unencrypted[3] = spellID;
+        unencrypted[4] = payloadLength;
         return unencrypted;
     }
     public static byte[] ProjectileCastPacket(byte spellID)
     {
+        byte[] unencrypted = GenericCastPacket(12, spellID, ControlCodes.SpellTypes_Projectile);
         byte[] cameraDirection = ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
-        byte[] unencrypted = new byte[17];
-        unencrypted[0] = InGame_Send.CastProjectile;
-        unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = spellID;
-        cameraDirection.CopyTo(unencrypted, 3);
+        cameraDirection.CopyTo(unencrypted, ControlCodes.CastPayloadStartIndex);
+        return unencrypted;
+    }
+    public static byte[] SummonPacket(byte spellID, byte playerToSummon)
+    {
+        byte[] unencrypted = GenericCastPacket(1, spellID, ControlCodes.SpellTypes_Summon);
+        unencrypted[ControlCodes.CastPayloadStartIndex] = playerToSummon;
         return unencrypted;
     }
     public static byte[] FlagCapturedPacket(byte flagCaptured)

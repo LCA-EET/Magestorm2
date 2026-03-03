@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,11 +9,13 @@ public static class Match
 {
     private static Dictionary<byte, Avatar> _matchPlayers;
     private static Dictionary<byte, ActivateableObject> _objects;
+    private static Dictionary<byte, Avatar> _deadAvatarsOnPCTeam;
     public static bool Running;
     
     public static void Init()
     {
         _matchPlayers = new Dictionary<byte, Avatar>();
+        _deadAvatarsOnPCTeam = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>();
     }
     
@@ -32,6 +35,27 @@ public static class Match
             return toRemove;
         }
         return null;
+    }
+    public static void AddDeadAvatar(Avatar deadPlayer)
+    {
+        if (!_deadAvatarsOnPCTeam.ContainsKey(deadPlayer.PlayerID))
+        {
+            _deadAvatarsOnPCTeam.Add(deadPlayer.PlayerID, deadPlayer);
+        }
+    }
+    public static void RemoveDeadAvatar(byte id)
+    {
+        if (_deadAvatarsOnPCTeam.ContainsKey(id))
+        {
+            _deadAvatarsOnPCTeam.Remove(id);
+        }
+    }
+    public static List<Avatar> DeadAvatars
+    {
+        get
+        {
+            return _deadAvatarsOnPCTeam.Values.ToList();
+        }
     }
     public static void RegisterActivateableObject(ActivateableObject obj)
     {

@@ -20,11 +20,7 @@ public class AnimationKeys
         Airborne = 8,
         None = 99;
 }
-public enum SpellType : byte
-{
-    Projectile = 1,
-    Self = 2
-}
+
 public enum SpellDiscipline: byte
 {
     FireLaw = 0,

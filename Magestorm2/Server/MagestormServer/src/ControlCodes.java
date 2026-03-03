@@ -3,6 +3,7 @@ public class ControlCodes {
     //region SpellTypes
         public static final byte SpellTypes_Projectile = 1;
         public static final byte SpellTypes_Self = 2;
+        public static final byte SpellTypes_Summon = 3;
     //endregion
 
     //region Discipline

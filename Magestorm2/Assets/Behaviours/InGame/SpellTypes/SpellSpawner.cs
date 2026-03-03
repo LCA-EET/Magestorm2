@@ -4,8 +4,10 @@ public class SpellSpawner : MonoBehaviour
 {
     public byte SpellKey;
     private byte _casterID;
+    private byte[] _payload;
     private short _castID;
     private Team _castingTeam;
+    private Avatar _caster;
 
     public void Start()
     {
@@ -16,31 +18,42 @@ public class SpellSpawner : MonoBehaviour
         }
         Destroy(gameObject);
     }
-    public virtual void InitializeSelfCast(Avatar caster, short castID)
+    public void Initialize(Avatar caster, byte spellType, short castID, byte[] payload)
     {
-        Debug.Log("InitializedSelfCast");
         _castID = castID;
-        transform.parent = caster.transform;
-        transform.position = caster.transform.position;
-        transform.localPosition = new Vector3(0, 0, 0);
-        if(caster.PlayerID == MatchParams.IDinMatch)
+        _payload = payload;
+        _caster = caster;
+        switch (spellType)
+        {
+            case ControlCodes.SpellTypes_Self:
+                InitializeSelfCast();
+                break;
+            case ControlCodes.SpellTypes_Projectile:
+                InitializeProjectile();
+                break;
+            case ControlCodes.SpellTypes_Summon:
+                break;
+        }
+        if (_caster.PlayerID == MatchParams.IDinMatch)
         {
             UseStamina();
         }
     }
-    public virtual void InitializeProjectile(byte casterID, Team castingTeam, short castID, Vector3 position, Vector3 direction)
+
+    private void InitializeSelfCast()
     {
-        _casterID = casterID;
-        _castingTeam = castingTeam;
-        _castID = castID;
-        Vector3 adjustedPosition = position + (direction * 0.67f);
+        transform.parent = _caster.transform;
+        transform.position = _caster.transform.position;
+        transform.localPosition = new Vector3(0, 0, 0);
+    }
+    private void InitializeProjectile()
+    {
+        Vector3 direction = ByteUtils.BytesToVector3(_payload, 0);
+        Vector3 adjustedPosition = _caster.transform.position + (direction * 0.67f);
+        Debug.Log("Direction: " + direction);
         adjustedPosition.y += 1.4f;
         transform.position = adjustedPosition;
         transform.forward = direction;
-        if(_casterID == MatchParams.IDinMatch)
-        {
-            UseStamina();
-        }
     }
     private void UseStamina()
     {

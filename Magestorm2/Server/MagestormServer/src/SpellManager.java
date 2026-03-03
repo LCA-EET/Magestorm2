@@ -9,10 +9,14 @@ public class SpellManager {
     }
 
     public static void AddSpell(Spell toAdd){
+        Main.LogMessage("Added spell " + toAdd.GetSpellID());
         _spellTable.put(toAdd.GetSpellID(), toAdd);
     }
 
     public static Spell GetSpell(int id){
         return _spellTable.get(id);
+    }
+    public static boolean ContainsSpell(int spellKey){
+        return _spellTable.containsKey(spellKey);
     }
 }

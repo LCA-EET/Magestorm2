@@ -209,22 +209,13 @@ public class Packets {
         toEncrypt[2] = hitterID;
         return Cryptographer.Encrypt(toEncrypt);
     }
-    public static byte[] SpawnSelfCastPacket(byte spellID, short castID, byte casterID){
-        byte[] toEncrypt = new byte[5];
-        toEncrypt[0] = InGame_Send.SpawnSelfCast;
-        toEncrypt[1] = casterID;
-        toEncrypt[2] = spellID;
+    public static byte[] CastPacket(byte[] decrypted, short castID){
+        byte[] toEncrypt = new byte[decrypted.length + 2];
+        Main.LogMessage("Cast packet length: " + toEncrypt.length);
+        System.arraycopy(decrypted, 0, toEncrypt, 0, decrypted.length);
         byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
-        System.arraycopy(castIDBytes, 0, toEncrypt, 3, 2);
+        System.arraycopy(castIDBytes, 0, toEncrypt, decrypted.length, 2);
         return Cryptographer.Encrypt(toEncrypt);
-    }
-    public static byte[] SpawnProjectilePacket(byte[] decrypted, short castID)
-    {
-        byte[] castBytes = ByteUtils.ShortToByteArray(castID);
-        int length = decrypted.length;
-        decrypted[0] = InGame_Send.SpawnProjectile;
-        System.arraycopy(castBytes, 0, decrypted, length-2, castBytes.length);
-        return Cryptographer.Encrypt(decrypted);
     }
 
     public static byte[] ApplyEffectPacket(byte playerAppliedTo, byte applierID, byte effectCode, byte duration, byte degree){

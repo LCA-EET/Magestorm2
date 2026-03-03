@@ -105,8 +105,8 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.ApplyEffect:
                         HandleEffect();
                         break;
-                    case InGame_Receive.SpawnProjectile:
-                        HandleProjectileSpawn();
+                    case InGame_Receive.Cast:
+                        HandleCast();
                         break;
                     case InGame_Receive.InactivityDisconnect:
                         HandleInactivityDisconnect();
@@ -114,28 +114,32 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.HitNotification:
                         HandleHitNotification();
                         break;
-                    case InGame_Receive.SpawnSelfCast:
-                        HandleSelfCast();
-                        break;
                 }
             }
         }
     }
-    private void HandleSelfCast()
+    private void HandleCast()
     {
         byte casterID = _decrypted[1];
+        byte spellType = _decrypted[2];
+        byte spellID = _decrypted[3];
+        byte payloadLength = _decrypted[4];
+        
         Avatar caster = null;
-        Debug.Log("HandleSelfCast");
-        if(Match.GetAvatar(casterID, ref caster)){
-            byte spellID = _decrypted[2];
-            short castID = BitConverter.ToInt16(_decrypted, 3);
+        if(Match.GetAvatar(casterID, ref caster))
+        {
             SpellSpawner spawner = null;
             if (ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner))
             {
-                spawner.InitializeSelfCast(caster, castID);
+                byte[] payload = new byte[payloadLength];
+                Array.Copy(_decrypted, ControlCodes.CastPayloadStartIndex, payload, 0, payloadLength);
+                short castID = BitConverter.ToInt16(_decrypted, ControlCodes.CastPayloadStartIndex + payloadLength);
+                Debug.Log("Payload length: " + payload.Length);
+                spawner.Initialize(caster, spellType, castID, payload);
             }
         }
     }
+
     private void HandleHitNotification()
     {
         byte hitByID = _decrypted[2];
@@ -151,23 +155,7 @@ public class InGamePacketProcessor : UDPProcessor
         Game.Disconnected = true;
         ComponentRegister.UIPrefabManager.InstantiateMessageBox_Function(Language.GetBaseString(300), Game.Quit);
     }
-    private void HandleProjectileSpawn()
-    {
-        short castID = BitConverter.ToInt16(_decrypted, _decrypted.Length - 2);
-        byte casterID = _decrypted[1];
-        byte spellID = _decrypted[2];
-        Vector3 direction = ByteUtils.BytesToVector3(_decrypted, 3);
-        Avatar caster = null;
-        if(Match.PlayerExists(casterID, ref caster))
-        {
-            SpellSpawner spawner = null;
-            if(ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner))
-            {
-                spawner.InitializeProjectile(casterID, caster.PlayerTeam, castID, caster.transform.position, direction);
-            }
-        }
-        //Debug.Log("CastID: " + castID);
-    }
+
     private void HandleEffect()
     {
         byte appliedToID = _decrypted[1];
