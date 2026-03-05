@@ -36,8 +36,8 @@ public class ServerParams {
             PregameInactivity = Long.parseLong(paramScanner.nextLine());
             SymmetricEncryption = Boolean.parseBoolean(paramScanner.nextLine());
             TickInterval = Byte.parseByte(paramScanner.nextLine());
-            MaxMatches = Byte.parseByte(paramScanner.nextLine());
             PollingFactor = Byte.parseByte(paramScanner.nextLine());
+            MaxMatches = Byte.parseByte(paramScanner.nextLine());
             System.out.println("Log file: " + LogFilePath);
             System.out.println("Error file: " + ErrorFilePath);
             Main.InitLog();

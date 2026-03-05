@@ -52,6 +52,7 @@ public class Cryptographer {
         return toReturn;
     }
     public static byte[] Encrypt(byte[] payload){
+        Main.LogMessage(payload[0] + ", length " + payload.length);
         if(GameServer.SymmetricEncryption){
             byte[] toReturn = new byte[0];
             _iv++;

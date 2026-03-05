@@ -50,6 +50,7 @@ public static class InGame_Packets
     {
         byte[] unencrypted = GenericCastPacket(12, spellID, ControlCodes.SpellTypes_Projectile);
         byte[] cameraDirection = ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
+        //Debug.Log("Direction: " + Camera.main.transform.forward);
         cameraDirection.CopyTo(unencrypted, ControlCodes.CastPayloadStartIndex);
         return unencrypted;
     }

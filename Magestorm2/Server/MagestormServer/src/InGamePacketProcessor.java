@@ -134,7 +134,7 @@ public class InGamePacketProcessor extends UDPProcessor{
                 _owningMatch.ParseCommand(split[0].toLowerCase().substring(1), split, _decrypted[1]);
             }
             else{
-                EnqueueForSend(Packets.MessagePacket(_decrypted, InGame_Send.BroadcastMessage),
+                EnqueueForSend(Packets.MessagePacket(_decrypted, 6 + messageLength),
                         _owningMatch.GetVerifiedClients());
             }
         }
@@ -153,7 +153,7 @@ public class InGamePacketProcessor extends UDPProcessor{
             else{
                 RemoteClient messageRecipient = _owningMatch.GetMatchCharacter(recipientID).GetRemoteClient();
                 Iterable<RemoteClient> recipients = Arrays.asList(_remote, messageRecipient);
-                EnqueueForSend(Packets.MessagePacket(_decrypted, InGame_Send.DirectMessage), recipients);
+                EnqueueForSend(Packets.MessagePacket(_decrypted, messageLength + 7), recipients);
             }
         }
     }

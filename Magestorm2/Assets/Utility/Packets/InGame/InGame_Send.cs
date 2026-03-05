@@ -10,10 +10,12 @@ public static class InGame_Send
                         RequestPlayerData = 2,
                         ChangedObjectState = 3,
                         FetchShrineHealth = 4,
-                        DirectMessage = 5,
-                        TeamMessage = 6,
+                        LeaveMatch = 5,
+                        DirectMessage = 6,
                         BroadcastMessage = 7,
-                        LeaveMatch = 8,
+                        TeamMessage = 8,
+                        
+                        
                         InactivityCheckResponse = 9,
                         BiasPool = 10,
                         QuitGame = 11,

@@ -319,10 +319,12 @@ public class PregamePacketProcessor : UDPProcessor
         Game.SetServerTime(BitConverter.ToInt64(_decrypted, 5));
         PlayerAccount.Init(accountID);
         byte tickInterval = _decrypted[13];
+        Debug.Log("Tick: " + tickInterval);
         byte pollingFactor = _decrypted[14];
         Game.TickInterval = tickInterval / 1000.0f;
         Game.MovementPolling = Game.TickInterval * pollingFactor;
         Debug.Log("Tick Interval: " + Game.TickInterval);
+        Debug.Log("Polling Factor: " + pollingFactor);
         Debug.Log("Movement Polling Interval: " + Game.MovementPolling);
        
         byte characterBytesStart = 15;

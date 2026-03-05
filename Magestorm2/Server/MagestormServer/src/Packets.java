@@ -24,9 +24,9 @@ public class Packets {
 
 
     public static byte[] AcknowledgeSubscriptionPacket(){return Cryptographer.Encrypt(AcknowledgeSubscription_Bytes);}
-    public static byte[] MessagePacket(byte[] decrypted, byte opCode){
-        decrypted[0] = opCode;
-        return Cryptographer.Encrypt(decrypted);
+    public static byte[] MessagePacket(byte[] decrypted, int messageLength){
+        byte[] toEncrypt = ExtractBytes(decrypted, 0, messageLength);
+        return Cryptographer.Encrypt(toEncrypt);
     }
     public static byte[] BannedForCheatingPacket() {return Cryptographer.Encrypt(BannedForCheating_Bytes);}
     public static byte[] BannedForBehaviorPacket() {return Cryptographer.Encrypt(BannedForBehavior_Bytes);}
@@ -210,11 +210,12 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
     public static byte[] CastPacket(byte[] decrypted, short castID){
-        byte[] toEncrypt = new byte[decrypted.length + 2];
-        Main.LogMessage("Cast packet length: " + toEncrypt.length);
-        System.arraycopy(decrypted, 0, toEncrypt, 0, decrypted.length);
+        byte payloadLength = decrypted[4];
+        int idxCastID = 5 + payloadLength;
+        byte[] toEncrypt = new byte[idxCastID + 2];
+        System.arraycopy(decrypted, 0, toEncrypt, 0, idxCastID);
         byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
-        System.arraycopy(castIDBytes, 0, toEncrypt, decrypted.length, 2);
+        System.arraycopy(castIDBytes, 0, toEncrypt, idxCastID, 2);
         return Cryptographer.Encrypt(toEncrypt);
     }
 
@@ -222,8 +223,8 @@ public class Packets {
         return Cryptographer.Encrypt(new byte[]{InGame_Send.ApplyEffect, playerAppliedTo, applierID, effectCode, duration, degree});
     }
     public static byte[] PostureChangePacket(byte[] decrypted){
-        decrypted[0] = InGame_Send.PostureChange;
-        return Cryptographer.Encrypt(decrypted);
+        byte[] toEncrypt = ExtractBytes(decrypted, 0, 3);
+        return Cryptographer.Encrypt(toEncrypt);
     }
     public static byte[] PlayerTapped(byte playerID){
         return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerTapped, playerID});

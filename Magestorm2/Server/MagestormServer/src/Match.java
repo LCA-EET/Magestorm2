@@ -208,7 +208,9 @@ public class Match {
                         toUpdate.UpdateDirection(decrypted, 20);
                         break;
                 }
-                SendToAll(Cryptographer.Encrypt(decrypted));
+                byte[] toEncrypt = new byte[controlCode==2 ? 32 : 20];
+                System.arraycopy(decrypted, 0, toEncrypt, 0, toEncrypt.length);
+                SendToAll(Cryptographer.Encrypt(toEncrypt));
             }
         }
     }

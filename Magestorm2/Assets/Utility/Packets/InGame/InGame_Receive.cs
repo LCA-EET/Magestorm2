@@ -12,9 +12,11 @@ public static class InGame_Receive
                         ObjectData = 3,
                         ObjectStateChange = 4,
                         AllShrineHealth = 5,
+                        
                         DirectMessage = 6,
-                        TeamMessage = 7,
-                        BroadcastMessage = 8,
+                        BroadcastMessage = 7,
+                        TeamMessage = 8,
+        
                         ProhibitedLanguage = 9,
                         PlayerLeftMatch = 10,
                         MatchEnded = 11,
