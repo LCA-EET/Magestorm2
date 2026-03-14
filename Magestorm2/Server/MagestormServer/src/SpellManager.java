@@ -2,9 +2,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SpellManager {
     private static ConcurrentHashMap<Integer, Spell> _spellTable;
-
+    private static ConcurrentHashMap<Integer, Byte> _recipientCodes;
     public static void init(){
         _spellTable = new ConcurrentHashMap<>();
+        _recipientCodes = new ConcurrentHashMap<>();
         Database.LoadSpellData();
     }
 

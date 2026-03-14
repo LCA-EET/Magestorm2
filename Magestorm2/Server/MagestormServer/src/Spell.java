@@ -2,7 +2,8 @@ public class Spell {
     private final int _spellID;
 
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
-            _spellType, _discipline, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1;
+            _spellType, _discipline, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
+            _notificationCode;
 
     public Spell(int id, byte[] params){
         _spellID = id;
@@ -20,6 +21,7 @@ public class Spell {
         _minDamagePerRoll1 = params[11];
         _maxDamagePerRoll1 = params[12];
         _element1 = params[13];
+        _notificationCode = params[14];
     }
     public boolean IsDamaging(){
         return _minDamagePerRoll0 > 0;
@@ -70,4 +72,6 @@ public class Spell {
     public byte GetElement1(){
         return _element1;
     }
+    public byte GetNotificationCode(){return _notificationCode;}
+
 }

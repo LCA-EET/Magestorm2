@@ -6,14 +6,14 @@ public class SkillLine : ValidatableForm
     public TMP_Text LevelText;
 
     private byte _skillLevel, _characterLevel;
-    private SpellDiscipline _skillID;
+    private byte _skillID;
     private bool _buttonsEnabled;
     
     private void Start()
     {
         AssociateFormToButtons();
     }
-    public void Init(byte skillLevel, SpellDiscipline skillID, byte characterLevel)
+    public void Init(byte skillLevel, byte skillID, byte characterLevel)
     {
         _skillLevel = skillLevel;
         Debug.Log("Init: Skill level for skill " + (byte)skillID + " = " + skillLevel);
@@ -93,5 +93,5 @@ public class SkillLine : ValidatableForm
         get { return _skillLevel; }
     }
 
-    public SpellDiscipline SpellDiscipline { get { return _skillID; } }
+    public byte SpellDiscipline { get { return _skillID; } }
 }

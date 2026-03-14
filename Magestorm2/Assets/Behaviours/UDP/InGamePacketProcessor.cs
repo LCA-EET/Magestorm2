@@ -114,6 +114,10 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.HitNotification:
                         HandleHitNotification();
                         break;
+                    case InGame_Receive.SendToValhalla:
+                        new MessageData(Language.GetBaseString(312), Language.GetBaseString(209));
+                        ComponentRegister.Valhalla.EnterValhalla();
+                        break;
                 }
             }
         }
@@ -124,7 +128,7 @@ public class InGamePacketProcessor : UDPProcessor
         byte spellType = _decrypted[2];
         byte spellID = _decrypted[3];
         byte payloadLength = _decrypted[4];
-        
+        Debug.Log("HandleCast()");
         Avatar caster = null;
         if(Match.GetAvatar(casterID, ref caster))
         {

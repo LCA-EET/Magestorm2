@@ -305,3 +305,10 @@ Server
 Slot11
 Slot12
 Toggle HUD
+You were raised by {0}.
+{0} was raised by {1}.
+Summon Dead
+Summons the spirit of a fallen comrade to the caster.
+You've been banished to Valhalla by an enemy cleric!
+Banish Spirit
+Basic: Sends the spirit of a fallen enemy to Valhalla. \nExpert: Banish restores mana equal to the level of the banished spirit. \nMaster: Banish restores mana equal to twice the level of the banished spirit.

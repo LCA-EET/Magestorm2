@@ -191,6 +191,10 @@ PrefabInstance:
       propertyPath: ImpactPrefab
       value: 
       objectReference: {fileID: 7597789657375416389, guid: 5c67fcd2fa363c649b2335f99ce5a880, type: 3}
+    - target: {fileID: 9193927689291293627, guid: 92aafcee71bbbf6449cc5844b80e0ec1, type: 3}
+      propertyPath: ImpactScaling
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

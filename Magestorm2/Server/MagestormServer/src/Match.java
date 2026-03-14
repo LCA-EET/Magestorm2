@@ -373,6 +373,9 @@ public class Match {
                     healingSpell.ProcessSpell(caster);
                 }
                 break;
+            case ControlCodes.SpellTypes_Summon:
+
+                break;
         }
         return castID;
     }
@@ -539,6 +542,13 @@ public class Match {
         return _matchType;
     }
 
+    public void SendPlayerToValhalla(MatchCharacter player){
+        SendToPlayer(Packets.SendToValhallaPacket(), player);
+        if(!player.IsAlive()){
+            player.Heal(player.GetMaxHP(), null);
+        }
+    }
+
     public boolean ParseCommand(String command, String[] params, byte senderID){
         Main.LogMessage("Command: " + command);
         MatchCharacter sender = _matchCharacters.get(senderID);
@@ -569,6 +579,8 @@ public class Match {
         }
         return false;
     }
+
+
     private void SendTeamMessage(String[] params, String delimeter, int startIndex, byte senderID, byte teamID){
         byte[] messageBytes = ByteUtils.UTF8toBytes(params, delimeter, startIndex);
         SendToCollection(Packets.TeamChatPacket(messageBytes, senderID, teamID),
@@ -580,7 +592,28 @@ public class Match {
             }
         }
     }
-
+    public void HandleBanish(byte[] decrypted){
+        byte casterID = decrypted[1];
+        MatchCharacter caster = GetMatchCharacter(casterID);
+        if(caster != null){
+            if(caster.IsAlive()){
+                MatchCharacter devoured = GetMatchCharacter(decrypted[2]);
+                if(devoured != null){
+                    if(!devoured.IsAlive()){
+                        byte skillLevel = caster.GetSkillLevel(ControlCodes.Discipline_SpiritLaw);
+                        if(skillLevel == 2){
+                            caster.AddMana(devoured.GetLevel());
+                        }
+                        else if (skillLevel == 3){
+                            caster.AddMana((short) (devoured.GetLevel() * 2));
+                        }
+                        SendPlayerToValhalla(devoured);
+                        SendToPlayer(Packets.HPandManaUpdatePacket(devoured.GetCurrentHP(), devoured.GetCurrentMana()), devoured);
+                    }
+                }
+            }
+        }
+    }
     public void LogMessage(String toLog){
         Main.LogMessage("Match " + _matchID +": " + toLog);
     }

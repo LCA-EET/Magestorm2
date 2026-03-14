@@ -731,7 +731,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7708181215239320694}
-  - component: {fileID: 4364205183023244802}
   m_Layer: 5
   m_Name: DescriptionEntry
   m_TagString: Untagged
@@ -759,20 +758,6 @@ RectTransform:
   m_AnchoredPosition: {x: 110, y: 209}
   m_SizeDelta: {x: 120, y: 26}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4364205183023244802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6006022821687047867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4cb0de3139852c44a89539b1e06d63e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PrefilledEntry
-  FieldDescription: {fileID: 0}
-  FieldValue: {fileID: 0}
 --- !u!1 &6450095575003687917
 GameObject:
   m_ObjectHideFlags: 0
@@ -806,7 +791,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000010538623}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &6796240946523118231
@@ -1268,6 +1253,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5630804635172965063}
     m_Modifications:
+    - target: {fileID: 139627694841269075, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 228530469274846634, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3600271314276901542, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1280,6 +1273,14 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3747379675769914020, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
+      propertyPath: ContentPanel
+      value: 
+      objectReference: {fileID: 5642293257283015641}
+    - target: {fileID: 3747379675769914020, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
+      propertyPath: VerticalScrollbar
+      value: 
+      objectReference: {fileID: 7476972168588615636}
     - target: {fileID: 4886540620549763313, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1360,6 +1361,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6900433347598108373, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7014081126557343558, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1386,6 +1391,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4886540620549763313, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
   m_PrefabInstance: {fileID: 7271182350746114686}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &5642293257283015641 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3072895306629663143, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
+  m_PrefabInstance: {fileID: 7271182350746114686}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5830244137567721690 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3747379675769914020, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
@@ -1397,6 +1407,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd411b6b1fe5a8143a46dac8a6e9a664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpellSelectView
+--- !u!114 &7476972168588615636 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 228530469274846634, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}
+  m_PrefabInstance: {fileID: 7271182350746114686}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Scrollbar
 --- !u!114 &7660242204583302807 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1055751485107424489, guid: 0572197b3c81f124ba9825712e6cc46e, type: 3}

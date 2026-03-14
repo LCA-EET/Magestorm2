@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-public static class InGame_Send
+﻿public static class InGame_Send
 {
     public const byte JoinedMatch = 1,
                         RequestPlayerData = 2,
@@ -14,8 +8,8 @@ public static class InGame_Send
                         DirectMessage = 6,
                         BroadcastMessage = 7,
                         TeamMessage = 8,
-                        
-                        
+
+
                         InactivityCheckResponse = 9,
                         BiasPool = 10,
                         QuitGame = 11,
@@ -33,5 +27,6 @@ public static class InGame_Send
                         PostureChange = 23,
                         Cast = 24,
                         ReportHit = 28,
-                        PlayerMoved = 29;
+                        PlayerMoved = 29,
+                        Devour = 30;
 }

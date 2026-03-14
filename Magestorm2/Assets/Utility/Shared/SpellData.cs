@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SpellData
 {
     private int _spellNameReference, _descReference;
     private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost;
-    private SpellDiscipline _discipline;
+    private byte _discipline;
     private byte _spellType;
 
     public SpellData(string[] fields, string contents)
@@ -56,7 +54,7 @@ public class SpellData
                     _skillNeeded = byte.Parse(fieldValue);
                     break;
                 case SpellAttributes.DISCIPLINE:
-                    _discipline = (SpellDiscipline)byte.Parse(fieldValue);
+                    _discipline = byte.Parse(fieldValue);
                     break;
                 case SpellAttributes.DESCRIPTION:
                     _descReference = int.Parse(fieldValue);
@@ -84,7 +82,7 @@ public class SpellData
     {
         get { return _spellType; }
     }
-    public SpellDiscipline Discipline
+    public byte Discipline
     {
         get { return _discipline; }
     }
@@ -132,7 +130,12 @@ public class SpellData
             }
             if (toSend != null)
             {
+                Debug.Log("Sending spell bytes.");
                 Game.SendInGameBytes(toSend);
+            }
+            else
+            {
+                Debug.Log("Spell bytes is null");
             }
         }
         else

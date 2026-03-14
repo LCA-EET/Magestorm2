@@ -130,7 +130,7 @@ public class UIPrefabManager : MonoBehaviour
     {
         AddToStack(Instantiate(PrefabUIKeyMapper));
     }
-    public void InstantiateAvailableSpellList(byte characterLevel, byte slotID, ISpellProcessor owner, Dictionary<SpellDiscipline, byte> disciplines)
+    public void InstantiateAvailableSpellList(byte characterLevel, byte slotID, ISpellProcessor owner, Dictionary<byte, byte> disciplines)
     {
         GameObject newForm = Instantiate(PrefabAvailableSpells);
         newForm.GetComponentInChildren<UIAvailableSpells>().InitializeForm(characterLevel, slotID, owner, disciplines);

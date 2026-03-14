@@ -151,6 +151,11 @@ public class PregamePacketProcessor extends UDPProcessor
         byte[] appearanceBytes = new byte[5];
         System.arraycopy(_decrypted, 9, appearanceBytes, 0, appearanceBytes.length);
         Database.UpdateCharacterAppearance(characterID, appearanceBytes);
+        PlayerCharacter toUpdate = CharacterManager.GetCharacter(characterID);
+        if(toUpdate != null){
+            Main.LogMessage("Updating appearance for character " + characterID);
+            toUpdate.UpdateAppearanceBytes(appearanceBytes);
+        }
     }
     public void HandleNameCheckPacket(){
         byte nameLength = _decrypted[5];

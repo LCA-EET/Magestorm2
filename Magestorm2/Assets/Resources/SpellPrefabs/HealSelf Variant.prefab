@@ -130,7 +130,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3280519133390621005, guid: a71be3e7990efb040a07565c43cbb198, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 692173179729376624}
+      addedObject: {fileID: 5398511452951608913}
     - targetCorrespondingSourceObject: {fileID: 3280519133430969738, guid: a71be3e7990efb040a07565c43cbb198, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6470262618194763236}
@@ -140,7 +140,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3280519133390621005, guid: a71be3e7990efb040a07565c43cbb198, type: 3}
   m_PrefabInstance: {fileID: 6502188558513184597}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &692173179729376624
+--- !u!114 &5398511452951608913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,11 +149,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8627442019093403160}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce43dc12eb7041f4bb43cd23e100488e, type: 3}
+  m_Script: {fileID: 11500000, guid: fee058c62ce7b9743a319bbaf3b79aca, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelfCast
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnedSpell
   CastClip: {fileID: 0}
-  AnimationExpiration: 3
+  ExpireAfter: 0
 --- !u!4 &8627442019093403175 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3280519133390621042, guid: a71be3e7990efb040a07565c43cbb198, type: 3}

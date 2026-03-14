@@ -54,6 +54,15 @@ public static class InGame_Packets
         cameraDirection.CopyTo(unencrypted, ControlCodes.CastPayloadStartIndex);
         return unencrypted;
     }
+    public static byte[] DevourPacket(short castID, byte playerDevoured)
+    {
+        byte[] unencrypted = new byte[5];
+        unencrypted[0] = InGame_Send.Devour;
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = playerDevoured;
+        BitConverter.GetBytes(castID).CopyTo(unencrypted, 3);
+        return unencrypted;
+    }
     public static byte[] SummonPacket(byte spellID, byte playerToSummon)
     {
         byte[] unencrypted = GenericCastPacket(1, spellID, ControlCodes.SpellTypes_Summon);

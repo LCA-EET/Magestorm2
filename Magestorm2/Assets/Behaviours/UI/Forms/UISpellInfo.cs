@@ -10,22 +10,25 @@ public class UISpellInfo : ValidatableForm, ISpellProcessor
     void Start()
     {
         _disciplines = new Dictionary<byte, int>();
-        _disciplines.Add((byte)SpellDiscipline.FireLaw, 229); // fire law
-        _disciplines.Add((byte)SpellDiscipline.IceLaw, 230); // ice law
-        _disciplines.Add((byte)SpellDiscipline.EarthLaw, 231); // earth law
-        _disciplines.Add((byte)SpellDiscipline.Brilliance, 232); // brialliance
-        _disciplines.Add((byte)SpellDiscipline.Displacement, 233); // Displacement
-        _disciplines.Add((byte)SpellDiscipline.Psionics, 234); // Psionics
-        _disciplines.Add((byte)SpellDiscipline.Supplication, 235); // Supplication
-        _disciplines.Add((byte)SpellDiscipline.Healing, 236); // Healing
-        _disciplines.Add((byte)SpellDiscipline.Smiting, 237); // Wounding
-        _disciplines.Add((byte)SpellDiscipline.ManaLaw, 238); // Mana Law
-        _disciplines.Add((byte)SpellDiscipline.VoidLaw, 239); // Void Law
-        _disciplines.Add((byte)SpellDiscipline.Sigils, 240); // Sigils
+        _disciplines.Add(ControlCodes.SpellDiscipline_FireLaw, 229); // fire law
+        _disciplines.Add(ControlCodes.SpellDiscipline_IceLaw, 230); // ice law
+        _disciplines.Add(ControlCodes.SpellDiscipline_EarthLaw, 231); // earth law
+        _disciplines.Add(ControlCodes.SpellDiscipline_Brilliance, 232); // brialliance
+        _disciplines.Add(ControlCodes.SpellDiscipline_Displacement, 233); // Displacement
+        _disciplines.Add(ControlCodes.SpellDiscipline_Psionics, 234); // Psionics
+        _disciplines.Add(ControlCodes.SpellDiscipline_Supplication, 235); // Supplication
+        _disciplines.Add(ControlCodes.SpellDiscipline_Healing, 236); // Healing
+        _disciplines.Add(ControlCodes.SpellDiscipline_Smiting, 237); // Wounding
+        _disciplines.Add(ControlCodes.SpellDiscipline_ManaLaw, 238); // Mana Law
+        _disciplines.Add(ControlCodes.SpellDiscipline_VoidLaw, 239); // Void Law
+        _disciplines.Add(ControlCodes.SpellDiscipline_Sigils, 240); // Sigils
+        _disciplines.Add(ControlCodes.SpellDiscipline_SpiritLaw, 283); // Spirit Law
+        _disciplines.Add(ControlCodes.SpellDiscipline_Barriers, 284); // Barriers
+        _disciplines.Add(ControlCodes.SpellDiscipline_Shielding, 285); // Shielding
         Disciplines.AssignKeys(_disciplines);
         AssociateFormToButtons();
         Spells.SetOwningForm(this);
-        Disciplines.RecordSelection((byte)SpellDiscipline.FireLaw);
+        Disciplines.RecordSelection(ControlCodes.SpellDiscipline_FireLaw);
     }
 
     public override void ButtonPressed(ButtonType buttonType)

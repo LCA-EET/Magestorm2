@@ -202,6 +202,10 @@ public class Packets {
 
     public static byte[] IGInactivityDisconnectPacket() { return Cryptographer.Encrypt(IGInactivityDisconnect_Bytes);}
 
+    public static byte[] SendToValhallaPacket(){
+        byte[] toEncrypt = new byte[]{InGame_Send.SendToValhalla};
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] HitNotificationPacket(byte hitPlayerID, byte hitterID){
         byte[] toEncrypt = new byte[3];
         toEncrypt[0] = InGame_Send.HitNotification;
@@ -211,7 +215,7 @@ public class Packets {
     }
     public static byte[] CastPacket(byte[] decrypted, short castID){
         byte payloadLength = decrypted[4];
-        int idxCastID = 5 + payloadLength;
+        int idxCastID = ControlCodes.CastPayloadStartIndex + payloadLength;
         byte[] toEncrypt = new byte[idxCastID + 2];
         System.arraycopy(decrypted, 0, toEncrypt, 0, idxCastID);
         byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);

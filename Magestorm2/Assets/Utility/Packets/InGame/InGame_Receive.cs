@@ -12,11 +12,11 @@ public static class InGame_Receive
                         ObjectData = 3,
                         ObjectStateChange = 4,
                         AllShrineHealth = 5,
-                        
+
                         DirectMessage = 6,
                         BroadcastMessage = 7,
                         TeamMessage = 8,
-        
+
                         ProhibitedLanguage = 9,
                         PlayerLeftMatch = 10,
                         MatchEnded = 11,
@@ -47,5 +47,6 @@ public static class InGame_Receive
                         PostureChange = 36,
                         ApplyEffect = 37,
                         InactivityDisconnect = 39,
-                        HitNotification = 40;
+                        HitNotification = 40,
+                        SendToValhalla = 41;
 }

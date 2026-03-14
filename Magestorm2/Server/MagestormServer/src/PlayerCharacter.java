@@ -15,7 +15,8 @@ public class PlayerCharacter {
     private final byte[] _characterBytes;
     private final byte[] _nameBytes;
     private final byte[] _nameLevelClass;
-    private final byte[] _appearanceBytes;
+    private byte[] _appearanceBytes;
+    private final int _indexAppearanceStart = 11;
     private final int _indexExperience = 17;
     private final int _indexSkills = 21;
     private final int _indexNameLength = 35;
@@ -44,11 +45,11 @@ public class PlayerCharacter {
         _charisma = fetched[9];
         _wisdom = fetched[10];
         _appearanceBytes = new byte[5];
-        _appearanceBytes[0] = fetched[11];
-        _appearanceBytes[1] = fetched[12];
-        _appearanceBytes[2] = fetched[13];
-        _appearanceBytes[3] = fetched[14];
-        _appearanceBytes[4] = fetched[15];
+        _appearanceBytes[0] = fetched[_indexAppearanceStart];
+        _appearanceBytes[1] = fetched[_indexAppearanceStart + 1];
+        _appearanceBytes[2] = fetched[_indexAppearanceStart + 2];
+        _appearanceBytes[3] = fetched[_indexAppearanceStart + 3];
+        _appearanceBytes[4] = fetched[_indexAppearanceStart + 4];
         _level = fetched[_indexLevel];
         _experience = ByteUtils.ExtractInt(fetched, _indexExperience);
         int skills = ByteUtils.ExtractInt(fetched, _indexSkills);
@@ -139,6 +140,10 @@ public class PlayerCharacter {
     }
     public byte[] GetAppearanceBytes(){
         return _appearanceBytes;
+    }
+    public void UpdateAppearanceBytes(byte[] appearance){
+        _appearanceBytes = appearance;
+        System.arraycopy(_appearanceBytes, 0, _characterBytes, _indexAppearanceStart, appearance.length);
     }
     public int GetAccountID(){
         return _accountID;

@@ -37,7 +37,7 @@ public class SkillPanel : ValidateableObject
     }
     public void RefreshClass(PlayerClass playerClass)
     {
-        SpellDiscipline[] availableDisciplines = SharedFunctions.DisciplinesByClass(playerClass);
+        byte[] availableDisciplines = SharedFunctions.DisciplinesByClass(playerClass);
         int index = 0;
         for (int i = 0; i < availableDisciplines.Length; i++)
         {
@@ -89,9 +89,9 @@ public class SkillPanel : ValidateableObject
         _validationFailureMessage = toReturn?"":Language.GetBaseString(291);
         return toReturn;
     }
-    public Dictionary<SpellDiscipline, byte> GetDisciplineTable()
+    public Dictionary<byte, byte> GetDisciplineTable()
     {
-        Dictionary<SpellDiscipline, byte> toReturn = new Dictionary<SpellDiscipline, byte>();
+        Dictionary<byte, byte> toReturn = new Dictionary<byte, byte>();
         foreach (SkillLine line in SkillLines)
         {
             if (line.gameObject.activeSelf)
@@ -100,9 +100,9 @@ public class SkillPanel : ValidateableObject
             }
         }
         Debug.Log("DT");
-        foreach (SpellDiscipline key in toReturn.Keys)
+        foreach (byte key in toReturn.Keys)
         {
-            Debug.Log((byte)key + ": " + toReturn[key].ToString());
+            Debug.Log(key + ": " + toReturn[key].ToString());
         }
         return toReturn;
     }

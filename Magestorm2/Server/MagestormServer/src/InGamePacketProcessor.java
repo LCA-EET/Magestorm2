@@ -1,3 +1,4 @@
+import javax.sound.sampled.Control;
 import java.net.DatagramPacket;
 import java.util.Arrays;
 
@@ -56,6 +57,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.ReportHit:
                     HandleReportHitPacket();
                     return true;
+                case InGame_Receive.Devour:
+                    _owningMatch.HandleBanish(_decrypted);
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -64,13 +68,32 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
         return false;
     }
+
     private void HandleCast(){
         byte casterID = _decrypted[1];
         byte spellID = _decrypted[3];
         if(_owningMatch.IsCharacterAlive(casterID) ){
             if(SpellManager.ContainsSpell(spellID)){
-                short castID = GetCastID(spellID);
-                _owningMatch.SendToAll(Packets.CastPacket(_decrypted, castID));
+                Spell spellReference = SpellManager.GetSpell(spellID);
+                MatchCharacter casterReference = _owningMatch.GetMatchCharacter(_decrypted[1]);
+                short castID = casterReference.CastSpell(spellReference);
+                byte[] toSend = Packets.CastPacket(_decrypted, castID);
+                switch(spellReference.GetNotificationCode()){
+                    case ControlCodes.SpellNotification_All:
+                        _owningMatch.SendToAll(toSend);
+                        break;
+                    case ControlCodes.SpellNotification_TeamOnly:
+                        MatchTeam recipientTeam = _owningMatch.GetMatchTeam(casterReference.GetTeamID());
+                        _owningMatch.SendToCollection(toSend, recipientTeam.GetRemoteClients());
+                        break;
+                    case ControlCodes.SpellNotification_CasterOnly:
+                        _owningMatch.SendToPlayer(toSend, casterReference);
+                        break;
+                    case ControlCodes.SpellNotification_Payload:
+                        _owningMatch.SendToPlayer(toSend, casterReference);
+                        _owningMatch.SendToPlayer(toSend, _decrypted[ControlCodes.CastPayloadStartIndex]);
+                        break;
+                }
             }
             else{
                 Main.LogError("IGPP.HandleCast: Invalid spell key. SpellID: " + spellID);
@@ -85,10 +108,6 @@ public class InGamePacketProcessor extends UDPProcessor{
 
     }
 
-    private short GetCastID(byte spellID){
-        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        return mc.CastSpell(spellID);
-    }
     private void HandlePostureChange(){
         _owningMatch.SendToAll(Packets.PostureChangePacket(_decrypted));
     }

@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+
     public GameObject AvatarPrefab;
     public GameObject DeadbodyPrefab;
     private Dictionary<byte, SpellSpawner> _spellPrefabs;
     private Dictionary<short, SpawnedSpell> _spellRegistry;
+    private Dictionary<byte, VFX> _vfxTable;
     private PeriodicAction _expirationCheck;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -14,12 +16,22 @@ public class Spawner : MonoBehaviour
     {
         _expirationCheck = new PeriodicAction(30.0f, ExpirationCheck, null);
         _spellRegistry = new Dictionary<short, SpawnedSpell>();
+        _vfxTable = new Dictionary<byte, VFX>();
         ComponentRegister.Spawner = this;
         LoadSpellPrefabs();
+        LoadVFXPrefabs();
     }
     void Start()
     {
         
+    }
+    public void SpawnVFX(byte vfxCode, Vector3 position)
+    {
+        if (_vfxTable.ContainsKey(vfxCode))
+        {
+            VFX vfx = Instantiate(_vfxTable[vfxCode]);
+            vfx.transform.position = position;
+        }
     }
     private void ExpirationCheck()
     {
@@ -37,6 +49,15 @@ public class Spawner : MonoBehaviour
             SpawnedSpell expiredSpell = _spellRegistry[castID];
             Destroy(expiredSpell.gameObject);
             _spellRegistry.Remove(castID);
+        }
+    }
+    private void LoadVFXPrefabs()
+    {
+        _vfxTable = new Dictionary<byte, VFX>();
+        VFX[] vfxContainers = Resources.LoadAll<VFX>("VFX");
+        foreach (VFX vfx in vfxContainers)
+        {
+            _vfxTable.Add(vfx.VFXCode, vfx);
         }
     }
     private void LoadSpellPrefabs()

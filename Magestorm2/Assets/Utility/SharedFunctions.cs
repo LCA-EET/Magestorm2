@@ -11,33 +11,33 @@ public static class SharedFunctions
     private static System.Random _random = new System.Random();
     private static object[] _params;
 
-    private static SpellDiscipline[] ArcanistDisciplines = new SpellDiscipline[] { 
-        SpellDiscipline.ManaLaw, 
-        SpellDiscipline.VoidLaw, 
-        SpellDiscipline.Sigils, 
-        SpellDiscipline.Shielding 
+    private static byte[] ArcanistDisciplines = new byte[] { 
+        ControlCodes.SpellDiscipline_ManaLaw, 
+        ControlCodes.SpellDiscipline_VoidLaw, 
+        ControlCodes.SpellDiscipline_Sigils, 
+        ControlCodes.SpellDiscipline_Shielding 
     };
 
-    private static SpellDiscipline[] ClericDisciplines = new SpellDiscipline[] { 
-        SpellDiscipline.Barriers, 
-        SpellDiscipline.Healing, 
-        SpellDiscipline.Smiting, 
-        SpellDiscipline.SpiritLaw, 
-        SpellDiscipline.Supplication 
+    private static byte[] ClericDisciplines = new byte[] { 
+        ControlCodes.SpellDiscipline_Barriers, 
+        ControlCodes.SpellDiscipline_Healing, 
+        ControlCodes.SpellDiscipline_Smiting, 
+        ControlCodes.SpellDiscipline_SpiritLaw, 
+        ControlCodes.SpellDiscipline_Supplication 
     };
     
-    private static SpellDiscipline[] MagicianDisciplines = new SpellDiscipline[] { 
-        SpellDiscipline.EarthLaw,  
-        SpellDiscipline.FireLaw, 
-        SpellDiscipline.IceLaw,
-        SpellDiscipline.Shielding
+    private static byte[] MagicianDisciplines = new byte[] { 
+        ControlCodes.SpellDiscipline_EarthLaw,  
+        ControlCodes.SpellDiscipline_FireLaw, 
+        ControlCodes.SpellDiscipline_IceLaw,
+        ControlCodes.SpellDiscipline_Shielding
     };
     
-    private static SpellDiscipline[] MentalistDisciplines = new SpellDiscipline[] { 
-        SpellDiscipline.Brilliance,
-        SpellDiscipline.Displacement,
-        SpellDiscipline.Psionics,
-        SpellDiscipline.Shielding
+    private static byte[] MentalistDisciplines = new byte[] { 
+        ControlCodes.SpellDiscipline_Brilliance,
+        ControlCodes.SpellDiscipline_Displacement,
+        ControlCodes.SpellDiscipline_Psionics,
+        ControlCodes.SpellDiscipline_Shielding
     };
 
     public static object[] Params {  
@@ -66,7 +66,11 @@ public static class SharedFunctions
         RaycastHit hitInfo;
         return CastDown(origin, layerMask, distance, out hitInfo);
     }
-  
+
+    public static bool BoxCast(Transform origin, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
+    {
+        return Physics.BoxCast(origin.position, Vector3.one, direction, out hitInfo);
+    }
     
     public static bool CastForward(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
     {
@@ -105,7 +109,7 @@ public static class SharedFunctions
             SetLayerRecursive(child.gameObject, newLayer);
         }
     }
-    public static SpellDiscipline[] DisciplinesByClass(PlayerClass playerClass)
+    public static byte[] DisciplinesByClass(PlayerClass playerClass)
     {
         switch (playerClass)
         {
@@ -120,40 +124,40 @@ public static class SharedFunctions
         }
         return null;
     }
-    public static int SpellDisciplineStringReference(SpellDiscipline spellDiscipline)
+    public static int SpellDisciplineStringReference(byte spellDiscipline)
     {
         
         switch (spellDiscipline)
         {
-            case SpellDiscipline.SpiritLaw:
+            case ControlCodes.SpellDiscipline_SpiritLaw:
                 return 283;
-            case SpellDiscipline.VoidLaw:
+            case ControlCodes.SpellDiscipline_VoidLaw:
                 return 239;
-            case SpellDiscipline.FireLaw:
+            case ControlCodes.SpellDiscipline_FireLaw:
                 return 229;
-            case SpellDiscipline.IceLaw:
+            case ControlCodes.SpellDiscipline_IceLaw:
                 return 230;
-            case SpellDiscipline.ManaLaw:
+            case ControlCodes.SpellDiscipline_ManaLaw:
                 return 238;
-            case SpellDiscipline.Barriers:
+            case ControlCodes.SpellDiscipline_Barriers:
                 return 284;
-            case SpellDiscipline.Brilliance:
+            case ControlCodes.SpellDiscipline_Brilliance:
                 return 232;
-            case SpellDiscipline.Displacement:
+            case ControlCodes.SpellDiscipline_Displacement:
                 return 233;
-            case SpellDiscipline.EarthLaw:
+            case ControlCodes.SpellDiscipline_EarthLaw:
                 return 231;
-            case SpellDiscipline.Psionics:
+            case ControlCodes.SpellDiscipline_Psionics:
                 return 234;
-            case SpellDiscipline.Smiting:
+            case ControlCodes.SpellDiscipline_Smiting:
                 return 237;
-            case SpellDiscipline.Supplication:
+            case ControlCodes.SpellDiscipline_Supplication:
                 return 235;
-            case SpellDiscipline.Sigils:
+            case ControlCodes.SpellDiscipline_Sigils:
                 return 240;
-            case SpellDiscipline.Shielding:
+            case ControlCodes.SpellDiscipline_Shielding:
                 return 285;
-            case SpellDiscipline.Healing:
+            case ControlCodes.SpellDiscipline_Healing:
                 return 236;
         }
         return 0;
@@ -296,10 +300,10 @@ public static class SharedFunctions
         return false;
     }
 
-    public static int DisciplineTableToInt(Dictionary<SpellDiscipline, byte> table)
+    public static int DisciplineTableToInt(Dictionary<byte, byte> table)
     {
         bool[] skillsArray = new bool[32];
-        foreach(SpellDiscipline key in table.Keys)
+        foreach(byte key in table.Keys)
         {
             ByteUtils.FillBooleanArray(ref skillsArray, table[key], ((byte)key) * 2);
         }

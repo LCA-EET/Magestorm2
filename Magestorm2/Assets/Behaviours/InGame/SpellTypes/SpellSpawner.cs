@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 public class SpellSpawner : MonoBehaviour 
 {
     public byte SpellKey;
@@ -23,34 +22,50 @@ public class SpellSpawner : MonoBehaviour
         _castID = castID;
         _payload = payload;
         _caster = caster;
+        _casterID = _caster.PlayerID;
+        _castingTeam = caster.PlayerTeam;
         switch (spellType)
         {
             case ControlCodes.SpellTypes_Self:
-                InitializeSelfCast();
+                AssociateToCaster();
                 break;
             case ControlCodes.SpellTypes_Projectile:
                 InitializeProjectile();
                 break;
             case ControlCodes.SpellTypes_Summon:
+                InitializeSummon();
                 break;
         }
-        if (_caster.PlayerID == MatchParams.IDinMatch)
+        if (_casterID == MatchParams.IDinMatch)
         {
             UseStamina();
         }
     }
-
-    private void InitializeSelfCast()
+    private void AssociateToCaster()
     {
         transform.parent = _caster.transform;
         transform.position = _caster.transform.position;
         transform.localPosition = new Vector3(0, 0, 0);
     }
+    private void InitializeSummon()
+    {
+        Debug.Log("Initialize Summon.");
+        AssociateToCaster();
+        byte summonedPlayerID = _payload[0];
+        Avatar summonedPlayer = null;
+        if (Match.GetAvatar(summonedPlayerID, ref summonedPlayer))
+        {
+            if (summonedPlayerID == MatchParams.IDinMatch)
+            {
+                ComponentRegister.PC.UpdatePosition(_caster.transform.position + ((_caster.transform.forward) * 0.67f));
+            }
+        }
+    }
+
     private void InitializeProjectile()
     {
         Vector3 direction = ByteUtils.BytesToVector3(_payload, 0);
         Vector3 adjustedPosition = _caster.transform.position + (direction * 0.67f);
-        Debug.Log("Direction: " + direction);
         adjustedPosition.y += 1.4f;
         transform.position = adjustedPosition;
         transform.forward = direction;

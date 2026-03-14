@@ -20,6 +20,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1937374618410250744, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000011444092
+      objectReference: {fileID: 0}
     - target: {fileID: 5841437462176196377, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -34,7 +38,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6193864156997671458, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
       propertyPath: m_Name
-      value: Disciplines Variant
+      value: DisciplinesSelectView
+      objectReference: {fileID: 0}
+    - target: {fileID: 8054634594553456340, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8054634594553456340, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8054634594553456340, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 8329279136748112046, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
       propertyPath: m_Pivot.x
@@ -125,9 +141,42 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8352675161516628004}
   m_SourcePrefab: {fileID: 100100000, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+--- !u!114 &598375174834550198 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3979551514658087773, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 4573385671304861419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &872564433779747614 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3705361552445554165, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 4573385671304861419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Scrollbar
 --- !u!114 &1098273085215560328 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3479654705667867747, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 4573385671304861419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &1654435915857634692 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2991044064208188271, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
   m_PrefabInstance: {fileID: 4573385671304861419}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -158,6 +207,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!224 &2708072927975155475 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1937374618410250744, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 4573385671304861419}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3390774772787111893 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1187153396086878526, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
@@ -191,6 +245,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &5095563678672330505 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8773287100525660642, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 4573385671304861419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
 --- !u!114 &5338328156992532317 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8458432062112512438, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
@@ -205,6 +270,28 @@ MonoBehaviour:
 --- !u!114 &5680146450980036932 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8188671206738671535, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 4573385671304861419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &6020437986288584386 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7852881898278948905, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 4573385671304861419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &6226193296580589315 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7570568399490015720, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
   m_PrefabInstance: {fileID: 4573385671304861419}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -252,7 +339,26 @@ MonoBehaviour:
   - {fileID: 3390774772787111893}
   - {fileID: 3679446966819848998}
   - {fileID: 5680146450980036932}
+  - {fileID: 5095563678672330505}
+  - {fileID: 1654435915857634692}
+  - {fileID: 6020437986288584386}
+  - {fileID: 6226193296580589315}
+  - {fileID: 8408891366934757817}
+  - {fileID: 598375174834550198}
+  ContentPanel: {fileID: 2708072927975155475}
+  VerticalScrollbar: {fileID: 872564433779747614}
   SpellSelectView: {fileID: 0}
+--- !u!114 &8408891366934757817 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5459924247721940818, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 4573385671304861419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
 --- !u!114 &8936543932210091390 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4860251865900827541, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}

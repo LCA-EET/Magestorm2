@@ -14,7 +14,7 @@ public class UIAvailableSpells : ValidatableForm, ISpellProcessor
         AssociateFormToButtons();
         Debug.Log("UIAvailableSpells form launched");
     }
-    public void InitializeForm(byte characterLevel, byte slotID, ISpellProcessor owner, Dictionary<SpellDiscipline, byte> disciplineLevels)
+    public void InitializeForm(byte characterLevel, byte slotID, ISpellProcessor owner, Dictionary<byte, byte> disciplineLevels)
     {
         _slotID = slotID;
         _owner = owner;

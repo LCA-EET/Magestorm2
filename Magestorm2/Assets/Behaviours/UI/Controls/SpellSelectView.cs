@@ -16,7 +16,7 @@ public class SpellSelectView : ScrollSelectView
 
     public void PopulateOptions(byte disciplineCode)
     {
-        List<SpellData> spellData = SpellManager.GetSpellsOfDiscipline(new SpellDiscipline[] { (SpellDiscipline)disciplineCode });
+        List<SpellData> spellData = SpellManager.GetSpellsOfDiscipline(new byte[] { (byte)disciplineCode });
         Dictionary<byte, int> options = new Dictionary<byte, int>();
         foreach(SpellData sd in spellData)
         {

@@ -1,5 +1,14 @@
 public class ControlCodes {
 
+    public static final byte CastPayloadStartIndex = 5;
+
+    //region SpellNotification
+        public static final byte SpellNotification_All = 0;
+        public static final byte SpellNotification_TeamOnly = 1;
+        public static final byte SpellNotification_CasterOnly = 2;
+        public static final byte SpellNotification_Payload = 3;
+    //
+
     //region SpellTypes
         public static final byte SpellTypes_Projectile = 1;
         public static final byte SpellTypes_Self = 2;

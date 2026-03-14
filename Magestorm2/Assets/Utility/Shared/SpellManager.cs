@@ -3,13 +3,13 @@ public static class SpellManager
 {
     private static bool _init;
     private static Dictionary<byte, SpellData> _spells;
-    private static Dictionary<SpellDiscipline, List<SpellData>> _spellsOfDiscipline;
+    private static Dictionary<byte, List<SpellData>> _spellsOfDiscipline;
     public static void Init()
     {
         if (!_init)
         {
             _spells = new Dictionary<byte, SpellData>();
-            _spellsOfDiscipline = new Dictionary<SpellDiscipline, List<SpellData>>();
+            _spellsOfDiscipline = new Dictionary<byte, List<SpellData>>();
             string contents;
             if (SharedFunctions.GetPHPString("spells", out contents))
             {
@@ -20,7 +20,7 @@ public static class SpellManager
                 {
                     SpellData toAdd = new SpellData(fields, spelldata[i]);
                     _spells.Add(toAdd.SpellID, toAdd);
-                    SpellDiscipline discipline = toAdd.Discipline;
+                    byte discipline = toAdd.Discipline;
                     if (!_spellsOfDiscipline.ContainsKey(discipline))
                     {
                         _spellsOfDiscipline.Add(discipline, new List<SpellData>());
@@ -50,12 +50,12 @@ public static class SpellManager
         }
         return toReturn;
     }
-    public static Dictionary<byte,SpellData> GetAvailableSpells(byte characterLevel, Dictionary<SpellDiscipline, byte> disciplineTable)
+    public static Dictionary<byte,SpellData> GetAvailableSpells(byte characterLevel, Dictionary<byte, byte> disciplineTable)
     {
         Dictionary<byte, SpellData> toReturn = new Dictionary<byte, SpellData>();
-        foreach(SpellDiscipline disciplineKey in disciplineTable.Keys)
+        foreach(byte disciplineKey in disciplineTable.Keys)
         {
-            List<SpellData> toCheck = GetSpellsOfDiscipline(new SpellDiscipline[] { disciplineKey });
+            List<SpellData> toCheck = GetSpellsOfDiscipline(new byte[] { disciplineKey });
             foreach(SpellData data in toCheck)
             {
                 if(data.MinLevel <= characterLevel &&
@@ -66,10 +66,10 @@ public static class SpellManager
         }
         return toReturn;
     }
-    public static List<SpellData> GetSpellsOfDiscipline(SpellDiscipline[] disciplines)
+    public static List<SpellData> GetSpellsOfDiscipline(byte[] disciplines)
     {
         List<SpellData> toReturn = new List<SpellData> ();
-        foreach (SpellDiscipline discipline in disciplines)
+        foreach (byte discipline in disciplines)
         {
             if (_spellsOfDiscipline.ContainsKey(discipline))
             {

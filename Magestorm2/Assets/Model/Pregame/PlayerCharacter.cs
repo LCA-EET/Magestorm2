@@ -15,9 +15,9 @@ public class PlayerCharacter
     private byte[] _statBytes;
     private byte[] _idBytes;
     private byte[] _slottedSpells;
-    private Dictionary<SpellDiscipline, byte> _skills;
+    private Dictionary<byte, byte> _skills;
     public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes, byte[] slots, int skills) {
-        _skills = new Dictionary<SpellDiscipline, byte>();
+        _skills = new Dictionary<byte, byte>();
         _slottedSpells = slots;
         _characterID = characterID;
         _characterName = characterName;
@@ -43,7 +43,7 @@ public class PlayerCharacter
             _slottedSpells[i] = decrypted[offset + i];
         }
     }
-    public byte GetSkillLevel(SpellDiscipline discipline)
+    public byte GetSkillLevel(byte discipline)
     {
         if (_skills.ContainsKey(discipline))
         {
@@ -140,7 +140,7 @@ public class PlayerCharacter
         }
         //Debug.Log("Skills base 2: " + binary +", length = " + binary.Length);
         _skills.Clear();
-        foreach(SpellDiscipline discipline in SharedFunctions.DisciplinesByClass((PlayerClass)_characterClass))
+        foreach(byte discipline in SharedFunctions.DisciplinesByClass((PlayerClass)_characterClass))
         {
             int skillIndex = ((byte)discipline) * 2;
             bool lsb = skillArray[skillIndex];

@@ -23,14 +23,14 @@ public class PacketSender extends Thread{
                                 _udp.Send(packetBytes, rc);
                             }
                             else{
-                                Main.LogError("Attempted to send to null RC associated with account " + rc.AccountID());
+                                Main.LogError("Attempted to send to null RC associated with account ");
                             }
                         }
                     }
                 }
                 Thread.sleep(ServerParams.TickInterval);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Main.LogStackTrace(e);
             }
         }
         Main.LogMessage("No longer sending from port " + _processor._listeningPort);

@@ -333,8 +333,13 @@ public class PC : MonoBehaviour
         List<Avatar> deadTeammates = Match.DeadAvatars;
         if (deadTeammates.Count > 0)
         {
+            Debug.Log(deadTeammates.Count + " dead teammates.");
             deadTeammates.Sort(_distanceSorter);
             return InGame_Packets.SummonPacket(spellID, deadTeammates[0].PlayerID);
+        }
+        else
+        {
+            Debug.Log("No dead teammates.");
         }
         return null;
     }

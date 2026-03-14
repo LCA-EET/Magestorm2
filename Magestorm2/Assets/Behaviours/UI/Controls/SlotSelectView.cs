@@ -66,7 +66,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
         }
     }
 
-    public void CheckAvailability(byte characterLevel, Dictionary<SpellDiscipline, byte> disciplineLevels)
+    public void CheckAvailability(byte characterLevel, Dictionary<byte, byte> disciplineLevels)
     {
         Dictionary<byte, SpellData> availableSpells = SpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
         for (byte i = 0; i < _slottedSpells.Length; i++)

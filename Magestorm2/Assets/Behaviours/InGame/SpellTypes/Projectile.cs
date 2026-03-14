@@ -18,7 +18,7 @@ public class Projectile : SpawnedSpell
         
         if (SharedFunctions.WasPCHit(other))
         {
-            //Debug.Log("WPH is true");
+            //Debug.Log("WPH is true. CasterID: " + CasterID);
             if (CasterID == MatchParams.IDinMatch)
             {
                 impact = false;

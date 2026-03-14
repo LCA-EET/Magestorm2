@@ -21,24 +21,7 @@ public class AnimationKeys
         None = 99;
 }
 
-public enum SpellDiscipline: byte
-{
-    FireLaw = 0,
-    IceLaw = 1,
-    EarthLaw = 2,
-    Brilliance = 3,
-    Displacement = 4,
-    Psionics = 5,
-    Supplication = 6,
-    Healing = 7,
-    Smiting = 8,
-    ManaLaw = 9,
-    VoidLaw = 10,
-    Sigils = 11,
-    SpiritLaw = 12,
-    Barriers = 13,
-    Shielding = 14
-}
+
 public enum TriggerType : byte
 {
     ManaPool = 0,

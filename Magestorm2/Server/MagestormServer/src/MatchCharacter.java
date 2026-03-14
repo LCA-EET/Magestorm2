@@ -160,6 +160,10 @@ public class MatchCharacter {
         _remote = remote;
         _verified = true;
     }
+    public void AddMana(short amount){
+        float newMana = _currentMana + amount;
+        _currentMana = Math.min(newMana, _maxMana);
+    }
 
     public boolean IsVerified(){
         return _verified;
@@ -172,7 +176,9 @@ public class MatchCharacter {
     public void MarkPacketReceived(){
         _lastPacketReceived = System.currentTimeMillis();
     }
-
+    public float GetMaxHP(){
+        return _maxHP;
+    }
     public boolean InactivityExceededWarningThreshold(){
         return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityWarning;
     }
@@ -222,9 +228,6 @@ public class MatchCharacter {
         }
         return false;
     }
-    public void AdjustMana(int adjustment){
-        _currentMana += adjustment;
-    }
 
     public byte[] GetPosition(){
         byte[] toReturn = new byte[12];
@@ -242,9 +245,8 @@ public class MatchCharacter {
     protected void UpdateDirection(byte[] decrypted, int index){
         System.arraycopy(decrypted, index, _playerData, _directionIndex, 4);
     }
-
-    protected void PlayerDied(MatchCharacter deadPlayer){
-
+    public byte GetSkillLevel(byte disciplineCode){
+        return _pc.GetSkillLevel(disciplineCode);
     }
     public float GetCurrentHP(){
         return _currentHP;
@@ -255,10 +257,9 @@ public class MatchCharacter {
     public byte GetLevel(){
         return _INLCTA[_idxLevel];
     }
-    public short CastSpell(byte spellID){
+    public short CastSpell(Spell cast){
         short toReturn = -1;
         if(IsAlive()){
-            Spell cast = SpellManager.GetSpell(spellID);
             byte spellCost = cast.SpellCost();
             byte skillRequired = cast.GetSkillRequired();
             byte discipline = cast.GetDiscipline();

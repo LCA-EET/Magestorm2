@@ -4,11 +4,12 @@ public class SpawnedSpell : MonoBehaviour
     public AudioClip CastClip;
     protected byte _casterID;
     protected short _castID;
-    protected float _expiration;
+    public float ExpireAfter;
+    private float _expiration;
     protected Team _castingTeam;
-    public void Initialize(byte casterID, Team castingTeam, short castID, Transform parent)
+    public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent)
     {
-        _expiration = Time.realtimeSinceStartup + 60;
+        _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
         transform.parent = parent;
         _casterID = casterID;
         _castingTeam = castingTeam;

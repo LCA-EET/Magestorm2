@@ -34,7 +34,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6193864156997671458, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
       propertyPath: m_Name
-      value: SpellSelectView Variant
+      value: SpellSelectView
+      objectReference: {fileID: 0}
+    - target: {fileID: 8035743772187524746, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8329279136748112046, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
       propertyPath: m_Pivot.x
@@ -136,6 +140,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &539804099315702530 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3979551514658087773, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 3479015265169258591}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &1857069958815042352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2991044064208188271, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 3479015265169258591}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
 --- !u!114 &2323413523578423649 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1187153396086878526, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
@@ -213,6 +239,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &5298216482856661437 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8773287100525660642, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 3479015265169258591}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &6437893649764538807 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7570568399490015720, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 3479015265169258591}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &6682492515398985846 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7852881898278948905, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 3479015265169258591}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
 --- !u!1 &7328191471357387389 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6193864156997671458, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
@@ -241,6 +300,14 @@ MonoBehaviour:
   - {fileID: 2323413523578423649}
   - {fileID: 4332491976126524818}
   - {fileID: 4747903280342077424}
+  - {fileID: 5298216482856661437}
+  - {fileID: 1857069958815042352}
+  - {fileID: 6682492515398985846}
+  - {fileID: 6437893649764538807}
+  - {fileID: 8899814213029015309}
+  - {fileID: 539804099315702530}
+  ContentPanel: {fileID: 0}
+  VerticalScrollbar: {fileID: 0}
 --- !u!114 &7642707438621350599 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6509856638723285656, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
@@ -255,6 +322,17 @@ MonoBehaviour:
 --- !u!114 &8301511394254257098 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4860251865900827541, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
+  m_PrefabInstance: {fileID: 3479015265169258591}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ab599a925ad74da18abde003114e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableLabel
+--- !u!114 &8899814213029015309 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5459924247721940818, guid: 132466d4df484ce4cbfc7c1540975f95, type: 3}
   m_PrefabInstance: {fileID: 3479015265169258591}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
