@@ -6,14 +6,18 @@ public static class LayerManager
     public const string Layer_DeadPlayer = "DeadPlayer";
     public const string Layer_RemotePlayer = "RemotePlayer";
     public const string Layer_DeadBody = "DeadBody";
+    public const string Layer_Surface = "Surface";
+    public const string Layer_Default = "Default";
+    public const string Layer_Interactable = "Interactable";
 
     private static int _playerLayer, _playerLayerMask;
     private static int _remotePlayerLayer, _remotePlayerLayerMask;
     private static int _deadPlayerLayer, _deadPlayerLayerMask;
     private static int _deadBodyLayer;
-    private static int _surfaceMask;
+    private static int _surfaceLayerMask;
     private static int _interactableMask;
     private static int _projectileImpactMask;
+    private static int _aoeObstructionMask;
     private static bool _init = false;
     public static void Init()
     {
@@ -26,12 +30,16 @@ public static class LayerManager
             _playerLayerMask = LayerMask.GetMask(Layer_Player);
             _deadPlayerLayerMask = LayerMask.GetMask(Layer_DeadPlayer);
             _remotePlayerLayerMask = LayerMask.GetMask(Layer_RemotePlayer);
-            _surfaceMask = LayerMask.GetMask("Surface");
-            _interactableMask = LayerMask.GetMask("Interactable");
-            _projectileImpactMask = LayerMask.GetMask(new string[] { "Surface", "Default", "RemotePlayer", "Interactable" });
-           
+            _surfaceLayerMask = LayerMask.GetMask(Layer_Surface);
+            _interactableMask = LayerMask.GetMask(Layer_Interactable);
+            _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable });
+            _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default });
             _init = true;
         }
+    }
+    public static int AoEObstructionMask
+    {
+        get {  return _aoeObstructionMask; }
     }
     public static int DeadBodyLayer
     {
@@ -68,7 +76,7 @@ public static class LayerManager
     public static int SurfaceMask
     {
         get{
-            return _surfaceMask;
+            return _surfaceLayerMask;
         }
     }
     public static int InteractableMask

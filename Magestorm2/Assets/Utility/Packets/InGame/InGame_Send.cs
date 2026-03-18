@@ -28,5 +28,6 @@
                         Cast = 24,
                         ReportHit = 28,
                         PlayerMoved = 29,
-                        Devour = 30;
+                        Devour = 30,
+                        ReportSplash = 31;
 }

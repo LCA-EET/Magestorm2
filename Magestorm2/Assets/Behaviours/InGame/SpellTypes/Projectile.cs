@@ -4,14 +4,15 @@ public class Projectile : SpawnedSpell
     public float Speed;
     public GameObject ImpactPrefab;
     public float ImpactScaling = 1.0f;
+    protected bool _impact, _directHit;
     private void FixedUpdate()
     {
-        
         transform.position += (Speed * transform.forward * Time.deltaTime);
     }
-    private void OnTriggerEnter(Collider other)
+
+    protected virtual void OnTriggerEnter(Collider other)
     {
-        bool impact = true;
+        _impact = true;
         // The target will report on being hit.
         // The shooter does NOT report on what it hit.
         // Shooter's projectile cannot impact themself
@@ -21,23 +22,23 @@ public class Projectile : SpawnedSpell
             //Debug.Log("WPH is true. CasterID: " + CasterID);
             if (CasterID == MatchParams.IDinMatch)
             {
-                impact = false;
+                _impact = false;
             }
             else
             {
+                _directHit = true;
                 Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
             }
         }
-
-        if (ImpactPrefab != null && impact)
+        if (ImpactPrefab != null && _impact)
         {
             GameObject impactObject = Instantiate(ImpactPrefab);
             impactObject.transform.localScale = Vector3.one * ImpactScaling;
             impactObject.transform.position = transform.position;
         }
-        if (impact)
+        if (_impact)
         {
-            Destroy(gameObject);
+            MarkForDestruction();
         }
     }
 }

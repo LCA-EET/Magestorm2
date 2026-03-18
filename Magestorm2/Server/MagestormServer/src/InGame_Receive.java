@@ -32,4 +32,5 @@ public class InGame_Receive {
     public static final byte ReportHit = 28;
     public static final byte PlayerMoved = 29;
     public static final byte Devour = 30;
+    public static final byte ReportSplash = 31;
 }

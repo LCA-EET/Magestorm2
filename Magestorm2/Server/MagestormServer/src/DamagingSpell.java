@@ -39,16 +39,20 @@ public class DamagingSpell extends CastSpell{
         if(resistance != 0){
             appliedDamage *= ((100.0f - resistance) / 100.0f);
         }
+        if(target.IsSplashHit(_castID)){
+            byte skillLevel = _casterReference.GetSkillLevel(_baseReference.GetDiscipline());
+            appliedDamage *= _baseReference.GetSplashFactor(skillLevel);
+        }
         target.TakeDamage(appliedDamage, _casterReference);
     }
 
     @Override
     public void ProcessSpell(MatchCharacter affectedPlayer){
-        Main.LogMessage("PriorHP: " + affectedPlayer.GetCurrentHP());
+        //Main.LogMessage("PriorHP: " + affectedPlayer.GetCurrentHP());
         ApplyDamage(GetDamage0(), _baseReference.GetElement0(), affectedPlayer);
         if(_multiElement){
             ApplyDamage(GetDamage1(), _baseReference.GetElement1(), affectedPlayer);
         }
-        Main.LogMessage("CurrentHP: " + affectedPlayer.GetCurrentHP());
+        //Main.LogMessage("CurrentHP: " + affectedPlayer.GetCurrentHP());
     }
 }

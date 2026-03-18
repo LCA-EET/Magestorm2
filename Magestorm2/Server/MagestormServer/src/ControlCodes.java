@@ -2,6 +2,12 @@ public class ControlCodes {
 
     public static final byte CastPayloadStartIndex = 5;
 
+    //region SkillLevels
+        public static final byte SkillLevel_Basic = 1;
+        public static final byte SkillLevel_Expert = 2;
+        public static final byte SkillLevel_Master = 3;
+    //
+
     //region SpellNotification
         public static final byte SpellNotification_All = 0;
         public static final byte SpellNotification_TeamOnly = 1;

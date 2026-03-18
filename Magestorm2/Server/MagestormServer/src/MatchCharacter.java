@@ -1,5 +1,6 @@
+import java.util.HashSet;
 import java.util.Hashtable;
-
+import java.lang.Short;
 public class MatchCharacter {
     private final MatchTeam _team;
     private final Match _owningMatch;
@@ -31,6 +32,7 @@ public class MatchCharacter {
     private int _lastPRPacketID;
     private final byte[] _resistance;
     private final boolean _newToMatch;
+    private final HashSet<Short> _splashHits;
 
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
         MarkPacketReceived();
@@ -67,7 +69,17 @@ public class MatchCharacter {
         _playerData = new byte[_INLCTA.length + 16];
         _positionIndex = _INLCTA.length;
         _directionIndex = _positionIndex + 12;
+        _splashHits = new HashSet<>();
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
+    }
+    public void RegisterSplashHit(short castID){
+        _splashHits.add(castID);
+    }
+    public void DeregisterSplashHit(short castID){
+        _splashHits.remove(castID);
+    }
+    public boolean IsSplashHit(short castID){
+        return _splashHits.contains(castID);
     }
     public byte IsNewToMatch(){
         return _newToMatch?(byte)1:(byte)0;
@@ -209,6 +221,7 @@ public class MatchCharacter {
         }
         return false;
     }
+
     public boolean RegenerateSP(long msElapsed){
         _manaRegenElapsed += msElapsed;
         if(_manaRegenElapsed >= _manaRegenTick){

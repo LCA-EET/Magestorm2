@@ -312,3 +312,5 @@ Summons the spirit of a fallen comrade to the caster.
 You've been banished to Valhalla by an enemy cleric!
 Banish Spirit
 Basic: Sends the spirit of a fallen enemy to Valhalla. \nExpert: Banish restores mana equal to the level of the banished spirit. \nMaster: Banish restores mana equal to twice the level of the banished spirit.
+Fireball
+Launches a projectile that explodes on impact, dealing 2-4 damage per point of skill to nearby targets. \nBasic: Inflicts 33% splash damage. \nExpert: Inflicts 50% splash damage. \nMaster: Inflicts 67% splash damage.

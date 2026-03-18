@@ -498,20 +498,21 @@ public class Match {
         return _sceneID;
     }
 
+    public void PlayerHit(MatchCharacter hitPlayer, short castID){
+        CastSpell spell = GetCastSpell(castID);
+        if(spell != null){
+            spell.ProcessSpell(hitPlayer);
+            byte[] packet = Packets.HitNotificationPacket(hitPlayer.GetIDinMatch(), spell.GetCasterID());
+            SendToPlayer(packet, hitPlayer);
+        }
+        else{
+            Main.LogError("Match.PlayerHit: Spell " + castID + " is null.");
+        }
+    }
     public void PlayerHit(byte hitPlayerID, short castID){
-        //Main.LogMessage("Match.PlayerHit checking " + hitPlayerID);
         MatchCharacter hitPlayer = GetMatchCharacter(hitPlayerID);
-        //Main.LogMessage("Player " + hitPlayerID + ", " + hitPlayer.GetCharacterName() + ", was hit by spell " + spellID);
         if(hitPlayer != null){
-            CastSpell spell = GetCastSpell(castID);
-            if(spell != null){
-                spell.ProcessSpell(hitPlayer);
-                byte[] packet = Packets.HitNotificationPacket(hitPlayerID, spell.GetCasterID());
-                SendToPlayer(packet, hitPlayer);
-            }
-            else{
-                Main.LogError("Match.PlayerHit: Spell " + castID + " is null.");
-            }
+            PlayerHit(hitPlayer, castID);
         }
         else{
             Main.LogError("Match.PlayerHit: Player " + hitPlayerID + " is null.");

@@ -7,6 +7,7 @@ public class SpawnedSpell : MonoBehaviour
     public float ExpireAfter;
     private float _expiration;
     protected Team _castingTeam;
+    protected bool _destroyOnNextUpdate;
     public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent)
     {
         _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
@@ -29,6 +30,15 @@ public class SpawnedSpell : MonoBehaviour
     }
     public virtual void Update()
     {
+        if (_destroyOnNextUpdate)
+        {
+            ComponentRegister.Spawner.DeregisterSpawnedSpell(this);
+            Destroy(gameObject);
+        }
+    }
+    public void MarkForDestruction()
+    {
+        _destroyOnNextUpdate = true;
     }
     public short CastID
     {

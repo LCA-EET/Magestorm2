@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using System.Xml.Linq;
 
 public static class SharedFunctions
 {
@@ -56,6 +54,60 @@ public static class SharedFunctions
     public static bool DirectionalCast(Transform origin, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
     {
         return Physics.Raycast(origin.position, origin.TransformDirection(direction), out hitInfo, distance, layerMask);
+    }
+    public static bool IsPlayerInRadius(Vector3 origin, float radius)
+    {        
+        Vector3 playerPosition = ComponentRegister.PC.transform.position;
+        if (Vector3.Distance(origin, playerPosition) <= radius)
+        {
+            Vector3 direction = DirectionVector(origin, playerPosition);
+            RaycastHit hitInfo;
+            return Physics.Raycast(origin, direction, out hitInfo, radius, LayerManager.AoEObstructionMask);
+        }
+        return false;        
+    }
+    public static byte[] GetPlayerIDsInRadius(Vector3 origin, float radius, bool livingPlayers)
+    {
+        List<byte> playerIDs = new List<byte>();
+        List<GameObject> toProcess = GetObjectsInRadius(origin, radius, livingPlayers ? LayerManager.PlayerLayerMask : LayerManager.DeadPlayerLayerMask, LayerManager.AoEObstructionMask);
+        foreach (GameObject obj in toProcess)
+        {
+            Avatar player = obj.GetComponent<Avatar>();
+            if(player != null)
+            {
+                playerIDs.Add(player.PlayerID);
+            }
+        }
+        return playerIDs.ToArray();
+    }
+    public static List<GameObject> GetObjectsInRadius(Vector3 origin, float radius, int objectLayerMask, int obstructionLayerMask)
+    {
+        List<GameObject> inRadius = new List<GameObject>();
+        Collider[] colliders = Physics.OverlapSphere(origin, radius, objectLayerMask);
+        foreach (Collider collider in colliders)
+        {
+            GameObject go = collider.gameObject;
+            Vector3 directionVector = DirectionVector(origin, go.transform.position);
+            if(obstructionLayerMask != 0)
+            {
+                RaycastHit hitInfo;
+                float distance = Vector3.Distance(go.transform.position, origin);
+                bool obstructed = Physics.Raycast(origin, directionVector, out hitInfo, distance, obstructionLayerMask);
+                if (!obstructed)
+                {
+                    inRadius.Add(go);
+                }
+            }
+            else
+            {
+                inRadius.Add(go);
+            }
+        }
+        return inRadius;
+    }
+    public static Vector3 DirectionVector(Vector3 start, Vector3 end)
+    {
+        return (end - start).normalized;
     }
     public static bool CastDown(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
     {

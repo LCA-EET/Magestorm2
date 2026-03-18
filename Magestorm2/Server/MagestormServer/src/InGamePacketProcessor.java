@@ -60,6 +60,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.Devour:
                     _owningMatch.HandleBanish(_decrypted);
                     return true;
+                case InGame_Receive.ReportSplash:
+                    HandleSplashHit();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -68,7 +71,15 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
         return false;
     }
-
+    private void HandleSplashHit(){
+        MatchCharacter hit = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        if(hit != null){
+            short castID = ByteUtils.ExtractShort(_decrypted, 2);
+            hit.RegisterSplashHit(castID);
+            _owningMatch.PlayerHit(hit, castID);
+            hit.DeregisterSplashHit(castID);
+        }
+    }
     private void HandleCast(){
         byte casterID = _decrypted[1];
         byte spellID = _decrypted[3];
@@ -105,7 +116,6 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void HandleReportHitPacket(){
         _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2));
-
     }
 
     private void HandlePostureChange(){

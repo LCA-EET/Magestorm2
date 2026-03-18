@@ -35,6 +35,7 @@ public class CastSpell {
     public byte GetSpellID(){
         return _spellID;
     }
+
     public void ProcessSpell(MatchCharacter affectedPlayer){
 
     }

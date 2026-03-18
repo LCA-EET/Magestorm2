@@ -35,20 +35,13 @@ public class Spawner : MonoBehaviour
     }
     private void ExpirationCheck()
     {
-        List<short> expired = new List<short>();
         float currentTime = Time.realtimeSinceStartup;
         foreach(SpawnedSpell spell in _spellRegistry.Values)
         {
             if (spell.IsExpired(currentTime))
             {
-                expired.Add(spell.CastID);
+                spell.MarkForDestruction();
             }
-        }
-        foreach(short castID in expired)
-        {
-            SpawnedSpell expiredSpell = _spellRegistry[castID];
-            Destroy(expiredSpell.gameObject);
-            _spellRegistry.Remove(castID);
         }
     }
     private void LoadVFXPrefabs()
@@ -73,6 +66,10 @@ public class Spawner : MonoBehaviour
     void Update()
     {
         _expirationCheck.ProcessAction(Time.deltaTime);
+    }
+    public void DeregisterSpawnedSpell(SpawnedSpell toDeregister)
+    {
+        _spellRegistry.Remove(toDeregister.CastID);
     }
     public void RegisterSpawnedSpell(SpawnedSpell toRegister)
     {
