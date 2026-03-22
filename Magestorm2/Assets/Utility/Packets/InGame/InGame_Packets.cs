@@ -49,9 +49,14 @@ public static class InGame_Packets
     public static byte[] ProjectileCastPacket(byte spellID)
     {
         byte[] unencrypted = GenericCastPacket(12, spellID, ControlCodes.SpellTypes_Projectile);
-        byte[] cameraDirection = ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
-        //Debug.Log("Direction: " + Camera.main.transform.forward);
-        cameraDirection.CopyTo(unencrypted, ControlCodes.CastPayloadStartIndex);
+        SharedFunctions.FillCameraDirectionBytes(ref unencrypted, ControlCodes.CastPayloadStartIndex);
+        return unencrypted;
+    }
+    public static byte[] CastBoltPacket(byte spellID, byte target)
+    {
+        byte[] unencrypted = GenericCastPacket(13, spellID, ControlCodes.SpellTypes_Bolt);
+        unencrypted[ControlCodes.CastPayloadStartIndex] = 1;
+        SharedFunctions.FillCameraDirectionBytes(ref unencrypted, ControlCodes.CastPayloadStartIndex + 1);
         return unencrypted;
     }
     public static byte[] DevourPacket(short castID, byte playerDevoured)
@@ -153,4 +158,6 @@ public static class InGame_Packets
         BitConverter.GetBytes(castID).CopyTo(unencrypted, 2);
         return unencrypted;
     }
+
+    
 }

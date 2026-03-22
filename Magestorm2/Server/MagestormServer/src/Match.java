@@ -373,6 +373,9 @@ public class Match {
                     healingSpell.ProcessSpell(caster);
                 }
                 break;
+            case ControlCodes.SpellTypes_Bolt:
+                _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference));
+                break;
             case ControlCodes.SpellTypes_Summon:
 
                 break;

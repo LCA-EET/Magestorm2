@@ -6,10 +6,12 @@ public class SpawnedSpell : MonoBehaviour
     protected short _castID;
     public float ExpireAfter;
     private float _expiration;
+    protected SpellData _spellReference;
     protected Team _castingTeam;
     protected bool _destroyOnNextUpdate;
-    public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent)
+    public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
     {
+        _spellReference = spellReference;
         _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
         transform.parent = parent;
         _casterID = casterID;

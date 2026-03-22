@@ -1,5 +1,12 @@
 using UnityEngine;
 
+public enum TeamSelectionCode
+{
+    All = 0,
+    Friendly = 1,
+    Enemy = 2
+}
+
 public class Postures
 {
     public const byte Standing = 0, 

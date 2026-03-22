@@ -3,7 +3,7 @@ public class Spell {
 
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
             _spellType, _discipline, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
-            _notificationCode;
+            _notificationCode, _effectRadius;
     private final float _splashFactor0, _splashFactor1, _splashFactor2;
 
     public Spell(int id, byte[] params){
@@ -26,6 +26,7 @@ public class Spell {
         _splashFactor0 = params[15] / 100.0f;
         _splashFactor1 = params[16] / 100.0f;
         _splashFactor2 = params[17] / 100.0f;
+        _effectRadius = params[18];
     }
     public boolean IsDamaging(){
         return _minDamagePerRoll0 > 0;

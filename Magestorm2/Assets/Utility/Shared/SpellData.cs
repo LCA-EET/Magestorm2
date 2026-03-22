@@ -3,7 +3,7 @@
 public class SpellData
 {
     private int _spellNameReference, _descReference;
-    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost;
+    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost, _effectRadius, _range, _projectileSpeed;
     private byte _discipline;
     private byte _spellType;
 
@@ -62,6 +62,15 @@ public class SpellData
                 case SpellAttributes.SPELLTYPE:
                     _spellType = byte.Parse(fieldValue);
                     break;
+                case SpellAttributes.EFFECTRADIUS:
+                    _effectRadius = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.RANGE:
+                    _range = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.PROJECTILESPEED:
+                    _projectileSpeed = byte.Parse(fieldValue);
+                    break;
             }
         }
     }
@@ -77,6 +86,18 @@ public class SpellData
         {
             return staminaCost;
         }
+    }
+    public byte ProjectileSpeed
+    {
+        get { return _projectileSpeed; }
+    }
+    public byte Range
+    {
+        get { return _range; }  
+    }
+    public byte EffectRadius
+    {
+        get { return _effectRadius; }
     }
     public byte SpellType
     {
@@ -127,6 +148,15 @@ public class SpellData
                 case ControlCodes.SpellTypes_Summon:
                     toSend = ComponentRegister.PC.Summon(SpellID);
                     break;
+                case ControlCodes.SpellTypes_Bolt:
+                    SpellData spellReference = null;
+                    if(SpellManager.GetSpell(SpellID, ref spellReference))
+                    {
+                        byte target = SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 3.0f, TeamSelectionCode.Enemy);
+                        toSend = InGame_Packets.CastBoltPacket(SpellID, target);
+                    }
+                    break;
+                    
             }
             if (toSend != null)
             {
@@ -185,4 +215,7 @@ public static class SpellAttributes
     public const string MAX_DAMAGE_PER_ROLL1 = "maxdamageperroll1";
     public const string ELEMENT0 = "element0";
     public const string ELEMENT1 = "element1";
+    public const string EFFECTRADIUS = "effectradius";
+    public const string RANGE = "range";
+    public const string PROJECTILESPEED = "projectilespeed";
 }

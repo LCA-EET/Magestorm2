@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 public class Projectile : SpawnedSpell
 {
-    public float Speed;
     public GameObject ImpactPrefab;
     public float ImpactScaling = 1.0f;
     protected bool _impact, _directHit;
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
-        transform.position += (Speed * transform.forward * Time.deltaTime);
+        transform.position += (_spellReference.ProjectileSpeed * transform.forward * Time.deltaTime);
     }
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -27,6 +26,7 @@ public class Projectile : SpawnedSpell
             else
             {
                 _directHit = true;
+                Debug.Log("Direct hit!");
                 Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
             }
         }

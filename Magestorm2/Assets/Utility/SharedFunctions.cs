@@ -66,6 +66,59 @@ public static class SharedFunctions
         }
         return false;        
     }
+    public static void FillCameraDirectionBytes(ref byte[] toFill, int index)
+    {
+        byte[] cameraDirectionBytes = GetCameraDirectionBytes();
+        Debug.Log("Direction1: " + Camera.main.transform.forward.ToString());
+        cameraDirectionBytes.CopyTo(toFill, index);
+    }
+    public static byte[] GetCameraDirectionBytes()
+    {
+        return ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
+    }
+    public static byte GetPlayerInSphereCast(Vector3 origin, float range, float radius, TeamSelectionCode tsc)
+    {
+        GameObjectDistanceComparer comparer = new GameObjectDistanceComparer(Game.PCAvatar.transform.position);
+        RaycastHit[] hits = Physics.SphereCastAll(origin, radius, Camera.main.transform.forward, range, LayerManager.RemotePlayerLayerMask);
+        Debug.Log("Number hits in spherecast: " + hits.Length);
+        if(hits.Length > 0)
+        {
+            List<GameObject> toProcess = new List<GameObject>();
+            for (int i = 0; i < hits.Length; i++)
+            {
+                toProcess.Add(hits[i].collider.gameObject);
+            }
+            toProcess.Sort(comparer);
+            for (int i = 0; i < toProcess.Count; i++)
+            {
+                GameObject toCheck = toProcess[i];
+                if (!IsObstructed(origin, toCheck.transform.position, LayerManager.AoEObstructionMask))
+                {
+                    Avatar unobstructed = toCheck.GetComponentInChildren<Avatar>();
+                    
+                    if (tsc == TeamSelectionCode.Friendly)
+                    {
+                        if(unobstructed.PlayerTeam == MatchParams.MatchTeam)
+                        {
+                            return unobstructed.PlayerID;
+                        }
+                    }
+                    else if (tsc == TeamSelectionCode.Enemy)
+                    {
+                        if (unobstructed.PlayerTeam != MatchParams.MatchTeam || MatchParams.MatchTeam == Team.Neutral)
+                        {
+                            return unobstructed.PlayerID;
+                        }
+                    }
+                    else
+                    {
+                        return unobstructed.PlayerID;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
     public static byte[] GetPlayerIDsInRadius(Vector3 origin, float radius, bool livingPlayers)
     {
         List<byte> playerIDs = new List<byte>();
@@ -80,6 +133,13 @@ public static class SharedFunctions
         }
         return playerIDs.ToArray();
     }
+    public static bool IsObstructed(Vector3 origin, Vector3 terminus, int obstructionLayerMask)
+    {
+        RaycastHit hitInfo;
+        float distance = Vector3.Distance(terminus, origin);
+        Vector3 directionVector = DirectionVector(origin, terminus);
+        return Physics.Raycast(origin, directionVector, out hitInfo, distance, obstructionLayerMask);
+    }
     public static List<GameObject> GetObjectsInRadius(Vector3 origin, float radius, int objectLayerMask, int obstructionLayerMask)
     {
         List<GameObject> inRadius = new List<GameObject>();
@@ -87,13 +147,10 @@ public static class SharedFunctions
         foreach (Collider collider in colliders)
         {
             GameObject go = collider.gameObject;
-            Vector3 directionVector = DirectionVector(origin, go.transform.position);
+            
             if(obstructionLayerMask != 0)
-            {
-                RaycastHit hitInfo;
-                float distance = Vector3.Distance(go.transform.position, origin);
-                bool obstructed = Physics.Raycast(origin, directionVector, out hitInfo, distance, obstructionLayerMask);
-                if (!obstructed)
+            {   
+                if(!IsObstructed(origin, go.transform.position, obstructionLayerMask))
                 {
                     inRadius.Add(go);
                 }

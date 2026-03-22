@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework.Internal;
+using UnityEngine;
 public class SpellSpawner : MonoBehaviour 
 {
     public byte SpellKey;
     private byte _casterID;
+    protected SpellData _spellReference;
     private byte[] _payload;
     private short _castID;
     private Team _castingTeam;
@@ -13,12 +15,17 @@ public class SpellSpawner : MonoBehaviour
         SpawnedSpell[] childObjects = GetComponentsInChildren<SpawnedSpell>();
         foreach (SpawnedSpell obj in childObjects)
         {
-            obj.Initialize(_casterID, _castingTeam, _castID, transform.parent);
+            obj.Initialize(_casterID, _castingTeam, _castID, transform.parent, _spellReference);
         }
         Destroy(gameObject);
     }
     public void Initialize(Avatar caster, byte spellType, short castID, byte[] payload)
     {
+        if (!SpellManager.GetSpell(SpellKey, ref _spellReference))
+        {
+            Destroy(gameObject);
+            return;
+        }
         _castID = castID;
         _payload = payload;
         _caster = caster;
@@ -35,11 +42,30 @@ public class SpellSpawner : MonoBehaviour
             case ControlCodes.SpellTypes_Summon:
                 InitializeSummon();
                 break;
+            case ControlCodes.SpellTypes_Bolt:
+                InitializeBolt();
+                break;
         }
         if (_casterID == MatchParams.IDinMatch)
         {
             UseStamina();
         }
+    }
+    private void InitializeBolt()
+    {
+        byte targetID = _payload[0];
+        Avatar target = null;
+        Vector3 direction;        
+        if(Match.GetAvatar(targetID, ref target))
+        {
+            direction = SharedFunctions.DirectionVector(_caster.transform.position, target.transform.position);
+        }
+        else
+        {
+            direction = ByteUtils.BytesToVector3(_payload, 1);
+            Debug.Log("Direction2: " + direction.ToString());
+        }
+        SetOrigin(direction);
     }
     private void AssociateToCaster()
     {
@@ -47,6 +73,7 @@ public class SpellSpawner : MonoBehaviour
         transform.position = _caster.transform.position;
         transform.localPosition = new Vector3(0, 0, 0);
     }
+
     private void InitializeSummon()
     {
         Debug.Log("Initialize Summon.");
@@ -61,21 +88,20 @@ public class SpellSpawner : MonoBehaviour
             }
         }
     }
-
-    private void InitializeProjectile()
+    private void SetOrigin(Vector3 direction)
     {
-        Vector3 direction = ByteUtils.BytesToVector3(_payload, 0);
         Vector3 adjustedPosition = _caster.transform.position + (direction * 0.67f);
         adjustedPosition.y += 1.4f;
         transform.position = adjustedPosition;
         transform.forward = direction;
     }
+    private void InitializeProjectile()
+    {
+        Vector3 direction = ByteUtils.BytesToVector3(_payload, 0);
+        SetOrigin(direction);
+    }
     private void UseStamina()
     {
-        SpellData data = null;
-        if (SpellManager.GetSpell(SpellKey, ref data))
-        {
-            ComponentRegister.PC.UseStamina(data.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel));
-        }
+        ComponentRegister.PC.UseStamina(_spellReference.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel));
     }
 }
