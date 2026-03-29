@@ -9,9 +9,10 @@ public class SpellSpawner : MonoBehaviour
     private short _castID;
     private Team _castingTeam;
     private Avatar _caster;
-
+    private Vector3 _boltYAdjustment;
     public void Start()
     {
+        _boltYAdjustment = new Vector3(0, 0.5f, 0);
         SpawnedSpell[] childObjects = GetComponentsInChildren<SpawnedSpell>();
         foreach (SpawnedSpell obj in childObjects)
         {
@@ -54,17 +55,20 @@ public class SpellSpawner : MonoBehaviour
     private void InitializeBolt()
     {
         byte targetID = _payload[0];
+        Debug.Log("Bolt target: " + targetID);
         Avatar target = null;
         Vector3 direction;        
         if(Match.GetAvatar(targetID, ref target))
         {
-            direction = SharedFunctions.DirectionVector(_caster.transform.position, target.transform.position);
+            direction = SharedFunctions.DirectionVector(_caster.transform.position, target.transform.position - _boltYAdjustment);
+            Debug.Log("Direction2: " + direction.ToString());
         }
         else
         {
             direction = ByteUtils.BytesToVector3(_payload, 1);
-            Debug.Log("Direction2: " + direction.ToString());
+            Debug.Log("Direction3: " + direction.ToString());
         }
+        //direction.y -= 0.5f;
         SetOrigin(direction);
     }
     private void AssociateToCaster()

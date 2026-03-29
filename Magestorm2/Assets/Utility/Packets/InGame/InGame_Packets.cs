@@ -55,7 +55,7 @@ public static class InGame_Packets
     public static byte[] CastBoltPacket(byte spellID, byte target)
     {
         byte[] unencrypted = GenericCastPacket(13, spellID, ControlCodes.SpellTypes_Bolt);
-        unencrypted[ControlCodes.CastPayloadStartIndex] = 1;
+        unencrypted[ControlCodes.CastPayloadStartIndex] = target;
         SharedFunctions.FillCameraDirectionBytes(ref unencrypted, ControlCodes.CastPayloadStartIndex + 1);
         return unencrypted;
     }

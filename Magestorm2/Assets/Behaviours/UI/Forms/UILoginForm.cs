@@ -45,8 +45,8 @@ public class UILoginForm : ValidatableForm
         if (Game.ForceLogin)
         {
             Game.ForceLogin = false;
-            string hashedPassword = Cryptography.SHA256Hash("Superman123");
-            Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket("Superman", hashedPassword));
+            string hashedPassword = Cryptography.SHA256Hash("test2");
+            Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket("test2", hashedPassword));
         }
         #endif
     }

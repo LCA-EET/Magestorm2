@@ -8,7 +8,7 @@ public static class ComponentRegister
     private static PlayerMovement _playerMovement;
     private static CharacterController _playerController;
     private static Collider _playerCollider;
-    private static Camera _mainCamera;
+    private static MainCamera _mainCamera;
     private static AudioSource _playerAudioSource;
     private static HUD _hud;
     private static MatchTimer _matchTimer;
@@ -236,7 +236,7 @@ public static class ComponentRegister
         }
     }
 
-    public static Camera MainCamera
+    public static MainCamera MainCamera
     {
         get
         {

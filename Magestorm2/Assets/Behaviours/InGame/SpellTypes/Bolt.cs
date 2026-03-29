@@ -7,12 +7,15 @@ public class Bolt : Projectile
     private Vector3 _priorPosition;
     protected override void FixedUpdate()
     {
-        transform.position += (30 * transform.forward * Time.deltaTime);
-        _distanceTravelled += Vector3.Distance(_priorPosition, transform.position);
-        _priorPosition = transform.position;
-        if(_distanceTravelled >= _maxRange)
+        base.FixedUpdate();
+        if (!_destroyOnNextUpdate)
         {
-            MarkForDestruction();
+            _distanceTravelled += Vector3.Distance(_priorPosition, transform.position);
+            _priorPosition = transform.position;
+            if (_distanceTravelled >= _maxRange)
+            {
+                MarkForDestruction();
+            }
         }
     }
 

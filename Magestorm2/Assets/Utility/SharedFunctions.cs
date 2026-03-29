@@ -58,13 +58,32 @@ public static class SharedFunctions
     public static bool IsPlayerInRadius(Vector3 origin, float radius)
     {        
         Vector3 playerPosition = ComponentRegister.PC.transform.position;
-        if (Vector3.Distance(origin, playerPosition) <= radius)
+        float distance = Vector3.Distance(origin, playerPosition);
+        if (distance <= radius)
         {
+            Debug.Log("Player is within the blast radius.");
             Vector3 direction = DirectionVector(origin, playerPosition);
             RaycastHit hitInfo;
-            return Physics.Raycast(origin, direction, out hitInfo, radius, LayerManager.AoEObstructionMask);
+            bool obstructed = Physics.Raycast(origin, direction, out hitInfo, radius, LayerManager.AoEObstructionMask);
+            if (obstructed)
+            {
+                Debug.Log("Player is obstructed by " + hitInfo.collider.gameObject.name);
+            }
+            return !obstructed;
+        }
+        else
+        {
+            Debug.Log("Player is outside of blast radius. Distance = " + distance + ", radius = " + radius);
         }
         return false;        
+    }
+    public static void CameraShake(SpellData spellData)
+    {
+        byte playerStrength = PlayerAccount.SelectedCharacter.GetStat(PlayerStats.Strength);
+        if(playerStrength < spellData.ShakePrevention)
+        {
+            ComponentRegister.MainCamera.Shake();
+        }
     }
     public static void FillCameraDirectionBytes(ref byte[] toFill, int index)
     {

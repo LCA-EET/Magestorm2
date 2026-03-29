@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
 {
@@ -219,6 +218,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
             gameObject.layer = LayerMask.NameToLayer("Player");
             gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
             SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
+            CharacterName.gameObject.SetActive(false);
             RPCollider.enabled = false;
         }
         else

@@ -3,7 +3,7 @@
 public class SpellData
 {
     private int _spellNameReference, _descReference;
-    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost, _effectRadius, _range, _projectileSpeed;
+    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost, _effectRadius, _range, _projectileSpeed, _shakePrevention;
     private byte _discipline;
     private byte _spellType;
 
@@ -71,6 +71,9 @@ public class SpellData
                 case SpellAttributes.PROJECTILESPEED:
                     _projectileSpeed = byte.Parse(fieldValue);
                     break;
+                case SpellAttributes.SHAKEPREVENTION:
+                    _shakePrevention = byte.Parse(fieldValue);
+                    break;
             }
         }
     }
@@ -86,6 +89,10 @@ public class SpellData
         {
             return staminaCost;
         }
+    }
+    public byte ShakePrevention
+    {
+        get { return _shakePrevention; }
     }
     public byte ProjectileSpeed
     {
@@ -218,4 +225,5 @@ public static class SpellAttributes
     public const string EFFECTRADIUS = "effectradius";
     public const string RANGE = "range";
     public const string PROJECTILESPEED = "projectilespeed";
+    public const string SHAKEPREVENTION = "shakeprevention";
 }

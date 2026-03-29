@@ -40,6 +40,7 @@ public class InputField : MonoBehaviour
             {
                 if (!ProfanityChecker.ContainsProhibitedLanguage(message))
                 {
+                    bool send = true;
                     if (MatchParams.IncludeTeams && !message.StartsWith("/") && ChatTarget != Team.Neutral)
                     {
                         string prepend = "";
@@ -57,7 +58,18 @@ public class InputField : MonoBehaviour
                         }
                         message = prepend + message;
                     }
-                    Game.SendInGameBytes(InGame_Packets.BroadcastMessagePacket(message));
+                    if (message.StartsWith("/"))
+                    {
+                        if(message.Substring(1) == "shake")
+                        {
+                            ComponentRegister.MainCamera.Shake();
+                            send = false;
+                        }
+                    }
+                    if (send)
+                    {
+                        Game.SendInGameBytes(InGame_Packets.BroadcastMessagePacket(message));
+                    }
                 }
                 else
                 {

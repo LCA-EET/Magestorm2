@@ -316,3 +316,5 @@ Fireball
 Launches a projectile that explodes on impact, dealing 2-4 damage per point of skill to nearby targets. \nBasic: Inflicts 33% splash damage. \nExpert: Inflicts 50% splash damage. \nMaster: Inflicts 67% splash damage.
 Firebolt
 Shoots a bolt of flame, dealing 1-4 damage per point of skill. 
+Firestorm
+Causes the target to be engulfed in an explosive, fiery tempest.
