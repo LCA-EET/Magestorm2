@@ -20,6 +20,7 @@ public class ControlCodes {
         public static final byte SpellTypes_Self = 2;
         public static final byte SpellTypes_Summon = 3;
         public static final byte SpellTypes_Bolt = 4;
+        public static final byte SpellTypes_PBAoE = 5;
     //endregion
 
     //region Discipline

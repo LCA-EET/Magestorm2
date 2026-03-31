@@ -55,16 +55,16 @@ public static class MatchParams
         _maxMana = BitConverter.ToSingle(_decrypted, 14);
         _maxStamina = _decrypted[18];
         MatchTeam = (Team)MatchTeamID;
-        MatchTypes type = (MatchTypes)MatchType;
+        byte type = MatchType;
         switch (type)
         {
-            case MatchTypes.Deathmatch:
+            case ControlCodes.MatchTypes_DeathMatch:
                 InitDM();
                 break;
-            case MatchTypes.FreeForAll:
+            case ControlCodes.MatchTypes_FreeForAll:
                 InitFFA();
                 break;
-            case MatchTypes.CaptureTheFlag:
+            case ControlCodes.MatchTypes_CaptureTheFlag:
                 InitCTF();
                 break;
         }

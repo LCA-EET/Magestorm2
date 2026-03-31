@@ -12,7 +12,7 @@ public class UIIngameMenu : ValidatableForm
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
         MatchID.text = Language.BuildString(98, MatchParams.MatchID); //
-        MatchType.text = Language.BuildString(112, SharedFunctions.MatchTypeString((MatchTypes)MatchParams.MatchType)); //
+        MatchType.text = Language.BuildString(112, SharedFunctions.MatchTypeString(MatchParams.MatchType)); //
     }
 
     // Update is called once per frame

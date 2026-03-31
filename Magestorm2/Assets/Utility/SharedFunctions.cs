@@ -309,16 +309,16 @@ public static class SharedFunctions
         }
         return "";
     }
-    public static string MatchTypeString(MatchTypes matchType)
+    public static string MatchTypeString(byte matchType)
     {
         
         switch (matchType)
         {
-            case MatchTypes.Deathmatch:
+            case ControlCodes.MatchTypes_DeathMatch:
                 return Language.GetBaseString(104); //
-            case MatchTypes.CaptureTheFlag:
+            case ControlCodes.MatchTypes_CaptureTheFlag:
                 return Language.GetBaseString(106); //
-            case MatchTypes.FreeForAll:
+            case ControlCodes.MatchTypes_FreeForAll:
                 return Language.GetBaseString(105); //
         }
         return "";

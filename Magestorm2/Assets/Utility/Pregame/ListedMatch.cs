@@ -30,7 +30,7 @@ public class ListedMatch
     {
         get
         {
-            return SharedFunctions.MatchTypeString((MatchTypes)MatchType);
+            return SharedFunctions.MatchTypeString(MatchType);
         }
     }
     public int CreatorID

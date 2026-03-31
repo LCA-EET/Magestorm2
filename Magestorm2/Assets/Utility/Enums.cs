@@ -73,12 +73,6 @@ public enum FormResult : byte
     No = 2
 }
 
-public enum MatchTypes : byte
-{
-    Deathmatch = 0,
-    FreeForAll = 1,
-    CaptureTheFlag=2
-}
 
 public enum EffectCode : byte
 {

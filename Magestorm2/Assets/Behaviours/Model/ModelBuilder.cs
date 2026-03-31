@@ -174,12 +174,14 @@ public class ModelBuilder : MonoBehaviour
     }
     public GameObject ConstructModel(byte[] appearance, byte team, byte level, GameObject parent)
     {
+        /*
         Debug.Log("Appearance Bytes");
         Debug.Log("================");
         for (int i =0; i < appearance.Length; i++)
         {
             Debug.Log(i + ":" + appearance[i]);
         }
+        */
         byte sex = appearance[IndexModelSex];
         byte skin = appearance[IndexModelSkin];
         Dictionary<byte, GameObject[]> components = GetOptions(sex, skin);

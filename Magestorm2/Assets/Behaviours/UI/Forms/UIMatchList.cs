@@ -54,7 +54,7 @@ public class UIMatchList : ValidatableForm
         }
         else
         {
-            if(selected.GetMatchType() == (byte)MatchTypes.FreeForAll)
+            if(selected.GetMatchType() == ControlCodes.MatchTypes_FreeForAll)
             {
                 MatchParams.ExpirationTime = selected.Match.Expiration;
                 Game.SendPregameBytes(Pregame_Packets.JoinMatchPacket(selected.MatchID, 0));

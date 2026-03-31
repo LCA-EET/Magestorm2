@@ -88,7 +88,7 @@ public class Spawner : MonoBehaviour
     {
         return Instantiate(AvatarPrefab).GetComponent<Avatar>();
     }
-    public GameObject SpawnDeadBody(GameObject model, Vector3 position, float yRotation, RuntimeAnimatorController deathAnim)
+    public GameObject SpawnDeadBody(GameObject model, Vector3 position, float yRotation, RuntimeAnimatorController deathAnim, Avatar deadPlayer)
     {
         GameObject deadBody = Instantiate(DeadbodyPrefab);
         DeadBody db = deadBody.GetComponent<DeadBody>();
@@ -98,6 +98,7 @@ public class Spawner : MonoBehaviour
         SharedFunctions.SetLayerRecursive(deadBody, LayerManager.DeadBodyLayer);
         Animator anim = deadBody.GetComponentInChildren<Animator>();
         anim.runtimeAnimatorController = deathAnim;
+        deadPlayer.SetDeadBody(db);
         return deadBody;
     }
 

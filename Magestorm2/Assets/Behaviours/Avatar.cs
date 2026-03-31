@@ -30,6 +30,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     private PeriodicAction _lookAtCamera, _effectsTick;
     private Animator _animator;
     private PMDByte _pmd; // posture, movement, direction
+    private DeadBody _deadBody;
     public AvatarAnimation AvatarAnimation;
     public BoxCollider RPCollider;
     void Awake()
@@ -47,7 +48,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _positionElapsed = 0.0f;
         _rotationElapsed = 0.0f;
     }
-
+    
     private void FixedUpdate()
     {
         if (_positionChange)
@@ -72,9 +73,13 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         AvatarAnimation.SetElapsed(Time.deltaTime);
         AvatarAnimation.Animate(_pmd);
     }
+    public void SetDeadBody(DeadBody deadBody)
+    {
+        _deadBody = deadBody;
+    }
     public void CreateDeadBody()
     {
-        ComponentRegister.Spawner.SpawnDeadBody(_model, transform.position, transform.eulerAngles.y, _isMale?AvatarAnimation.MaleDeath: AvatarAnimation.FemaleDeath);
+        ComponentRegister.Spawner.SpawnDeadBody(_model, transform.position, transform.eulerAngles.y, _isMale?AvatarAnimation.MaleDeath: AvatarAnimation.FemaleDeath, this);
     }
     private void EffectTick()
     {
@@ -148,6 +153,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
             {
                 Match.AddDeadAvatar(this);
             }
+        }
+        if (_isAlive && _deadBody != null)
+        {
+            _deadBody.DestroySelf();
         }
     }
     public void AddEffect(AppliedEffect effect)

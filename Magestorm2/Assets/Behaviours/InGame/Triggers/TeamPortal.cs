@@ -13,7 +13,7 @@ public class TeamPortal : Portal
         Sprite.Randomize = false;
         Color toUse = Teams.GetTeamColor(Team);
         Sprite.SetColor(new Color(toUse.r, toUse.g, toUse.b, 0.5f));
-        if (MatchParams.MatchType == (byte)MatchTypes.Deathmatch)
+        if (MatchParams.MatchType == ControlCodes.MatchTypes_DeathMatch)
         {
             _checkShrineHealth = new PeriodicAction(1.0f, CheckShrineHealth, null);
         }
@@ -26,7 +26,7 @@ public class TeamPortal : Portal
 
     public void Update()
     {
-        if (MatchParams.MatchType == (byte)MatchTypes.Deathmatch)
+        if (MatchParams.MatchType == ControlCodes.MatchTypes_DeathMatch)
         {
             _checkShrineHealth.ProcessAction(Time.deltaTime);
         }

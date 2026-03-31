@@ -18,7 +18,7 @@ public class TeamTorch : MonoBehaviour
     }
     public void Start()
     {
-        if(MatchParams.MatchType == (byte)MatchTypes.Deathmatch)
+        if(MatchParams.MatchType == ControlCodes.MatchTypes_DeathMatch)
         {
             TorchManager.RegisterTorch(this);
         }

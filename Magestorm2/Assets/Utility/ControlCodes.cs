@@ -8,6 +8,7 @@
     public const byte SpellTypes_Self = 2;
     public const byte SpellTypes_Summon = 3;
     public const byte SpellTypes_Bolt = 4;
+    public const byte SpellTypes_PBAoE = 5;
 
     public const byte SpellDiscipline_FireLaw = 0;
     public const byte SpellDiscipline_IceLaw = 1;
@@ -24,4 +25,8 @@
     public const byte SpellDiscipline_SpiritLaw = 12;
     public const byte SpellDiscipline_Barriers = 13;
     public const byte SpellDiscipline_Shielding = 14;
+
+    public const byte MatchTypes_DeathMatch = 0;
+    public const byte MatchTypes_FreeForAll = 1;
+    public const byte MatchTypes_CaptureTheFlag = 2;
 }

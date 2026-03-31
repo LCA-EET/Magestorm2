@@ -34,8 +34,11 @@ public class SpellSpawner : MonoBehaviour
         _castingTeam = caster.PlayerTeam;
         switch (spellType)
         {
+            case ControlCodes.SpellTypes_PBAoE:
+                AssociateToCaster(1.0f);
+                break;
             case ControlCodes.SpellTypes_Self:
-                AssociateToCaster();
+                AssociateToCaster(0.0f);
                 break;
             case ControlCodes.SpellTypes_Projectile:
                 InitializeProjectile();
@@ -71,17 +74,17 @@ public class SpellSpawner : MonoBehaviour
         //direction.y -= 0.5f;
         SetOrigin(direction);
     }
-    private void AssociateToCaster()
+    private void AssociateToCaster(float y)
     {
         transform.parent = _caster.transform;
         transform.position = _caster.transform.position;
-        transform.localPosition = new Vector3(0, 0, 0);
+        transform.localPosition = new Vector3(0, y, 0);
     }
 
     private void InitializeSummon()
     {
         Debug.Log("Initialize Summon.");
-        AssociateToCaster();
+        AssociateToCaster(1.0f);
         byte summonedPlayerID = _payload[0];
         Avatar summonedPlayer = null;
         if (Match.GetAvatar(summonedPlayerID, ref summonedPlayer))
