@@ -360,6 +360,7 @@ public class Match {
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
             case ControlCodes.SpellTypes_Projectile:
+            case ControlCodes.SpellTypes_PBAoE:
                 if(spellReference.IsDamaging()){
                     _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference));
                 }

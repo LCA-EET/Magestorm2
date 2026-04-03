@@ -74,18 +74,4 @@ public enum FormResult : byte
 }
 
 
-public enum EffectCode : byte
-{
-    Haste = 0,
-    Slow = 1,
-    Freezing = 2,
-    Burning = 3,
-    Shocked = 4,
-    Entangle = 5,
-    FireShield = 6,
-    IceShield = 7,
-    ElectricShield = 8,
-    EarthShield = 9,
-    Bleeding = 10,
-    Prayer = 11
-}
+

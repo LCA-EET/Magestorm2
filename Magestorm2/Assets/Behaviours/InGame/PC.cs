@@ -30,7 +30,7 @@ public class PC : MonoBehaviour
     public HashSet<int> _inTriggers;
     public HashSet<int> _priorInTriggers;
     
-    private Dictionary<EffectCode, AppliedEffect> _effects;
+    private Dictionary<byte, AppliedEffect> _effects;
     private SpellData _primarySpell, _secondarySpell;
     private DistanceSorter _distanceSorter;
     public void Awake()
@@ -42,7 +42,7 @@ public class PC : MonoBehaviour
         else
         {
             _distanceSorter = new DistanceSorter(transform, false);
-            _effects = new Dictionary<EffectCode, AppliedEffect>();
+            _effects = new Dictionary<byte, AppliedEffect>();
             _inTriggers = new HashSet<int>();
             _priorInTriggers = new HashSet<int>();
             _activeInfluencers = new Dictionary<byte, LeyInfluencer>();
@@ -82,7 +82,7 @@ public class PC : MonoBehaviour
     }
     public void ApplyEffect(AppliedEffect effect)
     {
-        EffectCode effectCode = effect.EffectCode;
+        byte effectCode = effect.EffectCode;
         if (_effects.ContainsKey(effectCode))
         {
             AppliedEffect toCancel = _effects[effectCode];

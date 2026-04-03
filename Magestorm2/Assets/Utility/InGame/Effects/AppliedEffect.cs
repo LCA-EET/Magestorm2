@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 public class AppliedEffect
 {
-    private EffectCode _effectCode;
+    private byte _effectCode;
     private Avatar _appliedTo, _applier;
     private float _duration;
-    public AppliedEffect(EffectCode effectCode, Avatar applier,  float duration)
+    public AppliedEffect(byte effectCode, Avatar applier,  float duration)
     {
         _applier = applier;
         _effectCode = effectCode;
@@ -28,7 +28,7 @@ public class AppliedEffect
     {
 
     }
-    public EffectCode EffectCode
+    public byte EffectCode
     {
         get { return _effectCode; }
     }

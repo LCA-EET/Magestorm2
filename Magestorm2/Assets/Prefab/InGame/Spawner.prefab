@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   AvatarPrefab: {fileID: 3074665814257248548, guid: 0f50b8a1238dade47a7639999da34ce8, type: 3}
   DeadbodyPrefab: {fileID: 3332532710418437741, guid: 37bd0bad612c7c4409b7ecfa9dd421e9, type: 3}
+  Marker: {fileID: 9007687685891254394, guid: 519cc479ca98a304998dff52698cf8fc, type: 3}

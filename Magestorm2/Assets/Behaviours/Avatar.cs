@@ -23,7 +23,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     private float _positionElapsed, _rotationElapsed, _rotationAmount;
     private float _effectTick = 0.5f;
     private Renderer[] _renderers;
-    private Dictionary<EffectCode, AppliedEffect> _appliedEffects;
+    private Dictionary<byte, AppliedEffect> _appliedEffects;
     private GameObject _model;
     private TMP_Text _nameText;
     private List<PeriodicAction> _actionList;
@@ -44,7 +44,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _appliedEffects = new Dictionary<EffectCode, AppliedEffect>();
+        _appliedEffects = new Dictionary<byte, AppliedEffect>();
         _positionElapsed = 0.0f;
         _rotationElapsed = 0.0f;
     }
@@ -171,18 +171,18 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     }
     public void RemoveAllEffects()
     {
-        List<EffectCode> toRemove = new List<EffectCode>();
-        foreach(EffectCode key in _appliedEffects.Keys)
+        List<byte> toRemove = new List<byte>();
+        foreach(byte key in _appliedEffects.Keys)
         {
             toRemove.Add(key);
         }
-        foreach (EffectCode key in toRemove)
+        foreach (byte key in toRemove)
         {
             RemoveEffect(key, false);
         }
         RefreshEffectsDisplay();
     }
-    public void RemoveEffect(EffectCode toRemove, bool refresh)
+    public void RemoveEffect(byte toRemove, bool refresh)
     {
         AppliedEffect removed = _appliedEffects[toRemove];
         removed.ReverseEffect();
@@ -198,7 +198,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         {
             BitArray effectBits = new BitArray(16, false);
             for (byte b = 0; b < effectBits.Length; b++) {
-                effectBits[b] = _appliedEffects.ContainsKey((EffectCode)b);
+                effectBits[b] = _appliedEffects.ContainsKey(b);
             }
             ComponentRegister.EffectsList.RefreshEffects(ByteUtils.BitArrayToBytes(effectBits));
         }

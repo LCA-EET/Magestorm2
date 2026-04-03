@@ -174,12 +174,12 @@ public class InGamePacketProcessor : UDPProcessor
             {
                 Avatar applier = null;
                 if(Match.GetAvatar(applierID, ref applier)){
-                    appliedTo.AddEffect(new AppliedEffect((EffectCode)effectCode, applier, duration));
+                    appliedTo.AddEffect(new AppliedEffect(effectCode, applier, duration));
                 }
             }
             else
             {
-                appliedTo.AddEffect(new AppliedEffect((EffectCode)effectCode, appliedTo, duration));
+                appliedTo.AddEffect(new AppliedEffect(effectCode, appliedTo, duration));
             }
         }
     }

@@ -39,32 +39,31 @@ public class EffectsList : MonoBehaviour
     }
     private SpriteSet GetSpriteSet(byte effectIndex)
     {
-        EffectCode code = (EffectCode)effectIndex;
-        switch (code)
+        switch (effectIndex)
         {
-            case EffectCode.Bleeding:
+            case ControlCodes.EffectCode_Bleeding:
                 return IconLibrary.GetSpriteSet("bleed");
-            case EffectCode.Burning:
+            case ControlCodes.EffectCode_Burning:
                 return IconLibrary.GetSpriteSet("burn");
-            case EffectCode.EarthShield:
+            case ControlCodes.EffectCode_EarthShield:
                 return IconLibrary.GetSpriteSet("earthshield");
-            case EffectCode.ElectricShield:
+            case ControlCodes.EffectCode_ElectricShield:
                 return IconLibrary.GetSpriteSet("elecshield");
-            case EffectCode.Entangle:
+            case ControlCodes.EffectCode_Entangle:
                 return IconLibrary.GetSpriteSet("entangle");
-            case EffectCode.FireShield:
+            case ControlCodes.EffectCode_FireShield:
                 return IconLibrary.GetSpriteSet("fireshield");
-            case EffectCode.Freezing:
+            case ControlCodes.EffectCode_Freezing:
                 return IconLibrary.GetSpriteSet("freeze");
-            case EffectCode.Haste:
+            case ControlCodes.EffectCode_Haste:
                 return IconLibrary.GetSpriteSet("haste");
-            case EffectCode.IceShield:
+            case ControlCodes.EffectCode_IceShield:
                 return IconLibrary.GetSpriteSet("iceshield");
-            case EffectCode.Prayer:
+            case ControlCodes.EffectCode_Prayer:
                 return IconLibrary.GetSpriteSet("prayer");
-            case EffectCode.Shocked:
+            case ControlCodes.EffectCode_Shocked:
                 return IconLibrary.GetSpriteSet("shock");
-            case EffectCode.Slow:
+            case ControlCodes.EffectCode_Slow:
                 return IconLibrary.GetSpriteSet("slow");
             
         }

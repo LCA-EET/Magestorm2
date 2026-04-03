@@ -6,6 +6,7 @@ public class PBAoE : SpawnedSpell
     {
         bool reportHit = false;
         base.Initialize(casterID, castingTeam, castID, parent, spellReference);
+        ComponentRegister.Spawner.SpawnMarker(transform.position, 1.0f);
         if(SharedFunctions.IsPlayerInRadius(transform.position, _spellReference.EffectRadius))
         {
             if (_spellReference.IsFriendly && castingTeam == MatchParams.MatchTeam)

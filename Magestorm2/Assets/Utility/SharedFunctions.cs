@@ -64,7 +64,7 @@ public static class SharedFunctions
             Debug.Log("Player is within the blast radius.");
             Vector3 direction = DirectionVector(origin, playerPosition);
             RaycastHit hitInfo;
-            bool obstructed = Physics.Raycast(origin, direction, out hitInfo, radius, LayerManager.AoEObstructionMask);
+            bool obstructed = Physics.Raycast(origin, direction, out hitInfo, distance, LayerManager.AoEObstructionMask);
             if (obstructed)
             {
                 Debug.Log("Player is obstructed by " + hitInfo.collider.gameObject.name);

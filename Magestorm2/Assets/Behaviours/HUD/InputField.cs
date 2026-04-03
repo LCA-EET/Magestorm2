@@ -60,11 +60,27 @@ public class InputField : MonoBehaviour
                     }
                     if (message.StartsWith("/"))
                     {
-                        if(message.Substring(1) == "shake")
+                        string command = message.Substring(1);
+                        switch (command)
                         {
-                            ComponentRegister.MainCamera.Shake();
-                            send = false;
+                            case "shake":
+                                ComponentRegister.MainCamera.Shake();
+                                send = false;
+                                break;
+                            case "placemarker":
+                                ComponentRegister.Spawner.SpawnMarker(Game.PCAvatar.transform.position, 1.0f);
+                                send = false;
+                                break;
+                            case "clearmarker":
+                                ComponentRegister.Spawner.ClearMarkers();
+                                send = false;
+                                break;
+                            case "markertoggle":
+                                ComponentRegister.Spawner.MarkerToggle();
+                                send = false;
+                                break;
                         }
+                        
                     }
                     if (send)
                     {

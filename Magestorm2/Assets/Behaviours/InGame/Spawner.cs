@@ -6,14 +6,18 @@ public class Spawner : MonoBehaviour
 
     public GameObject AvatarPrefab;
     public GameObject DeadbodyPrefab;
+    public GameObject Marker;
     private Dictionary<byte, SpellSpawner> _spellPrefabs;
     private Dictionary<short, SpawnedSpell> _spellRegistry;
     private Dictionary<byte, VFX> _vfxTable;
     private PeriodicAction _expirationCheck;
+    private List<GameObject> _activeMarkers;
+    private bool _showMarkers = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private void Awake()
     {
+        _activeMarkers = new List<GameObject>();
         _expirationCheck = new PeriodicAction(30.0f, ExpirationCheck, null);
         _spellRegistry = new Dictionary<short, SpawnedSpell>();
         _vfxTable = new Dictionary<byte, VFX>();
@@ -24,6 +28,29 @@ public class Spawner : MonoBehaviour
     void Start()
     {
         
+    }
+    public void ClearMarkers()
+    {
+        foreach (GameObject marker in _activeMarkers)
+        {
+            Destroy(marker);
+        }
+        _activeMarkers.Clear();
+    }
+    public void MarkerToggle()
+    {
+        _showMarkers = !_showMarkers;
+    }
+    public void SpawnMarker(Vector3 position, float scale)
+    {
+        if (!_showMarkers)
+        {
+            return;
+        }
+        GameObject marker = Instantiate(Marker);
+        marker.transform.position = position;
+        marker.transform.localScale = new Vector3(scale, scale, scale);
+        _activeMarkers.Add(marker);
     }
     public void SpawnVFX(byte vfxCode, Vector3 position)
     {
