@@ -3,8 +3,8 @@ public class Spell {
 
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
             _spellType, _discipline, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
-            _notificationCode, _effectRadius;
-    private final float _splashFactor0, _splashFactor1, _splashFactor2;
+            _notificationCode, _effectRadius, _effectCode, _effectStat, _duration, _levelsForRoll;
+    private final float _splashFactor0, _splashFactor1, _splashFactor2, _dotDamagePercent;
 
     public Spell(int id, byte[] params){
         _spellID = id;
@@ -22,11 +22,16 @@ public class Spell {
         _minDamagePerRoll1 = params[11];
         _maxDamagePerRoll1 = params[12];
         _element1 = params[13];
-        _notificationCode = params[14];
-        _splashFactor0 = params[15] / 100.0f;
-        _splashFactor1 = params[16] / 100.0f;
-        _splashFactor2 = params[17] / 100.0f;
-        _effectRadius = params[18];
+        _levelsForRoll = params[14];
+        _notificationCode = params[15];
+        _splashFactor0 = params[16] / 100.0f;
+        _splashFactor1 = params[17] / 100.0f;
+        _splashFactor2 = params[18] / 100.0f;
+        _effectRadius = params[19];
+        _effectCode = params[23];
+        _effectStat = params[24];
+        _duration = params[25];
+        _dotDamagePercent = params[26] / 100.0f;
     }
     public boolean IsDamaging(){
         return _minDamagePerRoll0 > 0;
@@ -78,7 +83,18 @@ public class Spell {
         return _element1;
     }
     public byte GetNotificationCode(){return _notificationCode;}
-
+    public byte GetEffectStatCode(){
+        return _effectStat;
+    }
+    public byte GetEffectCode(){
+        return _effectCode;
+    }
+    public byte GetDuration(){
+        return _duration;
+    }
+    public float GetDoTDamagePercent(){
+        return _dotDamagePercent;
+    }
     public float GetSplashFactor(byte skillLevel){
         return switch (skillLevel) {
             case ControlCodes.SkillLevel_Basic -> _splashFactor0;

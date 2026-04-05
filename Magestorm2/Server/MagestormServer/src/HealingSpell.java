@@ -1,8 +1,8 @@
 public class HealingSpell extends CastSpell{
     protected short _healing;
 
-    public HealingSpell(MatchCharacter caster, short castID, Spell baseReference){
-        super(caster, castID, baseReference);
+    public HealingSpell(MatchCharacter caster, short castID, Spell baseReference, Match matchReference){
+        super(caster, castID, baseReference, matchReference);
     }
 
     private void CalculateHeal(){

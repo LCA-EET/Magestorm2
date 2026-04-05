@@ -10,6 +10,7 @@ public class Spawner : MonoBehaviour
     private Dictionary<byte, SpellSpawner> _spellPrefabs;
     private Dictionary<short, SpawnedSpell> _spellRegistry;
     private Dictionary<byte, VFX> _vfxTable;
+    private Dictionary<byte, AppliedEffect> _appliedEffects;
     private PeriodicAction _expirationCheck;
     private List<GameObject> _activeMarkers;
     private bool _showMarkers = false;
@@ -24,6 +25,7 @@ public class Spawner : MonoBehaviour
         ComponentRegister.Spawner = this;
         LoadSpellPrefabs();
         LoadVFXPrefabs();
+        LoadAppliedEffectPrefabs();
     }
     void Start()
     {
@@ -60,6 +62,19 @@ public class Spawner : MonoBehaviour
             vfx.transform.position = position;
         }
     }
+    public void SpawnVFX(byte vfxCode, Transform parent, ref GameObject spawned)
+    {
+        if (_vfxTable.ContainsKey(vfxCode))
+        {
+            VFX vfx = Instantiate(_vfxTable[vfxCode]);
+            vfx.transform.parent = parent;
+        }
+        else
+        {
+            Debug.Log("No VFX for code " + vfxCode);
+        }
+    }
+   
     private void ExpirationCheck()
     {
         float currentTime = Time.realtimeSinceStartup;
@@ -78,6 +93,15 @@ public class Spawner : MonoBehaviour
         foreach (VFX vfx in vfxContainers)
         {
             _vfxTable.Add(vfx.VFXCode, vfx);
+        }
+    }
+    private void LoadAppliedEffectPrefabs()
+    {
+        _appliedEffects = new Dictionary<byte, AppliedEffect>();
+        AppliedEffect[] effects = Resources.LoadAll<AppliedEffect>("AppliedEffects");
+        foreach (AppliedEffect ae in effects)
+        {
+            _appliedEffects.Add(ae.EffectCode, ae);
         }
     }
     private void LoadSpellPrefabs()
@@ -101,6 +125,15 @@ public class Spawner : MonoBehaviour
     public void RegisterSpawnedSpell(SpawnedSpell toRegister)
     {
         _spellRegistry.Add(toRegister.CastID, toRegister);
+    }
+    public bool SpawnAppliedEffect(byte effectCode, ref AppliedEffect effect)
+    {
+        if (_appliedEffects.ContainsKey(effectCode))
+        {
+            effect = Instantiate(_appliedEffects[effectCode]);
+            return true;
+        }
+        return false;
     }
     public bool SpawnSpellPrefab(byte spellKey, ref SpellSpawner spawner)
     {

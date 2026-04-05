@@ -41,7 +41,7 @@ public class DMPacketProcessor extends InGamePacketProcessor{
         EnqueueForSend(Packets.AllShrineHealthPacket(health[0], health[1], health[2]), _remote);
     }
     private boolean HandleTeamMessage(){
-        SharedHandlers.HandleTeamMessage(_decrypted, this, _owningDM, _remote);
+        SharedFunctions.HandleTeamMessage(_decrypted, this, _owningDM, _remote);
         return true;
     }
 

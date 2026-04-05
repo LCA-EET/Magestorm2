@@ -47,7 +47,7 @@ public class ControlCodes {
     //endregion
 
     //region EffectCodes
-        public static final byte EffectCode_Haste = 0;
+
         public static final byte EffectCode_Slow = 1;
         public static final byte EffectCode_Freeze = 2;
         public static final byte EffectCode_Burn = 3;
@@ -59,6 +59,7 @@ public class ControlCodes {
         public static final byte EffectCode_EarthShield = 9;
         public static final byte EffectCode_Bleed = 10;
         public static final byte EffectCode_Prayer = 11;
+        public static final byte EffectCode_Haste = 12;
     //endregion
 
     //region ElementCodes
@@ -71,4 +72,13 @@ public class ControlCodes {
         public static final byte Element_Dark = 6;
         public static final byte Element_Physical = 7;
     //endregion
+
+    //region Statistics
+        public static final byte Statistic_Strength = 0;
+        public static final byte Statistic_Dexterity  = 1;
+        public static final byte Statistic_Constitution  = 2;
+        public static final byte Statistic_Intellect  = 3;
+        public static final byte Statistic_Charisma  = 4;
+        public static final byte Statistic_Wisdom  = 5;
+    //
 }

@@ -186,6 +186,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     {
         AppliedEffect removed = _appliedEffects[toRemove];
         removed.ReverseEffect();
+
         _appliedEffects.Remove(toRemove);
         if (refresh)
         {

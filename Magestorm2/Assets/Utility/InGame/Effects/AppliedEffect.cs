@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using UnityEngine;
 
-public class AppliedEffect
+public class AppliedEffect : MonoBehaviour
 {
-    private byte _effectCode;
+    public byte EffectCode;
     private Avatar _appliedTo, _applier;
     private float _duration;
-    public AppliedEffect(byte effectCode, Avatar applier,  float duration)
+    private byte _degree;
+    private GameObject _vfxContainer;
+    public void Initialize(Avatar applier, float duration, byte degree)
     {
         _applier = applier;
-        _effectCode = effectCode;
         _duration = duration;
+        _degree = degree;
     }
     public bool Tick(float deltaTime)
     {
@@ -23,15 +21,23 @@ public class AppliedEffect
     public virtual void ApplyEffect(Avatar appliedTo)
     {
         _appliedTo = appliedTo;
+        ComponentRegister.Spawner.SpawnVFX(EffectCode, _appliedTo.transform, ref _vfxContainer);
+        if (SharedFunctions.IsPlayerAvatar(appliedTo)){
+            // effect icon
+        }
+    }
+    public void DestroyVFX()
+    {
+        if (_vfxContainer != null)
+        {
+            Destroy(_vfxContainer);
+        }
     }
     public virtual void ReverseEffect()
     {
+        DestroyVFX();
+    }
 
-    }
-    public byte EffectCode
-    {
-        get { return _effectCode; }
-    }
     public float TimeRemaining
     {
         get { return _duration; }

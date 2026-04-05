@@ -91,6 +91,10 @@ public static class SharedFunctions
         Debug.Log("Direction1: " + Camera.main.transform.forward.ToString());
         cameraDirectionBytes.CopyTo(toFill, index);
     }
+    public static bool IsPlayerAvatar(Avatar toCheck)
+    {
+        return toCheck.PlayerID == MatchParams.IDinMatch;
+    }
     public static byte[] GetCameraDirectionBytes()
     {
         return ByteUtils.Vector3ToBytes(Camera.main.transform.forward);

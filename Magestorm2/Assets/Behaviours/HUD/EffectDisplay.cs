@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,11 +28,13 @@ public class EffectDisplay : MonoBehaviour
     public void Hide()
     {
         _isShown = false;
-        Image.gameObject.SetActive(false); 
+        Image.color = Colors.Transparent;
+        Image.gameObject.SetActive(false);
     }
     public void Show(bool show, SpriteSet spriteSet)
     {
         _spriteSet = spriteSet;
+        Image.color = Colors.Opaque;
         Image.gameObject.SetActive(show);
         _isShown = show;
     }

@@ -17,4 +17,9 @@ public class SpellImpact : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public void InvertDirection(Vector3 spawnerForward)
+    {
+        transform.forward = spawnerForward * -1;
+    }
 }

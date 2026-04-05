@@ -6,12 +6,7 @@ public class PlayerCharacter {
     private int _experience;
     private final CharacterClass _characterClass;
     private byte _level;
-    private final byte _strength;
-    private final byte _dexterity;
-    private final byte _constitution;
-    private final byte _charisma;
-    private final byte _wisdom;
-    private final byte _intellect;
+    private final byte[] _statistics;
     private final byte[] _characterBytes;
     private final byte[] _nameBytes;
     private final byte[] _nameLevelClass;
@@ -38,12 +33,13 @@ public class PlayerCharacter {
         _characterBytes = fetched;
         _characterID = ByteUtils.ExtractInt(fetched, 0);
         _characterClass = new CharacterClass(fetched[4]);
-        _strength = fetched[5];
-        _dexterity = fetched[6];
-        _constitution = fetched[7];
-        _intellect = fetched[8];
-        _charisma = fetched[9];
-        _wisdom = fetched[10];
+        _statistics = new byte[6];
+        _statistics[0] = fetched[5];
+        _statistics[1] = fetched[6];
+        _statistics[2] = fetched[7];
+        _statistics[3] = fetched[8];
+        _statistics[4] = fetched[9];
+        _statistics[5] = fetched[10];
         _appearanceBytes = new byte[5];
         _appearanceBytes[0] = fetched[_indexAppearanceStart];
         _appearanceBytes[1] = fetched[_indexAppearanceStart + 1];
@@ -100,15 +96,15 @@ public class PlayerCharacter {
         System.arraycopy(slots, 0, _characterBytes, _indexSlotStart, 10);
     }
     public byte GetMaxStamina(){
-        return (byte)(85.0f + (_strength * 8.5f));
+        return (byte)(85.0f + (_statistics[ControlCodes.Statistic_Strength] * 8.5f));
     }
     public float GetMaxHP(){
         short multiplier = _characterClass.HPMultiplier();
-        float toReturn = (_level * (_constitution / 20.0f) * multiplier * 1.579f) + 10;
+        float toReturn = (_level * (_statistics[ControlCodes.Statistic_Constitution] / 20.0f) * multiplier * 1.579f) + 10;
         return Math.round(toReturn);
     }
     public float GetMaxMana(){
-        byte statToUse = _characterClass.IsCleric() ? _charisma : _intellect;
+        byte statToUse = _characterClass.IsCleric() ? _statistics[ControlCodes.Statistic_Charisma] : _statistics[ControlCodes.Statistic_Intellect];
         float manaMultiplier = 1 + ((statToUse - 10) * 0.05f);
         return ((_level * 4) + 10) * manaMultiplier;
     }
@@ -188,5 +184,7 @@ public class PlayerCharacter {
         }
         return skillLevel;
     }
-
+    public byte GetStatistic(byte statCode){
+        return _statistics[statCode];
+    }
 }

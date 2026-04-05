@@ -362,20 +362,20 @@ public class Match {
             case ControlCodes.SpellTypes_Projectile:
             case ControlCodes.SpellTypes_PBAoE:
                 if(spellReference.IsDamaging()){
-                    _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference));
+                    _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 }
                 else if(spellReference.IsHealing()){
-                    _castSpells.put(castID, new HealingSpell(caster, castID, spellReference));
+                    _castSpells.put(castID, new HealingSpell(caster, castID, spellReference, this));
                 }
                 break;
             case ControlCodes.SpellTypes_Self:
                 if(spellReference.IsHealing()){
-                    HealingSpell healingSpell = new HealingSpell(caster, castID, spellReference);
+                    HealingSpell healingSpell = new HealingSpell(caster, castID, spellReference, this);
                     healingSpell.ProcessSpell(caster);
                 }
                 break;
             case ControlCodes.SpellTypes_Bolt:
-                _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference));
+                _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 break;
             case ControlCodes.SpellTypes_Summon:
 
@@ -402,9 +402,10 @@ public class Match {
     }
     public void Tick(long msElapsed){
         CountDownTimedObjects(msElapsed);
-        RegeneratePlayerHM(msElapsed);
+        PlayerTick(msElapsed);
         ClearExpiredSpells(msElapsed);
     }
+
     private void ClearExpiredSpells(long elapsed){
         _spellExpirationElapsed += elapsed;
         if(_spellExpirationElapsed >= 60000){
@@ -427,8 +428,9 @@ public class Match {
         _nextCastID++;
         return _nextCastID;
     }
-    private void RegeneratePlayerHM(long msElapsed){
+    private void PlayerTick(long msElapsed){
         for(MatchCharacter mc : _matchCharacters.values()){
+            mc.CountdownEffects(msElapsed);
             boolean hpChanged = false;
             boolean manaChanged = false;
             if(mc.IsAliveButInjured()){

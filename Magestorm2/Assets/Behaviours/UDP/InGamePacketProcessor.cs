@@ -170,16 +170,25 @@ public class InGamePacketProcessor : UDPProcessor
             byte effectCode = _decrypted[3];
             byte duration = _decrypted[4];
             byte degree = _decrypted[5];
+            AppliedEffect ae = null;
             if (applierID != appliedToID)
             {
                 Avatar applier = null;
                 if(Match.GetAvatar(applierID, ref applier)){
-                    appliedTo.AddEffect(new AppliedEffect(effectCode, applier, duration));
+                    if(ComponentRegister.Spawner.SpawnAppliedEffect(effectCode, ref ae))
+                    {
+                        ae.Initialize(applier, duration, degree);
+                        appliedTo.AddEffect(ae);
+                    }
                 }
             }
             else
             {
-                appliedTo.AddEffect(new AppliedEffect(effectCode, appliedTo, duration));
+                if(ComponentRegister.Spawner.SpawnAppliedEffect(effectCode, ref ae))
+                {
+                    ae.Initialize(appliedTo, duration, degree);
+                    appliedTo.AddEffect(ae);
+                }
             }
         }
     }

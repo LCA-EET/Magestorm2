@@ -1,6 +1,9 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.lang.Short;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class MatchCharacter {
     private final MatchTeam _team;
     private final Match _owningMatch;
@@ -33,6 +36,7 @@ public class MatchCharacter {
     private final byte[] _resistance;
     private final boolean _newToMatch;
     private final HashSet<Short> _splashHits;
+    private final ConcurrentHashMap<Byte, AppliedEffect> _activeEffects;
 
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
         MarkPacketReceived();
@@ -70,6 +74,7 @@ public class MatchCharacter {
         _positionIndex = _INLCTA.length;
         _directionIndex = _positionIndex + 12;
         _splashHits = new HashSet<>();
+        _activeEffects = new ConcurrentHashMap<>();
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
     }
     public void RegisterSplashHit(short castID){
@@ -108,15 +113,16 @@ public class MatchCharacter {
     }
     public void TakeDamage(float damageAmount, MatchCharacter attacker){
         _hpRegenWaitElapsed = 0;
+        Main.LogMessage("HP pre-adjustment: " + _currentHP);
         _currentHP -= damageAmount;
+        Main.LogMessage("HP post-adjustment: " + _currentHP);
         if(_currentHP <= 0){
             _owningMatch.PlayerKilled(this, attacker);
+            RemoveAllEffects();
         }
-        /*
-        else{
-            _owningMatch.SendToPlayer(Packets.PlayerDamagedPacket(_idInMatch, damageSource, _currentHP), this);
-        }
-        */
+    }
+    public byte GetStatistic(byte statCode){
+        return _pc.GetStatistic(statCode);
     }
     public void Heal(float healAmount, MatchCharacter healer){
         _hpRegenWaitElapsed = 0;
@@ -191,11 +197,41 @@ public class MatchCharacter {
     public float GetMaxHP(){
         return _maxHP;
     }
+    public void AddEffect(AppliedEffect toAdd){
+        byte effectCode = toAdd.GetEffectCode();
+        if(_activeEffects.containsKey(effectCode)){
+            _activeEffects.remove(effectCode);
+        }
+        _activeEffects.put(effectCode, toAdd);
+    }
+    public void RemoveAllEffects(){
+        _activeEffects.clear();
+    }
     public boolean InactivityExceededWarningThreshold(){
         return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityWarning;
     }
     public boolean InactivityExceededMaximumThreshold(){
         return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityDisconnect;
+    }
+    public void CountdownEffects(long msElapsed){
+        if(!_activeEffects.isEmpty()){
+            ArrayList<AppliedEffect> expiredEffects = null;
+            for(AppliedEffect ae : _activeEffects.values()){
+                if(ae.Tick(msElapsed)){
+                    if(expiredEffects == null){
+                        expiredEffects = new ArrayList<>();
+                    }
+                    expiredEffects.add(ae);
+                }
+            }
+            if(expiredEffects != null){
+                if(!expiredEffects.isEmpty()){
+                    for(AppliedEffect ae : expiredEffects){
+                        _activeEffects.remove(ae.GetEffectCode());
+                    }
+                }
+            }
+        }
     }
     public boolean RegenerateHP(long msElapsed){
         if(_hpRegenWaitElapsed >= _waitForHPRegen){

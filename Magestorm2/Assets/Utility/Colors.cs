@@ -2,6 +2,8 @@ using UnityEngine;
 
 public static class Colors
 {
+    public static Color Transparent;
+    public static Color Opaque;
     public static Color UnavailableSpell;
     public static Color TextBackground;
     public static Color Neutral, Order, Balance, Chaos;
@@ -12,6 +14,8 @@ public static class Colors
     {
         if (!_init)
         {
+            Transparent = new Color(1f, 1f, 1f, 0f);
+            Opaque = new Color(1f, 1f, 1f, 1f);
             Neutral = Color.white;
             Order = Color.blue;
             Chaos = Color.red;

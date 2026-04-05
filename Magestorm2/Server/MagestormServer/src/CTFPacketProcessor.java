@@ -16,7 +16,7 @@ public class CTFPacketProcessor extends InGamePacketProcessor{
                         _owningCTF.GetPoolManager().BiasPool(_decrypted[1], _decrypted[2], _remote);
                         break;
                     case InGame_Receive.TeamMessage:
-                        SharedHandlers.HandleTeamMessage(_decrypted, this, _owningCTF, _remote);
+                        SharedFunctions.HandleTeamMessage(_decrypted, this, _owningCTF, _remote);
                         break;
                     case InGame_Receive.FlagCaptured:
                         _owningCTF.FlagCaptured(_decrypted[1], _decrypted[2]);

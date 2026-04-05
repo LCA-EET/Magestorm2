@@ -10,6 +10,7 @@ public class Main {
     public static boolean Running = true;
 
     public static void main(String args[]) throws FileNotFoundException {
+        SharedFunctions.Initialize();
         String paramFilePath = args[0];
         ServerParams.LoadParams(paramFilePath);
         Mailer = new Emailer(ServerParams.EmailCredsPath);

@@ -115,7 +115,7 @@ PrefabInstance:
     - target: {fileID: 1044696000623670877, guid: 5269e3b614dc7a04daedb8e2fb98ceda, type: 3}
       propertyPath: ImpactPrefab
       value: 
-      objectReference: {fileID: 7597789657375416389, guid: 5c67fcd2fa363c649b2335f99ce5a880, type: 3}
+      objectReference: {fileID: 3828763825285082840, guid: 5c67fcd2fa363c649b2335f99ce5a880, type: 3}
     - target: {fileID: 4532158310422851431, guid: 5269e3b614dc7a04daedb8e2fb98ceda, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

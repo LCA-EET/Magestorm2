@@ -1,8 +1,8 @@
 public class DamagingSpell extends CastSpell{
     protected short _damage0, _damage1;
     protected boolean _multiElement;
-    public DamagingSpell(MatchCharacter caster, short castID, Spell baseReference){
-        super(caster, castID, baseReference);
+    public DamagingSpell(MatchCharacter caster, short castID, Spell baseReference, Match matchReference){
+        super(caster, castID, baseReference, matchReference);
         _multiElement = (baseReference.GetMinDamagePerRoll1() > 0);
     }
 
@@ -58,5 +58,13 @@ public class DamagingSpell extends CastSpell{
             ApplyDamage(GetDamage1(), _baseReference.GetElement1(), affectedPlayer);
         }
         Main.LogMessage("CurrentHP: " + affectedPlayer.GetCurrentHP());
+        ProcessEffect(affectedPlayer);
+    }
+
+    @Override
+    protected AppliedEffect CreateEffect(MatchCharacter target, byte effectCode){
+        byte duration = _baseReference.GetDuration();
+        float damagePerTick = (_damage0 * _baseReference.GetDoTDamagePercent()) / duration;
+        return new DoTEffect(_casterReference, target, _spellLevel, effectCode, duration, damagePerTick);
     }
 }
