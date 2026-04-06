@@ -5,13 +5,13 @@ using UnityEngine;
 public class StatPanel : ValidateableObject
 {
     public TMP_Text TotalText;
-    private Dictionary<PlayerStats, StatLine> _statTable;
+    private Dictionary<byte, StatLine> _statTable;
     private bool _readOnly = false;
     private StatLine[] _statLines;
     
     private void Awake()
     {
-        _statTable = new Dictionary<PlayerStats, StatLine>();
+        _statTable = new Dictionary<byte, StatLine>();
         _statLines = GetComponentsInChildren<StatLine>();
         foreach (StatLine statLine in _statLines)
         {
@@ -50,7 +50,7 @@ public class StatPanel : ValidateableObject
         byte[] stats = character.StatBytes;
         for (byte b = 0; b < stats.Length; b++)
         {
-            FillStat((PlayerStats)b, stats[b]);
+            FillStat(b, stats[b]);
         }
         TotalText.gameObject.SetActive(false);
     }
@@ -61,7 +61,7 @@ public class StatPanel : ValidateableObject
             statLine.DisableButtons();
         }
     }
-    public void FillStat(PlayerStats stat, byte value)
+    public void FillStat(byte stat, byte value)
     {
         _statTable[stat].Value = value;
     }
@@ -78,12 +78,12 @@ public class StatPanel : ValidateableObject
     public byte[] GetStats()
     {
         byte[] toReturn = new byte[6];
-        toReturn[0] = _statTable[PlayerStats.Strength].Value;
-        toReturn[1] = _statTable[PlayerStats.Dexterity].Value;
-        toReturn[2] = _statTable[PlayerStats.Constitution].Value;
-        toReturn[3] = _statTable[PlayerStats.Intellect].Value;
-        toReturn[4] = _statTable[PlayerStats.Charisma].Value;
-        toReturn[5] = _statTable[PlayerStats.Wisdom].Value;
+        toReturn[0] = _statTable[ControlCodes.PlayerStats_Strength].Value;
+        toReturn[1] = _statTable[ControlCodes.PlayerStats_Dexterity].Value;
+        toReturn[2] = _statTable[ControlCodes.PlayerStats_Constitution].Value;
+        toReturn[3] = _statTable[ControlCodes.PlayerStats_Intellect].Value;
+        toReturn[4] = _statTable[ControlCodes.PlayerStats_Charisma].Value;
+        toReturn[5] = _statTable[ControlCodes.PlayerStats_Wisdom].Value;
         return toReturn;
     }
 

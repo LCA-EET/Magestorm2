@@ -35,15 +35,7 @@ public enum TriggerType : byte
     Shrine = 1,
     LeyInfluencer = 2
 }
-public enum PlayerStats : byte
-{
-    Strength = 0,
-    Dexterity = 1,
-    Constitution = 2,
-    Intellect = 3,
-    Charisma = 4,
-    Wisdom = 5
-}
+
 public enum PlayerClass : byte
 {
     Arcanist = 0,

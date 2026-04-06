@@ -29,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _moveCheck;
     private Vector3 _priorStep, _priorPosition;
 
+    private bool _isSlowed, _isFrozen, _isHasted;
+
     private bool _positionChanged = false;
     private bool _midJump = false;
     private bool _grounded = false;
@@ -78,6 +80,18 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+    }
+    public void MarkSlow(bool slow)
+    {
+        _isSlowed = slow;
+    }
+    public void MarkHaste(bool haste)
+    {
+        _isHasted = haste;
+    }
+    public void MarkFrozen(bool frozen)
+    {
+        _isFrozen = frozen;
     }
     private bool MinimumReportingExceedance(float current, ref float prior, float limit)
     {
@@ -369,7 +383,18 @@ public class PlayerMovement : MonoBehaviour
             {
                 toReturn = toReturn * 0.7071f;
             }
-            // haste, slow, etc.
+            if (_isSlowed)
+            {
+                toReturn *= 0.75f;
+            }
+            if (_isFrozen)
+            {
+                toReturn *= 0.75f;
+            }
+            if (_isHasted)
+            {
+                toReturn *= 1.25f;
+            }
             return toReturn;
         }
     }

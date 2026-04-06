@@ -7,6 +7,7 @@ public class AppliedEffect : MonoBehaviour
     private float _duration;
     private byte _degree;
     private GameObject _vfxContainer;
+    protected bool _appliedToPlayer;
     public void Initialize(Avatar applier, float duration, byte degree)
     {
         _applier = applier;
@@ -22,9 +23,7 @@ public class AppliedEffect : MonoBehaviour
     {
         _appliedTo = appliedTo;
         ComponentRegister.Spawner.SpawnVFX(EffectCode, _appliedTo.transform, ref _vfxContainer);
-        if (SharedFunctions.IsPlayerAvatar(appliedTo)){
-            // effect icon
-        }
+        _appliedToPlayer = SharedFunctions.IsPlayerAvatar(appliedTo);
     }
     public void DestroyVFX()
     {

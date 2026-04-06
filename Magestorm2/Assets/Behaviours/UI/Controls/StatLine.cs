@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StatLine : ValidatableForm
 {
-    public PlayerStats Statistic;
+    public byte Statistic;
     public TMP_Text StatText;
     public TMP_Text StatValue;
     private byte _stat;

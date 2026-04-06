@@ -108,19 +108,19 @@ public class PlayerCharacter
                 return 5;
         }
     }
-    public byte GetStat(PlayerStats stat)
+    public byte GetStat(byte stat)
     {
-        return _statBytes[(byte)stat];
+        return _statBytes[stat];
     }
     public float GetMaxHP()
     {
         float multiplier = HPMultiplier();
-        float toReturn = (CharacterLevel * (GetStat(PlayerStats.Constitution) / 20.0f) * multiplier * 1.579f) + 10;
+        float toReturn = (CharacterLevel * (GetStat(ControlCodes.PlayerStats_Constitution) / 20.0f) * multiplier * 1.579f) + 10;
         return Mathf.Round(toReturn);
     }
     public float GetMaxMana()
     {
-        byte statToUse = (PlayerClass)CharacterClass == PlayerClass.Cleric ? GetStat(PlayerStats.Charisma) : GetStat(PlayerStats.Intellect);
+        byte statToUse = (PlayerClass)CharacterClass == PlayerClass.Cleric ? GetStat(ControlCodes.PlayerStats_Charisma) : GetStat(ControlCodes.PlayerStats_Intellect);
         float manaMultiplier = 1 + ((statToUse - 10) * 0.05f);
         return ((_characterLevel * 4) + 10) * manaMultiplier;
     }

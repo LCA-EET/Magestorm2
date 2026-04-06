@@ -1,6 +1,6 @@
 ﻿public static class ControlCodes
 {
-    public const byte VFX_Banish = 1;
+    public const byte VFX_Banish = 64;
 
     public const byte CastPayloadStartIndex = 5;
 
@@ -45,4 +45,12 @@
     public const byte MatchTypes_DeathMatch = 0;
     public const byte MatchTypes_FreeForAll = 1;
     public const byte MatchTypes_CaptureTheFlag = 2;
+
+    public const byte PlayerStats_Strength = 0; // affects jump height & resistance to camera shake
+    public const byte PlayerStats_Dexterity = 1; // affects stamina
+    public const byte PlayerStats_Constitution = 2; // Affects hP
+    public const byte PlayerStats_Intellect = 3; // affects SP + mentalist effects
+    public const byte PlayerStats_Charisma = 4; // affects SP + cleric effects
+    public const byte PlayerStats_Wisdom = 5; // affects magician effects
+    
 }

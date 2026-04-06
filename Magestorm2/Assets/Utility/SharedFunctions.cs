@@ -79,7 +79,7 @@ public static class SharedFunctions
     }
     public static void CameraShake(SpellData spellData)
     {
-        byte playerStrength = PlayerAccount.SelectedCharacter.GetStat(PlayerStats.Strength);
+        byte playerStrength = PlayerAccount.SelectedCharacter.GetStat(ControlCodes.PlayerStats_Strength);
         if(playerStrength < spellData.ShakePrevention)
         {
             ComponentRegister.MainCamera.Shake();
