@@ -105,6 +105,7 @@ public class MatchCharacter {
         _currentHP = hp;
         _owningMatch.SendToAll(Packets.PlayerRevivedPacket(_idInMatch, reviverID, _currentHP));
     }
+
     public void SetHP(float newHP){
         _currentHP = newHP;
     }
@@ -197,6 +198,17 @@ public class MatchCharacter {
     public float GetMaxHP(){
         return _maxHP;
     }
+
+    //region Effects
+    public void TerminateEffects(ArrayList<Byte> cancelled, byte spellID){
+        for(byte b : cancelled){
+            _activeEffects.remove(b);
+        }
+        _owningMatch.SendToAll(Packets.EffectsCancellationPacket(_idInMatch, spellID));
+    }
+    public boolean IsShocked(){
+        return _activeEffects.containsKey(ControlCodes.EffectCode_Shock);
+    }
     public void AddEffect(AppliedEffect toAdd){
         byte effectCode = toAdd.GetEffectCode();
         if(_activeEffects.containsKey(effectCode)){
@@ -206,12 +218,6 @@ public class MatchCharacter {
     }
     public void RemoveAllEffects(){
         _activeEffects.clear();
-    }
-    public boolean InactivityExceededWarningThreshold(){
-        return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityWarning;
-    }
-    public boolean InactivityExceededMaximumThreshold(){
-        return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityDisconnect;
     }
     public void CountdownEffects(long msElapsed){
         if(!_activeEffects.isEmpty()){
@@ -233,6 +239,15 @@ public class MatchCharacter {
             }
         }
     }
+    // endregion
+
+    public boolean InactivityExceededWarningThreshold(){
+        return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityWarning;
+    }
+    public boolean InactivityExceededMaximumThreshold(){
+        return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityDisconnect;
+    }
+
     public boolean RegenerateHP(long msElapsed){
         if(_hpRegenWaitElapsed >= _waitForHPRegen){
             if(_hpRegenElapsed >= _hpRegenTick){

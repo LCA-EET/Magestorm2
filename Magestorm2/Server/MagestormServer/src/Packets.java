@@ -222,6 +222,13 @@ public class Packets {
         System.arraycopy(castIDBytes, 0, toEncrypt, idxCastID, 2);
         return Cryptographer.Encrypt(toEncrypt);
     }
+    public static byte[] EffectsCancellationPacket(byte subjectID, byte spellID){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.EffectsCancellation;
+        toEncrypt[1] = subjectID;
+        toEncrypt[2] = spellID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
 
     public static byte[] ApplyEffectPacket(byte playerAppliedTo, byte applierID, byte effectCode, byte duration, byte degree){
         return Cryptographer.Encrypt(new byte[]{InGame_Send.ApplyEffect, playerAppliedTo, applierID, effectCode, duration, degree});

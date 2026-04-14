@@ -22,8 +22,11 @@ public class AppliedEffect : MonoBehaviour
     public virtual void ApplyEffect(Avatar appliedTo)
     {
         _appliedTo = appliedTo;
-        ComponentRegister.Spawner.SpawnVFX(EffectCode, _appliedTo.transform, ref _vfxContainer);
-        _appliedToPlayer = SharedFunctions.IsPlayerAvatar(appliedTo);
+        _appliedToPlayer = SharedFunctions.IsPlayerAvatar(_appliedTo);
+        if (!_appliedToPlayer)
+        {
+            ComponentRegister.Spawner.SpawnVFX(EffectCode, _appliedTo.transform, ref _vfxContainer);
+        }
     }
     public void DestroyVFX()
     {

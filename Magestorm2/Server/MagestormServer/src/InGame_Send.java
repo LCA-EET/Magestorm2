@@ -42,4 +42,5 @@ public class InGame_Send {
     public static final byte InactivityDisconnect = 39;
     public static final byte HitNotification = 40;
     public static final byte SendToValhalla = 41;
+    public static final byte EffectsCancellation = 42;
 }

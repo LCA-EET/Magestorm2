@@ -133,6 +133,18 @@ public class ByteUtils {
                 break;
         }
     }
+    public static boolean[] ShortToBoolArray(short toConvert)
+    {
+        int num = toConvert;
+        boolean[] binary = new boolean[16];
+        int id = 0;
+
+        while (num != 0) {
+            binary[id++] = num % 2 != 0;
+            num = num / 2;
+        }
+        return binary;
+    }
     public static boolean[] IntegerToBoolArray(int num)
     {
         boolean[] binary = new boolean[32];

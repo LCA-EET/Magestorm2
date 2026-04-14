@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Collections;
+using UnityEngine;
 public class Projectile : SpawnedSpell
 {
     public SpellImpact ImpactPrefab;
@@ -43,13 +44,8 @@ public class Projectile : SpawnedSpell
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (!Game.PCAvatar.IsAlive)
-        {
-            return;
-        }
         if (!_destroyOnNextUpdate)
         {
-            _impact = true;
             Debug.Log("Projectile.OnTriggerEnter. Collided with: " + other.name);
             if (SharedFunctions.WasPCHit(other))
             {
@@ -60,11 +56,26 @@ public class Projectile : SpawnedSpell
                 }
                 else
                 {
+                    _impact = true;
                     _directHit = true;
                     Debug.Log("Direct hit!");
                     Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
                     SharedFunctions.CameraShake(_spellReference);
                 }
+            }
+            else
+            {
+                Avatar remotePlayer = null;
+                if(SharedFunctions.WasRemoteHit(other, out remotePlayer))
+                {
+                    byte shieldID = SharedFunctions.IsShieldedFromElement(_spellReference.Element0, remotePlayer);
+                    if(shieldID > 0)
+                    {
+                        GameObject spawned = null;
+                        ComponentRegister.Spawner.SpawnVFX(shieldID, remotePlayer.transform, ref spawned);
+                    }
+                }
+                _impact = true;
             }
             if (ImpactPrefab != null && _impact)
             {

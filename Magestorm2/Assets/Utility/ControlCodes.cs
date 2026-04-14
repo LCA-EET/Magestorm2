@@ -4,9 +4,6 @@
 
     public const byte CastPayloadStartIndex = 5;
 
-
-
-    
     public const byte EffectCode_Slow = 1;
     public const byte EffectCode_Freezing = 2;
     public const byte EffectCode_Burning = 3;
@@ -19,6 +16,11 @@
     public const byte EffectCode_Bleeding = 10;
     public const byte EffectCode_Prayer = 11;
     public const byte EffectCode_Haste = 12;
+
+    public const byte Element_Fire = 1;
+    public const byte Element_Ice = 2;
+    public const byte Element_Earth = 3;
+    public const byte Element_Electric = 4;
 
     public const byte SpellTypes_Projectile = 1;
     public const byte SpellTypes_Self = 2;

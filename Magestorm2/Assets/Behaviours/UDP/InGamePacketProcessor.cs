@@ -118,8 +118,21 @@ public class InGamePacketProcessor : UDPProcessor
                         new MessageData(Language.GetBaseString(312), Language.GetBaseString(209));
                         ComponentRegister.Valhalla.EnterValhalla();
                         break;
+                    case InGame_Receive.EffectsCancellation:
+                        HandleEffectCancellation();
+                        break;
                 }
             }
+        }
+    }
+    private void HandleEffectCancellation()
+    {
+        byte subjectID = _decrypted[1];
+        byte spellID = _decrypted[2];
+        Avatar subject = null;
+        if(Match.GetAvatar(subjectID, ref subject))
+        {
+            subject.RemoveEffectsCancelledBySpell(spellID);
         }
     }
     private void HandleCast()

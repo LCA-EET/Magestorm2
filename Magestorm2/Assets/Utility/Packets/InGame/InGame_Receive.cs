@@ -48,5 +48,6 @@ public static class InGame_Receive
                         ApplyEffect = 37,
                         InactivityDisconnect = 39,
                         HitNotification = 40,
-                        SendToValhalla = 41;
+                        SendToValhalla = 41,
+                        EffectsCancellation = 42;
 }

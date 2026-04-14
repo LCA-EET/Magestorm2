@@ -58,6 +58,12 @@ public static class ByteUtils
         BitConverter.GetBytes(data.z).CopyTo(toReturn, 8);
         return toReturn;
     }
+    public static BitArray ShortToBoolArray(short num)
+    {
+        byte[] bytes = BitConverter.GetBytes(num);
+        BitArray bitArray = new BitArray(bytes);
+        return bitArray;
+    }
     public static void FillBooleanArray(ref bool[] toFill, int value, int startIndex)
     {
         switch (value)

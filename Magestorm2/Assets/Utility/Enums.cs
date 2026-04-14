@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum VFXDirection
+{
+    NA,
+    Up,
+    Down
+}
 public enum TeamSelectionCode
 {
     All = 0,

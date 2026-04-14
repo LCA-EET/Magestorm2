@@ -4,6 +4,7 @@ public class VFX : MonoBehaviour
     public byte VFXCode;
     public AudioSource AudioSource;
     public AudioClip AudioClip;
+    public VFXDirection VFXDirection = VFXDirection.NA;
     private float _elapsed;
     public byte ExpireAfter = 3;
     public void Start()
@@ -12,14 +13,25 @@ public class VFX : MonoBehaviour
         {
             AudioSource.Play();
         }
+        if(VFXDirection == VFXDirection.Down)
+        {
+            transform.localPosition =new Vector3(0,2,0);
+        }
+        else
+        {
+            transform.localPosition = Vector3.zero;
+        }
     }
 
     private void Update()
     {
-        _elapsed += Time.deltaTime;
-        if ((_elapsed >= ExpireAfter))
+        if(ExpireAfter > 0)
         {
-            Destroy(gameObject);
+            _elapsed += Time.deltaTime;
+            if ((_elapsed >= ExpireAfter))
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

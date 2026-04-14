@@ -15,7 +15,6 @@ public class PlayerMovement : MonoBehaviour
     private float _forwardAcceleration = 6.0f;
     private float _verticalSpeed = 0.0f;
     private float _maxVerticalSpeed = 30.0f;
-    private float _verticalAcceleration = 6.0f;
     private float _distanceTravelled = 0.0f;
     private float _distanceTravelledSinceLastStep = 0.0f;
     private float _positionLimit = 0.067f;
@@ -29,11 +28,11 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _moveCheck;
     private Vector3 _priorStep, _priorPosition;
 
-    private bool _isSlowed, _isFrozen, _isHasted;
+    private bool _isSlowed, _isFrozen, _isHasted, _isEntangled;
 
     private bool _positionChanged = false;
     private bool _midJump = false;
-    private bool _grounded = false;
+    private bool _onGround = false;
     private bool _csChanging = false;
     private byte _postureCheck;
     private RaycastHit _hitInfo;
@@ -93,6 +92,15 @@ public class PlayerMovement : MonoBehaviour
     {
         _isFrozen = frozen;
     }
+    public void MarkEntangled(bool entangled)
+    {
+        _isEntangled = entangled;
+        _midJump = false;
+        if(_verticalSpeed > 0)
+        {
+            _verticalSpeed = 0;
+        }
+    }
     private bool MinimumReportingExceedance(float current, ref float prior, float limit)
     {
         float distance = current - prior;
@@ -149,12 +157,12 @@ public class PlayerMovement : MonoBehaviour
             _pc.RegenStamina(Time.deltaTime, moving);
         }
 
-        if (!_grounded)
+        if (!_onGround)
         {
             Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
         }
-        else if (InputControls.Jump && _grounded)
+        else if (InputControls.Jump && _onGround && !_isEntangled)
         {
             _verticalSpeed = _verticalSpeed + _jumpSpeed;
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
@@ -173,7 +181,7 @@ public class PlayerMovement : MonoBehaviour
         bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
         _pc.RegenStamina(Time.deltaTime, false);
 
-        if (!_grounded)
+        if (!_onGround)
         {
             Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
@@ -278,24 +286,23 @@ public class PlayerMovement : MonoBehaviour
     }
     private void UpdateGroundedStatus()
     {
-        bool priorState = _grounded;
-        _grounded = isGrounded(out _hitInfo);
-        if (_grounded)
+        bool priorState = _onGround;
+        _onGround = isOnGround(out _hitInfo);
+        if (_onGround)
         {
-            if(Game.PlayerPMDByte.IsJumping)
+            if(Game.PlayerPMDByte.IsJumping && !_isEntangled)
             {
                 Game.PlayerPMDByte.SetLocalPosture(Postures.Standing);
             }
             _midJump = false;
-            _verticalAcceleration = 0.0f;
             _verticalSpeed = 0.0f;
             _distanceTravelled += Vector3.Distance(transform.position, _priorStep);
             _priorStep = transform.position;
             PlayStepSound();
         }
-        if (priorState != _grounded)
+        if (priorState != _onGround)
         {
-            Debug.Log("Grounded: " + _grounded);
+            Debug.Log("Grounded: " + _onGround);
         }
     }
     
@@ -313,11 +320,11 @@ public class PlayerMovement : MonoBehaviour
                     if (Game.PlayerPMDByte.IsRunning)
                     {
                         ComponentRegister.PC.PlaySFX(standingOn.FootstepClip);
-                        Debug.Log("Play Footstep");
+                        //Debug.Log("Play Footstep");
                     }
                     else
                     {
-                        Debug.Log("Not Running");
+                        //Debug.Log("Not Running");
                     }
                 }
             }
@@ -325,7 +332,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private bool isGrounded(out RaycastHit hitInfo)
+    private bool isOnGround(out RaycastHit hitInfo)
     {
         return _pc.DownwardCaster.CastForward(LayerManager.SurfaceMask, 0.1f, out hitInfo);
     }

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5125870549915043844, guid: 96cd3450835840840a113910c46e8541, type: 3}
+      propertyPath: EffectCode
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 167681554911266857, guid: 96cd3450835840840a113910c46e8541, type: 3}
       propertyPath: m_Name
       value: AE_Bleeding Variant

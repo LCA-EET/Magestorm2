@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class CastSpell {
     protected final short _castID;
     protected Spell _baseReference;
@@ -68,6 +70,7 @@ public class CastSpell {
             float random = SharedFunctions.GetRandomFloat();
             if(chance >= random){
                 Main.LogMessage("Effect triggered.");
+                target.TerminateEffects(_baseReference.GetEffectsCancelled(), _spellID);
                 AppliedEffect ae = CreateEffect(target, effectCode);
                 target.AddEffect(ae);
                 _matchReference.SendToAll(Packets.ApplyEffectPacket(target.GetIDinMatch(), _casterReference.GetIDinMatch(),

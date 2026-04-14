@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Spell {
     private final int _spellID;
 
@@ -6,8 +8,18 @@ public class Spell {
             _notificationCode, _effectRadius, _effectCode, _effectStat, _duration, _levelsForRoll;
     private final float _splashFactor0, _splashFactor1, _splashFactor2, _dotDamagePercent;
 
-    public Spell(int id, byte[] params){
+    private final short _cancelsEffects;
+    private final ArrayList<Byte> _effectsCancelled;
+    public Spell(int id, short cancelsEffects, byte[] params){
         _spellID = id;
+        _cancelsEffects = cancelsEffects;
+        _effectsCancelled = new ArrayList<>();
+        boolean[] converted = ByteUtils.ShortToBoolArray(_cancelsEffects);
+        for(byte b = 0; b < converted.length; b++){
+            if(converted[b]){
+                _effectsCancelled.add(b);
+            }
+        }
         _minDamagePerRoll0 = params[0];
         _maxDamagePerRoll0 = params[1];
         _minHealPerRoll = params[2];
@@ -32,6 +44,12 @@ public class Spell {
         _effectStat = params[24];
         _duration = params[25];
         _dotDamagePercent = params[26] / 100.0f;
+    }
+    public short GetEffectCancellation(){
+        return _cancelsEffects;
+    }
+    public ArrayList<Byte> GetEffectsCancelled(){
+        return _effectsCancelled;
     }
     public boolean IsDamaging(){
         return _minDamagePerRoll0 > 0;

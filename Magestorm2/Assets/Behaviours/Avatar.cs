@@ -92,7 +92,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
                 {
                     expired.Add(effect);
                 }
-                Debug.Log("Time Remaining: " + effect.TimeRemaining);
+                //Debug.Log("Time Remaining: " + effect.TimeRemaining);
             }
             foreach(AppliedEffect effect in expired)
             {
@@ -182,15 +182,31 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         }
         RefreshEffectsDisplay();
     }
+    public void RemoveEffectsCancelledBySpell(byte spellID)
+    {
+        SpellData spellReference = null;
+        if(SpellManager.GetSpell(spellID, ref spellReference))
+        {
+            List<byte> effectsToCancel = spellReference.CancelledEffects;
+            foreach (byte effect in effectsToCancel)
+            {
+                RemoveEffect(effect, false);
+            }
+        }
+        RefreshEffectsDisplay();
+    }
     public void RemoveEffect(byte toRemove, bool refresh)
     {
-        AppliedEffect removed = _appliedEffects[toRemove];
-        removed.ReverseEffect();
-
-        _appliedEffects.Remove(toRemove);
-        if (refresh)
+        if (_appliedEffects.ContainsKey(toRemove))
         {
-            RefreshEffectsDisplay();
+            AppliedEffect removed = _appliedEffects[toRemove];
+            removed.ReverseEffect();
+
+            _appliedEffects.Remove(toRemove);
+            if (refresh)
+            {
+                RefreshEffectsDisplay();
+            }
         }
     }
     private void RefreshEffectsDisplay()
@@ -239,6 +255,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     public PMDByte PMD
     {
         get { return _pmd; }
+    }
+    public bool IsEffectActive(byte effectID)
+    {
+        return _appliedEffects.ContainsKey(effectID);
     }
     public int LastPRPacketID
     {

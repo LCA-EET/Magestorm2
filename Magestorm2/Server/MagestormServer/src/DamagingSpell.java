@@ -47,6 +47,9 @@ public class DamagingSpell extends CastSpell{
         else{
             Main.LogMessage("Not a splash hit.");
         }
+        if(target.IsShocked()){
+            appliedDamage *= 1.1f;
+        }
         target.TakeDamage(appliedDamage, _casterReference);
     }
 

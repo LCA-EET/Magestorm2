@@ -64,10 +64,14 @@ public class Spawner : MonoBehaviour
     }
     public void SpawnVFX(byte vfxCode, Transform parent, ref GameObject spawned)
     {
+        Debug.Log("SpawnVFX: " + vfxCode);
         if (_vfxTable.ContainsKey(vfxCode))
         {
             VFX vfx = Instantiate(_vfxTable[vfxCode]);
             vfx.transform.parent = parent;
+            vfx.transform.localPosition = Vector3.zero;
+            spawned = vfx.gameObject;
+            Debug.Log("VFX " + vfxCode + " successfully spawned.");
         }
         else
         {
@@ -90,18 +94,22 @@ public class Spawner : MonoBehaviour
     {
         _vfxTable = new Dictionary<byte, VFX>();
         VFX[] vfxContainers = Resources.LoadAll<VFX>("VFX");
+        Debug.Log("LoadVFXPrefabs(): VFX count: " + vfxContainers.Length);
         foreach (VFX vfx in vfxContainers)
         {
             _vfxTable.Add(vfx.VFXCode, vfx);
+            Debug.Log("LoadVFXPrefabs(): Loaded " + vfx.VFXCode + ", " + vfx.name);
         }
     }
     private void LoadAppliedEffectPrefabs()
     {
         _appliedEffects = new Dictionary<byte, AppliedEffect>();
         AppliedEffect[] effects = Resources.LoadAll<AppliedEffect>("AppliedEffects");
+        Debug.Log("LoadAppliedEffectPrefabs(): AE count: " + effects.Length);
         foreach (AppliedEffect ae in effects)
         {
             _appliedEffects.Add(ae.EffectCode, ae);
+            Debug.Log("LoadAppliedEffectPrefabs(): Loaded " + ae.EffectCode + ", " + ae.name);
         }
     }
     private void LoadSpellPrefabs()
@@ -128,6 +136,10 @@ public class Spawner : MonoBehaviour
     }
     public bool SpawnAppliedEffect(byte effectCode, ref AppliedEffect effect)
     {
+        if(_appliedEffects == null)
+        {
+            Debug.Log("AE is null");
+        }
         if (_appliedEffects.ContainsKey(effectCode))
         {
             effect = Instantiate(_appliedEffects[effectCode]);

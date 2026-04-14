@@ -60,7 +60,7 @@ public class EffectsList : MonoBehaviour
             case ControlCodes.EffectCode_IceShield:
                 return IconLibrary.GetSpriteSet("iceshield");
             case ControlCodes.EffectCode_Prayer:
-                return IconLibrary.GetSpriteSet("prayer");
+                return IconLibrary.GetSpriteSet("prayer_basic");
             case ControlCodes.EffectCode_Shocked:
                 return IconLibrary.GetSpriteSet("shock");
             case ControlCodes.EffectCode_Slow:

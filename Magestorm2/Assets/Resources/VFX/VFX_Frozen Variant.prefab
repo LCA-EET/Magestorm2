@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 587124113024949203}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -116,7 +116,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -4855,17 +4855,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_Frozen Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3250507316515372806, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
+      propertyPath: VFXCode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3250507316515372806, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
+      propertyPath: ExpireAfter
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3250507316515372806, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
+      propertyPath: VFXDirection
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4108335265468273677, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.03341
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4108335265468273677, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4108335265468273677, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 12.56731
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4108335265468273677, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
       propertyPath: m_LocalRotation.w

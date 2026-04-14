@@ -26,13 +26,14 @@ public class Database {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 int spellID = rs.getInt(1);
+                short cancelsEffects = rs.getShort(2);
                 int columnCount = rs.getMetaData().getColumnCount();
-                byte columnsToSkip = 4;
+                byte columnsToSkip = 5;
                 byte[] attrib = new byte[columnCount - columnsToSkip];
                 for(int i = columnsToSkip; i < columnCount; i++){
                     attrib[i - columnsToSkip] = rs.getByte(i + 1); // first column is one, not zero;
                 }
-                Spell toAdd = new Spell(spellID,attrib);
+                Spell toAdd = new Spell(spellID, cancelsEffects, attrib);
                 SpellManager.AddSpell(toAdd);
            }
         }

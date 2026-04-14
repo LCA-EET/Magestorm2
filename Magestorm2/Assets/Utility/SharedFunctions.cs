@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public static class SharedFunctions
 {
+    private static Dictionary<byte, byte> _elementShieldEffects;
     private static System.Random _random = new System.Random();
     private static object[] _params;
 
@@ -41,6 +42,27 @@ public static class SharedFunctions
     public static object[] Params {  
         get { return _params; } 
         set { _params = value; }
+    }
+
+    public static void Initialize()
+    {
+        _elementShieldEffects = new Dictionary<byte, byte>();
+        _elementShieldEffects.Add(ControlCodes.Element_Earth, ControlCodes.EffectCode_EarthShield);
+        _elementShieldEffects.Add(ControlCodes.Element_Fire, ControlCodes.EffectCode_FireShield);
+        _elementShieldEffects.Add(ControlCodes.Element_Ice, ControlCodes.EffectCode_IceShield);
+        _elementShieldEffects.Add(ControlCodes.Element_Electric, ControlCodes.EffectCode_ElectricShield);
+    }
+    public static byte IsShieldedFromElement(byte element, Avatar toCheck)
+    {
+        if (_elementShieldEffects.ContainsKey(element))
+        {
+            byte shieldID = _elementShieldEffects[element];
+            if (toCheck.IsEffectActive(shieldID))
+            {
+                return shieldID;
+            }
+        }
+        return 0;
     }
     public static void FaceCamera(GameObject go)
     {
@@ -88,7 +110,7 @@ public static class SharedFunctions
     public static void FillCameraDirectionBytes(ref byte[] toFill, int index)
     {
         byte[] cameraDirectionBytes = GetCameraDirectionBytes();
-        Debug.Log("Direction1: " + Camera.main.transform.forward.ToString());
+        //Debug.Log("Direction1: " + Camera.main.transform.forward.ToString());
         cameraDirectionBytes.CopyTo(toFill, index);
     }
     public static bool IsPlayerAvatar(Avatar toCheck)
@@ -226,7 +248,7 @@ public static class SharedFunctions
 
     public static bool WasPCHit(Collider other)
     {
-        return other.GetComponent<PC>() != null;
+        return other.GetComponent<PC>() != null && Game.PCAvatar.IsAlive;
     }
     public static bool WasRemoteHit(Collider other, out Avatar remote)
     {
