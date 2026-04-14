@@ -5,6 +5,13 @@ public class Bolt : Projectile
     private float _distanceTravelled;
     private byte _maxRange;
     private Vector3 _priorPosition;
+    public ParticleSystem ParticleSystem;
+    private ParticleSystem.EmissionModule _emitter;
+    private void Awake()
+    {
+        _emitter = ParticleSystem.emission;
+    }
+
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
@@ -17,8 +24,15 @@ public class Bolt : Projectile
                 MarkForDestruction();
             }
         }
+        else
+        {
+            if (_emitter.enabled)
+            {
+                _emitter.enabled = false;
+            }
+        }
     }
-
+    
     public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
     {
         _maxRange = spellReference.Range;

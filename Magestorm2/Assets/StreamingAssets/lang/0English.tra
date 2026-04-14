@@ -244,7 +244,7 @@ Flame Strike
 Basic: Launches a projectile dealing 2-4 fire damage. The projectile has a 10% chance of burning the target. \nExpert: Two projectiles\nMaster: Three projectiles.
 Ice Dart
 Basic: Launches a projectile dealing 2-4 cold damage. The projectile has a 10% chance of freezing the target. \nExpert: Two projectiles\nMaster: Three projectiles.
-Stone Fist
+Rock Blast
 Basic: Launches a projectile dealing 1-2 earth damage and 1-2 physical damage. The projectile has a 10% chance of grounding the target. \nExpert: Two projectiles\nMaster: Three projectiles.
 Static Charge
 Basic: Launches a projectile dealing 2-4 electric. The projectile has a 10% chance of shocking the target. \nExpert: Two projectiles\nMaster: Three projectiles.
@@ -324,3 +324,5 @@ Shock Nova
 The caster rapidly discharges a burst of electrical dealing damage to adjacent enemies.
 Smite
 Fires a magically-conjured weapon at an enemy target. 
+Stonebolt
+Shoots a bolt of stone, dealing 1-4 damage per point of skill. 

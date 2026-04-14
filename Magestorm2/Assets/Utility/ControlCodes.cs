@@ -21,6 +21,9 @@
     public const byte Element_Ice = 2;
     public const byte Element_Earth = 3;
     public const byte Element_Electric = 4;
+    public const byte Element_Light = 5;
+    public const byte Element_Dark = 6;
+    public const byte Element_Physical = 7;
 
     public const byte SpellTypes_Projectile = 1;
     public const byte SpellTypes_Self = 2;

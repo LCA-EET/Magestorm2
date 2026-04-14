@@ -5,7 +5,9 @@ public class SpawnedSpell : MonoBehaviour
     protected byte _casterID;
     protected short _castID;
     public float ExpireAfter;
+    public float DestroyAfter;
     private float _expiration;
+    private float _destructionElapsed;
     protected SpellData _spellReference;
     protected Team _castingTeam;
     protected bool _destroyOnNextUpdate;
@@ -34,8 +36,15 @@ public class SpawnedSpell : MonoBehaviour
     {
         if (_destroyOnNextUpdate)
         {
-            ComponentRegister.Spawner.DeregisterSpawnedSpell(this);
-            Destroy(gameObject);
+            if(_destructionElapsed >= DestroyAfter)
+            {
+                ComponentRegister.Spawner.DeregisterSpawnedSpell(this);
+                Destroy(gameObject);
+            }
+            else
+            {
+                _destructionElapsed += Time.deltaTime;
+            }
         }
     }
     public void MarkForDestruction()
