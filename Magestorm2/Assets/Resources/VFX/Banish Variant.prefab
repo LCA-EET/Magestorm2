@@ -133,7 +133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3250507316515372806, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
       propertyPath: VFXCode
-      value: 64
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4108335265468273677, guid: 538623941c2cb0848926554840ccf3f2, type: 3}
       propertyPath: m_LocalPosition.x

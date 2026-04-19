@@ -1,5 +1,23 @@
 using UnityEngine;
 
+public enum VFXCode
+{
+    None,
+    Banish,
+    Bleed,
+    Burn,
+    EarthShield,
+    ElectricShield,
+    Entangle, 
+    FireShield,
+    Frozen,
+    Haste,
+    Heal,
+    IceShield,
+    Prayer,
+    Shock,
+    Slow
+}
 public enum VFXDirection
 {
     NA,

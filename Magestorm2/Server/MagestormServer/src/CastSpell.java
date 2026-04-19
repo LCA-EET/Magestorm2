@@ -49,25 +49,37 @@ public class CastSpell {
     protected void ProcessEffect(MatchCharacter target){
         byte effectCode = _baseReference.GetEffectCode();
         Main.LogMessage("Effect code for base reference " + _baseReference.GetSpellID() + ": " + _baseReference.GetEffectCode());
-
-        if(effectCode > 0){
-            byte effectStatCode = _baseReference.GetEffectStatCode();
-            Main.LogMessage("Effect stat code: " + effectStatCode);
-            byte casterStat = _casterReference.GetStatistic(effectStatCode);
-            Main.LogMessage("Caster stat: " + casterStat);
-            byte targetStat = target.GetStatistic(effectStatCode);
-            Main.LogMessage("Target stat: " + targetStat);
-            byte difference = (byte) (casterStat - targetStat);
-            Main.LogMessage("Difference: " + difference);
-            float chance = (50 + (difference * 10)) / 100.0f;
-            Main.LogMessage("Chance of effect: " + chance);
-            if(chance > 0.9f){
-                chance = 0.9f;
+        float chance, random;
+        if(effectCode > 0 ){
+            if(target.GetIDinMatch() == _casterReference.GetIDinMatch()){
+                //self-applied effect
+                chance = 1;
+                random = 0;
             }
-            if(chance < 0.1f){
-                chance = 0.1f;
+            else{
+                if(!target.IsEffectPrevented(effectCode)){
+                    byte effectStatCode = _baseReference.GetEffectStatCode();
+                    Main.LogMessage("Effect stat code: " + effectStatCode);
+                    byte casterStat = _casterReference.GetStatistic(effectStatCode);
+                    Main.LogMessage("Caster stat: " + casterStat);
+                    byte targetStat = target.GetStatistic(effectStatCode);
+                    Main.LogMessage("Target stat: " + targetStat);
+                    byte difference = (byte) (casterStat - targetStat);
+                    Main.LogMessage("Difference: " + difference);
+                    chance = (50 + (difference * 10)) / 100.0f;
+                    Main.LogMessage("Chance of effect: " + chance);
+                    if(chance > 0.9f){
+                        chance = 0.9f;
+                    }
+                    if(chance < 0.1f){
+                        chance = 0.1f;
+                    }
+                    random = SharedFunctions.GetRandomFloat();
+                }
+                else{
+                    return;
+                }
             }
-            float random = SharedFunctions.GetRandomFloat();
             if(chance >= random){
                 Main.LogMessage("Effect triggered.");
                 target.TerminateEffects(_baseReference.GetEffectsCancelled(), _spellID);
@@ -82,6 +94,6 @@ public class CastSpell {
         }
     }
     protected AppliedEffect CreateEffect(MatchCharacter target, byte effectCode){
-        return new AppliedEffect(_casterReference, target, _spellLevel, effectCode, _baseReference.GetDuration());
+        return new AppliedEffect(_casterReference, target, _baseReference, _spellLevel, effectCode, _baseReference.GetDuration());
     }
 }

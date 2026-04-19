@@ -83,3 +83,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Haste
   EffectCode: 12
+  VFXCode: 9

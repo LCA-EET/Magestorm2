@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour
     public GameObject Marker;
     private Dictionary<byte, SpellSpawner> _spellPrefabs;
     private Dictionary<short, SpawnedSpell> _spellRegistry;
-    private Dictionary<byte, VFX> _vfxTable;
+    private Dictionary<VFXCode, VFX> _vfxTable;
     private Dictionary<byte, AppliedEffect> _appliedEffects;
     private PeriodicAction _expirationCheck;
     private List<GameObject> _activeMarkers;
@@ -21,7 +21,7 @@ public class Spawner : MonoBehaviour
         _activeMarkers = new List<GameObject>();
         _expirationCheck = new PeriodicAction(30.0f, ExpirationCheck, null);
         _spellRegistry = new Dictionary<short, SpawnedSpell>();
-        _vfxTable = new Dictionary<byte, VFX>();
+        _vfxTable = new Dictionary<VFXCode, VFX>();
         ComponentRegister.Spawner = this;
         LoadSpellPrefabs();
         LoadVFXPrefabs();
@@ -54,7 +54,7 @@ public class Spawner : MonoBehaviour
         marker.transform.localScale = new Vector3(scale, scale, scale);
         _activeMarkers.Add(marker);
     }
-    public void SpawnVFX(byte vfxCode, Vector3 position)
+    public void SpawnVFX(VFXCode vfxCode, Vector3 position)
     {
         if (_vfxTable.ContainsKey(vfxCode))
         {
@@ -62,7 +62,12 @@ public class Spawner : MonoBehaviour
             vfx.transform.position = position;
         }
     }
-    public void SpawnVFX(byte vfxCode, Transform parent, ref GameObject spawned)
+    public void SpawnVFX(VFXCode vfxCode, Transform parent)
+    {
+        GameObject spawned = null;
+        SpawnVFX(vfxCode, parent, ref spawned);
+    }
+    public void SpawnVFX(VFXCode vfxCode, Transform parent, ref GameObject spawned)
     {
         Debug.Log("SpawnVFX: " + vfxCode);
         if (_vfxTable.ContainsKey(vfxCode))
@@ -92,7 +97,7 @@ public class Spawner : MonoBehaviour
     }
     private void LoadVFXPrefabs()
     {
-        _vfxTable = new Dictionary<byte, VFX>();
+        _vfxTable = new Dictionary<VFXCode, VFX>();
         VFX[] vfxContainers = Resources.LoadAll<VFX>("VFX");
         Debug.Log("LoadVFXPrefabs(): VFX count: " + vfxContainers.Length);
         foreach (VFX vfx in vfxContainers)
@@ -145,7 +150,11 @@ public class Spawner : MonoBehaviour
             effect = Instantiate(_appliedEffects[effectCode]);
             return true;
         }
-        return false;
+        else
+        {
+            Debug.Log("No AE for code: " + effectCode);
+        }
+            return false;
     }
     public bool SpawnSpellPrefab(byte spellKey, ref SpellSpawner spawner)
     {

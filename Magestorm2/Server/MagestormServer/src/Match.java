@@ -369,9 +369,14 @@ public class Match {
                 }
                 break;
             case ControlCodes.SpellTypes_Self:
+                CastSpell selfCast = null;
                 if(spellReference.IsHealing()){
-                    HealingSpell healingSpell = new HealingSpell(caster, castID, spellReference, this);
-                    healingSpell.ProcessSpell(caster);
+                    selfCast = new HealingSpell(caster, castID, spellReference, this);
+                    selfCast.ProcessSpell(caster);
+                }
+                else{
+                    selfCast = new CastSpell(caster, castID, spellReference, this);
+                    selfCast.ProcessSpell(caster);
                 }
                 break;
             case ControlCodes.SpellTypes_Bolt:
@@ -508,8 +513,10 @@ public class Match {
         CastSpell spell = GetCastSpell(castID);
         if(spell != null){
             spell.ProcessSpell(hitPlayer);
-            byte[] packet = Packets.HitNotificationPacket(hitPlayer.GetIDinMatch(), spell.GetCasterID());
-            SendToPlayer(packet, hitPlayer);
+            if(spell.GetBaseSpell().IsDamaging()){
+                byte[] packet = Packets.HitNotificationPacket(hitPlayer.GetIDinMatch(), spell.GetCasterID());
+                SendToPlayer(packet, hitPlayer);
+            }
         }
         else{
             Main.LogError("Match.PlayerHit: Spell " + castID + " is null.");

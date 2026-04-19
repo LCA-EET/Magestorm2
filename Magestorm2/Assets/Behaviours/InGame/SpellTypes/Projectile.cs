@@ -5,7 +5,9 @@ public class Projectile : SpawnedSpell
     public SpellImpact ImpactPrefab;
     public bool InvertImpactDirection;
     public float ImpactScaling = 1.0f;
+    public VFXCode ShieldVFX;
     protected bool _impact, _directHit;
+    protected Avatar _hitPlayer;
     protected virtual void FixedUpdate()
     {
         if (!_destroyOnNextUpdate)
@@ -58,6 +60,7 @@ public class Projectile : SpawnedSpell
                 {
                     _impact = true;
                     _directHit = true;
+                    _hitPlayer = Game.PCAvatar;
                     Debug.Log("Direct hit!");
                     Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
                     SharedFunctions.CameraShake(_spellReference);
@@ -65,14 +68,13 @@ public class Projectile : SpawnedSpell
             }
             else
             {
-                Avatar remotePlayer = null;
-                if(SharedFunctions.WasRemoteHit(other, out remotePlayer))
+                _hitPlayer = null;
+                if(SharedFunctions.WasRemoteHit(other, out _hitPlayer))
                 {
-                    byte shieldID = SharedFunctions.IsShieldedFromElement(_spellReference.Element0, remotePlayer);
-                    if(shieldID > 0)
+                    byte shieldID = SharedFunctions.IsShieldedFromElement(_spellReference.Element0, _hitPlayer);
+                    if(shieldID > 0 && ShieldVFX != VFXCode.None)
                     {
-                        GameObject spawned = null;
-                        ComponentRegister.Spawner.SpawnVFX(shieldID, remotePlayer.transform, ref spawned);
+                        ComponentRegister.Spawner.SpawnVFX(ShieldVFX, _hitPlayer.transform);
                     }
                 }
                 _impact = true;

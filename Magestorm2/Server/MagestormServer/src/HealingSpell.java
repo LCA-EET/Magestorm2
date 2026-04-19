@@ -20,11 +20,13 @@ public class HealingSpell extends CastSpell{
 
     @Override
     public void ProcessSpell(MatchCharacter affectedPlayer){
+        super.ProcessSpell(affectedPlayer);
         if(affectedPlayer.GetIDinMatch() == _casterReference.GetIDinMatch()
             || (affectedPlayer.GetTeamID() == _castingTeam && _castingTeam != MatchTeam.Neutral)){
             Main.LogMessage("PriorHP: " + affectedPlayer.GetCurrentHP());
             affectedPlayer.Heal(GetHealAmount(), _casterReference);
             Main.LogMessage("CurrentHP: " + affectedPlayer.GetCurrentHP());
+
         }
     }
 }

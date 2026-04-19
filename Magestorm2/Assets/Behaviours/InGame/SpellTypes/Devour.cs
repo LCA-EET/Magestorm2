@@ -12,7 +12,7 @@ public class Devour : SpawnedSpell
             if(hitInfo.collider != null)
             {
                 Avatar deadPlayer = hitInfo.collider.GetComponent<Avatar>();
-                ComponentRegister.Spawner.SpawnVFX(ControlCodes.VFX_Banish, deadPlayer.transform.position);
+                ComponentRegister.Spawner.SpawnVFX(VFXCode.Banish, deadPlayer.transform.position);
                 Debug.Log("Casting Team = " + _castingTeam);
                 Debug.Log("Dead Player Team = " + deadPlayer.PlayerTeam);
                 if(deadPlayer.PlayerTeam != castingTeam || castingTeam == Team.Neutral)

@@ -3,6 +3,7 @@
 public class AppliedEffect : MonoBehaviour
 {
     public byte EffectCode;
+    public VFXCode VFXCode;
     private Avatar _appliedTo, _applier;
     private float _duration;
     private byte _degree;
@@ -25,7 +26,7 @@ public class AppliedEffect : MonoBehaviour
         _appliedToPlayer = SharedFunctions.IsPlayerAvatar(_appliedTo);
         if (!_appliedToPlayer)
         {
-            ComponentRegister.Spawner.SpawnVFX(EffectCode, _appliedTo.transform, ref _vfxContainer);
+            ComponentRegister.Spawner.SpawnVFX(VFXCode, _appliedTo.transform, ref _vfxContainer);
         }
     }
     public void DestroyVFX()

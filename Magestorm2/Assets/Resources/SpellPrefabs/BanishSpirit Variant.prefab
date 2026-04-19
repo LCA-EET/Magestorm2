@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Devour
   CastClip: {fileID: 0}
   ExpireAfter: 3
+  DestroyAfter: 0
 --- !u!1001 &3818467041460733197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -56,15 +57,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5613803519542584221, guid: f728cda6d1df6fd4aa7f947141b0ed9e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.47064
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5613803519542584221, guid: f728cda6d1df6fd4aa7f947141b0ed9e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5613803519542584221, guid: f728cda6d1df6fd4aa7f947141b0ed9e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.9052
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5613803519542584221, guid: f728cda6d1df6fd4aa7f947141b0ed9e, type: 3}
       propertyPath: m_LocalRotation.w

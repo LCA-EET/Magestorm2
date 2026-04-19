@@ -221,6 +221,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9193927689291293627, guid: 92aafcee71bbbf6449cc5844b80e0ec1, type: 3}
+      propertyPath: ShieldVFX
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 9193927689291293627, guid: 92aafcee71bbbf6449cc5844b80e0ec1, type: 3}
       propertyPath: ImpactPrefab
       value: 
       objectReference: {fileID: 1624210858217755713, guid: 1d3a4ccebe61ce44e97bfa900f032fce, type: 3}

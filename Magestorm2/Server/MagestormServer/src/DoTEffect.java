@@ -1,9 +1,9 @@
 public class DoTEffect extends AppliedEffect{
     private long _elapsedSinceLastHit;
     private final float _damagePerTick;
-    public DoTEffect(MatchCharacter caster, MatchCharacter target, byte degree, byte effectCode,
+    public DoTEffect(MatchCharacter caster, MatchCharacter target, Spell baseReference, byte degree, byte effectCode,
                      byte duration, float damagePerTick) {
-        super(caster, target, degree, effectCode, duration);
+        super(caster, target, baseReference, degree, effectCode, duration);
         _damagePerTick = damagePerTick;
     }
 

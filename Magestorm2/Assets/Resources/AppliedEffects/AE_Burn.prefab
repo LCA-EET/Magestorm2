@@ -10,7 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2132631745679333182, guid: 50cde758e8152f1418a32715f1c2705e, type: 3}
       propertyPath: m_Name
-      value: AppliedEffect Variant
+      value: AE_Burn
+      objectReference: {fileID: 0}
+    - target: {fileID: 3738934940221306145, guid: 50cde758e8152f1418a32715f1c2705e, type: 3}
+      propertyPath: VFXCode
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3738934940221306145, guid: 50cde758e8152f1418a32715f1c2705e, type: 3}
       propertyPath: EffectCode

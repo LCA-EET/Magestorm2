@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acceedff951cb77448bf0e894b5313b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VFX
-  VFXCode: 10
+  VFXCode: 2
   AudioSource: {fileID: 8727228312779962486}
   AudioClip: {fileID: 0}
   VFXDirection: 2

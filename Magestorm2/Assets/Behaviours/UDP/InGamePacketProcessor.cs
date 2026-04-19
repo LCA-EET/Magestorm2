@@ -183,6 +183,7 @@ public class InGamePacketProcessor : UDPProcessor
             byte effectCode = _decrypted[3];
             byte duration = _decrypted[4];
             byte degree = _decrypted[5];
+            Debug.Log("HandleEffect(): " + applierID + ", " + effectCode + ", " + duration + ", " + degree);
             AppliedEffect ae = null;
             if (applierID != appliedToID)
             {

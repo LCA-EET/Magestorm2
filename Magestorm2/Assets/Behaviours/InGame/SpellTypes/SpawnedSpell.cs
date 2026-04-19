@@ -4,6 +4,7 @@ public class SpawnedSpell : MonoBehaviour
     public AudioClip CastClip;
     protected byte _casterID;
     protected short _castID;
+    protected Avatar _casterReference;
     public float ExpireAfter;
     public float DestroyAfter;
     private float _expiration;
@@ -11,21 +12,29 @@ public class SpawnedSpell : MonoBehaviour
     protected SpellData _spellReference;
     protected Team _castingTeam;
     protected bool _destroyOnNextUpdate;
+
     public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
     {
-        _spellReference = spellReference;
-        _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
-        transform.parent = parent;
-        _casterID = casterID;
-        _castingTeam = castingTeam;
-        _castID = castID;
-        ComponentRegister.Spawner.RegisterSpawnedSpell(this);
-        if(casterID == MatchParams.IDinMatch && CastClip != null)
+        if(Match.GetAvatar(casterID, ref _casterReference))
         {
-            if(CastClip!= null)
+            _spellReference = spellReference;
+            _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
+            transform.parent = parent;
+            _casterID = casterID;
+            _castingTeam = castingTeam;
+            _castID = castID;
+            ComponentRegister.Spawner.RegisterSpawnedSpell(this);
+            if (casterID == MatchParams.IDinMatch && CastClip != null)
             {
-                ComponentRegister.AudioPlayer.PlayClip(CastClip);
+                if (CastClip != null)
+                {
+                    ComponentRegister.AudioPlayer.PlayClip(CastClip);
+                }
             }
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
     public bool IsExpired(float currentTime)

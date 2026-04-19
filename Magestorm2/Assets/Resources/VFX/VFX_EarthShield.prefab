@@ -110,7 +110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8805025102406648231, guid: 3313d9c601a596a4d97c19a9e247b0ff, type: 3}
       propertyPath: VFXCode
-      value: 9
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8805025102406648231, guid: 3313d9c601a596a4d97c19a9e247b0ff, type: 3}
       propertyPath: ExpireAfter

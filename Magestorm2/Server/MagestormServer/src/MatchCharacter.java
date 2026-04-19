@@ -33,7 +33,7 @@ public class MatchCharacter {
     private float _priorHP, _priorMana;
     private float _ley;
     private int _lastPRPacketID;
-    private final byte[] _resistance;
+    private final float[] _resistance;
     private final boolean _newToMatch;
     private final HashSet<Short> _splashHits;
     private final ConcurrentHashMap<Byte, AppliedEffect> _activeEffects;
@@ -41,7 +41,7 @@ public class MatchCharacter {
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
         MarkPacketReceived();
         _team = team;
-        _resistance = new byte[8];
+        _resistance = new float[8];
         _lastPRPacketID = 0;
         _hpRegenElapsed = 0;
         _hpRegenTick = hpRegenTick;
@@ -89,8 +89,11 @@ public class MatchCharacter {
     public byte IsNewToMatch(){
         return _newToMatch?(byte)1:(byte)0;
     }
-    public byte GetResistance(byte elementID){
+    public float GetResistance(byte elementID){
         return _resistance[elementID];
+    }
+    public void AdjustResistance(byte elementID, float resistance){
+        _resistance[elementID] += resistance;
     }
     public int GetCharacterID(){
         return _pc.GetCharacterID();
@@ -211,9 +214,7 @@ public class MatchCharacter {
     }
     public void AddEffect(AppliedEffect toAdd){
         byte effectCode = toAdd.GetEffectCode();
-        if(_activeEffects.containsKey(effectCode)){
-            _activeEffects.remove(effectCode);
-        }
+        _activeEffects.remove(effectCode);
         _activeEffects.put(effectCode, toAdd);
     }
     public void RemoveAllEffects(){
@@ -333,6 +334,14 @@ public class MatchCharacter {
             }
         }
         return toReturn;
+    }
+    public boolean IsEffectPrevented(byte effectCode){
+        for(AppliedEffect ae : _activeEffects.values()){
+            if(ae.IsPreventingEffect(effectCode)){
+                return true;
+            }
+        }
+        return false;
     }
     @Override
     public String toString(){

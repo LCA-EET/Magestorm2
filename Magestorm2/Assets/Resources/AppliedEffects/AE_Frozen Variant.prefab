@@ -13,6 +13,10 @@ PrefabInstance:
       value: AE_Frozen Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3738934940221306145, guid: 50cde758e8152f1418a32715f1c2705e, type: 3}
+      propertyPath: VFXCode
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3738934940221306145, guid: 50cde758e8152f1418a32715f1c2705e, type: 3}
       propertyPath: EffectCode
       value: 2
       objectReference: {fileID: 0}

@@ -1,6 +1,7 @@
 ﻿public static class ControlCodes
 {
     public const byte VFX_Banish = 64;
+    public const byte VFX_HealSelf = 65;
 
     public const byte CastPayloadStartIndex = 5;
 

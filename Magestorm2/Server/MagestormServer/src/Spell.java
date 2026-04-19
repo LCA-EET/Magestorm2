@@ -1,25 +1,24 @@
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class Spell {
     private final int _spellID;
 
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
             _spellType, _discipline, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
-            _notificationCode, _effectRadius, _effectCode, _effectStat, _duration, _levelsForRoll;
+            _notificationCode, _effectRadius, _effectCode, _effectStat, _duration, _levelsForRoll, _iceResist, _fireResist, _elecResist, _earthResist;
     private final float _splashFactor0, _splashFactor1, _splashFactor2, _dotDamagePercent;
-
-    private final short _cancelsEffects;
+    private final float[] _resistances;
     private final ArrayList<Byte> _effectsCancelled;
-    public Spell(int id, short cancelsEffects, byte[] params){
+    private final HashSet<Byte> _effectsPrevented;
+    public Spell(int id, short cancelsEffects, short preventsEffects, byte[] params){
         _spellID = id;
-        _cancelsEffects = cancelsEffects;
         _effectsCancelled = new ArrayList<>();
-        boolean[] converted = ByteUtils.ShortToBoolArray(_cancelsEffects);
-        for(byte b = 0; b < converted.length; b++){
-            if(converted[b]){
-                _effectsCancelled.add(b);
-            }
-        }
+        _effectsPrevented = new HashSet<>();
+        _resistances = new float[8];
+        FillEffects(cancelsEffects, _effectsCancelled);
+        FillEffects(preventsEffects, _effectsPrevented);
         _minDamagePerRoll0 = params[0];
         _maxDamagePerRoll0 = params[1];
         _minHealPerRoll = params[2];
@@ -44,10 +43,34 @@ public class Spell {
         _effectStat = params[24];
         _duration = params[25];
         _dotDamagePercent = params[26] / 100.0f;
+        _iceResist = params[27];
+        _fireResist = params[28];
+        _elecResist = params[29];
+        _earthResist = params[30];
+        _resistances[ControlCodes.Element_Fire] = _fireResist / 100.0f;
+        _resistances[ControlCodes.Element_Earth] = _earthResist / 100.0f;
+        _resistances[ControlCodes.Element_Ice] = _iceResist / 100.0f;
+        _resistances[ControlCodes.Element_Electric] = _elecResist / 100.0f;
     }
-    public short GetEffectCancellation(){
-        return _cancelsEffects;
+
+    private void FillEffects(short number, Collection<Byte> collection){
+        boolean[] converted = ByteUtils.ShortToBoolArray(number);
+        for(byte b = 0; b < converted.length; b++){
+            if(converted[b]){
+                collection.add(b);
+            }
+        }
     }
+    public HashSet<Byte> GetEffectsPrevented(){
+        return _effectsPrevented;
+    }
+    public boolean IsEffectPrevented(byte effectCode){
+        return _effectsPrevented.contains(effectCode);
+    }
+    public float[] GetResistances(){
+        return _resistances;
+    }
+
     public ArrayList<Byte> GetEffectsCancelled(){
         return _effectsCancelled;
     }

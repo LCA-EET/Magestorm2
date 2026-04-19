@@ -35,9 +35,9 @@ public class DamagingSpell extends CastSpell{
 
     protected void ApplyDamage(short damage, byte element, MatchCharacter target){
         float appliedDamage = damage;
-        byte resistance = target.GetResistance(element);
+        float resistance = target.GetResistance(element);
         if(resistance != 0){
-            appliedDamage *= ((100.0f - resistance) / 100.0f);
+            appliedDamage *= (1.0f - resistance );
         }
         if(target.IsSplashHit(_castID)){
             byte skillLevel = _casterReference.GetSkillLevel(_baseReference.GetDiscipline());
@@ -68,6 +68,6 @@ public class DamagingSpell extends CastSpell{
     protected AppliedEffect CreateEffect(MatchCharacter target, byte effectCode){
         byte duration = _baseReference.GetDuration();
         float damagePerTick = (_damage0 * _baseReference.GetDoTDamagePercent()) / duration;
-        return new DoTEffect(_casterReference, target, _spellLevel, effectCode, duration, damagePerTick);
+        return new DoTEffect(_casterReference, target, _baseReference, _spellLevel, effectCode, duration, damagePerTick);
     }
 }

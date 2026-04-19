@@ -326,3 +326,11 @@ Smite
 Fires a magically-conjured weapon at an enemy target. 
 Stonebolt
 Shoots a bolt of stone, dealing 1-4 damage per point of skill. 
+Fire Shield
+Increases the caster's resistance against fire-based attacks.
+Ice Shield
+Increases the caster's resistance against ice-based attacks.
+Electric Shield
+Increases the caster's resistance against electric-based attacks.
+Earth Shield
+Increases the caster's resistance against earth-based attacks.
