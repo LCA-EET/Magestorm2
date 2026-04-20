@@ -37,15 +37,17 @@ public class DamagingSpell extends CastSpell{
         float appliedDamage = damage;
         float resistance = target.GetResistance(element);
         if(resistance != 0){
+            Main.LogDebug("DamagingSpell.ApplyDamage(): Pre-resist appliedDamage: " + appliedDamage);
             appliedDamage *= (1.0f - resistance );
+            Main.LogDebug("DamagingSpell.ApplyDamage(): Post-resist appliedDamage: " + appliedDamage);
         }
         if(target.IsSplashHit(_castID)){
             byte skillLevel = _casterReference.GetSkillLevel(_baseReference.GetDiscipline());
             appliedDamage *= Math.max(1,_baseReference.GetSplashFactor(skillLevel));
-            Main.LogMessage("Splash hit applied damage = " + appliedDamage);
+            Main.LogMessage("DamagingSpell.ApplyDamage(): Splash hit applied damage = " + appliedDamage);
         }
         else{
-            Main.LogMessage("Not a splash hit.");
+            Main.LogMessage("DamagingSpell.ApplyDamage(): Not a splash hit.");
         }
         if(target.IsShocked()){
             appliedDamage *= 1.1f;
@@ -55,12 +57,12 @@ public class DamagingSpell extends CastSpell{
 
     @Override
     public void ProcessSpell(MatchCharacter affectedPlayer){
-        Main.LogMessage("PriorHP: " + affectedPlayer.GetCurrentHP());
+        Main.LogMessage("DamagingSpell.ProcessSpell(): PriorHP: " + affectedPlayer.GetCurrentHP());
         ApplyDamage(GetDamage0(), _baseReference.GetElement0(), affectedPlayer);
         if(_multiElement){
             ApplyDamage(GetDamage1(), _baseReference.GetElement1(), affectedPlayer);
         }
-        Main.LogMessage("CurrentHP: " + affectedPlayer.GetCurrentHP());
+        Main.LogMessage("DamagingSpell.ProcessSpell(): PriorHP: " + affectedPlayer.GetCurrentHP());
         ProcessEffect(affectedPlayer);
     }
 

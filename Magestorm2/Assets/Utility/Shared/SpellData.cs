@@ -179,10 +179,10 @@ public class SpellData
                     toSend = InGame_Packets.ProjectileCastPacket(SpellID);
                     break;
                 case ControlCodes.SpellTypes_PBAoE:
-                    toSend = InGame_Packets.GenericCastPacket(0, SpellID, ControlCodes.SpellTypes_PBAoE);
-                    break;
                 case ControlCodes.SpellTypes_Self:
-                    toSend = InGame_Packets.GenericCastPacket(0, SpellID, ControlCodes.SpellTypes_Self);
+                case ControlCodes.SpellTypes_SelfHeal:
+                case ControlCodes.SpellTypes_SelfResist:
+                    toSend = InGame_Packets.GenericCastPacket(0, SpellID, SpellType);
                     break;
                 case ControlCodes.SpellTypes_Summon:
                     toSend = ComponentRegister.PC.Summon(SpellID);

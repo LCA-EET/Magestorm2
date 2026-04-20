@@ -8,7 +8,12 @@ public class ResistanceEffect extends AppliedEffect{
     }
     private void ApplyResistances(float factor){
         for(byte elementID = 0; elementID < _resistances.length; elementID++){
-            _target.AdjustResistance(elementID, _resistances[elementID] * factor);
+            float resistance = _resistances[elementID];
+            if (resistance != 0){
+                float adjustment = resistance * factor;
+                Main.LogDebug("ResistanceEffect.ApplyResistances(): ElementID: " + elementID + ", Adjustment: " + adjustment);
+                _target.AdjustResistance(elementID, adjustment);
+            }
         }
     }
     @Override

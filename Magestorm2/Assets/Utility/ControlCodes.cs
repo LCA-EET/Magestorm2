@@ -31,6 +31,9 @@
     public const byte SpellTypes_Summon = 3;
     public const byte SpellTypes_Bolt = 4;
     public const byte SpellTypes_PBAoE = 5;
+    public const byte SpellTypes_SelfHeal = 6;
+    public const byte SpellTypes_SelfResist = 7;
+
 
     public const byte SpellDiscipline_FireLaw = 0;
     public const byte SpellDiscipline_IceLaw = 1;

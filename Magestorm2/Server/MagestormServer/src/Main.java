@@ -8,7 +8,7 @@ public class Main {
     private static Log _serverLog;
     public static Emailer Mailer;
     public static boolean Running = true;
-
+    public static boolean Debug = false;
     public static void main(String args[]) throws FileNotFoundException {
         SharedFunctions.Initialize();
         String paramFilePath = args[0];
@@ -30,10 +30,13 @@ public class Main {
         }
     }
     public static void InitLog(){
-        _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath);
+        _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath, ServerParams.DebugFilePath);
     }
     public static void LogMessage(String toLog){
         _serverLog.LogMessage(toLog);
+    }
+    public static void LogDebug(String toLog){
+        _serverLog.LogDebug(toLog);
     }
     public static void LogError(String toLog){
         _serverLog.LogError(toLog);

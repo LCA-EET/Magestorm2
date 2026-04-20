@@ -368,19 +368,20 @@ public class Match {
                     _castSpells.put(castID, new HealingSpell(caster, castID, spellReference, this));
                 }
                 break;
-            case ControlCodes.SpellTypes_Self:
-                CastSpell selfCast = null;
-                if(spellReference.IsHealing()){
-                    selfCast = new HealingSpell(caster, castID, spellReference, this);
-                    selfCast.ProcessSpell(caster);
-                }
-                else{
-                    selfCast = new CastSpell(caster, castID, spellReference, this);
-                    selfCast.ProcessSpell(caster);
-                }
+            case ControlCodes.SpellTypes_SelfHeal:
+                HealingSpell selfHeal = new HealingSpell(caster, castID, spellReference, this);
+                selfHeal.ProcessSpell(caster);
+                break;
+            case ControlCodes.SpellTypes_SelfResist:
+                ResistanceSpell resistanceSpell = new ResistanceSpell(caster, castID, spellReference, this);
+                resistanceSpell.ProcessSpell(caster);
                 break;
             case ControlCodes.SpellTypes_Bolt:
                 _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
+                break;
+            case ControlCodes.SpellTypes_Self:
+                CastSpell selfCast = new CastSpell(caster, castID, spellReference, this);
+                selfCast.ProcessSpell(caster);
                 break;
             case ControlCodes.SpellTypes_Summon:
 
