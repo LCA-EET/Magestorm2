@@ -222,6 +222,18 @@ public class Packets {
         System.arraycopy(castIDBytes, 0, toEncrypt, idxCastID, 2);
         return Cryptographer.Encrypt(toEncrypt);
     }
+    public static byte[] WallDataPacket(ArrayList<Wall> wallData){
+        byte[] toEncrypt = new byte[1 + 1 + (wallData.size() * 27)];
+        toEncrypt[0] = InGame_Send.WallRequestResponse;
+        toEncrypt[1] = (byte)wallData.size();
+        int index = 2;
+        for(Wall wall : wallData){
+            byte[] wallBytes = wall.GetWallBytes();
+            System.arraycopy(wallBytes, 0, toEncrypt, index, wallBytes.length);
+            index += wallBytes.length;
+        }
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] EffectsCancellationPacket(byte subjectID, byte spellID){
         byte[] toEncrypt = new byte[3];
         toEncrypt[0] = InGame_Send.EffectsCancellation;
@@ -249,7 +261,26 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-
+    public static byte[] WallExpirationPacket(short wallID){
+        byte[] toEncrypt = new byte[1 + 1 + 2];
+        toEncrypt[0] = InGame_Send.WallExpired;
+        toEncrypt[1] = 1;
+        System.arraycopy(ByteUtils.ShortToByteArray(wallID), 0, toEncrypt, 2, 2);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+    public static byte[] WallsExpirationPacket(ArrayList<Short> wallIDs){
+        byte numWalls = (byte)wallIDs.size();
+        byte[] toEncrypt = new byte[1 + 1 + (numWalls * 2)];
+        toEncrypt[0] = InGame_Send.WallExpired;
+        toEncrypt[1] = numWalls;
+        int index = 2;
+        for(Short wallID : wallIDs){
+            byte[] wallIDBytes = ByteUtils.ShortToByteArray(wallID);
+            System.arraycopy(wallIDBytes, 0, toEncrypt, index, 2);
+            index += 2;
+        }
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] ObjectStatusBytes(ArrayList<Byte> status){
         byte[] toEncrypt = new byte[1 + status.size()];
         toEncrypt[0] = InGame_Send.ObjectData;

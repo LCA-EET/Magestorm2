@@ -90,6 +90,16 @@ public static class InGame_Packets
     {
         return new byte[] { InGame_Send.FlagReturned, MatchParams.IDinMatch, flagID};
     }
+
+    public static byte[] WallCastPacket(byte spellID)
+    {
+        byte[] generic = GenericCastPacket(24, spellID, ControlCodes.SpellTypes_Wall);
+        byte[] camera = SharedFunctions.GetCameraPositionBytes(2.0f);
+        camera.CopyTo(generic, ControlCodes.CastPayloadStartIndex);
+        byte[] rotation = ByteUtils.Vector3ToBytes(Camera.main.transform.rotation.eulerAngles);
+        rotation.CopyTo(generic, ControlCodes.CastPayloadStartIndex + 12);
+        return generic;
+    }
     public static byte[] QuitGamePacket()
     {
         byte[] unencrypted = new byte[7];
@@ -159,5 +169,18 @@ public static class InGame_Packets
         return unencrypted;
     }
 
-    
+    public static byte[] WallHitPacket(short castID, short wallID)
+    {
+        byte[] unencrypted = new byte[6];
+        unencrypted[0] = InGame_Send.WallHit;
+        unencrypted[1] = MatchParams.IDinMatch;
+        BitConverter.GetBytes(castID).CopyTo (unencrypted, 2);
+        BitConverter.GetBytes(wallID).CopyTo(unencrypted, 4);
+        return unencrypted;
+    }
+
+    public static byte[] WallDataRequest()
+    {
+        return new byte[] { InGame_Send.RequestWallData, MatchParams.IDinMatch};
+    }
 }

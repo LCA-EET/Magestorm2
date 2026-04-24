@@ -49,5 +49,7 @@ public static class InGame_Receive
                         InactivityDisconnect = 39,
                         HitNotification = 40,
                         SendToValhalla = 41,
-                        EffectsCancellation = 42;
+                        EffectsCancellation = 42,
+                        WallExpired = 43,
+                        WallRequestResponse = 44;
 }

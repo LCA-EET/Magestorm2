@@ -22,8 +22,8 @@ TagManager:
   - Projectile
   - DeadPlayer
   - DeadBody
-  - 
-  - 
+  - PlayerWall_Solid
+  - PlayerWall_NonSolid
   - 
   - 
   - 

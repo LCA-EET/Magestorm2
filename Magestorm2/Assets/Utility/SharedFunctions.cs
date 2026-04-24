@@ -117,6 +117,12 @@ public static class SharedFunctions
     {
         return toCheck.PlayerID == MatchParams.IDinMatch;
     }
+    public static byte[] GetCameraPositionBytes(float forwardDistance)
+    {
+        Vector3 cameraPosition = Camera.main.transform.position;
+        cameraPosition += Camera.main.transform.forward * forwardDistance;
+        return ByteUtils.Vector3ToBytes(cameraPosition);
+    }
     public static byte[] GetCameraDirectionBytes()
     {
         return ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
@@ -254,6 +260,11 @@ public static class SharedFunctions
     {
         remote = other.GetComponent<Avatar>();
         return remote != null;
+    }
+    public static bool WasWallHit(Collider other, out Wall wall)
+    {
+        wall = other.GetComponent<Wall>();
+        return wall != null;
     }
     public static void SetLayerRecursive(GameObject gameObject, LayerMask newLayer)
     {

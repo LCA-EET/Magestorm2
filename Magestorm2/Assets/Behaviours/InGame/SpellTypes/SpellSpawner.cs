@@ -49,11 +49,21 @@ public class SpellSpawner : MonoBehaviour
             case ControlCodes.SpellTypes_Bolt:
                 InitializeBolt();
                 break;
+            case ControlCodes.SpellTypes_Wall:
+                InitializeWall();
+                break;
         }
         if (_casterID == MatchParams.IDinMatch)
         {
             UseStamina();
         }
+    }
+    private void InitializeWall()
+    {
+        Vector3 position = ByteUtils.BytesToVector3(_payload, 0);
+        Vector3 eulers = ByteUtils.BytesToVector3(_payload, 12);
+        transform.eulerAngles = eulers;
+        transform.position = position;
     }
     private void InitializeBolt()
     {

@@ -23,6 +23,7 @@ public class ControlCodes {
         public static final byte SpellTypes_PBAoE = 5;
         public static final byte SpellTypes_SelfHeal = 6;
         public static final byte SpellTypes_SelfResist = 7;
+        public static final byte SpellTypes_Wall = 8;
     //endregion
 
     //region Discipline

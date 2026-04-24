@@ -18,7 +18,7 @@
                         FlagReturned = 14,
                         FlagTaken = 15,
                         HitPlayer = 16,
-                        CastSpell = 17,
+                        //CastSpell = 17,
                         ObjectStatus = 18,
 
                         FetchPlayer = 20,
@@ -29,5 +29,7 @@
                         ReportHit = 28,
                         PlayerMoved = 29,
                         Devour = 30,
-                        ReportSplash = 31;
+                        ReportSplash = 31,
+                        WallHit = 32,
+                        RequestWallData = 33;
 }

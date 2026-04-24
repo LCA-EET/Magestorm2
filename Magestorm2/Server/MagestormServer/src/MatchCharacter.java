@@ -37,10 +37,13 @@ public class MatchCharacter {
     private final boolean _newToMatch;
     private final HashSet<Short> _splashHits;
     private final ConcurrentHashMap<Byte, AppliedEffect> _activeEffects;
+    private byte _wallCount;
+    private final byte _maxWalls;
 
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
         MarkPacketReceived();
         _team = team;
+        _wallCount = 0;
         _resistance = new float[8];
         _lastPRPacketID = 0;
         _hpRegenElapsed = 0;
@@ -51,6 +54,8 @@ public class MatchCharacter {
         boolean joinAlive = match.JoinAlive(team.GetTeamID());
         _newToMatch = newToMatch;
         _pc = pc;
+        _maxWalls = (byte) (3 + Math.floor(pc.GetCharacterLevel() / 3.0f));
+        Main.LogDebug("Max walls for player " + pc.GetCharacterName() + ", level " + pc.GetCharacterLevel() + " is " + _maxWalls);
         _maxHP = _pc.GetMaxHP();
         _maxMana = _pc.GetMaxMana();
         _currentHP = joinAlive?_maxHP:0;
@@ -77,6 +82,27 @@ public class MatchCharacter {
         _activeEffects = new ConcurrentHashMap<>();
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
     }
+    //region Walls
+    public void IncrementWallCount()
+    {
+        _wallCount++;
+    }
+    public void ResetWallCount(){
+        _wallCount = 0;
+    }
+    public void DecrementWallCount(){
+        _wallCount--;
+    }
+    public byte GetWallCount(){
+        return _wallCount;
+    }
+    public byte GetMaxWalls(){
+        return _maxWalls;
+    }
+    public boolean CanCastAdditionalWall(){
+        return _wallCount < _maxWalls;
+    }
+    //endregion
     public void RegisterSplashHit(short castID){
         _splashHits.add(castID);
     }
@@ -322,7 +348,7 @@ public class MatchCharacter {
     public byte GetLevel(){
         return _INLCTA[_idxLevel];
     }
-    public short CastSpell(Spell cast){
+    public short CastSpell(Spell cast, byte[] decrypted){
         short toReturn = -1;
         if(IsAlive()){
             byte spellCost = cast.SpellCost();
@@ -330,7 +356,7 @@ public class MatchCharacter {
             byte discipline = cast.GetDiscipline();
             if(spellCost < _currentMana && skillRequired <= _pc.GetSkillLevel(discipline)){
                 _currentMana -= spellCost;
-                toReturn = _owningMatch.SpellCast(this, cast);
+                toReturn = _owningMatch.SpellCast(this, cast, decrypted); // instantiation happens here
             }
         }
         return toReturn;

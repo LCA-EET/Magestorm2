@@ -2,14 +2,14 @@
 
 public static class TriggerManager
 {
-    private static Dictionary<int, Trigger> _triggers;
+    private static Dictionary<int, ITrigger> _triggers;
     private static int _nextID = 0;
     public static void Init()
     {
-        _triggers = new Dictionary<int, Trigger>();
+        _triggers = new Dictionary<int, ITrigger>();
     }
 
-    public static int RegisterTrigger(Trigger toRegister)
+    public static int RegisterTrigger(ITrigger toRegister)
     {
         _nextID++;
         if(_triggers == null)
@@ -20,7 +20,7 @@ public static class TriggerManager
         return _nextID;
     }
 
-    public static bool GetTrigger(int id, ref Trigger trigger)
+    public static bool GetTrigger(int id, ref ITrigger trigger)
     {
         if (_triggers.ContainsKey(id))
         {

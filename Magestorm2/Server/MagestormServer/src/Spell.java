@@ -83,6 +83,7 @@ public class Spell {
     public int GetSpellID(){
         return _spellID;
     }
+
     public byte GetMinDamagePerRoll0(){
         return _minDamagePerRoll0;
     }

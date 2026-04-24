@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,7 @@ public static class Match
     private static Dictionary<byte, Avatar> _matchPlayers;
     private static Dictionary<byte, ActivateableObject> _objects;
     private static Dictionary<byte, Avatar> _deadAvatarsOnPCTeam;
+    private static Dictionary<short, Wall> _walls;
     public static bool Running;
     
     public static void Init()
@@ -17,6 +19,7 @@ public static class Match
         _matchPlayers = new Dictionary<byte, Avatar>();
         _deadAvatarsOnPCTeam = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>();
+        _walls = new Dictionary<short, Wall>();
     }
     
     
@@ -78,7 +81,19 @@ public static class Match
         MatchParams.ReturningFromMatch = true;
         SceneManager.LoadScene("Pregame");
     }
-
+    public static void AddWall(short castID, Wall wall)
+    {
+        _walls.Add(castID, wall);
+    }
+    public static void RemoveWall(short castID)
+    {
+        if (_walls.ContainsKey(castID))
+        {
+            Wall toRemove = _walls[castID];
+            _walls.Remove(castID);
+            toRemove.DestroyWall();
+        }
+    }
     public static Dictionary<byte, Avatar> GetMatchPlayers()
     {
         return _matchPlayers;
@@ -155,6 +170,7 @@ public static class Match
             added.UpdatePosition(positionBytes, 0, true);
             added.UpdateDirection(directionBytes, 0, true);
         }
+        Game.SendInGameBytes(InGame_Packets.WallDataRequest());
     }
     public static void UpdatePlayerLocation(byte[] decrypted)
     {

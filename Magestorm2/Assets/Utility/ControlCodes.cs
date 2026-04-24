@@ -33,6 +33,7 @@
     public const byte SpellTypes_PBAoE = 5;
     public const byte SpellTypes_SelfHeal = 6;
     public const byte SpellTypes_SelfResist = 7;
+    public const byte SpellTypes_Wall = 8;
 
 
     public const byte SpellDiscipline_FireLaw = 0;

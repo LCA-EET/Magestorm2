@@ -121,9 +121,46 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.EffectsCancellation:
                         HandleEffectCancellation();
                         break;
+                    case InGame_Receive.WallExpired:
+                        HandleWallExpiration();
+                        break;
+                    case InGame_Receive.WallRequestResponse:
+                        HandleWallRequestResponse();
+                        break;
                 }
             }
         }
+    }
+    private void HandleWallRequestResponse()
+    {
+        byte numWalls = _decrypted[1];
+        int index = 2;
+        for(int i = 0; i < numWalls; i++)
+        {
+            byte spellID = _decrypted[index];
+            index++;
+            short castID = BitConverter.ToInt16(_decrypted, index);
+            index += 2;
+            byte[] payload = new byte[24];
+            Array.Copy(_decrypted, index, payload, 0, 24);
+            index += 24;
+            SpellSpawner spawner = null;
+            ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner);
+            spawner.Initialize(Game.PCAvatar, ControlCodes.SpellTypes_Wall, castID, payload);
+        }
+        
+    }
+    private void HandleWallExpiration()
+    {
+        byte numWalls = _decrypted[1];
+        int index = 2;
+        for(int i = 0; i < numWalls; i++)
+        {
+            short wallID = BitConverter.ToInt16(_decrypted, index);
+            Match.RemoveWall(wallID);
+            index += 2;
+        }
+
     }
     private void HandleEffectCancellation()
     {

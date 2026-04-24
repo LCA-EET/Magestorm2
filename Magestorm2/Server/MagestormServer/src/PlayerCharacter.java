@@ -108,6 +108,9 @@ public class PlayerCharacter {
         float manaMultiplier = 1 + ((statToUse - 10) * 0.05f);
         return ((_level * 4) + 10) * manaMultiplier;
     }
+    public byte GetCharacterLevel(){
+        return _level;
+    }
     public String GetCharacterName(){
         return _characterName;
     }

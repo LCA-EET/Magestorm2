@@ -187,6 +187,9 @@ public class SpellData
                 case ControlCodes.SpellTypes_Summon:
                     toSend = ComponentRegister.PC.Summon(SpellID);
                     break;
+                case ControlCodes.SpellTypes_Wall:
+                    toSend = InGame_Packets.WallCastPacket(SpellID);
+                    break;
                 case ControlCodes.SpellTypes_Bolt:
                     SpellData spellReference = null;
                     if(SpellManager.GetSpell(SpellID, ref spellReference))

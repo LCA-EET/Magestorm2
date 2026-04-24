@@ -21,7 +21,7 @@ public class InGame_Receive {
     public static final byte FlagReturned = 14;
     public static final byte FlagTaken = 15;
     public static final byte HitPlayer = 16;
-    public static final byte CastSpell = 17;
+    //public static final byte CastSpell = 17;
     public static final byte ObjectStatus = 18;
 
     public static final byte FetchPlayer = 20;
@@ -33,4 +33,6 @@ public class InGame_Receive {
     public static final byte PlayerMoved = 29;
     public static final byte Devour = 30;
     public static final byte ReportSplash = 31;
+    public static final byte WallHit = 32;
+    public static final byte RequestWallData = 33;
 }

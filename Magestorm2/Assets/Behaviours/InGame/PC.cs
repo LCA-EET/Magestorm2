@@ -108,10 +108,10 @@ public class PC : MonoBehaviour
             _inTriggers.Clear();
             foreach(int id in exited)
             {
-                Trigger exitedTrigger = null;
+                ITrigger exitedTrigger = null;
                 if(TriggerManager.GetTrigger(id, ref exitedTrigger))
                 {
-                    if(exitedTrigger.Entered && !exitedTrigger.Exited)
+                    if(exitedTrigger.HasEntered() && !exitedTrigger.HasExited())
                     {
                         exitedTrigger.ExitAction();
                     }
@@ -271,7 +271,7 @@ public class PC : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Trigger toProcess = null;
+        ITrigger toProcess = null;
         if (ObtainTrigger(other, ref toProcess))
         {
             toProcess.EnterAction();
@@ -279,15 +279,15 @@ public class PC : MonoBehaviour
     }
     public void OnTriggerStay(Collider other)
     {
-        Trigger toProcess = null;
+        ITrigger toProcess = null;
         if (ObtainTrigger(other, ref toProcess))
         {
-            _inTriggers.Add(toProcess.TriggerID);
+            _inTriggers.Add(toProcess.GetTriggerID());
         }
     }
-    private bool ObtainTrigger(Collider other, ref Trigger trigger)
+    private bool ObtainTrigger(Collider other, ref ITrigger trigger)
     {
-        trigger = other.GetComponent<Trigger>();
+        trigger = other.GetComponent<ITrigger>();
         return trigger != null;
     }
     public void HPandManaUpdate(byte[] decrypted)

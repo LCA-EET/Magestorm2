@@ -21,6 +21,7 @@ public class Match {
     protected ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
     protected final ConcurrentHashMap<Short, CastSpell> _castSpells;
     protected final ConcurrentHashMap<Integer, Score> _playerScores;
+    protected final ConcurrentHashMap<Short, Wall> _walls;
     protected final HashSet<Integer> _playersJoined;
     protected byte _nextPlayerID;
     protected final int _matchPort;
@@ -38,6 +39,7 @@ public class Match {
         _matchType = matchType;
         _sceneID = sceneID;
         _castSpells = new ConcurrentHashMap<>();
+        _walls = new ConcurrentHashMap<>();
         _matchCharacters = new ConcurrentHashMap<>();
         _unverifiedCharacters = new ConcurrentHashMap<>();
         _playerScores = new ConcurrentHashMap<>();
@@ -356,7 +358,7 @@ public class Match {
         }
 
     }
-    public short SpellCast(MatchCharacter caster, Spell spellReference){
+    public short SpellCast(MatchCharacter caster, Spell spellReference, byte[] decrypted){
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
             case ControlCodes.SpellTypes_Projectile:
@@ -386,6 +388,17 @@ public class Match {
             case ControlCodes.SpellTypes_Summon:
 
                 break;
+            case ControlCodes.SpellTypes_Wall:
+                if(caster.CanCastAdditionalWall()){
+                    byte[] prBytes = new byte[24];
+                    System.arraycopy(decrypted, ControlCodes.CastPayloadStartIndex, prBytes, 0, 24);
+                    Wall wall = new Wall(caster, castID, spellReference, this, prBytes);
+                    _walls.put(castID, wall);
+                }
+                else{
+                    castID = -1;
+                }
+                break;
         }
         return castID;
     }
@@ -406,12 +419,46 @@ public class Match {
     protected void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
         _processor.EnqueueForSend(encrypted, recipients);
     }
+    public void RequestWallData(MatchCharacter requester){
+        if(!_walls.isEmpty()){
+            ArrayList<Wall> wallData = new ArrayList<>();
+            for(Wall wall : _walls.values()){
+                wallData.add(wall);
+                if(wallData.size() == 19){
+                    SendToPlayer(Packets.WallDataPacket(wallData), requester);
+                    wallData.clear();
+                }
+            }
+            if(!wallData.isEmpty()){
+                SendToPlayer(Packets.WallDataPacket(wallData), requester);
+            }
+        }
+    }
     public void Tick(long msElapsed){
         CountDownTimedObjects(msElapsed);
         PlayerTick(msElapsed);
         ClearExpiredSpells(msElapsed);
+        CountdownWalls(msElapsed);
     }
-
+    private void CountdownWalls(long msElapsed){
+        if(!_walls.isEmpty()){
+            ArrayList<Short> expiredWalls = new ArrayList<>();
+            for(Wall wall : _walls.values()){
+                if(wall.ReduceDuration(msElapsed)){
+                    expiredWalls.add(wall.CastID());
+                }
+            }
+            for(Short wallID : expiredWalls){
+                _walls.remove(wallID);
+            }
+            if(!expiredWalls.isEmpty()){
+                SendToAll(Packets.WallsExpirationPacket(expiredWalls));
+            }
+        }
+    }
+    public Wall GetWall(short wallID){
+        return _walls.get(wallID);
+    }
     private void ClearExpiredSpells(long elapsed){
         _spellExpirationElapsed += elapsed;
         if(_spellExpirationElapsed >= 60000){

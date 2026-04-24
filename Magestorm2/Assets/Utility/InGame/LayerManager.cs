@@ -9,6 +9,9 @@ public static class LayerManager
     public const string Layer_Surface = "Surface";
     public const string Layer_Default = "Default";
     public const string Layer_Interactable = "Interactable";
+    public const string Layer_PlayerWallSolid = "PlayerWall_Solid";
+    public const string Layer_PlayerWallNonSolid = "PlayerWall_NonSolid";
+
 
     private static int _playerLayer, _playerLayerMask;
     private static int _remotePlayerLayer, _remotePlayerLayerMask;
@@ -32,7 +35,7 @@ public static class LayerManager
             _remotePlayerLayerMask = LayerMask.GetMask(Layer_RemotePlayer);
             _surfaceLayerMask = LayerMask.GetMask(Layer_Surface);
             _interactableMask = LayerMask.GetMask(Layer_Interactable);
-            _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable });
+            _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_PlayerWallSolid, Layer_PlayerWallNonSolid });
             _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default });
             _init = true;
         }

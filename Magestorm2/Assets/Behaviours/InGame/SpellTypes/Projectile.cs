@@ -77,6 +77,15 @@ public class Projectile : SpawnedSpell
                         ComponentRegister.Spawner.SpawnVFX(ShieldVFX, _hitPlayer.transform);
                     }
                 }
+                Wall hitWall = null;
+                if (_casterID == MatchParams.IDinMatch)
+                {
+                    if (SharedFunctions.WasWallHit(other, out hitWall))
+                    {
+                        Game.SendInGameBytes(InGame_Packets.WallHitPacket(_castID, hitWall.CastID));
+                        Debug.Log("Wall hit.");
+                    }
+                }
                 _impact = true;
             }
             if (ImpactPrefab != null && _impact)

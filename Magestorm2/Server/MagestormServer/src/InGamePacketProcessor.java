@@ -63,6 +63,12 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.ReportSplash:
                     HandleSplashHit();
                     return true;
+                case InGame_Receive.WallHit:
+                    HandleWallHit();
+                    return true;
+                case InGame_Receive.RequestWallData:
+                    HandleWallRequestPacket();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -70,6 +76,26 @@ public class InGamePacketProcessor extends UDPProcessor{
             return HandleJoinMatchPacket(_remote);
         }
         return false;
+    }
+    private void HandleWallRequestPacket(){
+        _owningMatch.RequestWallData(_owningMatch.GetMatchCharacter(_decrypted[1]));
+    }
+    private void HandleWallHit(){
+        MatchCharacter shooter = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        if(shooter!= null){
+            if(shooter.IsAlive()){
+                short castID = ByteUtils.ExtractShort(_decrypted, 2);
+                DamagingSpell projectile = (DamagingSpell)_owningMatch.GetCastSpell(castID);
+                if(projectile != null){
+                    short wallID = ByteUtils.ExtractShort(_decrypted, 4);
+                    Wall wall = _owningMatch.GetWall(wallID);
+                    if(wall != null){
+                        wall.TakeDamage(projectile);
+                    }
+                }
+            }
+        }
+
     }
     private void HandleSplashHit(){
         MatchCharacter hit = _owningMatch.GetMatchCharacter(_decrypted[1]);
@@ -87,23 +113,25 @@ public class InGamePacketProcessor extends UDPProcessor{
             if(SpellManager.ContainsSpell(spellID)){
                 Spell spellReference = SpellManager.GetSpell(spellID);
                 MatchCharacter casterReference = _owningMatch.GetMatchCharacter(_decrypted[1]);
-                short castID = casterReference.CastSpell(spellReference);
-                byte[] toSend = Packets.CastPacket(_decrypted, castID);
-                switch(spellReference.GetNotificationCode()){
-                    case ControlCodes.SpellNotification_All:
-                        _owningMatch.SendToAll(toSend);
-                        break;
-                    case ControlCodes.SpellNotification_TeamOnly:
-                        MatchTeam recipientTeam = _owningMatch.GetMatchTeam(casterReference.GetTeamID());
-                        _owningMatch.SendToCollection(toSend, recipientTeam.GetRemoteClients());
-                        break;
-                    case ControlCodes.SpellNotification_CasterOnly:
-                        _owningMatch.SendToPlayer(toSend, casterReference);
-                        break;
-                    case ControlCodes.SpellNotification_Payload:
-                        _owningMatch.SendToPlayer(toSend, casterReference);
-                        _owningMatch.SendToPlayer(toSend, _decrypted[ControlCodes.CastPayloadStartIndex]);
-                        break;
+                short castID = casterReference.CastSpell(spellReference, _decrypted); // instantiation downstream
+                if(castID != -1){
+                    byte[] toSend = Packets.CastPacket(_decrypted, castID);
+                    switch(spellReference.GetNotificationCode()){
+                        case ControlCodes.SpellNotification_All:
+                            _owningMatch.SendToAll(toSend);
+                            break;
+                        case ControlCodes.SpellNotification_TeamOnly:
+                            MatchTeam recipientTeam = _owningMatch.GetMatchTeam(casterReference.GetTeamID());
+                            _owningMatch.SendToCollection(toSend, recipientTeam.GetRemoteClients());
+                            break;
+                        case ControlCodes.SpellNotification_CasterOnly:
+                            _owningMatch.SendToPlayer(toSend, casterReference);
+                            break;
+                        case ControlCodes.SpellNotification_Payload: // sends to the player(s) identified in the payload
+                            _owningMatch.SendToPlayer(toSend, casterReference);
+                            _owningMatch.SendToPlayer(toSend, _decrypted[ControlCodes.CastPayloadStartIndex]);
+                            break;
+                    }
                 }
             }
             else{

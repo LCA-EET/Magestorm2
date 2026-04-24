@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Trigger : MonoBehaviour
+public class Trigger : MonoBehaviour, ITrigger
 {
     protected List<PeriodicAction> _actionList;
     protected TriggerType _triggerType;
@@ -30,17 +30,17 @@ public class Trigger : MonoBehaviour
         _exited = false;
         _exited = true;
     }
-    public int TriggerID
+    public bool HasEntered()
     {
-        get { return _triggerID; }
+        return _entered;
     }
-    public bool Entered
+    public bool HasExited()
     {
-        get { return _entered; }
+        return _exited;
     }
-    public bool Exited
+    public int GetTriggerID()
     {
-        get { return _exited; }
+        return _triggerID;
     }
 }
 
