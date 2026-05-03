@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class SharedFunctions {
+
+
     private static Random _random;
     public static void Initialize(){
         _random = new Random();

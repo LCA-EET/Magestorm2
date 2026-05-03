@@ -1,8 +1,6 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -148,6 +146,7 @@ public static class Match
         Avatar added = ComponentRegister.Spawner.SpawnAvatar();
         added.SetAttributes(playerID, name, level, characterClass, (Team)teamID, appearance);
         MessageData md = new MessageData(name + " has joined the match.", "Server");
+        ComponentRegister.PlayerStatusPanel.SetExperience(PlayerAccount.SelectedCharacter.GetExperience());
         AddAvatar(added);
         if (playerID == MatchParams.IDinMatch)
         {

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -91,7 +92,7 @@ public class Database {
         }
         return false;
     }
-    private static Connection DBConnection(){
+    public static Connection DBConnection(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             DriverManager.setLoginTimeout(10);
@@ -457,10 +458,10 @@ public class Database {
         }
 
     }
-    public static byte[] GetLevelsList(byte status){
+    public static byte[] GetLevelsList(byte status) {
         byte[] toReturn = null;
         String sql = "SELECT id, scenename, maxplayers, pooldata, activatables FROM levels WHERE status=?";
-        try(Connection conn = DBConnection()){
+        try (Connection conn = DBConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setByte(1, status);
             ResultSet rs = ps.executeQuery();
@@ -477,31 +478,30 @@ public class Database {
                 byte[] fetched = new byte[1 + 1 + 1 + poolBytes.length + 1 + nameBytes.length];
                 int fIdx = 0;
                 fetched[fIdx] = sceneID;
-                fetched[fIdx+1] = maxPlayers;
-                fetched[fIdx+2] = (byte)poolBytes.length;
+                fetched[fIdx + 1] = maxPlayers;
+                fetched[fIdx + 2] = (byte) poolBytes.length;
                 fIdx = 3;
                 int poolIdx = 0;
-                while (poolIdx < poolBytes.length){
+                while (poolIdx < poolBytes.length) {
                     fetched[fIdx] = poolBytes[poolIdx];
                     poolIdx++;
                     fIdx++;
                 }
-                fetched[fIdx] = (byte)nameBytes.length;
+                fetched[fIdx] = (byte) nameBytes.length;
                 GameServer.RecordMaxPlayerData(sceneID, maxPlayers);
-                System.arraycopy(nameBytes, 0, fetched, fIdx+1, nameBytes.length);
+                System.arraycopy(nameBytes, 0, fetched, fIdx + 1, nameBytes.length);
                 bytesReturned.add(fetched);
                 totalLength += fetched.length;
             }
             toReturn = new byte[totalLength + 2];
             toReturn[0] = Pregame_Send.LevelsList;
-            toReturn[1] = (byte)bytesReturned.size();
+            toReturn[1] = (byte) bytesReturned.size();
             int index = 2;
-            for(byte[] sceneData : bytesReturned){
+            for (byte[] sceneData : bytesReturned) {
                 System.arraycopy(sceneData, 0, toReturn, index, sceneData.length);
                 index += sceneData.length;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Main.LogError("Database.GetScenes(): " + e.getMessage());
         }
         return toReturn;
@@ -521,6 +521,22 @@ public class Database {
         }
         catch(Exception e){
             Main.LogError("Database.UpdateSlotting(): " + e.getMessage());
+            Main.LogStackTrace(e);
+        }
+    }
+    public static void UpdateExperience(int characterID, int experience, byte level, Connection conn){
+        String sql = "UPDATE characters SET experience = ?, level = ? WHERE id = ?";
+        try{
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, experience);
+            ps.setByte(2, level);
+            ps.setInt(3, characterID);
+            ps.execute();
+            Main.LogDebug("Updated experience, level for player " + characterID + " to " + experience + ", " + level);
+        }
+        catch(Exception e){
+            Main.LogError("Database.UpdateExperience(): " + e.getMessage());
+            Main.LogStackTrace(e);
         }
     }
 }

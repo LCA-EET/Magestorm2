@@ -25,6 +25,8 @@
     public const byte Element_Light = 5;
     public const byte Element_Dark = 6;
     public const byte Element_Physical = 7;
+    public const byte Element_Mana = 8;
+    public const byte Element_Void = 9;
 
     public const byte SpellTypes_Projectile = 1;
     public const byte SpellTypes_Self = 2;

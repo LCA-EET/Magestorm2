@@ -53,17 +53,22 @@ public class DamagingSpell extends CastSpell{
             appliedDamage *= 1.1f;
         }
         target.TakeDamage(appliedDamage, _casterReference);
+        if(target.GetIDinMatch() != _casterReference.GetIDinMatch()){
+            _casterReference.AdjustExperience(appliedDamage * 2);
+        }
     }
 
     @Override
     public void ProcessSpell(MatchCharacter affectedPlayer){
-        Main.LogMessage("DamagingSpell.ProcessSpell(): PriorHP: " + affectedPlayer.GetCurrentHP());
+        Main.LogDebug("DamagingSpell.ProcessSpell(): PriorHP: " + affectedPlayer.GetCurrentHP());
         ApplyDamage(GetDamage0(), _baseReference.GetElement0(), affectedPlayer);
         if(_multiElement){
             ApplyDamage(GetDamage1(), _baseReference.GetElement1(), affectedPlayer);
         }
-        Main.LogMessage("DamagingSpell.ProcessSpell(): PriorHP: " + affectedPlayer.GetCurrentHP());
-        ProcessEffect(affectedPlayer);
+        Main.LogDebug("DamagingSpell.ProcessSpell(): CurrentHP: " + affectedPlayer.GetCurrentHP());
+        if(affectedPlayer.IsAlive()){
+            ProcessEffect(affectedPlayer);
+        }
     }
 
     @Override

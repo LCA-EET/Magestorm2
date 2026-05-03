@@ -1,4 +1,4 @@
-public class Wall extends CastSpell{
+public class Wall extends DamagingSpell{
     protected final byte[] _wallBytes;
     protected byte _elementCode;
     protected long _durationRemaining;

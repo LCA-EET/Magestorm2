@@ -2,6 +2,12 @@ public class ControlCodes {
 
     public static final byte CastPayloadStartIndex = 5;
 
+    //region LogIDs
+        public static final byte LogID_Main = 1;
+        public static final byte LogID_Error = 2;
+        public static final byte LogID_Debug = 3;
+    //endregion
+
     //region SkillLevels
         public static final byte SkillLevel_Basic = 1;
         public static final byte SkillLevel_Expert = 2;

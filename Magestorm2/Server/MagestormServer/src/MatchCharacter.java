@@ -39,12 +39,13 @@ public class MatchCharacter {
     private final ConcurrentHashMap<Byte, AppliedEffect> _activeEffects;
     private byte _wallCount;
     private final byte _maxWalls;
-
+    private int _startingXP;
+    private float _endingXP, _priorXP;
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
         MarkPacketReceived();
         _team = team;
         _wallCount = 0;
-        _resistance = new float[8];
+        _resistance = new float[10];
         _lastPRPacketID = 0;
         _hpRegenElapsed = 0;
         _hpRegenTick = hpRegenTick;
@@ -54,6 +55,9 @@ public class MatchCharacter {
         boolean joinAlive = match.JoinAlive(team.GetTeamID());
         _newToMatch = newToMatch;
         _pc = pc;
+        _startingXP = _pc.GetExperience();
+        _endingXP = _startingXP;
+        _priorXP = _endingXP;
         _maxWalls = (byte) (3 + Math.floor(pc.GetCharacterLevel() / 3.0f));
         Main.LogDebug("Max walls for player " + pc.GetCharacterName() + ", level " + pc.GetCharacterLevel() + " is " + _maxWalls);
         _maxHP = _pc.GetMaxHP();
@@ -134,7 +138,29 @@ public class MatchCharacter {
         _currentHP = hp;
         _owningMatch.SendToAll(Packets.PlayerRevivedPacket(_idInMatch, reviverID, _currentHP));
     }
-
+    //region Experience
+    public void AdjustExperience(float experience){
+        _endingXP += experience;
+        if(_endingXP < _startingXP){
+            _endingXP = _startingXP;
+        }
+    }
+    public void MultiplyExperience(float factor){
+        _endingXP = (_endingXP - _startingXP) * factor;
+    }
+    public float ReportXP(){
+        if(_priorXP == _endingXP){
+            return 0;
+        }
+        else{
+            _priorXP = _endingXP;
+            return _endingXP;
+        }
+    }
+    public int GetEndingXP(){
+        return (int)Math.floor(_endingXP);
+    }
+    //endregion
     public void SetHP(float newHP){
         _currentHP = newHP;
     }
@@ -149,6 +175,7 @@ public class MatchCharacter {
         if(_currentHP <= 0){
             _owningMatch.PlayerKilled(this, attacker);
             RemoveAllEffects();
+
         }
     }
     public byte GetStatistic(byte statCode){

@@ -101,7 +101,25 @@ public static class Language
     }
     public static string GetBaseString(int stringIndex)
     {
-        return _languageStrings[SelectedLanguage][stringIndex];
+        if (_languageStrings.ContainsKey(SelectedLanguage))
+        {
+            Dictionary<int, string> lang = _languageStrings[SelectedLanguage];
+            if (lang.ContainsKey(stringIndex))
+            {
+                return lang[stringIndex];
+            }
+            else
+            {
+                Debug.Log("No language string for index " + stringIndex);
+                return "[undef]";
+            }
+        }
+        else
+        {
+            Debug.Log("Invalid language selection: " + SelectedLanguage);
+            return "[undef]";
+        }
+        
     }
     private static void IngestLanguageFiles()
     {

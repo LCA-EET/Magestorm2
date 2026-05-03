@@ -27,7 +27,7 @@ public class Trigger : MonoBehaviour, ITrigger
     }
     public virtual void ExitAction() 
     {
-        _exited = false;
+        _entered = false;
         _exited = true;
     }
     public bool HasEntered()

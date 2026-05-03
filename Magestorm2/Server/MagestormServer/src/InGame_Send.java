@@ -45,4 +45,5 @@ public class InGame_Send {
     public static final byte EffectsCancellation = 42;
     public static final byte WallExpired = 43;
     public static final byte WallRequestResponse = 44;
+    public static final byte ExperienceUpdate = 45;
 }

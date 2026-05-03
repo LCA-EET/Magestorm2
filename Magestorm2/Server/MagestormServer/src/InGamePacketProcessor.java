@@ -150,7 +150,10 @@ public class InGamePacketProcessor extends UDPProcessor{
         _owningMatch.SendToAll(Packets.PostureChangePacket(_decrypted));
     }
     private void HandleTap(){
-        _owningMatch.PlayerTapped(_decrypted[1]);
+        MatchCharacter tapped = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        tapped.MultiplyExperience(0.95f);
+        _owningMatch.PlayerTapped(tapped.GetIDinMatch());
+
     }
     private void HandleLeyUpdate(){
         _owningMatch.UpdatePlayerLey(_decrypted);

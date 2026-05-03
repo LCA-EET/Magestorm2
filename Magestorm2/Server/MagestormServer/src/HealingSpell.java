@@ -24,9 +24,12 @@ public class HealingSpell extends CastSpell{
         if(affectedPlayer.GetIDinMatch() == _casterReference.GetIDinMatch()
             || (affectedPlayer.GetTeamID() == _castingTeam && _castingTeam != MatchTeam.Neutral)){
             Main.LogMessage("PriorHP: " + affectedPlayer.GetCurrentHP());
-            affectedPlayer.Heal(GetHealAmount(), _casterReference);
+            short amountHealed = GetHealAmount();
+            affectedPlayer.Heal(amountHealed, _casterReference);
             Main.LogMessage("CurrentHP: " + affectedPlayer.GetCurrentHP());
-
+            if(affectedPlayer.GetIDinMatch() != _casterReference.GetIDinMatch()){
+                _casterReference.AdjustExperience(amountHealed * 2);
+            }
         }
     }
 }

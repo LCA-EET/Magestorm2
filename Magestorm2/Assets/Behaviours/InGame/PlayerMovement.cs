@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private byte _postureCheck;
     private RaycastHit _hitInfo;
     private PC _pc;
+    private byte _insideWallCount;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -51,6 +52,16 @@ public class PlayerMovement : MonoBehaviour
         _controllerCrouchCenter = new Vector3(Controller.center.x, Controller.center.y, Controller.center.z);
         _cameraLocalPosition = Camera.main.transform.localPosition;
         _cameraCrouchedPosition = new Vector3(_cameraLocalPosition.x, _cameraLocalPosition.y / 1.66f, _cameraCrouchedPosition.z);
+    }
+    public void IncrementInsideWallCount()
+    {
+        _insideWallCount++;
+        Debug.Log("Wall count: " + _insideWallCount);
+    }
+    public void DecrementInsideWallCount()
+    {
+        _insideWallCount--;
+        Debug.Log("Wall count: " + _insideWallCount);
     }
     private void ReportMovement()
     {
@@ -401,6 +412,10 @@ public class PlayerMovement : MonoBehaviour
             if (_isHasted)
             {
                 toReturn *= 1.25f;
+            }
+            if(_insideWallCount > 0)
+            {
+                toReturn *= (float)(Math.Pow(0.75, _insideWallCount));
             }
             return toReturn;
         }

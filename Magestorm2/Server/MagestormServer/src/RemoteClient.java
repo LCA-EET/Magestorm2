@@ -74,5 +74,7 @@ public class RemoteClient {
     {
         _timeLastReceived = System.currentTimeMillis();
     }
-
+    public String ToString(){
+        return "ID: " + _accountID + ", " + _address.toString() + ":" + _remotePort + " " + _username;
+    }
 }

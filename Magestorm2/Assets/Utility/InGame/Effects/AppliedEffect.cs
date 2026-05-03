@@ -33,7 +33,12 @@ public class AppliedEffect : MonoBehaviour
     {
         if (_vfxContainer != null)
         {
+            Debug.Log("DestroyVFX(): Destroyed VFX container for effect " + EffectCode);
             Destroy(_vfxContainer);
+        }
+        else
+        {
+            Debug.Log("DestroyVFX(): VFX container is null");
         }
     }
     public virtual void ReverseEffect()

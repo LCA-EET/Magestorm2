@@ -1,33 +1,64 @@
-import javax.xml.crypto.Data;
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
     public static Charset charset = StandardCharsets.UTF_8;
     private static Log _serverLog;
     public static Emailer Mailer;
+    public static ThreadMonitor ThreadMonitor;
+    public static ExperienceUpdater ExperienceUpdater;
     public static boolean Running = true;
     public static boolean Debug = false;
     public static void main(String args[]) throws FileNotFoundException {
+        ThreadMonitor = new ThreadMonitor();
         SharedFunctions.Initialize();
         String paramFilePath = args[0];
         ServerParams.LoadParams(paramFilePath);
         Mailer = new Emailer(ServerParams.EmailCredsPath);
-
-        new Thread(_serverLog).start();
+        new RegisteredThread(_serverLog).start();
         Main.LogMessage("Pregame Inactivity Timeout: " + ServerParams.PregameInactivity);
         Main.LogMessage("Ingame Inactivity Timeout: " + ServerParams.InactivityDisconnect);
+
         Cryptographer.GenerateKeyAndIV();
         if(Database.TestDBConnection()){
             Database.UpdateServerInfo();
             GameServer.init();
+            ExperienceUpdater = new ExperienceUpdater();
+            ProcessCommands();
         }
         else{
-            Main.LogMessage("Exiting due to a failure to access the database.");
-            _serverLog.WriteNow();
+            Main.LogError("Exiting due to a failure to access the database.");
             System.exit(0);
         }
+    }
+    private static void ProcessCommands(){
+        try (Scanner scanner = new Scanner(System.in)) {
+            while(Main.Running){
+                System.out.print(">: ");
+                String command = scanner.nextLine();
+                switch(command){
+                    case "lc":
+                        ProcessListRCCommand();
+                        break;
+                    case "ts":
+                    case "terminateserver":
+                        GameServer.TerminateServer();
+                        break;
+                }
+            }
+        }
+    }
+    private static void ProcessListRCCommand(){
+        Iterable<RemoteClient> remoteClientList = GameServer.ConnectedClients();
+        int count = 0;
+        for(RemoteClient rc : remoteClientList){
+            System.out.println(rc.ToString());
+            count++;
+        }
+        System.out.println(count + " connected clients.");
     }
     public static void InitLog(){
         _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath, ServerParams.DebugFilePath);

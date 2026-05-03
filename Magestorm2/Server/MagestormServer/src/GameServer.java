@@ -10,9 +10,11 @@ public class GameServer extends Thread {
     private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
     private static ConcurrentHashMap<Byte, byte[]> _poolData;
     private static ConcurrentHashMap<Byte, byte[]> _objectData;
+
     private static RemoteClientMonitor _rcMonitor;
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
+    private static int _threadID = 0;
     public static void init(){
         ByteUtils.init();
         GameUtils.init();
@@ -29,7 +31,7 @@ public class GameServer extends Thread {
         _levelData = Database.GetLevelsList((byte)1);
         _usedMatchPorts = new ConcurrentSkipListSet<>();
     }
-    
+
     public static void AddActiveCharacter(int accountID, PlayerCharacter active){
         _activeCharacters.put(accountID, active);
     }
@@ -121,5 +123,11 @@ public class GameServer extends Thread {
     }
     public static byte RetrieveMaxPlayerData(byte sceneID){
         return _maxPlayerData.get(sceneID);
+    }
+    public static void TerminateServer(){
+        Main.Running = false;
+        Main.LogMessage("Server is shutting down.");
+        Main.ThreadMonitor.InterruptAllThreads();
+        System.exit(0);
     }
 }

@@ -127,9 +127,18 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.WallRequestResponse:
                         HandleWallRequestResponse();
                         break;
+                    case InGame_Receive.ExperienceUpdate:
+                        HandleExperienceUpdate();                
+                        break;
                 }
             }
         }
+    }
+    private void HandleExperienceUpdate()
+    {
+        float exp = BitConverter.ToSingle(_decrypted, 1);
+        int experience = (int)exp;
+        ComponentRegister.PlayerStatusPanel.SetExperience(experience);
     }
     private void HandleWallRequestResponse()
     {

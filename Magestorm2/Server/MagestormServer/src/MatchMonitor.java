@@ -1,26 +1,32 @@
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MatchMonitor extends Thread{
+public class MatchMonitor extends RegisteredThread{
 
     private final long _tick = 500;
     private long _inactivityCheckElapsed = 0;
     public MatchMonitor(){
-        new Thread(this).start();
+        new RegisteredThread(this).start();
     }
     public void run(){
-
-        while(Main.Running){
+        while(!_terminated){
             try {
                 CheckForExpiration();
                 if(MatchManager.UpdatesNeeded){
                     MatchManager.NotifySubscribers();
                 }
                 Thread.sleep(_tick);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            }
+            catch(InterruptedException ie){
+                _terminated = true;
+            }
+            catch (Exception e) {
+                Main.LogError("MatchMonitor.run(): " + e.getMessage());
+                Main.LogStackTrace(e);
             }
         }
+        Deregister();
+        Main.LogMessage("MatchMonitor terminated.");
     }
 
     private void CheckForExpiration()

@@ -134,6 +134,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         if (!_isAlive)
         {
             RemoveAllEffects();
+            Debug.Log("Removed effects for player " + _name);
             layer = LayerManager.DeadPlayerLayer;
         }
         else

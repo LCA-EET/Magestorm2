@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 
-public class PacketSender extends Thread{
-    private UDPClient _udp;
-    private UDPProcessor _processor;
+public class PacketSender extends RegisteredThread{
+    private final UDPClient _udp;
+    private final UDPProcessor _processor;
 
     public PacketSender(UDPClient udp, UDPProcessor processor){
         _udp = udp;
         _processor = processor;
-        new Thread(this).start();
+        new RegisteredThread(this).start();
     }
 
     public void run(){
@@ -35,5 +35,6 @@ public class PacketSender extends Thread{
         }
         Main.LogMessage("No longer sending from port " + _processor._listeningPort);
         _udp.StopListening();
+        Deregister();
     }
 }

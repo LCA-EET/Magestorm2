@@ -405,6 +405,14 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
+    public static byte[] ExperienceUpdatePacket(float experience){
+        byte[] toEncrypt = new byte[5];
+        toEncrypt[0] = InGame_Send.ExperienceUpdate;
+        byte[] expBytes = ByteUtils.FloatToByteArray(experience);
+        System.arraycopy(expBytes, 0, toEncrypt, 1, 4);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     /////////////////////// SHARED //////////////////////
 
     public static byte[] ExtractBytes(byte[] decrypted, int index, int length){

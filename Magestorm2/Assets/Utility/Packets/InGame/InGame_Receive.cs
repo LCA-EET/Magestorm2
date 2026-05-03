@@ -51,5 +51,6 @@ public static class InGame_Receive
                         SendToValhalla = 41,
                         EffectsCancellation = 42,
                         WallExpired = 43,
-                        WallRequestResponse = 44;
+                        WallRequestResponse = 44,
+                        ExperienceUpdate = 45;
 }

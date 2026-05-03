@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerCharacter
 {
-    private int _characterID;
+    private int _characterID, _experience;
     private string _characterName;
     private byte _characterClass;
     private byte _characterLevel;
@@ -16,7 +16,7 @@ public class PlayerCharacter
     private byte[] _idBytes;
     private byte[] _slottedSpells;
     private Dictionary<byte, byte> _skills;
-    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes, byte[] slots, int skills) {
+    public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes, byte[] slots, int skills, int experience) {
         _skills = new Dictionary<byte, byte>();
         _slottedSpells = slots;
         _characterID = characterID;
@@ -27,6 +27,7 @@ public class PlayerCharacter
         _statBytes = statBytes;
         _appearanceBytes = appearanceBytes;
         _idBytes = BitConverter.GetBytes(characterID);
+        _experience = experience;
         UpdateSkillsTable(skills);
     }
     public byte[] SlottedSpells
@@ -35,6 +36,10 @@ public class PlayerCharacter
         {
             return _slottedSpells;
         }
+    }
+    public int GetExperience()
+    {
+        return _experience;
     }
     public void UpdateSlottedSpells(byte[] decrypted, int offset)
     {

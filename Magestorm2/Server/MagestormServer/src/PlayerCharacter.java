@@ -117,13 +117,15 @@ public class PlayerCharacter {
     public void UpdateExperience(int experience){
         _experience = experience;
         byte[] expBytes = ByteUtils.IntToByteArray(experience);
-        System.arraycopy(expBytes,0,_characterBytes, _indexExperience, 8);
+        System.arraycopy(expBytes,0,_characterBytes, _indexExperience, 4);
+    }
+    public int GetExperience(){
+        return _experience;
     }
     public void UpdateLevel(byte level){
         _level = level;
         _characterBytes[_indexLevel] = _level;
     }
-
     public int GetCharacterID(){
         return _characterID;
     }

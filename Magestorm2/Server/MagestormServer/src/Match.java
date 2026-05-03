@@ -9,7 +9,6 @@ public class Match {
     protected final byte _sceneID;
     protected final long _expirationTime;
     protected final long _regenTick;
-
     protected final byte[] _creatorName;
     protected final byte[] _matchBytes;
     protected final MatchOptions _matchOptions;
@@ -30,7 +29,8 @@ public class Match {
     protected byte _matchType;
     protected short _nextCastID = 0;
     private long _spellExpirationElapsed = 0;
-
+    private long _expCheckElapsed = 0;
+    private final long _expReportInterval = 30000;
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType, byte matchOptions){
         _playersJoined = new HashSet<>();
         _matchOptions = new MatchOptions(matchOptions);
@@ -264,6 +264,7 @@ public class Match {
                     pc.MarkRemovedFromMatch();
                 }
             }
+            Main.ExperienceUpdater.AddToQueue(departee);
         }
         LogMessage("Player " + id + " has left the match. Players remaining: " + _matchCharacters.size());
         if(send){
@@ -393,6 +394,7 @@ public class Match {
                     byte[] prBytes = new byte[24];
                     System.arraycopy(decrypted, ControlCodes.CastPayloadStartIndex, prBytes, 0, 24);
                     Wall wall = new Wall(caster, castID, spellReference, this, prBytes);
+                    _castSpells.put(castID, wall);
                     _walls.put(castID, wall);
                 }
                 else{
@@ -439,6 +441,19 @@ public class Match {
         PlayerTick(msElapsed);
         ClearExpiredSpells(msElapsed);
         CountdownWalls(msElapsed);
+        ExpTick(msElapsed);
+    }
+    private void ExpTick(long msElapsed){
+        _expCheckElapsed += msElapsed;
+        if(_expCheckElapsed >= _expReportInterval){
+            _expCheckElapsed = 0;
+            for(MatchCharacter mc : _matchCharacters.values()){
+                float experience = mc.ReportXP();
+                if(experience != 0){
+                    SendToPlayer(Packets.ExperienceUpdatePacket(experience), mc);
+                }
+            }
+        }
     }
     private void CountdownWalls(long msElapsed){
         if(!_walls.isEmpty()){
@@ -598,6 +613,7 @@ public class Match {
         IncrementPlayerDeaths(killed.GetCharacterID());
         killed.GetTeam().GetScore().IncrementDeaths();
         killer.GetTeam().GetScore().IncrementKills();
+        killer.AdjustExperience(killed.GetMaxHP() * (int)(1 + Math.floor(killed.GetLevel() / 8.0f)));
     }
 
     public byte GetMatchType(){
@@ -663,14 +679,17 @@ public class Match {
                 if(devoured != null){
                     if(!devoured.IsAlive()){
                         byte skillLevel = caster.GetSkillLevel(ControlCodes.Discipline_SpiritLaw);
+                        short manaRecovered = 0;
                         if(skillLevel == 2){
-                            caster.AddMana(devoured.GetLevel());
+                            manaRecovered = devoured.GetLevel();
                         }
                         else if (skillLevel == 3){
-                            caster.AddMana((short) (devoured.GetLevel() * 2));
+                            manaRecovered = (short) (devoured.GetLevel() * 2);
                         }
+                        caster.AddMana(manaRecovered);
                         SendPlayerToValhalla(devoured);
                         SendToPlayer(Packets.HPandManaUpdatePacket(devoured.GetCurrentHP(), devoured.GetCurrentMana()), devoured);
+                        caster.AdjustExperience(manaRecovered * 2);
                     }
                 }
             }

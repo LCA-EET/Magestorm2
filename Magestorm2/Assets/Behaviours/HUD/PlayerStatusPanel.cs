@@ -10,6 +10,7 @@ public class PlayerStatusPanel : MonoBehaviour
     public BarIndicator[] PlayerIndicators;
     public TMP_Text PlayerName;
     public TMP_Text LCT;
+    public TMP_Text Experience;
     public Counter Kills;
     public Counter Deaths;
     private Dictionary<PlayerIndicator, BarIndicator> _indicators;
@@ -47,6 +48,11 @@ public class PlayerStatusPanel : MonoBehaviour
     void Update()
     {
         
+    }
+    public void SetExperience(int experience)
+    {
+        Experience.SetText("E: " + experience);
+        Teams.SetTextColor(Experience);
     }
     public void SetIndicator(PlayerIndicator indic, float fill)
     {

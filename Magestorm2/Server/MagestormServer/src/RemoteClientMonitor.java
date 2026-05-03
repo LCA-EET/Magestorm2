@@ -1,9 +1,7 @@
-import java.util.ArrayList;
-
-public class RemoteClientMonitor extends Thread{
+public class RemoteClientMonitor extends RegisteredThread{
 
     public RemoteClientMonitor(){
-        new Thread(this).start();
+        new RegisteredThread(this).start();
     }
     public void run(){
         while(Main.Running){

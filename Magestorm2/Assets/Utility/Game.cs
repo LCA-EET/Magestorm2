@@ -73,10 +73,10 @@ public static class Game
     {
         if (!_init)
         {
+            Language.Init();
             Application.runInBackground = true;
             IconLibrary.Init();
             Colors.Init();
-            Language.Init();
             LayerManager.Init();
             LevelData.Init();
             Teams.Init();

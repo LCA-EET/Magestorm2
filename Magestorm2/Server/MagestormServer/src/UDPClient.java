@@ -1,7 +1,7 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-public class UDPClient extends Thread{
+public class UDPClient extends RegisteredThread{
     private DatagramSocket _udpSocket;
     private boolean _listening;
     private final int _localPort;
@@ -13,7 +13,7 @@ public class UDPClient extends Thread{
         _processor = processor;
         try{
             _udpSocket = new DatagramSocket(_localPort);
-            new Thread(this).start();
+            new RegisteredThread(this).start();
         }
         catch(Exception e){
             Main.LogError("Could not open datagram socket on port: " + _localPort + ", " + e.getMessage());
@@ -33,6 +33,7 @@ public class UDPClient extends Thread{
             receivedBuffer = new byte[bufferSize];
         }
         Main.LogMessage("UDP client on port " + _localPort + " is no longer listening.");
+        Deregister();
     }
     public void StopListening() {
         _listening = false;

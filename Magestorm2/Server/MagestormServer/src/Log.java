@@ -2,13 +2,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-public class Log extends Thread{
+public class Log extends RegisteredThread{
     private final DateTimeFormatter _formatter;
-    private final ConcurrentLinkedQueue<String> _debugQueue;
-    private final ConcurrentLinkedQueue<String> _messageQueue;
-    private final ConcurrentLinkedQueue<String> _errorQueue;
+    private final LinkedBlockingQueue<LogEvent> _eventQueue;
     private final FileWriter _logFileWriter, _errorFileWriter, _debugFileWriter;
     public Log(String logFile, String errorFile, String debugFile){
         _formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -19,20 +17,15 @@ public class Log extends Thread{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        _messageQueue = new ConcurrentLinkedQueue<>();
-        _errorQueue = new ConcurrentLinkedQueue<>();
-        _debugQueue = new ConcurrentLinkedQueue<>();
+        _eventQueue = new LinkedBlockingQueue<>();
     }
     public void run(){
         Main.LogMessage("Log started.");
         Main.LogError("Log started.");
         Main.LogDebug("Log started.");
-        while(Main.Running){
+        while(!_terminated){
             try{
-                Thread.sleep(1000);
-                ProcessQueue(_messageQueue, _logFileWriter);
-                ProcessQueue(_errorQueue, _errorFileWriter);
-                ProcessQueue(_debugQueue, _debugFileWriter);
+                ProcessQueue(); // blocking
             }
             catch(Exception e){
                 System.err.println(e.getMessage());
@@ -41,26 +34,30 @@ public class Log extends Thread{
         try {
             _logFileWriter.close();
             _errorFileWriter.close();
+            _debugFileWriter.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+        Deregister();
     }
-    public void WriteNow(){
-        ProcessQueue(_messageQueue, _logFileWriter);
-        ProcessQueue(_errorQueue, _errorFileWriter);
-        ProcessQueue(_debugQueue, _debugFileWriter);
-    }
-    private void ProcessQueue(ConcurrentLinkedQueue toProcess, FileWriter writer){
-        while(!toProcess.isEmpty()){
-            String message = toProcess.remove().toString();
-            try {
-                writer.append(message);
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-            }
-        }
+    private void ProcessQueue(){
         try{
-            writer.flush();
+            LogEvent event = _eventQueue.take();
+            byte logID = event.GetLogID();
+            switch(logID){
+                case ControlCodes.LogID_Main:
+                    _logFileWriter.append(event.GetEventText());
+                    _logFileWriter.flush();
+                    break;
+                case ControlCodes.LogID_Debug:
+                    _debugFileWriter.append(event.GetEventText());
+                    _debugFileWriter.flush();
+                    break;
+                case ControlCodes.LogID_Error:
+                    _errorFileWriter.append(event.GetEventText());
+                    _errorFileWriter.flush();
+                    break;
+            }
         }
         catch(Exception e){
             System.err.println(e.getMessage());
@@ -70,12 +67,12 @@ public class Log extends Thread{
         return "\n" + LocalDateTime.now().format(_formatter) + ": " + toFormat;
     }
     public void LogMessage(String toLog){
-        _messageQueue.add(FormatString(toLog));
+        _eventQueue.add(new LogEvent(ControlCodes.LogID_Main, FormatString(toLog)));
     }
     public void LogError(String toLog){
-        _errorQueue.add(FormatString(toLog));
+        _eventQueue.add(new LogEvent(ControlCodes.LogID_Error, FormatString(toLog)));
     }
     public void LogDebug(String toLog){
-        _debugQueue.add(FormatString(toLog));
+        _eventQueue.add(new LogEvent(ControlCodes.LogID_Debug, FormatString(toLog)));
     }
 }

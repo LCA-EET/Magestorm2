@@ -1,35 +1,34 @@
 import java.net.DatagramPacket;
 import java.rmi.Remote;
 import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-public class UDPProcessor extends Thread{
+public class UDPProcessor extends RegisteredThread{
 
     protected RemoteClient _remote;
     protected DatagramPacket _received;
     protected final UDPClient _udpClient;
     protected final PacketSender _sender;
     protected final ConcurrentLinkedQueue<OutgoingPacket> _outgoingPackets;
-    protected final ConcurrentLinkedQueue<DatagramPacket> _toProcess;
+    protected final BlockingQueue<DatagramPacket> _toProcess;
     protected byte[] _decrypted;
     protected final int _listeningPort;
     protected byte _opCode;
-    protected boolean _terminated;
 
     public UDPProcessor(int listeningPort){
         _listeningPort = listeningPort;
         _udpClient = new UDPClient(listeningPort, this);
         _outgoingPackets = new ConcurrentLinkedQueue<>();
-        _toProcess = new ConcurrentLinkedQueue<>();
+        _toProcess = new LinkedBlockingQueue<>();
         _terminated = false;
         _sender = new PacketSender(_udpClient, this);
-        new Thread(this).start();
-    }
-    public boolean IsTerminated(){
-        return _terminated;
+        new RegisteredThread(this).start();
     }
     public void TerminateProcessor(){
         _terminated = true;
+        this.interrupt(); // interrupt the blocking take()
     }
     protected void PreProcess(DatagramPacket received){
         _decrypted = Cryptographer.Decrypt(received.getData());
@@ -73,9 +72,10 @@ public class UDPProcessor extends Thread{
     public void run(){
         while(!_terminated){
             try{
-                if(!_toProcess.isEmpty()){
-                    ProcessPacket(_toProcess.poll());
-                }
+                ProcessPacket(_toProcess.take());
+            }
+            catch(InterruptedException ie){
+                Main.LogMessage("Terminating UDPProcessor on port " + _listeningPort);
             }
             catch(Exception ex){
                 Main.LogError(ex.getMessage());
@@ -83,5 +83,6 @@ public class UDPProcessor extends Thread{
             }
         }
         Main.LogMessage("UDPProcessor on port " + _listeningPort + " has terminated.");
+        Deregister();
     }
 }
