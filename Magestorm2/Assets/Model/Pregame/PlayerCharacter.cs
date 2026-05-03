@@ -37,6 +37,14 @@ public class PlayerCharacter
             return _slottedSpells;
         }
     }
+    public void SetLevel(byte level)
+    {
+        _characterLevel = level;
+    }
+    public void SetExperience(int exp)
+    {
+        _experience = exp;
+    }
     public int GetExperience()
     {
         return _experience;

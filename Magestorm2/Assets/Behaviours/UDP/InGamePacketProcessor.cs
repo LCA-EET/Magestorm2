@@ -138,6 +138,7 @@ public class InGamePacketProcessor : UDPProcessor
     {
         float exp = BitConverter.ToSingle(_decrypted, 1);
         int experience = (int)exp;
+        PlayerAccount.SelectedCharacter.SetExperience(experience);
         ComponentRegister.PlayerStatusPanel.SetExperience(experience);
     }
     private void HandleWallRequestResponse()

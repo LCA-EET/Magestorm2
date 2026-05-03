@@ -8,6 +8,7 @@ public class RemoteClient {
     private int _remotePort;
     private String _username;
     private long _timeLastReceived = 0;
+    private int _cidJustExited = 0;
     private boolean _subscribedToMatches, _portSwitchPending, _inGame;
 
     public RemoteClient(DatagramPacket received){
@@ -23,6 +24,14 @@ public class RemoteClient {
         return _address;
     }
 
+    public int GetDepartedCharacterID(){
+        int toReturn = _cidJustExited;
+        _cidJustExited = 0;
+        return toReturn;
+    }
+    public void SetDepartingCharacterID(int cid){
+        _cidJustExited = cid;
+    }
     public void SetNameAndID(String username, int ID){
         _accountID = ID;
         _username = username;

@@ -261,6 +261,7 @@ public class Match {
                 RemoteClient rc = GameServer.GetClient(pc.GetAccountID());
                 if(rc != null){
                     rc.MarkPortSwitchPending();
+                    rc.SetDepartingCharacterID(departee.GetCharacterID());
                     pc.MarkRemovedFromMatch();
                 }
             }
@@ -631,8 +632,15 @@ public class Match {
         Main.LogMessage("Command: " + command);
         MatchCharacter sender = _matchCharacters.get(senderID);
         switch(command){
+            case "setexp":
+                sender.SetExperience(Integer.parseInt(params[1]));
+                return true;
+            case "adjustexp":
+                sender.AdjustExperience(Float.parseFloat(params[1]));
+                return true;
             case "1hp":
                 sender.TakeDamage(sender.GetCurrentHP() - 1, sender);
+                return true;
             case "revive":
                 sender.Revive(senderID, 1);
                 return true;

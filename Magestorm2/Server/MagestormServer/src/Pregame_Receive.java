@@ -18,4 +18,5 @@ public class Pregame_Receive {
     public static final byte UpdateSkills = 17;
     public static final byte UpdateSkillsAndSlotting = 18;
     public static final byte Heartbeat = 19;
+    public static final byte RequestCharacterData = 20;
 }

@@ -187,7 +187,18 @@ public class Packets {
     public static byte[] RemovedFromServerPacket(byte reasonCode){
         return Cryptographer.Encrypt(new byte[]{Pregame_Send.RemovedFromServer, reasonCode});
     }
-
+    public static byte[] ExpLevelUpdatePacket(PlayerCharacter pc){
+        byte[] toEncrypt = new byte[10];
+        toEncrypt[0] = Pregame_Send.ExpLevelUpdate;
+        int characterID = pc.GetCharacterID();
+        byte[] cidBytes = ByteUtils.IntToByteArray(characterID);
+        System.arraycopy(cidBytes, 0, toEncrypt, 1, cidBytes.length);
+        toEncrypt[5] = pc.GetCharacterLevel();
+        int experience = pc.GetExperience();
+        byte[] expBytes = ByteUtils.IntToByteArray(experience);
+        System.arraycopy(expBytes, 0, toEncrypt, 6, expBytes.length);
+        return Cryptographer.Encrypt(toEncrypt);
+    }
 
 
     /////////////////////// IN-GAME PACKETS ////////////////////////

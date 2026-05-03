@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -105,12 +106,28 @@ public class PregamePacketProcessor : UDPProcessor
                     case Pregame_Receive.UpdateSkillsAndSlots:
                         HandleSkillsSlotsUpdate();
                         break;
+                    case Pregame_Receive.ExpLevelUpdate:
+                        HandleExperienceUpdate();                
+                        break;
                 }
             }
         }
         if (Game.LoggedIn)
         {
             _heartbeat.ProcessAction(Time.deltaTime);
+        }
+    }
+    private void HandleExperienceUpdate()
+    {
+        int characterID = BitConverter.ToInt32(_decrypted, 1);
+        byte characterLevel = _decrypted[5];
+        int experience = BitConverter.ToInt32(_decrypted, 6);
+        PlayerCharacter pc = PlayerAccount.GetCharacter(characterID);
+        if(pc != null)
+        {
+            pc.SetExperience(experience);
+            pc.SetLevel(characterLevel);
+            PlayerAccount.UpdatesMade = true;
         }
     }
     private void QuitWithMessage(int messageReference)

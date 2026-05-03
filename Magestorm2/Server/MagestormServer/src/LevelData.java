@@ -32,17 +32,14 @@ public class LevelData {
                     902000, // 29
                     979000  // 30
             };
-    public static byte DetermineLevel(byte currentLevel, int experience){
-        byte level = currentLevel;
-        for(byte b = currentLevel; b < _experience.length; b++){
+    public static byte DetermineLevel(int experience){
+        byte toReturn = 1;
+        for(byte b = 0; b < _experience.length; b++){
             if(_experience[b] <= experience){
-                level = b;
-            }
-            else{
-                return level;
+                toReturn = b;
             }
         }
-        level++;
-        return level;
+        toReturn++;
+        return toReturn;
     }
 }

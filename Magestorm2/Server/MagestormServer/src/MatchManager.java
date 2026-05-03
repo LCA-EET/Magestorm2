@@ -16,6 +16,13 @@ public class MatchManager{
 
     public static void SendMatchListToClient(RemoteClient rc){
         GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
+        int cid = rc.GetDepartedCharacterID();
+        if(cid > 0){
+            PlayerCharacter pc = CharacterManager.GetCharacter(cid);
+            if(pc != null){
+                GameServer.EnqueueForSend(Packets.ExpLevelUpdatePacket(pc), rc);
+            }
+        }
     }
 
     public static void Subscribe(int accountID, boolean subscribe, int charID, RemoteClient remote){

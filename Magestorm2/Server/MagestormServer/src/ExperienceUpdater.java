@@ -24,14 +24,15 @@ public class ExperienceUpdater extends RegisteredThread{
     private void UpdateExperience(MatchCharacter mc)
     {
         int experience = mc.GetEndingXP();
-        if(experience > 0){
+        int startingExp = mc.GetStartingXP();
+        if(experience != startingExp){
             int characterID = mc.GetCharacterID();
 
             PlayerCharacter pc = mc.PC();
             pc.UpdateExperience(experience);
             byte currentLevel = pc.GetCharacterLevel();
-            byte newLevel = LevelData.DetermineLevel(currentLevel, experience);
-            if(newLevel > currentLevel){
+            byte newLevel = LevelData.DetermineLevel(experience);
+            if(newLevel != currentLevel){
                 pc.UpdateLevel(newLevel);
             }
             Database.UpdateExperience(characterID, experience, newLevel, _persistentConnection);

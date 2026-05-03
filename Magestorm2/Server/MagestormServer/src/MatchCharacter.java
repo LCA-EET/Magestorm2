@@ -139,6 +139,10 @@ public class MatchCharacter {
         _owningMatch.SendToAll(Packets.PlayerRevivedPacket(_idInMatch, reviverID, _currentHP));
     }
     //region Experience
+    public void SetExperience(int experience){
+        _endingXP = experience;
+        _startingXP = -1;
+    }
     public void AdjustExperience(float experience){
         _endingXP += experience;
         if(_endingXP < _startingXP){
@@ -156,6 +160,9 @@ public class MatchCharacter {
             _priorXP = _endingXP;
             return _endingXP;
         }
+    }
+    public int GetStartingXP(){
+        return _startingXP;
     }
     public int GetEndingXP(){
         return (int)Math.floor(_endingXP);

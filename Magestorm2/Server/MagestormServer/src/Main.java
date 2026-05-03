@@ -43,6 +43,7 @@ public class Main {
                     case "lc":
                         ProcessListRCCommand();
                         break;
+                    case "exit":
                     case "ts":
                     case "terminateserver":
                         GameServer.TerminateServer();
@@ -51,6 +52,7 @@ public class Main {
             }
         }
     }
+
     private static void ProcessListRCCommand(){
         Iterable<RemoteClient> remoteClientList = GameServer.ConnectedClients();
         int count = 0;

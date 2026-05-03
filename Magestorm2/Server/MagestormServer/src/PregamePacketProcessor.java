@@ -20,6 +20,7 @@ public class PregamePacketProcessor extends UDPProcessor
             /*
             RemoteClient Exists
              */
+
             case Pregame_Receive.Heartbeat:
                 AssignRC();
                 return true;
@@ -84,6 +85,10 @@ public class PregamePacketProcessor extends UDPProcessor
                 AssignRC();
                 HandleSlotAndSkillUpdate();
                 break;
+            case Pregame_Receive.RequestCharacterData:
+                AssignRC();
+                HandleCharacterDataRequest();
+                return true;
             /*
             RemoteClient doesn't exist
              */
@@ -98,6 +103,7 @@ public class PregamePacketProcessor extends UDPProcessor
         }
         return true;
     }
+
     private void AssignRC(){
         _remote = LoggedInClient();
         if(_remote != null){
@@ -300,5 +306,6 @@ public class PregamePacketProcessor extends UDPProcessor
         }
 
     }
-
+    private void HandleCharacterDataRequest(){
+    }
 }
