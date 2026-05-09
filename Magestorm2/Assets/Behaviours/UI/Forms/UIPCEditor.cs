@@ -24,7 +24,7 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
         if(groupID == 0 && _character == null)
         {
             SlotSelectView.ClearSelections();
-            SkillPanel.RefreshClass((PlayerClass)selectedIndex);
+            SkillPanel.RefreshClass(selectedIndex);
         }
     }
     public void InitForm(PlayerCharacter character)
@@ -32,9 +32,9 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
         if (character == null)
         {
             _characterLevel = 1;
-            SkillPanel.InitControl(1);
-            SkillPanel.RefreshClass((PlayerClass)ClassToggleGroup.DefaultSelection);
-            SlotSelectView.Init(new byte[10], _characterLevel, SkillPanel);
+            SkillPanel.InitControl(_characterLevel);
+            SkillPanel.RefreshClass(ClassToggleGroup.DefaultSelection);
+            SlotSelectView.Init(new byte[10], _characterLevel, SkillPanel.GetDisciplineTable());
             CLPanel.gameObject.SetActive(false);
         }
         else
@@ -47,8 +47,9 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
             NameField.SetValue(_character.CharacterName, true);
             StatPanel.FillStats(character);
             StatPanel.DisablePanel();
+            SkillPanel.InitControl(_characterLevel);
             SkillPanel.FillSkills(_character);
-            SlotSelectView.Init(character.SlottedSpells, _characterLevel, SkillPanel);
+            SlotSelectView.Init(character.SlottedSpells, _characterLevel, SkillPanel.GetDisciplineTable());
         }
         
     }

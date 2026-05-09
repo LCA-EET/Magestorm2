@@ -26,7 +26,7 @@ public class Shrine : BiasableTrigger
         ShrineManager.RegisterShrine(this);
         BiasAmount = 100;
         InitTrigger(TriggerType.Shrine);
-        if(ComponentRegister.PC.CharacterClass == PlayerClass.Cleric)
+        if(ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Cleric)
         {
             LeyInfluencer.AssignOwner(this, ShrinePower, (byte)Team);
         }

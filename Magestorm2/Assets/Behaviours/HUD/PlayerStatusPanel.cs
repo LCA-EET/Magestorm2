@@ -40,7 +40,7 @@ public class PlayerStatusPanel : MonoBehaviour
         _pc = PlayerAccount.SelectedCharacter;
         Teams.Init();
         SetPlayerName(_pc.CharacterName);
-        SetLCT(_pc.CharacterLevel, (PlayerClass)_pc.CharacterClass, MatchParams.MatchTeam);
+        SetLCT(_pc.CharacterLevel, _pc.CharacterClass, MatchParams.MatchTeam);
         Reticle.color = Teams.GetTeamColor(MatchParams.MatchTeam);
     }
 
@@ -63,7 +63,7 @@ public class PlayerStatusPanel : MonoBehaviour
         PlayerName.text = name;
         Teams.SetTextColor(PlayerName);
     }
-    public void SetLCT(byte level, PlayerClass playerClass, Team team)
+    public void SetLCT(byte level, byte playerClass, Team team)
     {
         string levelString = Language.GetBaseString(14); //
         string ofString = Language.GetBaseString(15); //

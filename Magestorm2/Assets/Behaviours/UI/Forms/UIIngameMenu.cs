@@ -41,6 +41,13 @@ public class UIIngameMenu : ValidatableForm
                 Game.SendInGameBytes(InGame_Packets.QuitGamePacket());
                 Game.Quit();
                 break;
+            case ButtonType.Misc4:
+                ComponentRegister.UIPrefabManager.InstantiateSpellSlotter();
+                break;
+            case ButtonType.Misc5:
+                Debug.Log("Sending leaderboard request.");
+                Game.SendInGameBytes(InGame_Packets.LeaderboardPacket());
+                break;
         }
     }
 }

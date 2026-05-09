@@ -46,4 +46,5 @@ public class InGame_Send {
     public static final byte WallExpired = 43;
     public static final byte WallRequestResponse = 44;
     public static final byte ExperienceUpdate = 45;
+    public static final byte MatchScores = 46;
 }

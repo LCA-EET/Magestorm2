@@ -38,6 +38,7 @@ public class MatchCharacter {
     private final HashSet<Short> _splashHits;
     private final ConcurrentHashMap<Byte, AppliedEffect> _activeEffects;
     private byte _wallCount;
+    private byte[] _scoreBytes;
     private final byte _maxWalls;
     private int _startingXP;
     private float _endingXP, _priorXP;
@@ -85,6 +86,14 @@ public class MatchCharacter {
         _splashHits = new HashSet<>();
         _activeEffects = new ConcurrentHashMap<>();
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
+        InitializeScoreBytes(nameLevelClass);
+    }
+    private void InitializeScoreBytes(byte[] nlc){
+        _scoreBytes = new byte[3 + nlc.length];
+        System.arraycopy(nlc, 0, _scoreBytes, 3, nlc.length);
+    }
+    public byte[] GetScoreBytes(){
+        return _scoreBytes;
     }
     //region Walls
     public void IncrementWallCount()
@@ -389,8 +398,10 @@ public class MatchCharacter {
             byte skillRequired = cast.GetSkillRequired();
             byte discipline = cast.GetDiscipline();
             if(spellCost < _currentMana && skillRequired <= _pc.GetSkillLevel(discipline)){
-                _currentMana -= spellCost;
                 toReturn = _owningMatch.SpellCast(this, cast, decrypted); // instantiation happens here
+                if(toReturn != -1){
+                    _currentMana -= spellCost;
+                }
             }
         }
         return toReturn;

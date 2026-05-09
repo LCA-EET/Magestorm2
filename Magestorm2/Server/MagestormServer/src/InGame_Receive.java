@@ -35,4 +35,5 @@ public class InGame_Receive {
     public static final byte ReportSplash = 31;
     public static final byte WallHit = 32;
     public static final byte RequestWallData = 33;
+    public static final byte LeaderboardRequest = 34;
 }

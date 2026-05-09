@@ -8,8 +8,8 @@ public class RemotePlayerData
 {
     private string _name;
     private byte _idInMatch, _level, _teamID;
-    private PlayerClass _playerClass;
-    public RemotePlayerData(byte idInMatch, byte teamID, string name, byte level, PlayerClass playerClass)
+    private byte _playerClass;
+    public RemotePlayerData(byte idInMatch, byte teamID, string name, byte level, byte playerClass)
     {
         _name = name;
         _teamID = teamID;
@@ -31,7 +31,7 @@ public class RemotePlayerData
         get { return _level; } 
     }
 
-    public PlayerClass PlayerClass
+    public byte PlayerClass
     {
         get { return _playerClass; }
     }

@@ -105,8 +105,8 @@ Deathmatch
 Free For All
 Capture the Flag
 Match Type
-Return to Game
-Adjust Controls
+Return
+Controls
 Exit Match
 Quit Game
 Type: {0}
@@ -289,8 +289,8 @@ Name
 Character Editor
 You have unused stat points to allocate.
 You have unused skill points to allocate.
-You must be at least level 7 to reach Expert rank.
-You must be at least level 14 to reach Master rank.
+You must be at least level 8 to reach Expert rank.
+You must be at least level 16 to reach Master rank.
 Level {0}
 Spell: {0}
 Primary: {0}
@@ -339,3 +339,8 @@ Conjures a wall of air in front of the caster.
 Manawall
 Conjures a wall of mana in front of the caster.
 Experience {0}
+Woodwall
+Conjures a solid wall of wood in front of the caster.
+Match Leaderboard
+Leaderboard
+Spell Slots

@@ -140,8 +140,10 @@ MonoBehaviour:
   PrefabAppearanceChooser: {fileID: 9190357501265961709, guid: a48e3a24a5845cf49be81af3d4801039, type: 3}
   PrefabUIIngameMenu: {fileID: 1593089919454309017, guid: b2f435c9797cbc44a92f4e16e6f9d25d, type: 3}
   PrefabUIKeyMapper: {fileID: 9190357501265961709, guid: 7d006ff2b7fcd7543a4b0ea39f1d9d00, type: 3}
+  PrefabUIMatchScores: {fileID: 1608520810029365017, guid: 8623f2849fd302146941501c18521b3d, type: 3}
   PrefabSpellInfo: {fileID: 6796240946523118231, guid: 2e1c7d14dca38334aa05dc40f0b35080, type: 3}
   PrefabAvailableSpells: {fileID: 6796240946523118231, guid: 220bbbfd130c785489a01c2ee17279d3, type: 3}
+  PrefabUISpellSlots: {fileID: 6796240946523118231, guid: 29488e4e5e86dad4984d9949a846df1a, type: 3}
 --- !u!82 &7185910421088315080
 AudioSource:
   m_ObjectHideFlags: 0

@@ -91,14 +91,18 @@ public static class InGame_Packets
         return new byte[] { InGame_Send.FlagReturned, MatchParams.IDinMatch, flagID};
     }
 
-    public static byte[] WallCastPacket(byte spellID)
+    public static byte[] WallCastPacket(byte spellID, byte spellType)
     {
-        byte[] generic = GenericCastPacket(24, spellID, ControlCodes.SpellTypes_Wall);
+        byte[] generic = GenericCastPacket(24, spellID, spellType);
         byte[] camera = SharedFunctions.GetCameraPositionBytes(2.0f);
         camera.CopyTo(generic, ControlCodes.CastPayloadStartIndex);
         byte[] rotation = ByteUtils.Vector3ToBytes(Camera.main.transform.rotation.eulerAngles);
         rotation.CopyTo(generic, ControlCodes.CastPayloadStartIndex + 12);
         return generic;
+    }
+    public static byte[] LeaderboardPacket()
+    {
+        return new byte[] { InGame_Send.LeaderboardRequest, MatchParams.IDinMatch };
     }
     public static byte[] QuitGamePacket()
     {

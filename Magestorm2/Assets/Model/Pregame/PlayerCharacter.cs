@@ -65,17 +65,17 @@ public class PlayerCharacter
         return 0;
     }
 
-    public static string ClassToString(PlayerClass playerClass)
+    public static string ClassToString(byte playerClass)
     {
         switch (playerClass)
         {
-            case PlayerClass.Arcanist:
+            case ControlCodes.PlayerClass_Arcanist:
                 return Language.GetBaseString(7); //
-            case PlayerClass.Magician:
+            case ControlCodes.PlayerClass_Magician:
                 return Language.GetBaseString(8); //
-            case PlayerClass.Cleric: 
+            case ControlCodes.PlayerClass_Cleric: 
                 return Language.GetBaseString(6); //
-            case PlayerClass.Mentalist:
+            case ControlCodes.PlayerClass_Mentalist:
                 return Language.GetBaseString(9); //
         }
         return "";
@@ -106,16 +106,20 @@ public class PlayerCharacter
     public byte CharacterLevel { get { return _characterLevel; } }
     public string CharacterClassString
     {
-        get { return ClassToString((PlayerClass)CharacterClass); }
+        get { return ClassToString(CharacterClass); }
+    }
+    public Dictionary<byte, byte> DisciplineTable
+    {
+        get { return _skills; }
     }
     private byte HPMultiplier()
     {
-        PlayerClass playerClass = (PlayerClass)CharacterClass;
+        byte playerClass = CharacterClass;
         switch (playerClass)
         {
-            case PlayerClass.Cleric:
+            case ControlCodes.PlayerClass_Cleric:
                 return 6;
-            case PlayerClass.Magician:
+            case ControlCodes.PlayerClass_Magician:
                 return 4;
             default:
                 return 5;
@@ -133,7 +137,7 @@ public class PlayerCharacter
     }
     public float GetMaxMana()
     {
-        byte statToUse = (PlayerClass)CharacterClass == PlayerClass.Cleric ? GetStat(ControlCodes.PlayerStats_Charisma) : GetStat(ControlCodes.PlayerStats_Intellect);
+        byte statToUse = CharacterClass == ControlCodes.PlayerClass_Cleric ? GetStat(ControlCodes.PlayerStats_Charisma) : GetStat(ControlCodes.PlayerStats_Intellect);
         float manaMultiplier = 1 + ((statToUse - 10) * 0.05f);
         return ((_characterLevel * 4) + 10) * manaMultiplier;
     }
@@ -153,7 +157,7 @@ public class PlayerCharacter
         }
         //Debug.Log("Skills base 2: " + binary +", length = " + binary.Length);
         _skills.Clear();
-        foreach(byte discipline in SharedFunctions.DisciplinesByClass((PlayerClass)_characterClass))
+        foreach(byte discipline in SharedFunctions.DisciplinesByClass(_characterClass))
         {
             int skillIndex = ((byte)discipline) * 2;
             bool lsb = skillArray[skillIndex];

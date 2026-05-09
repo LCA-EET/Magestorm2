@@ -109,6 +109,9 @@ public class PregamePacketProcessor : UDPProcessor
                     case Pregame_Receive.ExpLevelUpdate:
                         HandleExperienceUpdate();                
                         break;
+                    case Pregame_Receive.MatchScore:
+                        HandleMatchScoreRequest();
+                        break;
                 }
             }
         }
@@ -116,6 +119,10 @@ public class PregamePacketProcessor : UDPProcessor
         {
             _heartbeat.ProcessAction(Time.deltaTime);
         }
+    }
+    private void HandleMatchScoreRequest()
+    {
+        ComponentRegister.UIPrefabManager.InstantiateMatchScores(_decrypted, true);
     }
     private void HandleExperienceUpdate()
     {
@@ -219,7 +226,7 @@ public class PregamePacketProcessor : UDPProcessor
             string playerName = ByteUtils.BytesToUTF8(_decrypted, index, nameLength);
             Debug.Log(playerName);
             index += nameLength;
-            toReturn[playerIndex] = new RemotePlayerData(idInMatch, teamID, playerName, playerLevel, (PlayerClass)playerClass);
+            toReturn[playerIndex] = new RemotePlayerData(idInMatch, teamID, playerName, playerLevel, playerClass);
             playerIndex++;
         }
         

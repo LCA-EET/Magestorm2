@@ -19,8 +19,10 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabAppearanceChooser;
     public GameObject PrefabUIIngameMenu;
     public GameObject PrefabUIKeyMapper;
+    public GameObject PrefabUIMatchScores;
     public GameObject PrefabSpellInfo;
     public GameObject PrefabAvailableSpells;
+    public GameObject PrefabUISpellSlots;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -58,7 +60,12 @@ public class UIPrefabManager : MonoBehaviour
         instantiated.GetComponent<UIPCEditor>().InitForm(character);
         AddToStack(instantiated);
     }
-    
+    public void InstantiateMatchScores(byte[] data, bool resetMatchID)
+    {
+        GameObject go = Instantiate(PrefabUIMatchScores);
+        go.GetComponent<UIMatchScore>().PopulateForm(data, resetMatchID);
+        AddToStack(go);
+    }
     public void InstantiateInGameMenu()
     {
         
@@ -125,6 +132,10 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateMatchCreator()
     {
         AddToStack(Instantiate(PrefabMatchCreator));
+    }
+    public void InstantiateSpellSlotter()
+    {
+        AddToStack(Instantiate(PrefabUISpellSlots));
     }
     public void InstantiateKeyMapper()
     {

@@ -236,17 +236,17 @@ public static class SharedFunctions
     {
         return DirectionalCast(origin, layerMask, distance, Vector3.forward, out hitInfo);
     }
-    public static string PlayerClassToString(PlayerClass playerClass)
+    public static string PlayerClassToString(byte playerClass)
     {
         switch (playerClass)
         {
-            case PlayerClass.Arcanist:
+            case ControlCodes.PlayerClass_Arcanist:
                 return Language.GetBaseString(7); //
-            case PlayerClass.Cleric:
+            case ControlCodes.PlayerClass_Cleric:
                 return Language.GetBaseString(6); //
-            case PlayerClass.Magician:
+            case ControlCodes.PlayerClass_Magician:
                 return Language.GetBaseString(8); // 
-            case PlayerClass.Mentalist:
+            case ControlCodes.PlayerClass_Mentalist:
                 return Language.GetBaseString(9); //
         }
         return "Undefined";
@@ -274,17 +274,17 @@ public static class SharedFunctions
             SetLayerRecursive(child.gameObject, newLayer);
         }
     }
-    public static byte[] DisciplinesByClass(PlayerClass playerClass)
+    public static byte[] DisciplinesByClass(byte playerClass)
     {
         switch (playerClass)
         {
-            case PlayerClass.Arcanist:
+            case ControlCodes.PlayerClass_Arcanist:
                 return ArcanistDisciplines;
-            case PlayerClass.Cleric:
+            case ControlCodes.PlayerClass_Cleric:
                 return ClericDisciplines;
-            case PlayerClass.Magician:
+            case ControlCodes.PlayerClass_Magician:
                 return MagicianDisciplines;
-            case PlayerClass.Mentalist:
+            case ControlCodes.PlayerClass_Mentalist:
                 return MentalistDisciplines;
         }
         return null;
@@ -329,19 +329,19 @@ public static class SharedFunctions
     }
     public static byte GetMaxSkillPointsForLevel(byte characterLevel)
     {
-        return (byte)(3 + Math.Floor(characterLevel / 7.0));
+        return (byte)(3 + Math.Floor(characterLevel / 8.0));
     }
-    public static string ClassAbbreviation(PlayerClass playerClass)
+    public static string ClassAbbreviation(byte playerClass)
     {
         switch (playerClass)
         {
-            case PlayerClass.Arcanist:
+            case ControlCodes.PlayerClass_Arcanist:
                 return "Ar";
-            case PlayerClass.Cleric:
+            case ControlCodes.PlayerClass_Cleric:
                 return "Cl";
-            case PlayerClass.Magician:
+            case ControlCodes.PlayerClass_Magician:
                 return "Ma";
-            case PlayerClass.Mentalist:
+            case ControlCodes.PlayerClass_Mentalist:
                 return "Me";
         }
         return "";

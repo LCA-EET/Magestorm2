@@ -345,7 +345,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isOnGround(out RaycastHit hitInfo)
     {
-        return _pc.DownwardCaster.CastForward(LayerManager.SurfaceMask, 0.1f, out hitInfo);
+        return _pc.DownwardCaster.CastForward(LayerManager.FloorMask, 0.1f, out hitInfo);
     }
     private void Accelerate(ref float speed, float maxSpeed, float directionFactor, float acceleration)
     {

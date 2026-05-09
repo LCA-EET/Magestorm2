@@ -15,6 +15,9 @@ public class Wall extends DamagingSpell{
         caster.IncrementWallCount();
         Main.LogDebug("Wall " + _castID + " created. Duration: " + _durationRemaining);
     }
+    public boolean IsSolidWall(){
+        return _baseReference.SpellType() == ControlCodes.SpellTypes_SolidWall;
+    }
     public boolean ReduceDuration(long msElapsed){
         _durationRemaining -= msElapsed;
         Main.LogDebug("Wall " + _castID + " duration remaining: " + _durationRemaining);

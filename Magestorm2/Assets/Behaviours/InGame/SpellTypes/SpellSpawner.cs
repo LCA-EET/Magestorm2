@@ -49,7 +49,8 @@ public class SpellSpawner : MonoBehaviour
             case ControlCodes.SpellTypes_Bolt:
                 InitializeBolt();
                 break;
-            case ControlCodes.SpellTypes_Wall:
+            case ControlCodes.SpellTypes_NonSolidWall:
+            case ControlCodes.SpellTypes_SolidWall:
                 InitializeWall();
                 break;
         }

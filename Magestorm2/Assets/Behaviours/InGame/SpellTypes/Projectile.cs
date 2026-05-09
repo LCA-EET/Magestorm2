@@ -8,6 +8,7 @@ public class Projectile : SpawnedSpell
     public VFXCode ShieldVFX;
     protected bool _impact, _directHit;
     protected Avatar _hitPlayer;
+    protected int _impactMask;
     protected virtual void FixedUpdate()
     {
         if (!_destroyOnNextUpdate)
@@ -22,7 +23,7 @@ public class Projectile : SpawnedSpell
             float toAdvance = _spellReference.ProjectileSpeed * Time.deltaTime;
             transform.position += (transform.forward * toAdvance);
             RaycastHit hitInfo;
-            if (Physics.Raycast(transform.position, transform.forward, out hitInfo, toAdvance, LayerManager.ProjectileImpactMask))
+            if (Physics.Raycast(transform.position, transform.forward, out hitInfo, toAdvance, _impactMask))
             {
                 transform.position = hitInfo.point;
                 OnTriggerEnter(hitInfo.collider);
@@ -30,7 +31,7 @@ public class Projectile : SpawnedSpell
             }
         }
     }
-    protected void SpawnImpactPrefab()
+    protected virtual void SpawnImpactPrefab()
     {
         Debug.Log("Spawning Impact Prefab");
         SpellImpact impactObject = Instantiate(ImpactPrefab);
@@ -97,5 +98,10 @@ public class Projectile : SpawnedSpell
                 MarkForDestruction();
             }
         }
+    }
+    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
+    {
+        base.Initialize(casterID, castingTeam, castID, parent, spellReference);
+        _impactMask = LayerManager.ProjectileImpactMask;
     }
 }

@@ -52,5 +52,6 @@ public static class InGame_Receive
                         EffectsCancellation = 42,
                         WallExpired = 43,
                         WallRequestResponse = 44,
-                        ExperienceUpdate = 45;
+                        ExperienceUpdate = 45,
+                        MatchScores = 46;
 }

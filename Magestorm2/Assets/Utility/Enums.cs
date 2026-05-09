@@ -60,13 +60,6 @@ public enum TriggerType : byte
     LeyInfluencer = 2
 }
 
-public enum PlayerClass : byte
-{
-    Arcanist = 0,
-    Cleric = 1,
-    Magician = 2,
-    Mentalist = 3
-}
 public enum PlayerIndicator : byte
 {
     Health = 0,

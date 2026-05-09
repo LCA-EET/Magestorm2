@@ -12,6 +12,7 @@ public class GameServer extends Thread {
     private static ConcurrentHashMap<Byte, byte[]> _objectData;
 
     private static RemoteClientMonitor _rcMonitor;
+
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
     private static int _threadID = 0;

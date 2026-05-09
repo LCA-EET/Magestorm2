@@ -142,7 +142,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
             layer = _playersAvatar? LayerManager.PlayerLayer : LayerManager.RemotePlayerLayer;
         }
         SharedFunctions.SetLayerRecursive(gameObject, layer);
-        if(PlayerAccount.SelectedCharacter.CharacterClass == (byte)PlayerClass.Cleric 
+        if(PlayerAccount.SelectedCharacter.CharacterClass == ControlCodes.PlayerClass_Cleric
             && PlayerTeam == MatchParams.MatchTeam
             && MatchParams.MatchTeam != Team.Neutral)
         {
@@ -226,7 +226,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _name = name;
         _class = playerClass;
         _level = level;
-        _playerClassString = PlayerCharacter.ClassToString((PlayerClass)playerClass);
+        _playerClassString = PlayerCharacter.ClassToString(playerClass);
         _team = team;
         _nameText.text = name;
         _nameText.color = Teams.GetTeamColor(_team);
@@ -345,9 +345,9 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     {
         get { return _playerClassString; }
     }
-    public PlayerClass PlayerClass
+    public byte PlayerClass
     {
-        get { return (PlayerClass)_class; }
+        get { return _class; }
     }
     public int CompareTo(Avatar other)
     {

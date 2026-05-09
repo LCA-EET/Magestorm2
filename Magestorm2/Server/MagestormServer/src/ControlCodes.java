@@ -2,6 +2,14 @@ public class ControlCodes {
 
     public static final byte CastPayloadStartIndex = 5;
 
+    //region MatchOptions
+        public static final int MatchOptions_FastRegen = 0;
+        public static final int MatchOptions_NoSolidWalls = 1;
+        public static final int MatchOptions_AntiStack = 2;
+        public static final int MatchOptions_NoResurrection = 3;
+        public static final int MatchOptions_NoHealOther = 4;
+    //endregion
+
     //region LogIDs
         public static final byte LogID_Main = 1;
         public static final byte LogID_Error = 2;
@@ -29,7 +37,9 @@ public class ControlCodes {
         public static final byte SpellTypes_PBAoE = 5;
         public static final byte SpellTypes_SelfHeal = 6;
         public static final byte SpellTypes_SelfResist = 7;
-        public static final byte SpellTypes_Wall = 8;
+        public static final byte SpellTypes_NonSolidWall = 8;
+        public static final byte SpellTypes_SolidWall = 9;
+        public static final byte SpellTypes_Resistable = 10;
     //endregion
 
     //region Discipline

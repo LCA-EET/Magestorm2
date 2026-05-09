@@ -5,13 +5,21 @@ public class MatchManager{
     private static ConcurrentHashMap<Byte, Match> _activeMatches;
     private static byte _nextMatchID = 1;
     private static byte _maxMatches;
+    private static ConcurrentHashMap<Byte, byte[]> _scores;
     public static boolean UpdatesNeeded;
 
     public static void init(byte maxMatches){
         UpdatesNeeded = false;
+        _scores = new ConcurrentHashMap<>();
         _maxMatches = maxMatches;
         _activeMatches = new ConcurrentHashMap<>();
         new MatchMonitor();
+    }
+    public static void UpdateScore(byte matchID, byte[] scoreBytes){
+        _scores.put(matchID, scoreBytes);
+    }
+    public static byte[] GetScoreBytes(byte matchID){
+        return _scores.get(matchID);
     }
 
     public static void SendMatchListToClient(RemoteClient rc){

@@ -11,6 +11,7 @@ public class SharedFunctions {
     public static float GetRandomFloat(){
         return _random.nextFloat();
     }
+
     public static boolean HandleTeamMessage(byte[] decrypted, InGamePacketProcessor proc, Match owner, RemoteClient remote){
         byte teamID = decrypted[2];
         int messageLength = ByteUtils.ExtractInt(decrypted, 3);

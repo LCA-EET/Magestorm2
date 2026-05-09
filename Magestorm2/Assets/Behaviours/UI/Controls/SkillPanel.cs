@@ -28,6 +28,7 @@ public class SkillPanel : ValidateableObject
     private void UpdateRemainingPoints()
     {
         _pointsRemaining = (SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel) - GetUsedSkillPoints());
+        Debug.Log("Remaining Skill Points: " + _pointsRemaining);
         RemainingText.text = Language.BuildString(286, _pointsRemaining);
         if(_pointsRemaining != _priorPointsRemaining)
         {
@@ -35,7 +36,7 @@ public class SkillPanel : ValidateableObject
             SlotSelectView.CheckAvailability(_characterLevel, GetDisciplineTable()); 
         }
     }
-    public void RefreshClass(PlayerClass playerClass)
+    public void RefreshClass(byte playerClass)
     {
         byte[] availableDisciplines = SharedFunctions.DisciplinesByClass(playerClass);
         int index = 0;
@@ -52,7 +53,7 @@ public class SkillPanel : ValidateableObject
     }
     public void FillSkills(PlayerCharacter pc)
     {
-        RefreshClass((PlayerClass)pc.CharacterClass);
+        RefreshClass(pc.CharacterClass);
         for (int i = 0; i < SkillLines.Length; i++) 
         {
             SkillLine toUpdate = SkillLines[i];

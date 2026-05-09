@@ -3,7 +3,7 @@ using UnityEngine;
 public class SlotSelectView : ScrollSelectView, ISpellProcessor
 {
     private byte _characterLevel;
-    private SkillPanel _skillPanel;
+    private Dictionary<byte,byte> _disciplineTable;
     private byte[] _slottedSpells;
     private const int _noSelectionRef = 276;
     void Awake()
@@ -22,9 +22,9 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
         _slottedSpells[slotID] = 0;
         Labels[slotID].UpdateText(_noSelectionRef);
     }
-    public void Init(byte[] slottedSpells, byte characterLevel, SkillPanel skillPanel)
+    public void Init(byte[] slottedSpells, byte characterLevel, Dictionary<byte, byte> disciplineTable)
     {
-        _skillPanel = skillPanel;
+        _disciplineTable = disciplineTable;
         _characterLevel = characterLevel;
         for (byte i = 0; i < slottedSpells.Length; i++)
         {
@@ -55,7 +55,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
 
     protected override void ProcessSelection()
     {
-        ComponentRegister.UIPrefabManager.InstantiateAvailableSpellList(_characterLevel, _selectedOption, this, _skillPanel.GetDisciplineTable());
+        ComponentRegister.UIPrefabManager.InstantiateAvailableSpellList(_characterLevel, _selectedOption, this, _disciplineTable);
     }
 
     public byte[] SlotSelections

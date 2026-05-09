@@ -187,8 +187,9 @@ public class SpellData
                 case ControlCodes.SpellTypes_Summon:
                     toSend = ComponentRegister.PC.Summon(SpellID);
                     break;
-                case ControlCodes.SpellTypes_Wall:
-                    toSend = InGame_Packets.WallCastPacket(SpellID);
+                case ControlCodes.SpellTypes_SolidWall:
+                case ControlCodes.SpellTypes_NonSolidWall:
+                    toSend = InGame_Packets.WallCastPacket(SpellID, SpellType);
                     break;
                 case ControlCodes.SpellTypes_Bolt:
                     SpellData spellReference = null;

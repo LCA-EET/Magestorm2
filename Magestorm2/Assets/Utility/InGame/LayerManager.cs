@@ -20,7 +20,9 @@ public static class LayerManager
     private static int _surfaceLayerMask;
     private static int _interactableMask;
     private static int _projectileImpactMask;
+    private static int _mindImpactMask;
     private static int _aoeObstructionMask;
+    private static int _floorMask;
     private static bool _init = false;
     public static void Init()
     {
@@ -35,10 +37,16 @@ public static class LayerManager
             _remotePlayerLayerMask = LayerMask.GetMask(Layer_RemotePlayer);
             _surfaceLayerMask = LayerMask.GetMask(Layer_Surface);
             _interactableMask = LayerMask.GetMask(Layer_Interactable);
+            _floorMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid });
             _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_PlayerWallSolid, Layer_PlayerWallNonSolid });
-            _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default });
+            _mindImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable});
+            _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid , Layer_PlayerWallNonSolid });
             _init = true;
         }
+    }
+    public static int MindImpactMask
+    {
+        get { return _mindImpactMask; }
     }
     public static int AoEObstructionMask
     {
@@ -80,6 +88,13 @@ public static class LayerManager
     {
         get{
             return _surfaceLayerMask;
+        }
+    }
+    public static int FloorMask
+    {
+        get
+        {
+            return _floorMask;
         }
     }
     public static int InteractableMask

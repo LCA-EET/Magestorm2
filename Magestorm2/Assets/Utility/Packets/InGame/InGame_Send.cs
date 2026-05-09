@@ -31,5 +31,7 @@
                         Devour = 30,
                         ReportSplash = 31,
                         WallHit = 32,
-                        RequestWallData = 33;
+                        RequestWallData = 33,
+                        LeaderboardRequest = 34;
+                        
 }

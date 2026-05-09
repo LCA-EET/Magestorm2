@@ -103,7 +103,6 @@ public class PregamePacketProcessor extends UDPProcessor
         }
         return true;
     }
-
     private void AssignRC(){
         _remote = LoggedInClient();
         if(_remote != null){
@@ -187,6 +186,8 @@ public class PregamePacketProcessor extends UDPProcessor
     public void HandleMatchSubscribePacket(boolean subscribe, RemoteClient remote){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);
         MatchManager.Subscribe(_accountID, subscribe, characterID, remote);
+        byte priorMatchID = _decrypted[9];
+        SendMatchScore(priorMatchID, remote);
     }
 
     public String[] LogInDetails(){
@@ -205,7 +206,12 @@ public class PregamePacketProcessor extends UDPProcessor
         Database.DeactivateCharacter(characterID, _accountID);
         EnqueueForSend(Packets.CharacterDeletedPacket(characterID), _remote);
     }
-
+    private void SendMatchScore(byte matchID, RemoteClient rc){
+        byte[] toEncrypt= MatchManager.GetScoreBytes(matchID);
+        if(toEncrypt != null){
+            EnqueueForSend(Packets.MatchScoresPacket(Pregame_Send.MatchScore, toEncrypt), rc);
+        }
+    }
     private void HandleCreateCharacterPacket(){
         byte classCode = _decrypted[5];
         byte[] stats = new byte[6];

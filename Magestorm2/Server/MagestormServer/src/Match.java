@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +12,7 @@ public class Match {
     protected final long _regenTick;
     protected final byte[] _creatorName;
     protected final byte[] _matchBytes;
+    protected byte[] _scoreBytes;
     protected final MatchOptions _matchOptions;
     protected final byte _lastIndex;
     protected ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
@@ -28,13 +30,14 @@ public class Match {
     protected final byte _maxPlayers;
     protected byte _matchType;
     protected short _nextCastID = 0;
+    protected boolean _scoreUpdated = false;
     private long _spellExpirationElapsed = 0;
     private long _expCheckElapsed = 0;
     private final long _expReportInterval = 30000;
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType, byte matchOptions){
         _playersJoined = new HashSet<>();
         _matchOptions = new MatchOptions(matchOptions);
-        _regenTick = _matchOptions.IsOptionSet(MatchOptions.FastRegen)?1000:5000;
+        _regenTick = _matchOptions.IsOptionSet(ControlCodes.MatchOptions_FastRegen)?1000:5000;
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
         _sceneID = sceneID;
@@ -87,21 +90,25 @@ public class Match {
             _objectStatus.put(objectKey, new ActivatableObject(this,objectKey, objectData[i+1]));
         }
     }
-    public void IncrementPlayerDeaths(int characterID){
+    
+    public void IncrementPlayerDeaths(MatchCharacter mc){
+        int characterID = mc.GetCharacterID();
         if(!_playerScores.containsKey(characterID)){
-            _playerScores.put(characterID, new Score());
+            _playerScores.put(characterID, new Score(mc));
         }
         _playerScores.get(characterID).IncrementDeaths();
     }
-    public void IncrementPlayerKills(int characterID){
+    public void IncrementPlayerKills(MatchCharacter mc){
+        int characterID = mc.GetCharacterID();
         if(!_playerScores.containsKey(characterID)){
-            _playerScores.put(characterID, new Score());
+            _playerScores.put(characterID, new Score(mc));
         }
         _playerScores.get(characterID).IncrementKills();
     }
-    public void IncrementPlayerRaises(int characterID){
+    public void IncrementPlayerRaises(MatchCharacter mc){
+        int characterID = mc.GetCharacterID();
         if(!_playerScores.containsKey(characterID)){
-            _playerScores.put(characterID, new Score());
+            _playerScores.put(characterID, new Score(mc));
         }
         _playerScores.get(characterID).IncrementRaises();
     }
@@ -165,6 +172,37 @@ public class Match {
         _matchBytes[_lastIndex] = NumPlayersInMatch();
         return _matchBytes;
     }
+    //region Scoring
+    public void RefreshScoreBytes(int topX){
+        ArrayList<byte[]> scoreBytes = new ArrayList<>();
+        int arrayLength = 2;
+        ArrayList<Score> topXscores = new ArrayList<>(_playerScores.values());
+        Collections.sort(topXscores);
+        for(int i = 0; i < topXscores.size(); i++){
+            Score score = topXscores.get(i);
+            byte[] playerScoreBytes = score.GetScorer().GetScoreBytes();
+            playerScoreBytes[0] = score.GetKills();
+            playerScoreBytes[1] = score.GetDeaths();
+            playerScoreBytes[2] = score.GetRaises();
+            arrayLength+= playerScoreBytes.length;
+            scoreBytes.add(playerScoreBytes);
+            if(i > topX){
+                break;
+            }
+        }
+        _scoreBytes = new byte[arrayLength];
+        int index = 2;
+        for(byte[] playerScoreBytes : scoreBytes){
+            System.arraycopy(playerScoreBytes, 0, _scoreBytes, index, playerScoreBytes.length);
+            index+=playerScoreBytes.length;
+        }
+        _scoreBytes[0] = InGame_Send.MatchScores;
+        _scoreBytes[1] = (byte)scoreBytes.size();
+    }
+    public byte[] GetScoreBytes(){
+        return _scoreBytes;
+    }
+    //endregion
     public boolean HasRoomForAnotherPlayer(){
         return NumPlayersInMatch() < _maxPlayers;
     }
@@ -247,6 +285,13 @@ public class Match {
         for (byte id : playerIDs){
             LeaveMatch(id, false, false);
         }
+    }
+    public boolean ScoreUpdated(){
+        boolean toReturn = _scoreUpdated;
+        if(toReturn){
+            _scoreUpdated = false;
+        }
+        return toReturn;
     }
     public void LeaveMatch(byte id, boolean send, boolean quitGame){
         MatchCharacter departee = _matchCharacters.remove(id);
@@ -380,6 +425,7 @@ public class Match {
                 ResistanceSpell resistanceSpell = new ResistanceSpell(caster, castID, spellReference, this);
                 resistanceSpell.ProcessSpell(caster);
                 break;
+            case ControlCodes.SpellTypes_Resistable:
             case ControlCodes.SpellTypes_Bolt:
                 _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 break;
@@ -390,13 +436,19 @@ public class Match {
             case ControlCodes.SpellTypes_Summon:
 
                 break;
-            case ControlCodes.SpellTypes_Wall:
+            case ControlCodes.SpellTypes_SolidWall:
+            case ControlCodes.SpellTypes_NonSolidWall:
                 if(caster.CanCastAdditionalWall()){
                     byte[] prBytes = new byte[24];
                     System.arraycopy(decrypted, ControlCodes.CastPayloadStartIndex, prBytes, 0, 24);
                     Wall wall = new Wall(caster, castID, spellReference, this, prBytes);
-                    _castSpells.put(castID, wall);
-                    _walls.put(castID, wall);
+                    if(wall.IsSolidWall() && _matchOptions.IsOptionSet(ControlCodes.MatchOptions_NoSolidWalls)){
+                        castID = -1;
+                    }
+                    else{
+                        _castSpells.put(castID, wall);
+                        _walls.put(castID, wall);
+                    }
                 }
                 else{
                     castID = -1;
@@ -610,11 +662,13 @@ public class Match {
 
     protected void PlayerKilled(MatchCharacter killed, MatchCharacter killer){
         SendToAll(Packets.PlayerKilledPacket(killed.GetIDinMatch(), killer.GetIDinMatch()));
-        IncrementPlayerKills(killer.GetCharacterID());
-        IncrementPlayerDeaths(killed.GetCharacterID());
+        IncrementPlayerKills(killer);
+        IncrementPlayerDeaths(killed);
         killed.GetTeam().GetScore().IncrementDeaths();
         killer.GetTeam().GetScore().IncrementKills();
         killer.AdjustExperience(killed.GetMaxHP() * (int)(1 + Math.floor(killed.GetLevel() / 8.0f)));
+        RefreshScoreBytes(10);
+        _scoreUpdated = true;
     }
 
     public byte GetMatchType(){

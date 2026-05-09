@@ -5,6 +5,11 @@
 
     public const byte CastPayloadStartIndex = 5;
 
+    public const byte PlayerClass_Arcanist = 0;
+    public const byte PlayerClass_Cleric = 1;
+    public const byte PlayerClass_Magician = 2;
+    public const byte PlayerClass_Mentalist = 3;
+
     public const byte EffectCode_Slow = 1;
     public const byte EffectCode_Freezing = 2;
     public const byte EffectCode_Burning = 3;
@@ -35,8 +40,9 @@
     public const byte SpellTypes_PBAoE = 5;
     public const byte SpellTypes_SelfHeal = 6;
     public const byte SpellTypes_SelfResist = 7;
-    public const byte SpellTypes_Wall = 8;
-
+    public const byte SpellTypes_NonSolidWall = 8;
+    public const byte SpellTypes_SolidWall = 9;
+    public const byte SpellTypes_Resistable = 10;
 
     public const byte SpellDiscipline_FireLaw = 0;
     public const byte SpellDiscipline_IceLaw = 1;

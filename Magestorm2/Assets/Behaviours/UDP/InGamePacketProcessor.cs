@@ -130,9 +130,17 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.ExperienceUpdate:
                         HandleExperienceUpdate();                
                         break;
+                    case InGame_Receive.MatchScores:
+                        HandleMatchScores();
+                        break;
                 }
             }
         }
+    }
+    private void HandleMatchScores()
+    {
+        Debug.Log("Match Score Packet Received");
+        ComponentRegister.UIPrefabManager.InstantiateMatchScores(_decrypted, false);
     }
     private void HandleExperienceUpdate()
     {
@@ -149,14 +157,18 @@ public class InGamePacketProcessor : UDPProcessor
         {
             byte spellID = _decrypted[index];
             index++;
-            short castID = BitConverter.ToInt16(_decrypted, index);
-            index += 2;
-            byte[] payload = new byte[24];
-            Array.Copy(_decrypted, index, payload, 0, 24);
-            index += 24;
-            SpellSpawner spawner = null;
-            ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner);
-            spawner.Initialize(Game.PCAvatar, ControlCodes.SpellTypes_Wall, castID, payload);
+            SpellData baseReference = null;
+            if (SpellManager.GetSpell(spellID, ref baseReference))
+            {
+                short castID = BitConverter.ToInt16(_decrypted, index);
+                index += 2;
+                byte[] payload = new byte[24];
+                Array.Copy(_decrypted, index, payload, 0, 24);
+                index += 24;
+                SpellSpawner spawner = null;
+                ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner);
+                spawner.Initialize(Game.PCAvatar, baseReference.SpellType, castID, payload);
+            }
         }
         
     }

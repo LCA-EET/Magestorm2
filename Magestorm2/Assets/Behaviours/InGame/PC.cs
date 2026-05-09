@@ -16,7 +16,7 @@ public class PC : MonoBehaviour
     public MusicPlayer MusicPlayer;
     public bool JoinedMatch;
 
-    private PlayerClass _class;
+    private byte _class;
     private List<PeriodicAction> _actionList;
 
     private ManaPool _enteredPool;
@@ -50,12 +50,12 @@ public class PC : MonoBehaviour
             PlayerMovement.SetPC(this);
             _staminaRegen = MatchParams.MaxStamina / 1.67f;
             _hml = new Dictionary<PlayerIndicator, HMLUpdater>();
-            _class = (PlayerClass)PlayerAccount.SelectedCharacter.CharacterClass;
+            _class = PlayerAccount.SelectedCharacter.CharacterClass;
             _actionList = new List<PeriodicAction>();
             new PeriodicAction(Game.TickInterval, UpdateIndicators, _actionList);
             if(MatchParams.MatchTeam != Team.Neutral)
             {
-                if (_class == PlayerClass.Cleric || _class == PlayerClass.Magician)
+                if (_class == ControlCodes.PlayerClass_Cleric || _class == ControlCodes.PlayerClass_Magician)
                 {
                     Debug.Log("Ley computation enabled.");
                     new PeriodicAction(1.0f, ComputeLey, _actionList);
@@ -71,7 +71,7 @@ public class PC : MonoBehaviour
         _ley = new HMLUpdater(0.1f, 1.0f, PlayerIndicator.Ley, _hml);
         _stamina = new HMLUpdater(0.1f, MatchParams.MaxStamina, PlayerIndicator.Stamina, _hml);
         _camera = Camera.main;
-        if(_class == PlayerClass.Mentalist)
+        if(_class == ControlCodes.PlayerClass_Mentalist)
         {
             _ley.UpdateValue(0.6f);
         }
@@ -200,7 +200,7 @@ public class PC : MonoBehaviour
         Debug.Log("Sending tap packet.");
         Game.SendInGameBytes(InGame_Packets.TapPacket());
     }
-    public PlayerClass CharacterClass
+    public byte CharacterClass
     {
         get
         {

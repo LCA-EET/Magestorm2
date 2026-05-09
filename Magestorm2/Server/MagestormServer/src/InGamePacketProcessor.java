@@ -69,6 +69,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.RequestWallData:
                     HandleWallRequestPacket();
                     return true;
+                case InGame_Receive.LeaderboardRequest:
+                    HandleLeaderboardRequest();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -76,6 +79,11 @@ public class InGamePacketProcessor extends UDPProcessor{
             return HandleJoinMatchPacket(_remote);
         }
         return false;
+    }
+    private void HandleLeaderboardRequest(){
+        byte[] toEncrypt = MatchManager.GetScoreBytes(_owningMatch._matchID);
+        _owningMatch.SendToPlayer(Packets.MatchScoresPacket(InGame_Send.MatchScores, toEncrypt),
+                _owningMatch.GetMatchCharacter(_decrypted[1]));
     }
     private void HandleWallRequestPacket(){
         _owningMatch.RequestWallData(_owningMatch.GetMatchCharacter(_decrypted[1]));

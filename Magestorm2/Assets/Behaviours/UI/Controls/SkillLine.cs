@@ -33,11 +33,11 @@ public class SkillLine : ValidatableForm
                 case ButtonType.Increase:
                     if (_skillLevel < 3)
                     {
-                        if(_skillLevel == 1 && _characterLevel < 7)
+                        if(_skillLevel == 1 && _characterLevel < 8)
                         {
                             Game.MessageBoxReference(292);
                         }
-                        else if (_skillLevel == 2 && _characterLevel < 14)
+                        else if (_skillLevel == 2 && _characterLevel < 16)
                         {
                             Game.MessageBoxReference(293);
                         }

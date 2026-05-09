@@ -24,7 +24,7 @@ TagManager:
   - DeadBody
   - PlayerWall_Solid
   - PlayerWall_NonSolid
-  - 
+  - Resistable
   - 
   - 
   - 

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchMonitor extends RegisteredThread{
 
@@ -15,6 +16,7 @@ public class MatchMonitor extends RegisteredThread{
                 if(MatchManager.UpdatesNeeded){
                     MatchManager.NotifySubscribers();
                 }
+
                 Thread.sleep(_tick);
             }
             catch(InterruptedException ie){
@@ -48,11 +50,13 @@ public class MatchMonitor extends RegisteredThread{
             }
             else{
                 match.Tick(_tick);
+                if(match.ScoreUpdated()){
+                    MatchManager.UpdateScore(match.MatchID(), match.GetScoreBytes());
+                }
                 if(checkPlayerInactivity){
                     match.CheckForInactivity();
                 }
             }
         }
     }
-
 }

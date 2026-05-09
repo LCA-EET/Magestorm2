@@ -25,5 +25,6 @@
                         MatchIsFullPacket = 23,
                         AcknowledgeSubscription = 24,
                         UpdateSkillsAndSlots = 25,
-                        ExpLevelUpdate = 26;
+                        ExpLevelUpdate = 26,
+                        MatchScore = 27;
 }

@@ -22,7 +22,7 @@ public class ManaPool : BiasableTrigger
     {
         InitTrigger(TriggerType.ManaPool);
         _poolPower = PoolManager.RegisterPool(this);
-        if (ComponentRegister.PC.CharacterClass == PlayerClass.Magician)
+        if (ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Magician)
         {
             LeyInfluencer.AssignOwner(this, _poolPower, PoolID);
         }
@@ -109,7 +109,7 @@ public class ManaPool : BiasableTrigger
     }
     public override void EnterAction()
     {
-        if(PlayerAccount.SelectedCharacter.CharacterClass != (byte)PlayerClass.Arcanist)
+        if(PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
         {
             base.EnterAction();
             _playerInPool = true;

@@ -26,9 +26,12 @@ public class Bolt : Projectile
         }
         else
         {
-            if (_emitter.enabled)
+            if(ParticleSystem != null)
             {
-                _emitter.enabled = false;
+                if (_emitter.enabled)
+                {
+                    _emitter.enabled = false;
+                }
             }
         }
     }
