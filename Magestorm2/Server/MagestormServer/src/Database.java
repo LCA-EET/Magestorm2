@@ -506,14 +506,14 @@ public class Database {
         }
         return toReturn;
     }
-    public static void UpdateSlotting(int characterID, byte[] decrypted, int offset){
+    public static void UpdateSlotting(int characterID, byte[] slots, Connection conn){
         String sql = "UPDATE characters SET slot0 = ?, slot1 = ?, slot2 = ?, slot3 = ?, slot4 = ?, " +
                 "slot5 = ?, slot6 = ?, slot7 = ?, slot8 = ?, slot9 = ? WHERE id = ?";
-        try(Connection conn = DBConnection()) {
+        try{
             PreparedStatement ps = conn.prepareStatement(sql);
             int index = 1;
-            for(int i = offset; i < decrypted.length; i++){
-                ps.setByte(index, decrypted[i]);
+            for(int i = 0; i < slots.length; i++){
+                ps.setByte(index, slots[i]);
                 index++;
             }
             ps.setInt(index, characterID);

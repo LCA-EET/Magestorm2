@@ -2,12 +2,17 @@ public class ControlCodes {
 
     public static final byte CastPayloadStartIndex = 5;
 
+    //region AsyncDBUpdate
+        public static final byte AsyncDBUpdate_Experience = 0;
+        public static final byte AsyncDBUpdate_Slotting = 1;
+    //endregion
+
     //region MatchOptions
-        public static final int MatchOptions_FastRegen = 0;
-        public static final int MatchOptions_NoSolidWalls = 1;
-        public static final int MatchOptions_AntiStack = 2;
-        public static final int MatchOptions_NoResurrection = 3;
-        public static final int MatchOptions_NoHealOther = 4;
+        public static final byte MatchOptions_FastRegen = 0;
+        public static final byte MatchOptions_NoSolidWalls = 1;
+        public static final byte MatchOptions_AntiStack = 2;
+        public static final byte MatchOptions_NoResurrection = 3;
+        public static final byte MatchOptions_NoHealOther = 4;
     //endregion
 
     //region LogIDs

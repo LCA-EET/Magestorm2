@@ -1,7 +1,6 @@
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -9,7 +8,7 @@ public class Main {
     private static Log _serverLog;
     public static Emailer Mailer;
     public static ThreadMonitor ThreadMonitor;
-    public static ExperienceUpdater ExperienceUpdater;
+    public static AsyncDBUpdater AsyncDBUpdater;
     public static boolean Running = true;
     public static boolean Debug = false;
     public static void main(String args[]) throws FileNotFoundException {
@@ -26,7 +25,7 @@ public class Main {
         if(Database.TestDBConnection()){
             Database.UpdateServerInfo();
             GameServer.init();
-            ExperienceUpdater = new ExperienceUpdater();
+            AsyncDBUpdater = new AsyncDBUpdater();
             ProcessCommands();
         }
         else{

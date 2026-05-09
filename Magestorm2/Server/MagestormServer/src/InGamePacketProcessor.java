@@ -72,6 +72,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.LeaderboardRequest:
                     HandleLeaderboardRequest();
                     return true;
+                case InGame_Receive.UpdateSlotting:
+                    HandleUpdateSlotting();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -79,6 +82,12 @@ public class InGamePacketProcessor extends UDPProcessor{
             return HandleJoinMatchPacket(_remote);
         }
         return false;
+    }
+    private void HandleUpdateSlotting(){
+        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        if(mc != null){
+
+        }
     }
     private void HandleLeaderboardRequest(){
         byte[] toEncrypt = MatchManager.GetScoreBytes(_owningMatch._matchID);

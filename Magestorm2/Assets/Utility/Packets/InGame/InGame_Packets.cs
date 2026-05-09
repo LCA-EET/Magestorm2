@@ -187,4 +187,13 @@ public static class InGame_Packets
     {
         return new byte[] { InGame_Send.RequestWallData, MatchParams.IDinMatch};
     }
+
+    public static byte[] UpdateSlots(byte[] slots)
+    {
+        byte[] unencrypted = new byte[slots.Length + 2];
+        unencrypted[0] = InGame_Send.UpdateSlots;
+        unencrypted[1] = MatchParams.IDinMatch;
+        Array.Copy(slots, 0, unencrypted, 2, slots.Length);
+        return unencrypted;
+    }
 }

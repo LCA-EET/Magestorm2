@@ -310,7 +310,7 @@ public class Match {
                     pc.MarkRemovedFromMatch();
                 }
             }
-            Main.ExperienceUpdater.AddToQueue(departee);
+            Main.AsyncDBUpdater.AddToQueue(new AsyncDBUpdate(ControlCodes.AsyncDBUpdate_Experience, departee, null));
         }
         LogMessage("Player " + id + " has left the match. Players remaining: " + _matchCharacters.size());
         if(send){
