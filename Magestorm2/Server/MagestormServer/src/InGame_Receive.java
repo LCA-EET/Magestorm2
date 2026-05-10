@@ -37,4 +37,5 @@ public class InGame_Receive {
     public static final byte RequestWallData = 33;
     public static final byte LeaderboardRequest = 34;
     public static final byte UpdateSlotting = 35;
+    public static final byte ReportResistableHit = 36;
 }

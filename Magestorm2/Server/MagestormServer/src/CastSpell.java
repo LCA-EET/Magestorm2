@@ -49,47 +49,30 @@ public class CastSpell {
     protected void ProcessEffect(MatchCharacter target){
         byte effectCode = _baseReference.GetEffectCode();
         Main.LogMessage("Effect code for base reference " + _baseReference.GetSpellID() + ": " + _baseReference.GetEffectCode());
+        boolean successfullyApplied;
         float chance, random;
         if(effectCode > 0 ){
             if(target.GetIDinMatch() == _casterReference.GetIDinMatch()){
                 //self-applied effect
-                chance = 1;
-                random = 0;
+                successfullyApplied = true;
             }
             else{
                 if(!target.IsEffectPrevented(effectCode)){
-                    byte effectStatCode = _baseReference.GetEffectStatCode();
-                    Main.LogMessage("Effect stat code: " + effectStatCode);
-                    byte casterStat = _casterReference.GetStatistic(effectStatCode);
-                    Main.LogMessage("Caster stat: " + casterStat);
-                    byte targetStat = target.GetStatistic(effectStatCode);
-                    Main.LogMessage("Target stat: " + targetStat);
-                    byte difference = (byte) (casterStat - targetStat);
-                    Main.LogMessage("Difference: " + difference);
-                    chance = (50 + (difference * 10)) / 100.0f;
-                    Main.LogMessage("Chance of effect: " + chance);
-                    if(chance > 0.9f){
-                        chance = 0.9f;
-                    }
-                    if(chance < 0.1f){
-                        chance = 0.1f;
-                    }
-                    random = SharedFunctions.GetRandomFloat();
+                    successfullyApplied = SharedFunctions.EffectApplied(0.1f, 0.9f, _baseReference.GetEffectStatCode(), target, _casterReference);
                 }
                 else{
                     return;
                 }
             }
-            if(chance >= random){
+            if(successfullyApplied){
                 Main.LogMessage("Effect triggered.");
                 target.TerminateEffects(_baseReference.GetEffectsCancelled(), _spellID);
-                AppliedEffect ae = CreateEffect(target, effectCode);
-                target.AddEffect(ae);
+                target.AddEffect(CreateEffect(target, effectCode));
                 _matchReference.SendToAll(Packets.ApplyEffectPacket(target.GetIDinMatch(), _casterReference.GetIDinMatch(),
                         effectCode, _baseReference.GetDuration(), _spellLevel));
             }
             else{
-                Main.LogMessage("Effect not triggered. Chance: " + chance + ", r: " + random);
+                Main.LogMessage("Effect not triggered.");
             }
         }
     }

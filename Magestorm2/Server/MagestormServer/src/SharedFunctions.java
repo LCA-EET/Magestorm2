@@ -11,7 +11,24 @@ public class SharedFunctions {
     public static float GetRandomFloat(){
         return _random.nextFloat();
     }
-
+    public static boolean EffectApplied(float minChance, float maxChance, byte statCode, MatchCharacter target, MatchCharacter caster){
+        Main.LogMessage("Effect stat code: " + statCode);
+        byte casterStat = caster.GetStatistic(statCode);
+        Main.LogMessage("Caster stat: " + casterStat);
+        byte targetStat = target.GetStatistic(statCode);
+        Main.LogMessage("Target stat: " + targetStat);
+        byte difference = (byte) (casterStat - targetStat);
+        Main.LogMessage("Difference: " + difference);
+        float chance = (50 + (difference * 10)) / 100.0f;
+        Main.LogMessage("Chance of effect: " + chance);
+        if(chance > 0.9f){
+            chance = 0.9f;
+        }
+        if(chance < 0.1f){
+            chance = 0.1f;
+        }
+        return chance > SharedFunctions.GetRandomFloat();
+    }
     public static boolean HandleTeamMessage(byte[] decrypted, InGamePacketProcessor proc, Match owner, RemoteClient remote){
         byte teamID = decrypted[2];
         int messageLength = ByteUtils.ExtractInt(decrypted, 3);

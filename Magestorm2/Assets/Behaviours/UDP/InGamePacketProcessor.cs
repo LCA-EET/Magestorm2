@@ -133,9 +133,16 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.MatchScores:
                         HandleMatchScores();
                         break;
+                    case InGame_Receive.SpellResisted:
+                        HandleSpellResist();                
+                        break;
                 }
             }
         }
+    }
+    private void HandleSpellResist()
+    {
+
     }
     private void HandleMatchScores()
     {

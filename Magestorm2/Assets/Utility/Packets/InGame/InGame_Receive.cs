@@ -53,5 +53,6 @@ public static class InGame_Receive
                         WallExpired = 43,
                         WallRequestResponse = 44,
                         ExperienceUpdate = 45,
-                        MatchScores = 46;
+                        MatchScores = 46,
+                        SpellResisted = 47;
 }

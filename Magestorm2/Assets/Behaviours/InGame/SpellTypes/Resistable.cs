@@ -6,6 +6,10 @@ public class Resistable : Bolt
         base.Initialize(casterID, castingTeam, castID, parent, spellReference);
         _impactMask = LayerManager.MindImpactMask;
     }
+    protected override void ReportHit()
+    {
+        Game.SendInGameBytes(InGame_Packets.ReportResistableHit(_castID));
+    }
     protected override void SpawnImpactPrefab()
     {
         return;

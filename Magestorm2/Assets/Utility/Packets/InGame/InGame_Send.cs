@@ -33,6 +33,7 @@
                         WallHit = 32,
                         RequestWallData = 33,
                         LeaderboardRequest = 34,
-                        UpdateSlots = 35;
+                        UpdateSlots = 35,
+                        ReportResistableHit = 36;
                         
 }

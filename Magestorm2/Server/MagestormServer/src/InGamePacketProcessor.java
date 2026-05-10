@@ -57,6 +57,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.ReportHit:
                     HandleReportHitPacket();
                     return true;
+                case InGame_Receive.ReportResistableHit:
+                    HandleResistableHitPacket();
+                    return true;
                 case InGame_Receive.Devour:
                     _owningMatch.HandleBanish(_decrypted);
                     return true;
@@ -83,10 +86,17 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
         return false;
     }
+    private void HandleResistableHitPacket(){
+        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        if(mc != null){
+            short castID = ByteUtils.ExtractShort(_decrypted, 2);
+
+        }
+    }
     private void HandleUpdateSlotting(){
         MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
         if(mc != null){
-
+            Main.AsyncDBUpdater.AddToQueue(new AsyncDBUpdate(ControlCodes.AsyncDBUpdate_Slotting, mc, _decrypted));
         }
     }
     private void HandleLeaderboardRequest(){

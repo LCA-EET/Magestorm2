@@ -45,6 +45,10 @@ public class Projectile : SpawnedSpell
             impactObject.InvertDirection(transform.forward);
         }
     }
+    protected virtual void ReportHit()
+    {
+        Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
+    }
     protected virtual void OnTriggerEnter(Collider other)
     {
         if (!_destroyOnNextUpdate)
@@ -63,7 +67,7 @@ public class Projectile : SpawnedSpell
                     _directHit = true;
                     _hitPlayer = Game.PCAvatar;
                     Debug.Log("Direct hit!");
-                    Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
+                    ReportHit();
                     SharedFunctions.CameraShake(_spellReference);
                 }
             }

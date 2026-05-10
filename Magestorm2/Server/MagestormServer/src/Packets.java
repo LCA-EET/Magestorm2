@@ -424,6 +424,14 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
+    public static byte[] SpellResistedPacket(byte targetID, byte casterID){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.SpellResisted;
+        toEncrypt[1] = casterID;
+        toEncrypt[2] = targetID;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     /////////////////////// SHARED //////////////////////
 
     public static byte[] ExtractBytes(byte[] decrypted, int index, int length){

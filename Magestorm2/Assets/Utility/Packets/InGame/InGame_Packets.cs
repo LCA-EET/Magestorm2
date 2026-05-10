@@ -154,7 +154,14 @@ public static class InGame_Packets
         return unencrypted;
 
     }
-
+    public static byte[] ReportResistableHit(short castID)
+    {
+        byte[] unencrypted = new byte[4];
+        unencrypted[0] = InGame_Send.ReportResistableHit;
+        unencrypted[1] = MatchParams.IDinMatch;
+        BitConverter.GetBytes(castID).CopyTo(unencrypted, 2);
+        return unencrypted;
+    }
     public static byte[] ReportHitPacket(short castID)
     {
         byte[] unencrypted = new byte[4];

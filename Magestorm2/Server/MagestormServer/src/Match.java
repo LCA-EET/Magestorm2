@@ -215,7 +215,7 @@ public class Match {
             newToMatch = false;
         }
         else{
-            newToMatch = true;
+             newToMatch = true;
             _playersJoined.add(characterID);
         }
         MatchCharacter toAdd = new MatchCharacter(joining, playerID, this,
@@ -337,7 +337,6 @@ public class Match {
                 byte alive = subject.IsAlive()?(byte)1:(byte)0;
                 SendToPlayer(Packets.PlayerDataPacket(subject.GetPlayerData(), alive, subject.IsNewToMatch()), requesterID);
             }
-
         }
     }
     public int GetMatchPort(){
@@ -426,6 +425,8 @@ public class Match {
                 resistanceSpell.ProcessSpell(caster);
                 break;
             case ControlCodes.SpellTypes_Resistable:
+                _castSpells.put(castID, new ResistableSpell(caster, castID, spellReference, this));
+                break;
             case ControlCodes.SpellTypes_Bolt:
                 _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 break;
