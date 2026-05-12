@@ -158,14 +158,14 @@ public class InGamePacketProcessor : UDPProcessor
         byte targetID = _decrypted[2];
         if(MatchParams.IDinMatch == targetID)
         {
-            new MessageData(Language.GetBaseString(347), Language.GetBaseString(209));
+            ComponentRegister.ResistanceNotice.SetText(Language.GetBaseString(347));
         }
         else
         {
             Avatar target = null;
             if(Match.GetAvatar(targetID, ref target))
             {
-                new MessageData(Language.BuildString(348, target.Name), Language.GetBaseString(209));
+                ComponentRegister.ResistanceNotice.SetText(Language.BuildString(348, target.Name));
             }
         }
     }

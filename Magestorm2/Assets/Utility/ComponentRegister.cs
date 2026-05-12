@@ -39,7 +39,13 @@ public static class ComponentRegister
     private static SpellPanel _spellPanel;
     private static AvailableSpellsPanel _availableSpellsPanel;
     private static DamageDirectionPanel _ddiPanel;
-
+    private static ResistanceNotice _resistanceNotice;
+    
+    public static ResistanceNotice ResistanceNotice
+    {
+        get {  return _resistanceNotice; }
+        set {  _resistanceNotice = value; }
+    }
     public static DamageDirectionPanel DDIPanel
     {
         get { return _ddiPanel; }
