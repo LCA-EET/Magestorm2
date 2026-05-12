@@ -127,7 +127,7 @@ public static class SharedFunctions
     {
         return ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
     }
-    public static byte GetPlayerInSphereCast(Vector3 origin, float range, float radius, TeamSelectionCode tsc)
+    public static byte GetPlayerInSphereCast(Vector3 origin, float range, float radius, TeamSelectionCode tsc, int obstructionMask)
     {
         GameObjectDistanceComparer comparer = new GameObjectDistanceComparer(Game.PCAvatar.transform.position);
         RaycastHit[] hits = Physics.SphereCastAll(origin, radius, Camera.main.transform.forward, range, LayerManager.RemotePlayerLayerMask);
@@ -143,7 +143,7 @@ public static class SharedFunctions
             for (int i = 0; i < toProcess.Count; i++)
             {
                 GameObject toCheck = toProcess[i];
-                if (!IsObstructed(origin, toCheck.transform.position, LayerManager.AoEObstructionMask))
+                if (!IsObstructed(origin, toCheck.transform.position, obstructionMask))
                 {
                     Avatar unobstructed = toCheck.GetComponentInChildren<Avatar>();
                     

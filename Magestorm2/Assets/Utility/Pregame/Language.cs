@@ -110,8 +110,15 @@ public static class Language
             }
             else
             {
-                Debug.Log("No language string for index " + stringIndex);
-                return "[undef]";
+                if (_languageStrings[(int)Languages.English].ContainsKey(stringIndex))
+                {
+                    return _languageStrings[(int)Languages.English][stringIndex];
+                }
+                else
+                {
+                    Debug.Log("No language string for index " + stringIndex);
+                    return "[undef]";
+                }
             }
         }
         else

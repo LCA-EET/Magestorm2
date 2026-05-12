@@ -54,5 +54,6 @@ public static class InGame_Receive
                         WallRequestResponse = 44,
                         ExperienceUpdate = 45,
                         MatchScores = 46,
-                        SpellResisted = 47;
+                        SpellResisted = 47,
+                        SpawnVFXonPlayer = 48;
 }

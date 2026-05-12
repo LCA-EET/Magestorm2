@@ -7,7 +7,8 @@ public class Spell {
 
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
             _spellType, _discipline, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
-            _notificationCode, _effectRadius, _effectCode, _effectStat, _duration, _levelsForRoll, _iceResist, _fireResist, _elecResist, _earthResist;
+            _notificationCode, _effectRadius, _effectCode, _effectStat, _duration, _levelsForRoll, _iceResist, _fireResist, _elecResist, _earthResist,
+            _vfxCode, _manaResist;
     private final float _splashFactor0, _splashFactor1, _splashFactor2, _dotDamagePercent;
     private final float[] _resistances;
     private final ArrayList<Byte> _effectsCancelled;
@@ -16,7 +17,7 @@ public class Spell {
         _spellID = id;
         _effectsCancelled = new ArrayList<>();
         _effectsPrevented = new HashSet<>();
-        _resistances = new float[8];
+        _resistances = new float[10];
         FillEffects(cancelsEffects, _effectsCancelled);
         FillEffects(preventsEffects, _effectsPrevented);
         _minDamagePerRoll0 = params[0];
@@ -47,12 +48,17 @@ public class Spell {
         _fireResist = params[28];
         _elecResist = params[29];
         _earthResist = params[30];
+        _manaResist = params[31];
         _resistances[ControlCodes.Element_Fire] = _fireResist / 100.0f;
         _resistances[ControlCodes.Element_Earth] = _earthResist / 100.0f;
         _resistances[ControlCodes.Element_Ice] = _iceResist / 100.0f;
         _resistances[ControlCodes.Element_Electric] = _elecResist / 100.0f;
+        _resistances[ControlCodes.Element_Mana] = _manaResist / 100.0f;
+        _vfxCode = params[32];
     }
-
+    public byte GetVFXCode(){
+        return _vfxCode;
+    }
     private void FillEffects(short number, Collection<Byte> collection){
         boolean[] converted = ByteUtils.ShortToBoolArray(number);
         for(byte b = 0; b < converted.length; b++){

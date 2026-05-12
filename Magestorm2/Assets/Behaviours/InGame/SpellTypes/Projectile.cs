@@ -5,7 +5,7 @@ public class Projectile : SpawnedSpell
     public SpellImpact ImpactPrefab;
     public bool InvertImpactDirection;
     public float ImpactScaling = 1.0f;
-    public VFXCode ShieldVFX;
+    public byte ShieldVFX;
     protected bool _impact, _directHit;
     protected Avatar _hitPlayer;
     protected int _impactMask;
@@ -77,7 +77,7 @@ public class Projectile : SpawnedSpell
                 if(SharedFunctions.WasRemoteHit(other, out _hitPlayer))
                 {
                     byte shieldID = SharedFunctions.IsShieldedFromElement(_spellReference.Element0, _hitPlayer);
-                    if(shieldID > 0 && ShieldVFX != VFXCode.None)
+                    if(shieldID > 0 && ShieldVFX != ControlCodes.VFX_None)
                     {
                         ComponentRegister.Spawner.SpawnVFX(ShieldVFX, _hitPlayer.transform);
                     }

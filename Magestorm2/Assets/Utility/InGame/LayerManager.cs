@@ -21,7 +21,7 @@ public static class LayerManager
     private static int _interactableMask;
     private static int _projectileImpactMask;
     private static int _mindImpactMask;
-    private static int _aoeObstructionMask;
+    private static int _aoeObstructionMask, _resistableObstructionMask;
     private static int _floorMask;
     private static bool _init = false;
     public static void Init()
@@ -41,8 +41,13 @@ public static class LayerManager
             _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_PlayerWallSolid, Layer_PlayerWallNonSolid });
             _mindImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable});
             _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid , Layer_PlayerWallNonSolid });
+            _resistableObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default });
             _init = true;
         }
+    }
+    public static int ResistableObstructionMask
+    {
+        get { return _resistableObstructionMask;}
     }
     public static int MindImpactMask
     {

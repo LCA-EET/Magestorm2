@@ -9,7 +9,10 @@ public class Bolt : Projectile
     private ParticleSystem.EmissionModule _emitter;
     private void Awake()
     {
-        _emitter = ParticleSystem.emission;
+        if (ParticleSystem != null)
+        {
+            _emitter = ParticleSystem.emission;
+        }
     }
 
     protected override void FixedUpdate()

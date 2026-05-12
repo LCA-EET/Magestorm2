@@ -95,6 +95,8 @@ public class ControlCodes {
         public static final byte Element_Light = 5;
         public static final byte Element_Dark = 6;
         public static final byte Element_Physical = 7;
+        public static final byte Element_Mana = 8;
+        public static final byte Element_Void = 9;
     //endregion
 
     //region Statistics

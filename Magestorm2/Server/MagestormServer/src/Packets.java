@@ -199,7 +199,10 @@ public class Packets {
         System.arraycopy(expBytes, 0, toEncrypt, 6, expBytes.length);
         return Cryptographer.Encrypt(toEncrypt);
     }
-
+    public static byte[] SpawnVFXonPlayerPacket( byte vfxCode, byte targetID){
+        byte[] toEncrypt = new byte[]{InGame_Send.SpawnVFXonPlayer, vfxCode, targetID };
+        return Cryptographer.Encrypt(toEncrypt);
+    }
 
     /////////////////////// IN-GAME PACKETS ////////////////////////
     private static final byte[] MatchEnded_Bytes = new byte[]{InGame_Send.MatchEnded};

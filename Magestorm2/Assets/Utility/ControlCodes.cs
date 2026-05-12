@@ -1,8 +1,5 @@
 ﻿public static class ControlCodes
 {
-    public const byte VFX_Banish = 64;
-    public const byte VFX_HealSelf = 65;
-
     public const byte CastPayloadStartIndex = 5;
 
     public const byte PlayerClass_Arcanist = 0;
@@ -70,5 +67,22 @@
     public const byte PlayerStats_Intellect = 3; // affects SP + mentalist effects
     public const byte PlayerStats_Charisma = 4; // affects SP + cleric effects
     public const byte PlayerStats_Wisdom = 5; // affects magician effects
-    
+
+    public const byte VFX_None = 0;
+    public const byte VFX_Banish = 1;
+    public const byte VFX_Bleed = 2;
+    public const byte VFX_Burn = 3;
+    public const byte VFX_EarthShield = 4;
+    public const byte VFX_ElectricShield = 5;
+    public const byte VFX_Entangle = 6;
+    public const byte VFX_FireShield = 7;
+    public const byte VFX_Frozen = 8;
+    public const byte VFX_Haste = 9;
+    public const byte VFX_Heal = 10;
+    public const byte VFX_IceShield = 11;
+    public const byte VFX_Prayer = 12;
+    public const byte VFX_Shock = 13;
+    public const byte VFX_Slow = 14;
+    public const byte VFX_Wrack = 15;
+
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 public class VFX : MonoBehaviour
 {
-    public VFXCode VFXCode;
+    public byte VFXCode;
     public AudioSource AudioSource;
     public AudioClip AudioClip;
     public VFXDirection VFXDirection = VFXDirection.NA;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 public class FriendlyProjectile : Projectile 
 {
-    public VFXCode VFXCode;
+    public byte VFXCode;
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);

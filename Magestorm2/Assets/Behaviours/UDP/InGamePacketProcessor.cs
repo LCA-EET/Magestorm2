@@ -136,13 +136,38 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.SpellResisted:
                         HandleSpellResist();                
                         break;
+                    case InGame_Receive.SpawnVFXonPlayer:
+                        HandleSpawnVFXonPlayer();
+                        break;
                 }
             }
         }
     }
+    private void HandleSpawnVFXonPlayer()
+    {
+        Avatar target = null;
+        if (Match.GetAvatar(_decrypted[2], ref target))
+        {
+            Debug.Log("Spawning VFX " + _decrypted[1] + " on player " + _decrypted[2]);
+            ComponentRegister.Spawner.SpawnVFX(_decrypted[1], target.transform);
+        }
+    }
     private void HandleSpellResist()
     {
-
+        byte casterID = _decrypted[1];
+        byte targetID = _decrypted[2];
+        if(MatchParams.IDinMatch == targetID)
+        {
+            new MessageData(Language.GetBaseString(347), Language.GetBaseString(209));
+        }
+        else
+        {
+            Avatar target = null;
+            if(Match.GetAvatar(targetID, ref target))
+            {
+                new MessageData(Language.BuildString(348, target.Name), Language.GetBaseString(209));
+            }
+        }
     }
     private void HandleMatchScores()
     {

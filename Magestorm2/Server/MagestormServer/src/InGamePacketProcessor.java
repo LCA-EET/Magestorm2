@@ -87,10 +87,15 @@ public class InGamePacketProcessor extends UDPProcessor{
         return false;
     }
     private void HandleResistableHitPacket(){
-        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        if(mc != null){
-            short castID = ByteUtils.ExtractShort(_decrypted, 2);
-
+        MatchCharacter target = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        if(target != null){
+            if(target.IsAlive()){
+                short castID = ByteUtils.ExtractShort(_decrypted, 2);
+                ResistableSpell resistable = (ResistableSpell) _owningMatch.GetCastSpell(castID);
+                if(resistable != null){
+                    resistable.ProcessSpell(target);
+                }
+            }
         }
     }
     private void HandleUpdateSlotting(){
@@ -108,21 +113,15 @@ public class InGamePacketProcessor extends UDPProcessor{
         _owningMatch.RequestWallData(_owningMatch.GetMatchCharacter(_decrypted[1]));
     }
     private void HandleWallHit(){
-        MatchCharacter shooter = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        if(shooter!= null){
-            if(shooter.IsAlive()){
-                short castID = ByteUtils.ExtractShort(_decrypted, 2);
-                DamagingSpell projectile = (DamagingSpell)_owningMatch.GetCastSpell(castID);
-                if(projectile != null){
-                    short wallID = ByteUtils.ExtractShort(_decrypted, 4);
-                    Wall wall = _owningMatch.GetWall(wallID);
-                    if(wall != null){
-                        wall.TakeDamage(projectile);
-                    }
-                }
+        short castID = ByteUtils.ExtractShort(_decrypted, 2);
+        DamagingSpell projectile = (DamagingSpell)_owningMatch.GetCastSpell(castID);
+        if(projectile != null){
+            short wallID = ByteUtils.ExtractShort(_decrypted, 4);
+            Wall wall = _owningMatch.GetWall(wallID);
+            if(wall != null){
+                wall.TakeDamage(projectile);
             }
         }
-
     }
     private void HandleSplashHit(){
         MatchCharacter hit = _owningMatch.GetMatchCharacter(_decrypted[1]);

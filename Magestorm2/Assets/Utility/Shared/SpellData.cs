@@ -192,10 +192,11 @@ public class SpellData
                     toSend = InGame_Packets.WallCastPacket(SpellID, SpellType);
                     break;
                 case ControlCodes.SpellTypes_Bolt:
+                case ControlCodes.SpellTypes_Resistable:
                     SpellData spellReference = null;
                     if(SpellManager.GetSpell(SpellID, ref spellReference))
                     {
-                        byte target = SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 3.0f, TeamSelectionCode.Enemy);
+                        byte target = SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 3.0f, TeamSelectionCode.Enemy, SpellType==ControlCodes.SpellTypes_Resistable?LayerManager.ResistableObstructionMask:LayerManager.AoEObstructionMask);
                         toSend = InGame_Packets.CastBoltPacket(SpellID, target);
                     }
                     break;

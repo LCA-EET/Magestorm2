@@ -48,4 +48,5 @@ public class InGame_Send {
     public static final byte ExperienceUpdate = 45;
     public static final byte MatchScores = 46;
     public static final byte SpellResisted = 47;
+    public static final byte SpawnVFXonPlayer = 48;
 }

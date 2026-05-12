@@ -108,6 +108,7 @@ public static class Game
                 byte[] key = Convert.FromBase64String(key64);
                 AssignGameServerAddress("fosiemods.net");
                 Cryptography.Init(key);
+                Debug.Log("Game Server Port: " + GameServerPort);
                 return GameServerPort;
             }
         }

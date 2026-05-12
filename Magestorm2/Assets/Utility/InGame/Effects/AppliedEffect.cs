@@ -3,7 +3,7 @@
 public class AppliedEffect : MonoBehaviour
 {
     public byte EffectCode;
-    public VFXCode VFXCode;
+    public byte VFXCode;
     private Avatar _appliedTo, _applier;
     private float _duration;
     private byte _degree;
