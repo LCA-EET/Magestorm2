@@ -14,6 +14,9 @@ public class Haste : AppliedEffect
     public override void ReverseEffect()
     {
         base.ReverseEffect();
-        ComponentRegister.PlayerMovement.MarkHaste(false);
+        if (_appliedToPlayer)
+        {
+            ComponentRegister.PlayerMovement.MarkHaste(false);
+        }
     }
 }

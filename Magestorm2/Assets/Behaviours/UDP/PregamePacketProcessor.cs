@@ -260,13 +260,16 @@ public class PregamePacketProcessor : UDPProcessor
     private void HandleMatchDataPacket()
     {
         byte matchCount = _decrypted[1];
+        Debug.Log("MatchCount: " + matchCount);
         int index = 2;
         ActiveMatches.ClearMatches();
         for(int i = 0; i < matchCount; i++)
         {
             byte matchID = _decrypted[index];
+            Debug.Log("MatchID: " + matchID);
             index++;
             byte sceneID = _decrypted[index];
+            Debug.Log("SceneID: " + sceneID);
             index++;
             long expirationTime = BitConverter.ToInt64(_decrypted, index);
             long currentTime = TimeUtil.CurrentTime();
@@ -274,8 +277,8 @@ public class PregamePacketProcessor : UDPProcessor
             int creatorAccountID = BitConverter.ToInt32(_decrypted, index);
             index += 4;
             byte nameLength = _decrypted[index];
-            byte[] nameBytes = new byte[nameLength];
             index++;
+            byte[] nameBytes = new byte[nameLength];
             byte matchType = _decrypted[index];
             index++;
             byte matchOptions = _decrypted[index];
@@ -283,6 +286,8 @@ public class PregamePacketProcessor : UDPProcessor
             Array.Copy(_decrypted, index, nameBytes, 0, nameLength);
             string creatorName = Encoding.UTF8.GetString(nameBytes);
             index += nameLength;
+            byte numPlayers = _decrypted[index];
+            index++;
             ListedMatch toAdd = new ListedMatch(matchID, sceneID, creatorName, expirationTime, creatorAccountID, matchType, matchOptions);
             ActiveMatches.AddMatch(toAdd);
         }

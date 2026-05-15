@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchMonitor extends RegisteredThread{
 
@@ -10,13 +8,13 @@ public class MatchMonitor extends RegisteredThread{
         new RegisteredThread(this).start();
     }
     public void run(){
+        Register("MatchMonitor");
         while(!_terminated){
             try {
                 CheckForExpiration();
                 if(MatchManager.UpdatesNeeded){
                     MatchManager.NotifySubscribers();
                 }
-
                 Thread.sleep(_tick);
             }
             catch(InterruptedException ie){
@@ -47,6 +45,9 @@ public class MatchMonitor extends RegisteredThread{
         for(Match match : activeMatches){
             if(currentTime >= match.GetExpiration()){
                 match.MarkExpired();
+                if(match.IsQuickMatch()){
+                    MatchManager.AddQuickMatch();
+                }
             }
             else{
                 match.Tick(_tick);

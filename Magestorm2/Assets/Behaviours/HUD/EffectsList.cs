@@ -53,6 +53,8 @@ public class EffectsList : MonoBehaviour
                 return IconLibrary.GetSpriteSet("entangle");
             case ControlCodes.EffectCode_FireShield:
                 return IconLibrary.GetSpriteSet("fireshield");
+            case ControlCodes.EffectCode_Fly:
+                return IconLibrary.GetSpriteSet("fly");
             case ControlCodes.EffectCode_Freezing:
                 return IconLibrary.GetSpriteSet("freeze");
             case ControlCodes.EffectCode_Haste:
@@ -65,6 +67,10 @@ public class EffectsList : MonoBehaviour
                 return IconLibrary.GetSpriteSet("shock");
             case ControlCodes.EffectCode_Slow:
                 return IconLibrary.GetSpriteSet("slow");
+            case ControlCodes.EffectCode_ViewAll:
+                return IconLibrary.GetSpriteSet("wizardeye");
+            case ControlCodes.EffectCode_ViewTeam:
+                return IconLibrary.GetSpriteSet("wizardeye");
             
         }
         return null;

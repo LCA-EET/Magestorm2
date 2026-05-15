@@ -175,13 +175,14 @@ public static class Pregame_Packets
     {
         return OpCodePlusAccountIDBytes(Pregame_Send.RequestMatchList);
     }
-    public static byte[] SubscribeToMatchesPacket()
+    public static byte[] SubscribeToMatchesPacket(bool qm)
     {
-        byte[] toSend = new byte[1 + 4 + 4 + 1];
+        byte[] toSend = new byte[1 + 4 + 4 + 1 + 1];
         toSend[0] = Pregame_Send.SubscribeToMatches;
         PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
         PlayerAccount.SelectedCharacter.IDBytes.CopyTo(toSend, 5);
-        toSend[toSend.Length - 1] = MatchParams.MatchID;
+        toSend[toSend.Length - 2] = MatchParams.MatchID;
+        toSend[toSend.Length - 1] = (byte)(qm ? 1 : 0);
         return toSend;
     }
     public static byte[] OpCodePlusAccountIDBytes(byte opCode)

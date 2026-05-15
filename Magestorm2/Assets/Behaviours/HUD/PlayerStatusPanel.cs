@@ -70,11 +70,11 @@ public class PlayerStatusPanel : MonoBehaviour
         string baseString = team == Team.Neutral ? levelString + " {0} {1}" : levelString + " {0} {1} " + ofString + " {2}";
         if (team == Team.Neutral)
         {
-            baseString = string.Format(baseString, level, SharedFunctions.PlayerClassToString(playerClass));
+            baseString = string.Format(baseString, level, CharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName);
         }
         else
         {
-            baseString = string.Format(baseString, level, SharedFunctions.PlayerClassToString(playerClass), Teams.GetTeamName(team));
+            baseString = string.Format(baseString, level, CharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName, Teams.GetTeamName(team));
         }
         LCT.text = baseString;
         Teams.SetTextColor(LCT);

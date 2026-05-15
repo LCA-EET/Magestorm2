@@ -11,7 +11,7 @@ public class Shrine {
 
     public void AdjustShrineHealth(MatchCharacter adjuster){
         byte amount = (byte)GameUtils.DiceRoll(30,1);
-        amount *= (byte)(adjuster.GetClass().ShrineMultiplier() * (byte)(_teamID==adjuster.GetTeamID()?1:-1));
+        amount *= (byte)(adjuster.GetClass().GetBiasMultiplier() * (byte)(_teamID==adjuster.GetTeamID()?1:-1));
         short newHealth = _shrineHealth;
         newHealth += amount;
         if(newHealth < 0){

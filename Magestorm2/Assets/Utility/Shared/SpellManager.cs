@@ -3,13 +3,11 @@ public static class SpellManager
 {
     private static bool _init;
     private static Dictionary<byte, SpellData> _spells;
-    private static Dictionary<byte, List<SpellData>> _spellsOfDiscipline;
     public static void Init()
     {
         if (!_init)
         {
             _spells = new Dictionary<byte, SpellData>();
-            _spellsOfDiscipline = new Dictionary<byte, List<SpellData>>();
             string contents;
             if (SharedFunctions.GetPHPString("spells", out contents))
             {
@@ -21,11 +19,7 @@ public static class SpellManager
                     SpellData toAdd = new SpellData(fields, spelldata[i]);
                     _spells.Add(toAdd.SpellID, toAdd);
                     byte discipline = toAdd.Discipline;
-                    if (!_spellsOfDiscipline.ContainsKey(discipline))
-                    {
-                        _spellsOfDiscipline.Add(discipline, new List<SpellData>());
-                    }
-                    _spellsOfDiscipline[discipline].Add(toAdd);
+                    DisciplineManager.GetDiscipline(discipline).AddSpellToDiscipline(toAdd);
                 }
                 
             }
@@ -55,7 +49,7 @@ public static class SpellManager
         Dictionary<byte, SpellData> toReturn = new Dictionary<byte, SpellData>();
         foreach(byte disciplineKey in disciplineTable.Keys)
         {
-            List<SpellData> toCheck = GetSpellsOfDiscipline(new byte[] { disciplineKey });
+            List<SpellData> toCheck = DisciplineManager.GetSpellsOfDiscipline(new byte[] { disciplineKey });
             foreach(SpellData data in toCheck)
             {
                 if(data.MinLevel <= characterLevel &&
@@ -66,17 +60,6 @@ public static class SpellManager
         }
         return toReturn;
     }
-    public static List<SpellData> GetSpellsOfDiscipline(byte[] disciplines)
-    {
-        List<SpellData> toReturn = new List<SpellData> ();
-        foreach (byte discipline in disciplines)
-        {
-            if (_spellsOfDiscipline.ContainsKey(discipline))
-            {
-                toReturn.AddRange(_spellsOfDiscipline[discipline]);
-            }
-        }
-        return toReturn;
-    }
+    
 
 }

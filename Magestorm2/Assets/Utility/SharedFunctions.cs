@@ -10,35 +10,6 @@ public static class SharedFunctions
     private static System.Random _random = new System.Random();
     private static object[] _params;
 
-    private static byte[] ArcanistDisciplines = new byte[] { 
-        ControlCodes.SpellDiscipline_ManaLaw, 
-        ControlCodes.SpellDiscipline_VoidLaw, 
-        ControlCodes.SpellDiscipline_Sigils, 
-        ControlCodes.SpellDiscipline_Shielding 
-    };
-
-    private static byte[] ClericDisciplines = new byte[] { 
-        ControlCodes.SpellDiscipline_Barriers, 
-        ControlCodes.SpellDiscipline_Healing, 
-        ControlCodes.SpellDiscipline_Smiting, 
-        ControlCodes.SpellDiscipline_SpiritLaw, 
-        ControlCodes.SpellDiscipline_Supplication 
-    };
-    
-    private static byte[] MagicianDisciplines = new byte[] { 
-        ControlCodes.SpellDiscipline_EarthLaw,  
-        ControlCodes.SpellDiscipline_FireLaw, 
-        ControlCodes.SpellDiscipline_IceLaw,
-        ControlCodes.SpellDiscipline_Shielding
-    };
-    
-    private static byte[] MentalistDisciplines = new byte[] { 
-        ControlCodes.SpellDiscipline_Brilliance,
-        ControlCodes.SpellDiscipline_Displacement,
-        ControlCodes.SpellDiscipline_Psionics,
-        ControlCodes.SpellDiscipline_Shielding
-    };
-
     public static object[] Params {  
         get { return _params; } 
         set { _params = value; }
@@ -236,23 +207,7 @@ public static class SharedFunctions
     {
         return DirectionalCast(origin, layerMask, distance, Vector3.forward, out hitInfo);
     }
-    public static string PlayerClassToString(byte playerClass)
-    {
-        switch (playerClass)
-        {
-            case ControlCodes.PlayerClass_Arcanist:
-                return Language.GetBaseString(7); //
-            case ControlCodes.PlayerClass_Cleric:
-                return Language.GetBaseString(6); //
-            case ControlCodes.PlayerClass_Magician:
-                return Language.GetBaseString(8); // 
-            case ControlCodes.PlayerClass_Mentalist:
-                return Language.GetBaseString(9); //
-        }
-        return "Undefined";
-    }
-
-    public static bool WasPCHit(Collider other)
+     public static bool WasPCHit(Collider other)
     {
         return other.GetComponent<PC>() != null && Game.PCAvatar.IsAlive;
     }
@@ -274,78 +229,13 @@ public static class SharedFunctions
             SetLayerRecursive(child.gameObject, newLayer);
         }
     }
-    public static byte[] DisciplinesByClass(byte playerClass)
-    {
-        switch (playerClass)
-        {
-            case ControlCodes.PlayerClass_Arcanist:
-                return ArcanistDisciplines;
-            case ControlCodes.PlayerClass_Cleric:
-                return ClericDisciplines;
-            case ControlCodes.PlayerClass_Magician:
-                return MagicianDisciplines;
-            case ControlCodes.PlayerClass_Mentalist:
-                return MentalistDisciplines;
-        }
-        return null;
-    }
-    public static int SpellDisciplineStringReference(byte spellDiscipline)
-    {
-        
-        switch (spellDiscipline)
-        {
-            case ControlCodes.SpellDiscipline_SpiritLaw:
-                return 283;
-            case ControlCodes.SpellDiscipline_VoidLaw:
-                return 239;
-            case ControlCodes.SpellDiscipline_FireLaw:
-                return 229;
-            case ControlCodes.SpellDiscipline_IceLaw:
-                return 230;
-            case ControlCodes.SpellDiscipline_ManaLaw:
-                return 238;
-            case ControlCodes.SpellDiscipline_Barriers:
-                return 284;
-            case ControlCodes.SpellDiscipline_Brilliance:
-                return 232;
-            case ControlCodes.SpellDiscipline_Displacement:
-                return 233;
-            case ControlCodes.SpellDiscipline_EarthLaw:
-                return 231;
-            case ControlCodes.SpellDiscipline_Psionics:
-                return 234;
-            case ControlCodes.SpellDiscipline_Smiting:
-                return 237;
-            case ControlCodes.SpellDiscipline_Supplication:
-                return 235;
-            case ControlCodes.SpellDiscipline_Sigils:
-                return 240;
-            case ControlCodes.SpellDiscipline_Shielding:
-                return 285;
-            case ControlCodes.SpellDiscipline_Healing:
-                return 236;
-        }
-        return 0;
-    }
+    
+    
     public static byte GetMaxSkillPointsForLevel(byte characterLevel)
     {
         return (byte)(3 + Math.Floor(characterLevel / 8.0));
     }
-    public static string ClassAbbreviation(byte playerClass)
-    {
-        switch (playerClass)
-        {
-            case ControlCodes.PlayerClass_Arcanist:
-                return "Ar";
-            case ControlCodes.PlayerClass_Cleric:
-                return "Cl";
-            case ControlCodes.PlayerClass_Magician:
-                return "Ma";
-            case ControlCodes.PlayerClass_Mentalist:
-                return "Me";
-        }
-        return "";
-    }
+
     public static string MatchTypeString(byte matchType)
     {
         

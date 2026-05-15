@@ -10,6 +10,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     private int _lastPRPacketID = 0;
     private string _name;
     private byte _level, _class;
+    private CharacterClassData _classData;
     private string _playerClassString;
     private Team _team;
     private bool _playersAvatar;
@@ -33,6 +34,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     private DeadBody _deadBody;
     public AvatarAnimation AvatarAnimation;
     public BoxCollider RPCollider;
+    public GameObject TeamIndicator, InnerIndicator;
     void Awake()
     {
         _actionList = new List<PeriodicAction>();
@@ -47,8 +49,42 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _appliedEffects = new Dictionary<byte, AppliedEffect>();
         _positionElapsed = 0.0f;
         _rotationElapsed = 0.0f;
+        
     }
-    
+    private void AssignIndicatorLayer()
+    {
+        switch (_team)
+        {
+            case Team.Chaos:
+                TeamIndicator.layer = LayerManager.TeamLayer_Chaos;
+                break;
+            case Team.Balance:
+                TeamIndicator.layer = LayerManager.TeamLayer_Balance;
+                break;
+            case Team.Order:
+                TeamIndicator.layer = LayerManager.TeamLayer_Order;
+                break;
+            case Team.Neutral:
+                TeamIndicator.gameObject.SetActive(false);
+                break;
+        }
+        InnerIndicator.layer = TeamIndicator.layer;
+    }
+    private void AssignIndicatorColor()
+    {
+        switch (_team)
+        {
+            case Team.Chaos:
+                InnerIndicator.GetComponent<SpriteRenderer>().color = Colors.Chaos;
+                break;
+            case Team.Balance:
+                InnerIndicator.GetComponent<SpriteRenderer>().color = Colors.Balance;
+                break;
+            case Team.Order:
+                InnerIndicator.GetComponent<SpriteRenderer>().color = Colors.Order;
+                break;
+        }
+    }
     private void FixedUpdate()
     {
         if (_positionChange)
@@ -142,7 +178,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
             layer = _playersAvatar? LayerManager.PlayerLayer : LayerManager.RemotePlayerLayer;
         }
         SharedFunctions.SetLayerRecursive(gameObject, layer);
-        if(PlayerAccount.SelectedCharacter.CharacterClass == ControlCodes.PlayerClass_Cleric
+        if (alive)
+        {
+            AssignIndicatorLayer();
+        }
+        if(_classData.CanSeeDeadPlayers
             && PlayerTeam == MatchParams.MatchTeam
             && MatchParams.MatchTeam != Team.Neutral)
         {
@@ -183,19 +223,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         }
         RefreshEffectsDisplay();
     }
-    public void RemoveEffectsCancelledBySpell(byte spellID)
-    {
-        SpellData spellReference = null;
-        if(SpellManager.GetSpell(spellID, ref spellReference))
-        {
-            List<byte> effectsToCancel = spellReference.CancelledEffects;
-            foreach (byte effect in effectsToCancel)
-            {
-                RemoveEffect(effect, false);
-            }
-        }
-        RefreshEffectsDisplay();
-    }
     public void RemoveEffect(byte toRemove, bool refresh)
     {
         if (_appliedEffects.ContainsKey(toRemove))
@@ -210,7 +237,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
             }
         }
     }
-    private void RefreshEffectsDisplay()
+    public void RefreshEffectsDisplay()
     {
         if(_playerID == MatchParams.IDinMatch)
         {
@@ -225,8 +252,9 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     {
         _name = name;
         _class = playerClass;
+        _classData = CharacterClassManager.GetCharacterClassData(playerClass);
         _level = level;
-        _playerClassString = PlayerCharacter.ClassToString(playerClass);
+        _playerClassString = _classData.CharacterClassName;
         _team = team;
         _nameText.text = name;
         _nameText.color = Teams.GetTeamColor(_team);
@@ -236,7 +264,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _animator.applyRootMotion = false;
         AvatarAnimation.Init(_animator, appearance[0] == 0);
         gameObject.transform.localPosition = new Vector3(0, -0.08f, 0);
-        
         if(MatchParams.IDinMatch == id)
         {
             _playersAvatar = true;
@@ -252,6 +279,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         {
             gameObject.layer = LayerMask.NameToLayer("RemotePlayer");
         }
+        AssignIndicatorColor();
+        AssignIndicatorLayer();
     }
     public PMDByte PMD
     {

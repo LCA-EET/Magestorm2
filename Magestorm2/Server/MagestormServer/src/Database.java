@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,22 +21,86 @@ public class Database {
         _password = pass;
         _psk = psk;
     }
-    public static void LoadSpellData(){
-        String sql = "SELECT * FROM spells";
-        try(Connection conn = DBConnection()){
+    public static void LoadClassData(Connection conn){
+        String sql = "SELECT * FROM characterclasses";
+        try{
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int spellID = rs.getInt(1);
-                short cancelsEffects = rs.getShort(2);
-                short preventsEffects = rs.getShort(3);
+                byte classCode = rs.getByte(1);
                 int columnCount = rs.getMetaData().getColumnCount();
-                byte columnsToSkip = 6;
+                byte columnsToSkip = 4;
                 byte[] attrib = new byte[columnCount - columnsToSkip];
                 for(int i = columnsToSkip; i < columnCount; i++){
                     attrib[i - columnsToSkip] = rs.getByte(i + 1); // first column is one, not zero;
                 }
-                Spell toAdd = new Spell(spellID, cancelsEffects, preventsEffects, attrib);
+                CharacterClass cclass = new CharacterClass(classCode, attrib);
+                CharacterClassManager.AddCharacterClass(classCode, cclass);
+            }
+        }
+        catch(Exception e){
+            Main.LogError("Database.LoadEffectData(): " + e.getMessage());
+        }
+    }
+    public static void LoadDisciplineData(Connection conn){
+        String sql = "SELECT * FROM disciplines";
+        try{
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                byte disciplineID = rs.getByte(1);
+                int columnCount = rs.getMetaData().getColumnCount();
+                byte columnsToSkip = 3;
+                byte[] attrib = new byte[columnCount - columnsToSkip];
+                for(int i = columnsToSkip; i < columnCount; i++){
+                    attrib[i - columnsToSkip] = rs.getByte(i + 1); // first column is one, not zero;
+                }
+                DisciplineData ddata = new DisciplineData(disciplineID, attrib);
+                DisciplineManager.AddDiscipline(disciplineID, ddata);
+            }
+        }
+        catch(Exception e){
+            Main.LogError("Database.LoadDisciplineData(): " + e.getMessage());
+        }
+    }
+    public static void LoadEffectData(Connection conn){
+        String sql = "SELECT * FROM effects";
+        try{
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                byte effectID = rs.getByte(1);
+                String effectName = rs.getString(2);
+                long effectsPrevented = rs.getLong(3);
+                long effectsCancelled = rs.getLong(4);
+                int columnCount = rs.getMetaData().getColumnCount();
+                byte columnsToSkip = 4;
+                byte[] attrib = new byte[columnCount - columnsToSkip];
+                for(int i = columnsToSkip; i < columnCount; i++){
+                    attrib[i - columnsToSkip] = rs.getByte(i + 1); // first column is one, not zero;
+                }
+                Effect toAdd = new Effect(effectID, effectName, effectsPrevented, effectsCancelled, attrib);
+                EffectManager.AddEffect(toAdd);
+            }
+        }
+        catch(Exception e){
+            Main.LogError("Database.LoadEffectData(): " + e.getMessage());
+        }
+    }
+    public static void LoadSpellData(Connection conn){
+        String sql = "SELECT * FROM spells";
+        try{
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int spellID = rs.getInt(1);
+                int columnCount = rs.getMetaData().getColumnCount();
+                byte columnsToSkip = 4;
+                byte[] attrib = new byte[columnCount - columnsToSkip];
+                for(int i = columnsToSkip; i < columnCount; i++){
+                    attrib[i - columnsToSkip] = rs.getByte(i + 1); // first column is one, not zero;
+                }
+                Spell toAdd = new Spell(spellID, attrib);
                 SpellManager.AddSpell(toAdd);
            }
         }
@@ -507,15 +572,21 @@ public class Database {
         return toReturn;
     }
     public static void UpdateSlotting(int characterID, byte[] slots, Connection conn){
-        String sql = "UPDATE characters SET slot0 = ?, slot1 = ?, slot2 = ?, slot3 = ?, slot4 = ?, " +
-                "slot5 = ?, slot6 = ?, slot7 = ?, slot8 = ?, slot9 = ? WHERE id = ?";
+        String sql = "UPDATE characters SET slots = ? WHERE id = ?";
         try{
+            String slotEntry = "";
+            for(byte b = 0; b < slots.length; b++){
+                if(slotEntry.isEmpty()){
+                    slotEntry += slots[b];
+                }
+                else{
+                    slotEntry += (":" + slots[b]);
+                }
+            }
             PreparedStatement ps = conn.prepareStatement(sql);
             int index = 1;
-            for(int i = 0; i < slots.length; i++){
-                ps.setByte(index, slots[i]);
-                index++;
-            }
+            ps.setString(index, slotEntry);
+            index++;
             ps.setInt(index, characterID);
             ps.execute();
         }

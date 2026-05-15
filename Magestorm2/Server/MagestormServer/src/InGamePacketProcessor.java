@@ -106,8 +106,10 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void HandleLeaderboardRequest(){
         byte[] toEncrypt = MatchManager.GetScoreBytes(_owningMatch._matchID);
-        _owningMatch.SendToPlayer(Packets.MatchScoresPacket(InGame_Send.MatchScores, toEncrypt),
-                _owningMatch.GetMatchCharacter(_decrypted[1]));
+        if(toEncrypt != null){
+            _owningMatch.SendToPlayer(Packets.MatchScoresPacket(InGame_Send.MatchScores, toEncrypt),
+                    _owningMatch.GetMatchCharacter(_decrypted[1]));
+        }
     }
     private void HandleWallRequestPacket(){
         _owningMatch.RequestWallData(_owningMatch.GetMatchCharacter(_decrypted[1]));
@@ -214,15 +216,19 @@ public class InGamePacketProcessor extends UDPProcessor{
                     _remote);
         }
         else{
-            Main.LogMessage("MessageString: " + messageString);
-            if(messageString.startsWith("/")){
-                String[] split = messageString.split(" ");
-                _owningMatch.ParseCommand(split[0].toLowerCase().substring(1), split, _decrypted[1]);
+            MatchCharacter sender = _owningMatch.GetMatchCharacter(_decrypted[1]);
+            if(sender != null){
+                Main.LogChat(sender, messageString, _owningMatch._matchID);
+                if(messageString.startsWith("/")){
+                    String[] split = messageString.split(" ");
+                    _owningMatch.ParseCommand(split[0].toLowerCase().substring(1), split, _decrypted[1]);
+                }
+                else{
+                    EnqueueForSend(Packets.MessagePacket(_decrypted, 6 + messageLength),
+                            _owningMatch.GetVerifiedClients());
+                }
             }
-            else{
-                EnqueueForSend(Packets.MessagePacket(_decrypted, 6 + messageLength),
-                        _owningMatch.GetVerifiedClients());
-            }
+
         }
     }
 
@@ -237,9 +243,13 @@ public class InGamePacketProcessor extends UDPProcessor{
                 EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage), _remote);
             }
             else{
-                RemoteClient messageRecipient = _owningMatch.GetMatchCharacter(recipientID).GetRemoteClient();
-                Iterable<RemoteClient> recipients = Arrays.asList(_remote, messageRecipient);
-                EnqueueForSend(Packets.MessagePacket(_decrypted, messageLength + 7), recipients);
+                MatchCharacter sender = _owningMatch.GetMatchCharacter(_decrypted[1]);
+                if(sender != null){
+                    Main.LogChat(sender, messageString, _owningMatch._matchID);
+                    RemoteClient messageRecipient = _owningMatch.GetMatchCharacter(recipientID).GetRemoteClient();
+                    Iterable<RemoteClient> recipients = Arrays.asList(_remote, messageRecipient);
+                    EnqueueForSend(Packets.MessagePacket(_decrypted, messageLength + 7), recipients);
+                }
             }
         }
     }

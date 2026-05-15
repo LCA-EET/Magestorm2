@@ -6,20 +6,15 @@ public class Spell {
     private final int _spellID;
 
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
-            _spellType, _discipline, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
-            _notificationCode, _effectRadius, _effectCode, _effectStat, _duration, _levelsForRoll, _iceResist, _fireResist, _elecResist, _earthResist,
-            _vfxCode, _manaResist;
-    private final float _splashFactor0, _splashFactor1, _splashFactor2, _dotDamagePercent;
+            _spellType, _disciplineCode, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
+            _notificationCode, _radius, _effectCode, _duration, _levelsForRoll, _iceResist, _fireResist, _elecResist, _earthResist,
+            _manaResist;
+    private final DisciplineData _associatedDiscipline;
+    private final float _splashFactor0, _splashFactor1, _splashFactor2;
     private final float[] _resistances;
-    private final ArrayList<Byte> _effectsCancelled;
-    private final HashSet<Byte> _effectsPrevented;
-    public Spell(int id, short cancelsEffects, short preventsEffects, byte[] params){
+    public Spell(int id, byte[] params){
         _spellID = id;
-        _effectsCancelled = new ArrayList<>();
-        _effectsPrevented = new HashSet<>();
         _resistances = new float[10];
-        FillEffects(cancelsEffects, _effectsCancelled);
-        FillEffects(preventsEffects, _effectsPrevented);
         _minDamagePerRoll0 = params[0];
         _maxDamagePerRoll0 = params[1];
         _minHealPerRoll = params[2];
@@ -27,7 +22,8 @@ public class Spell {
         _element0 = params[4];
         _spellCost = params[5];
         _spellType = params[6];
-        _discipline = params[7];
+        _disciplineCode = params[7];
+        _associatedDiscipline = DisciplineManager.GetDiscipline(_disciplineCode);
         _skillRequired = params[8];
         _numRolls = params[9];
         _minlevel = params[10];
@@ -39,46 +35,23 @@ public class Spell {
         _splashFactor0 = params[16] / 100.0f;
         _splashFactor1 = params[17] / 100.0f;
         _splashFactor2 = params[18] / 100.0f;
-        _effectRadius = params[19];
+        _radius = params[19];
         _effectCode = params[23];
-        _effectStat = params[24];
-        _duration = params[25];
-        _dotDamagePercent = params[26] / 100.0f;
-        _iceResist = params[27];
-        _fireResist = params[28];
-        _elecResist = params[29];
-        _earthResist = params[30];
-        _manaResist = params[31];
+        _duration = params[24];
+        _iceResist = params[25];
+        _fireResist = params[26];
+        _elecResist = params[27];
+        _earthResist = params[28];
+        _manaResist = params[29];
         _resistances[ControlCodes.Element_Fire] = _fireResist / 100.0f;
         _resistances[ControlCodes.Element_Earth] = _earthResist / 100.0f;
         _resistances[ControlCodes.Element_Ice] = _iceResist / 100.0f;
         _resistances[ControlCodes.Element_Electric] = _elecResist / 100.0f;
         _resistances[ControlCodes.Element_Mana] = _manaResist / 100.0f;
-        _vfxCode = params[32];
-    }
-    public byte GetVFXCode(){
-        return _vfxCode;
-    }
-    private void FillEffects(short number, Collection<Byte> collection){
-        boolean[] converted = ByteUtils.ShortToBoolArray(number);
-        for(byte b = 0; b < converted.length; b++){
-            if(converted[b]){
-                collection.add(b);
-            }
-        }
-    }
-    public HashSet<Byte> GetEffectsPrevented(){
-        return _effectsPrevented;
-    }
-    public boolean IsEffectPrevented(byte effectCode){
-        return _effectsPrevented.contains(effectCode);
-    }
-    public float[] GetResistances(){
-        return _resistances;
     }
 
-    public ArrayList<Byte> GetEffectsCancelled(){
-        return _effectsCancelled;
+    public float[] GetResistances(){
+        return _resistances;
     }
     public boolean IsDamaging(){
         return _minDamagePerRoll0 > 0;
@@ -111,8 +84,8 @@ public class Spell {
     public byte SpellType(){
         return _spellType;
     }
-    public byte GetDiscipline(){
-        return _discipline;
+    public DisciplineData GetDiscipline(){
+        return _associatedDiscipline;
     }
     public byte GetSkillRequired(){
         return _skillRequired;
@@ -131,17 +104,14 @@ public class Spell {
         return _element1;
     }
     public byte GetNotificationCode(){return _notificationCode;}
-    public byte GetEffectStatCode(){
-        return _effectStat;
-    }
     public byte GetEffectCode(){
         return _effectCode;
     }
     public byte GetDuration(){
         return _duration;
     }
-    public float GetDoTDamagePercent(){
-        return _dotDamagePercent;
+    public byte GetDisciplineCode(){
+        return _disciplineCode;
     }
     public float GetSplashFactor(byte skillLevel){
         return switch (skillLevel) {

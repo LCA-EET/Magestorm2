@@ -25,9 +25,9 @@ TagManager:
   - PlayerWall_Solid
   - PlayerWall_NonSolid
   - Resistable
-  - 
-  - 
-  - 
+  - TeamChaos
+  - TeamBalance
+  - TeamOrder
   - 
   - 
   - 

@@ -4,7 +4,7 @@ public class AppliedEffect : MonoBehaviour
 {
     public byte EffectCode;
     public byte VFXCode;
-    private Avatar _appliedTo, _applier;
+    protected Avatar _appliedTo, _applier;
     private float _duration;
     private byte _degree;
     private GameObject _vfxContainer;

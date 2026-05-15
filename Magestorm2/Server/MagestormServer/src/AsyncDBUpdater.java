@@ -10,6 +10,7 @@ public class AsyncDBUpdater extends RegisteredThread{
         new RegisteredThread(this).start();
     }
     public void run(){
+        Register("AsyncDBUpdater");
         while(!_terminated){
             try{
                 _toProcess.take().ProcessRequest(_persistentConnection);

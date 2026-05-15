@@ -3,6 +3,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -155,6 +156,25 @@ public class ByteUtils {
             num = num / 2;
         }
         return binary;
+    }
+    public static boolean[] LongToBoolArray(long num)
+    {
+        boolean[] binary = new boolean[64];
+        int id = 0;
+
+        while (num != 0) {
+            binary[id++] = num % 2 != 0;
+            num = num / 2;
+        }
+        return binary;
+    }
+    static boolean[] BytesToBooleanArray(byte[] bytes) {
+        BitSet bits = BitSet.valueOf(bytes);
+        boolean[] bools = new boolean[bytes.length * 8];
+        for (int i = bits.nextSetBit(0); i != -1; i = bits.nextSetBit(i+1)) {
+            bools[i] = true;
+        }
+        return bools;
     }
     public static int BitsToInt(boolean[] bits) {
         int result = 0;

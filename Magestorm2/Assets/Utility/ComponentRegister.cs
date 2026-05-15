@@ -9,6 +9,8 @@ public static class ComponentRegister
     private static CharacterController _playerController;
     private static Collider _playerCollider;
     private static MainCamera _mainCamera;
+    private static Camera _minimapCamera;
+    private static Minimap _minimap;
     private static AudioSource _playerAudioSource;
     private static HUD _hud;
     private static MatchTimer _matchTimer;
@@ -41,6 +43,17 @@ public static class ComponentRegister
     private static DamageDirectionPanel _ddiPanel;
     private static ResistanceNotice _resistanceNotice;
     
+    public static Minimap Minimap
+    {
+        get
+        {
+            return _minimap;
+        }
+        set
+        {
+            _minimap = value;
+        }
+    }
     public static ResistanceNotice ResistanceNotice
     {
         get {  return _resistanceNotice; }

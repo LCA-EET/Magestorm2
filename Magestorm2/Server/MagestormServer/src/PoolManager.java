@@ -29,7 +29,7 @@ public class PoolManager {
             MatchCharacter biaser = _owningMatch.GetMatchCharacter(biaserID);
             if(biaser.IsAlive()){
                 short diceRoll = GameUtils.DiceRoll(100, 1);
-                if(Pool.BiasChance(biaser.GetClassCode()) >= diceRoll){
+                if(biaser.GetClass().GetPoolBiasChance() >= diceRoll){
                     _matchPools.get(poolID).Bias(biaser);
                     _biasChange = true;
                 }

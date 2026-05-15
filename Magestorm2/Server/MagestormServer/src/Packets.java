@@ -67,7 +67,8 @@ public class Packets {
     public static byte[] MatchIsFullPacket(){
         return Cryptographer.Encrypt(MatchIsFull_Bytes);
     }
-    private static int FillInitialMatchEntryBytes(MatchCharacter mc, byte[] toFill, byte matchType, byte sceneID, byte teamID, byte matchID, int port){
+    private static int FillInitialMatchEntryBytes(MatchCharacter mc, byte[] toFill, byte matchType, byte sceneID,
+                                                  byte teamID, byte matchID, int port, long expiration){
         toFill[0] = Pregame_Send.MatchEntryPacket;
         toFill[1] = matchType;
         toFill[2] = sceneID;
@@ -78,15 +79,16 @@ public class Packets {
         System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxHP()), 0, toFill, 10, 4);
         System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxMana()), 0, toFill, 14, 4);
         toFill[18] = mc.PC().GetMaxStamina();
-        return 19; // the next index;
+        System.arraycopy(ByteUtils.LongToByteArray(expiration), 0, toFill, 19, 8);
+        return 27; // the next index;
     }
     public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, MatchCharacter mc, int port, byte matchID,
-                                               byte matchType){
+                                               byte matchType, long expiration){
         DeathMatch dm = (DeathMatch)MatchManager.GetMatch(matchID);
         byte[] poolData = dm.GetPoolManager().GetPoolBiasData();
         byte[] shrineData = dm.ReportAllShrineHealth();
-        byte[] toEncrypt = new byte[19 + shrineData.length + poolData.length];
-        int nextIndex = FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, teamID, matchID, port);
+        byte[] toEncrypt = new byte[27 + shrineData.length + poolData.length];
+        int nextIndex = FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, teamID, matchID, port, expiration);
         System.arraycopy(shrineData, 0, toEncrypt, nextIndex, shrineData.length);
         nextIndex += shrineData.length;
         System.arraycopy(poolData, 0, toEncrypt, nextIndex, poolData.length);
@@ -94,13 +96,13 @@ public class Packets {
     }
 
     public static byte[] CTFEntryPacket(byte sceneID, MatchCharacter mc, byte teamID, int port, byte matchID,
-                                        byte matchType){
+                                        byte matchType, long expiration){
         CaptureTheFlag ctf = (CaptureTheFlag) MatchManager.GetMatch(matchID);
         byte[] flagBytes = ctf.FlagsStatus();
         byte[] scores = ctf.GetScores();
         byte[] poolBytes = ctf.GetPoolManager().GetPoolBiasData();
-        byte[] toEncrypt = new byte[19 + scores.length + 1 + flagBytes.length + poolBytes.length];
-        int nextIndex = FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, teamID, matchID, port);
+        byte[] toEncrypt = new byte[27 + scores.length + 1 + flagBytes.length + poolBytes.length];
+        int nextIndex = FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, teamID, matchID, port, expiration);
         System.arraycopy(scores, 0, toEncrypt, nextIndex, 3);
         nextIndex += 3;
         toEncrypt[nextIndex] = (byte)flagBytes.length;
@@ -111,9 +113,9 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] FFAEntryPacket(byte sceneID, MatchCharacter mc, int port, byte matchType, byte matchID){
-        byte[] toEncrypt = new byte[19];
-        FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, MatchTeam.Neutral, matchID, port);
+    public static byte[] FFAEntryPacket(byte sceneID, MatchCharacter mc, int port, byte matchType, byte matchID, long expiration){
+        byte[] toEncrypt = new byte[27];
+        FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, MatchTeam.Neutral, matchID, port, expiration);
         return Cryptographer.Encrypt(toEncrypt);
     }
 
@@ -248,11 +250,17 @@ public class Packets {
         }
         return Cryptographer.Encrypt(toEncrypt);
     }
-    public static byte[] EffectsCancellationPacket(byte subjectID, byte spellID){
-        byte[] toEncrypt = new byte[3];
+    public static byte[] EffectsCancellationPacket(byte subjectID,  ArrayList<Byte> cancelled){
+        byte cancelSize = (byte)cancelled.size();
+        byte[] toEncrypt = new byte[2 + 1 + cancelSize];
         toEncrypt[0] = InGame_Send.EffectsCancellation;
         toEncrypt[1] = subjectID;
-        toEncrypt[2] = spellID;
+        toEncrypt[2] = cancelSize;
+        byte index = 3;
+        for(byte b = 0; b < cancelSize; b++){
+            toEncrypt[index] = cancelled.get(b);
+            index++;
+        }
         return Cryptographer.Encrypt(toEncrypt);
     }
 

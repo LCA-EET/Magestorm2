@@ -7,6 +7,7 @@ public class ServerParams {
     public static String LogFilePath;
     public static String ErrorFilePath;
     public static String DebugFilePath;
+    public static String ChatFilePath;
     public static String EmailCredsPath;
     public static long InactivityWarning = 60000;
     public static long InactivityDisconnect = 120000;
@@ -17,6 +18,7 @@ public class ServerParams {
     public static byte PollingFactor = 5;
     public static boolean SymmetricEncryption = false;
     public static short ListeningPort;
+    public static byte QMEnabled = 0;
 
     public static void LoadParams(String paramFilePath){
         ExecutionDirectory = System.getProperty("user.dir");
@@ -35,6 +37,7 @@ public class ServerParams {
             ErrorFilePath = paramScanner.nextLine();
             LogFilePath = paramScanner.nextLine();
             DebugFilePath = paramScanner.nextLine();
+            ChatFilePath = paramScanner.nextLine();
             InactivityWarning = Long.parseLong(paramScanner.nextLine());
             InactivityDisconnect = Long.parseLong(paramScanner.nextLine());
             PregameInactivity = Long.parseLong(paramScanner.nextLine());
@@ -43,6 +46,7 @@ public class ServerParams {
             PollingFactor = Byte.parseByte(paramScanner.nextLine());
             MaxMatches = Byte.parseByte(paramScanner.nextLine());
             ExpMultiplier = Float.parseFloat(paramScanner.nextLine());
+            QMEnabled = Byte.parseByte(paramScanner.nextLine());
             System.out.println("Log file: " + LogFilePath);
             System.out.println("Error file: " + ErrorFilePath);
             System.out.println("Debug file: " + DebugFilePath);

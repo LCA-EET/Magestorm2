@@ -10,8 +10,8 @@ public class CaptureTheFlag extends Match{
     private boolean _flagsChanged;
 
 
-    public CaptureTheFlag(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchOptions) {
-        super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.CaptureTheFlag, matchOptions);
+    public CaptureTheFlag(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchOptions) {
+        super(matchID, creatorID, creatorName, sceneID, duration, MatchType.CaptureTheFlag, matchOptions);
         _flagsChanged = true;
         _currentScores = new byte[3];
         _poolManager = new PoolManager(this);
@@ -166,7 +166,7 @@ public class CaptureTheFlag extends Match{
     @Override
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID) {
         MatchCharacter mc = super.JoinMatch(rc, teamID);
-        GameServer.EnqueueForSend(Packets.CTFEntryPacket(_sceneID, mc, teamID, _matchPort, _matchID, _matchType), rc);
+        GameServer.EnqueueForSend(Packets.CTFEntryPacket(_sceneID, mc, teamID, _matchPort, _matchID, _matchType, _expirationTime), rc);
         return mc;
     }
 

@@ -42,7 +42,7 @@ public class DamagingSpell extends CastSpell{
             Main.LogDebug("DamagingSpell.ApplyDamage(): Post-resist appliedDamage: " + appliedDamage);
         }
         if(target.IsSplashHit(_castID)){
-            byte skillLevel = _casterReference.GetSkillLevel(_baseReference.GetDiscipline());
+            byte skillLevel = _casterReference.GetSkillLevel(_baseReference.GetDisciplineCode());
             appliedDamage *= Math.max(1,_baseReference.GetSplashFactor(skillLevel));
             Main.LogMessage("DamagingSpell.ApplyDamage(): Splash hit applied damage = " + appliedDamage);
         }
@@ -72,9 +72,7 @@ public class DamagingSpell extends CastSpell{
     }
 
     @Override
-    protected AppliedEffect CreateEffect(MatchCharacter target, byte effectCode){
-        byte duration = _baseReference.GetDuration();
-        float damagePerTick = (_damage0 * _baseReference.GetDoTDamagePercent()) / duration;
-        return new DoTEffect(_casterReference, target, _baseReference, _spellLevel, effectCode, duration, damagePerTick);
+    protected AppliedEffect CreateEffect(MatchCharacter target, Effect baseEffect){
+        return new DoTEffect(_casterReference, target, baseEffect, _spellLevel, GetDamage0());
     }
 }

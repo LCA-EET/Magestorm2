@@ -34,7 +34,7 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
             _characterLevel = 1;
             SkillPanel.InitControl(_characterLevel);
             SkillPanel.RefreshClass(ClassToggleGroup.DefaultSelection);
-            SlotSelectView.Init(new byte[10], _characterLevel, SkillPanel.GetDisciplineTable());
+            SlotSelectView.Init(new byte[10], _characterLevel, null, SkillPanel);
             CLPanel.gameObject.SetActive(false);
         }
         else
@@ -49,7 +49,7 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
             StatPanel.DisablePanel();
             SkillPanel.InitControl(_characterLevel);
             SkillPanel.FillSkills(_character);
-            SlotSelectView.Init(character.SlottedSpells, _characterLevel, SkillPanel.GetDisciplineTable());
+            SlotSelectView.Init(character.SlottedSpells, _characterLevel, SkillPanel.GetDisciplineTable(), null);
         }
         
     }

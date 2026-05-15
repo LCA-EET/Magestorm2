@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class PlayerCharacter {
@@ -32,7 +33,7 @@ public class PlayerCharacter {
         _accountID = accountID;
         _characterBytes = fetched;
         _characterID = ByteUtils.ExtractInt(fetched, 0);
-        _characterClass = new CharacterClass(fetched[4]);
+        _characterClass = CharacterClassManager.GetCharacterClass(fetched[4]);
         _statistics = new byte[6];
         _statistics[0] = fetched[5];
         _statistics[1] = fetched[6];
@@ -55,7 +56,7 @@ public class PlayerCharacter {
         _characterName = ByteUtils.BytesToUTF8(_nameBytes);
         _nameLevelClass = new byte[1 + 1 + 1 + nameLength];
         _nameLevelClass[0] = _level;
-        _nameLevelClass[1] = _characterClass.GetClass();
+        _nameLevelClass[1] = _characterClass.GetClassID();
         _nameLevelClass[2] = nameLength;
         System.arraycopy(_nameBytes, 0, _nameLevelClass, 3, nameLength);
         UpdateSkills(skills);
@@ -65,7 +66,7 @@ public class PlayerCharacter {
         _skills = ByteUtils.IntegerToBoolArray(skills);
         //Main.LogMessage("Skills int: " + skills + ", " + ByteUtils.BitsToInt(_skills));
         _skillsTable.clear();
-        byte[] classSkills = CharacterClass.GetBaseSkills(_characterClass.GetClass());
+        byte[] classSkills = CharacterClassManager.GetDisciplinesOfClass(_characterClass.GetClassID());
         for(byte classSkill : classSkills){
             int skillIndex = classSkill * 2;
             boolean lsb = _skills[skillIndex];
@@ -99,7 +100,7 @@ public class PlayerCharacter {
         return (byte)(85.0f + (_statistics[ControlCodes.Statistic_Strength] * 8.5f));
     }
     public float GetMaxHP(){
-        short multiplier = _characterClass.HPMultiplier();
+        short multiplier = _characterClass.GetHPMultiplier();
         float toReturn = (_level * (_statistics[ControlCodes.Statistic_Constitution] / 20.0f) * multiplier * 1.579f) + 10;
         return Math.round(toReturn);
     }

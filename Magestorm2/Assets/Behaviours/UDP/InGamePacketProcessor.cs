@@ -219,11 +219,17 @@ public class InGamePacketProcessor : UDPProcessor
     private void HandleEffectCancellation()
     {
         byte subjectID = _decrypted[1];
-        byte spellID = _decrypted[2];
         Avatar subject = null;
         if(Match.GetAvatar(subjectID, ref subject))
         {
-            subject.RemoveEffectsCancelledBySpell(spellID);
+            byte numToCancel = _decrypted[2];
+            byte index = 3;
+            for (byte b = 0; b < numToCancel; b++)
+            {
+                subject.RemoveEffect(_decrypted[index], false);
+                index++;
+            }
+            subject.RefreshEffectsDisplay();
         }
     }
     private void HandleCast()

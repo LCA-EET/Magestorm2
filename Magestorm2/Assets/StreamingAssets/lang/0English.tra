@@ -251,7 +251,7 @@ Basic: Launches a projectile dealing 2-4 electric. The projectile has a 10% chan
 Leap
 Basic: The caster leaps high into the air.\nExpert and Master: Increases the height of the leap.
 Mind Probe
-Basic: A point-blank mental assault on a target, dealing 8-16 mind damage. \nExpert and Master: Deals 50% more damage.
+Basic: A point-blank mental assault on a target, dealing 2-4 mind damage. Successful probes temporarily reveal the location of enemy targets on the minimap.
 Prayer
 Basic: Reduces damage taken by 20% for one minute.\nExpert and Master: Reduces damage by an additional 20%. 
 Resurrection
@@ -280,7 +280,7 @@ Not Learned
 Basic
 Expert
 Master
-Spirit Law
+Necromancy
 Barriers
 Shielding
 Remaining: {0}
@@ -348,3 +348,10 @@ You resisted a spell.
 {0} resisted your spell.
 Wrack Mind
 Unleashes a torrent of psionic energy at the caster's target.
+Wizard Eye
+Temporarily reveals the locations of all enemies on the minimap.
+Quick Match
+Fly
+Allows the caster to fly.
+Cancel Flight
+Cancel's the caster's existing flight spell.

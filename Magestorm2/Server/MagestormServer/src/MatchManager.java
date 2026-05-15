@@ -5,6 +5,7 @@ public class MatchManager{
     private static ConcurrentHashMap<Byte, Match> _activeMatches;
     private static byte _nextMatchID = 1;
     private static byte _maxMatches;
+    private static byte _qmID;
     private static ConcurrentHashMap<Byte, byte[]> _scores;
     public static boolean UpdatesNeeded;
 
@@ -14,6 +15,12 @@ public class MatchManager{
         _maxMatches = maxMatches;
         _activeMatches = new ConcurrentHashMap<>();
         new MatchMonitor();
+    }
+    public static byte GetQMID(){
+        return _qmID;
+    }
+    public static void SetQMID(byte qmID){
+        _qmID = qmID;
     }
     public static void UpdateScore(byte matchID, byte[] scoreBytes){
         _scores.put(matchID, scoreBytes);
@@ -87,15 +94,15 @@ public class MatchManager{
                     switch(matchType){
                         case MatchType.DeathMatch:
                             newlyCreated = new DeathMatch(matchID, accountID, activeCharacter.GetNameBytes(),
-                                    sceneID, System.currentTimeMillis(), duration, matchOptions);
+                                    sceneID, duration, matchOptions);
                             break;
                         case MatchType.FreeForAll:
                             newlyCreated = new FreeForAll(matchID, accountID, activeCharacter.GetNameBytes(),
-                                    sceneID, System.currentTimeMillis(), duration, matchOptions);
+                                    sceneID, duration, matchOptions);
                             break;
                         case MatchType.CaptureTheFlag:
                             newlyCreated = new CaptureTheFlag(matchID, accountID, activeCharacter.GetNameBytes(),
-                                    sceneID, System.currentTimeMillis(), duration, matchOptions);
+                                    sceneID, duration, matchOptions);
                             break;
                     }
                     Main.LogMessage("Match " + matchID + " created by account " + accountID );
@@ -120,6 +127,10 @@ public class MatchManager{
             _activeMatches.remove(toDelete.MatchID());
             UpdatesNeeded = true;
         }
+    }
+    public static void AddQuickMatch(){
+        byte matchID = NextMatchID();
+        AddMatch(matchID, new FreeForAll(matchID, 0, (byte)1, (byte)3, (byte)0));
     }
     private static void AddMatch(byte matchID, Match newlyCreated){
         _activeMatches.put(matchID, newlyCreated);
@@ -152,7 +163,7 @@ public class MatchManager{
 
     public static void RemoveMatch(byte matchID){
         Match removed = _activeMatches.remove(matchID);
-        GameServer.RemoveUsedPort(removed.GetMatchPort());
+
         UpdatesNeeded = true;
     }
 

@@ -4,8 +4,8 @@ public class DeathMatch extends Match{
     private final PoolManager _poolManager;
     private final ConcurrentHashMap<Byte, Shrine> _shrines;
 
-    public DeathMatch(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchOptions) {
-        super(matchID, creatorID, creatorName, sceneID, creationTime, duration, MatchType.DeathMatch, matchOptions);
+    public DeathMatch(byte matchID, int creatorID, byte[] creatorName, byte sceneID,  byte duration, byte matchOptions) {
+        super(matchID, creatorID, creatorName, sceneID, duration, MatchType.DeathMatch, matchOptions);
         _poolManager = new PoolManager(this);
         _shrines = new ConcurrentHashMap<>();
         for(int i = 1; i < MatchTeam.TeamCodes.length; i++){
@@ -84,7 +84,7 @@ public class DeathMatch extends Match{
     @Override
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID) {
         MatchCharacter mc = super.JoinMatch(rc, teamID);
-        GameServer.EnqueueForSend(Packets.DeathMatchEntryPacket(_sceneID, teamID, mc, _matchPort, _matchID, _matchType), rc);
+        GameServer.EnqueueForSend(Packets.DeathMatchEntryPacket(_sceneID, teamID, mc, _matchPort, _matchID, _matchType, _expirationTime), rc);
         return mc;
     }
 

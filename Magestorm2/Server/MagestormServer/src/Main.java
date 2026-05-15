@@ -47,6 +47,9 @@ public class Main {
                     case "terminateserver":
                         GameServer.TerminateServer();
                         break;
+                    case "lt":
+                        ThreadMonitor.PrintActiveThreads();
+                        break;
                 }
             }
         }
@@ -62,10 +65,14 @@ public class Main {
         System.out.println(count + " connected clients.");
     }
     public static void InitLog(){
-        _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath, ServerParams.DebugFilePath);
+        _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath,
+                ServerParams.DebugFilePath, ServerParams.ChatFilePath);
     }
     public static void LogMessage(String toLog){
         _serverLog.LogMessage(toLog);
+    }
+    public static void LogChat(MatchCharacter sender, String message, byte matchID){
+        _serverLog.LogChat(sender, message, matchID);
     }
     public static void LogDebug(String toLog){
         _serverLog.LogDebug(toLog);

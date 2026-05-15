@@ -6,6 +6,8 @@ public class UILoginForm : ValidatableForm
     {
         Game.LoggedIn = false;
         Game.FetchServerInfo();
+        CharacterClassManager.Init();
+        DisciplineManager.Init();
         SpellManager.Init();
         ComponentRegister.UILoginForm = this;
     }
@@ -27,7 +29,7 @@ public class UILoginForm : ValidatableForm
                 ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
                 if (PlayerAccount.SelectedCharacter != null)
                 {
-                    Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket());
+                    Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket(false));
                 }
                 Cursor.lockState = CursorLockMode.None;
             }

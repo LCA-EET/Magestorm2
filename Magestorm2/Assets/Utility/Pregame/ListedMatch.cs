@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 public class ListedMatch
 {
     private byte _matchID, _sceneID, _matchType;
@@ -17,8 +18,10 @@ public class ListedMatch
         _matchID = matchID;
         _sceneID = sceneID;
         _creatorName = creatorName;
+        Debug.Log("Creator Name: " + creatorName);
         _expiration = expiration;
         _creatorID = creatorID;
+        Debug.Log("CreatorID: " + CreatorID);
         _sceneName = LevelData.GetLevel(sceneID).LevelName;
         _matchOptions = matchOptions;
     }

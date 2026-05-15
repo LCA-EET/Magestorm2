@@ -10,7 +10,7 @@
     public void Start()
     {
         PlayerCharacter pc = PlayerAccount.SelectedCharacter;
-        SlotSelectView.Init(pc.SlottedSpells, pc.CharacterLevel, pc.DisciplineTable);
+        SlotSelectView.Init(pc.SlottedSpells, pc.CharacterLevel, pc.DisciplineTable, null);
     }
     public void SelectionMade(object[] args)
     {

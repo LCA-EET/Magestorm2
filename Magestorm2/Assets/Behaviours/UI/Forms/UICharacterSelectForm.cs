@@ -6,6 +6,7 @@ public class UICharacterSelectForm : ValidatableForm
 {
     public UICharacterCard[] CharacterCards;
     public RenderTexture[] RenderTextures;
+    private bool _qmJoin;
     private void Awake()
     {
         Game.LoggedIn = true;
@@ -84,7 +85,7 @@ public class UICharacterSelectForm : ValidatableForm
     }
     protected override void PassedValidation()
     {
-        Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket());
+        Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket(_qmJoin));
     }
     protected override bool ValidateForm()
     {
@@ -106,6 +107,7 @@ public class UICharacterSelectForm : ValidatableForm
             case ButtonType.Submit:
                 if (ValidateForm())
                 {
+                    _qmJoin = false;
                     PassedValidation();
                 }
                 else
@@ -120,7 +122,15 @@ public class UICharacterSelectForm : ValidatableForm
                 ComponentRegister.UIPrefabManager.InstantiateSpellInfo();
                 break;
             case ButtonType.Misc1:
-
+                if (ValidateForm())
+                {
+                    _qmJoin = true;
+                    PassedValidation();
+                }
+                else
+                {
+                    Game.MessageBox(Language.GetBaseString(36)); //
+                }
                 break;
             case ButtonType.Misc2:
                 if (ValidateForm())

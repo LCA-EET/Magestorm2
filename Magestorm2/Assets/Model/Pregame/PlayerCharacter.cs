@@ -15,6 +15,7 @@ public class PlayerCharacter
     private byte[] _statBytes;
     private byte[] _idBytes;
     private byte[] _slottedSpells;
+    private CharacterClassData _classData;
     private Dictionary<byte, byte> _skills;
     public PlayerCharacter(int characterID, string characterName, byte characterClass, byte characterLevel, byte[] statBytes, byte[] appearanceBytes, byte[] slots, int skills, int experience) {
         _skills = new Dictionary<byte, byte>();
@@ -22,6 +23,7 @@ public class PlayerCharacter
         _characterID = characterID;
         _characterName = characterName;
         _characterClass = characterClass;
+        _classData = CharacterClassManager.GetCharacterClassData(characterClass);
         _characterLevel = characterLevel;
         _characterNameBytes = Encoding.UTF8.GetBytes(characterName);
         _statBytes = statBytes;
@@ -64,22 +66,6 @@ public class PlayerCharacter
         }
         return 0;
     }
-
-    public static string ClassToString(byte playerClass)
-    {
-        switch (playerClass)
-        {
-            case ControlCodes.PlayerClass_Arcanist:
-                return Language.GetBaseString(7); //
-            case ControlCodes.PlayerClass_Magician:
-                return Language.GetBaseString(8); //
-            case ControlCodes.PlayerClass_Cleric: 
-                return Language.GetBaseString(6); //
-            case ControlCodes.PlayerClass_Mentalist:
-                return Language.GetBaseString(9); //
-        }
-        return "";
-    }
     public byte[] StatBytes
     {
         get { return _statBytes; }
@@ -106,39 +92,26 @@ public class PlayerCharacter
     public byte CharacterLevel { get { return _characterLevel; } }
     public string CharacterClassString
     {
-        get { return ClassToString(CharacterClass); }
+        get { return _classData.CharacterClassName; }
     }
     public Dictionary<byte, byte> DisciplineTable
     {
         get { return _skills; }
     }
-    private byte HPMultiplier()
-    {
-        byte playerClass = CharacterClass;
-        switch (playerClass)
-        {
-            case ControlCodes.PlayerClass_Cleric:
-                return 6;
-            case ControlCodes.PlayerClass_Magician:
-                return 4;
-            default:
-                return 5;
-        }
-    }
+
     public byte GetStat(byte stat)
     {
         return _statBytes[stat];
     }
     public float GetMaxHP()
     {
-        float multiplier = HPMultiplier();
+        float multiplier = CharacterClassManager.GetCharacterClassData(_characterClass).HPMultiplier;
         float toReturn = (CharacterLevel * (GetStat(ControlCodes.PlayerStats_Constitution) / 20.0f) * multiplier * 1.579f) + 10;
         return Mathf.Round(toReturn);
     }
     public float GetMaxMana()
     {
-        byte statToUse = CharacterClass == ControlCodes.PlayerClass_Cleric ? GetStat(ControlCodes.PlayerStats_Charisma) : GetStat(ControlCodes.PlayerStats_Intellect);
-        float manaMultiplier = 1 + ((statToUse - 10) * 0.05f);
+        float manaMultiplier = 1 + ((_classData.ManaStatCode - 10) * 0.05f);
         return ((_characterLevel * 4) + 10) * manaMultiplier;
     }
     public void UpdateSkillsTable(int skills)
@@ -157,7 +130,7 @@ public class PlayerCharacter
         }
         //Debug.Log("Skills base 2: " + binary +", length = " + binary.Length);
         _skills.Clear();
-        foreach(byte discipline in SharedFunctions.DisciplinesByClass(_characterClass))
+        foreach(byte discipline in CharacterClassManager.GetDisciplineCodesOfClass(_characterClass))
         {
             int skillIndex = ((byte)discipline) * 2;
             bool lsb = skillArray[skillIndex];

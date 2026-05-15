@@ -6,6 +6,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
     private Dictionary<byte,byte> _disciplineTable;
     private byte[] _slottedSpells;
     private const int _noSelectionRef = 276;
+    private SkillPanel _skillPanel;
     void Awake()
     {
         _slottedSpells = new byte[10];
@@ -22,10 +23,11 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
         _slottedSpells[slotID] = 0;
         Labels[slotID].UpdateText(_noSelectionRef);
     }
-    public void Init(byte[] slottedSpells, byte characterLevel, Dictionary<byte, byte> disciplineTable)
+    public void Init(byte[] slottedSpells, byte characterLevel, Dictionary<byte, byte> disciplineTable, SkillPanel skillPanel)
     {
         _disciplineTable = disciplineTable;
         _characterLevel = characterLevel;
+        _skillPanel = skillPanel;
         for (byte i = 0; i < slottedSpells.Length; i++)
         {
             byte spellID = slottedSpells[i];
@@ -55,7 +57,16 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
 
     protected override void ProcessSelection()
     {
-        ComponentRegister.UIPrefabManager.InstantiateAvailableSpellList(_characterLevel, _selectedOption, this, _disciplineTable);
+        Dictionary<byte, byte> toUse;
+        if (_disciplineTable == null)
+        {
+            toUse = _skillPanel.GetDisciplineTable();
+        }
+        else
+        {
+            toUse = _disciplineTable;
+        }
+        ComponentRegister.UIPrefabManager.InstantiateAvailableSpellList(_characterLevel, _selectedOption, this, toUse);
     }
 
     public byte[] SlotSelections

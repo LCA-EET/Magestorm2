@@ -19,6 +19,9 @@
     public const byte EffectCode_Bleeding = 10;
     public const byte EffectCode_Prayer = 11;
     public const byte EffectCode_Haste = 12;
+    public const byte EffectCode_ViewTeam = 13;
+    public const byte EffectCode_ViewAll = 14;
+    public const byte EffectCode_Fly = 15;
 
     public const byte Element_Fire = 1;
     public const byte Element_Ice = 2;

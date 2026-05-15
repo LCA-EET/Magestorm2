@@ -4,7 +4,8 @@ public class RemoteClientMonitor extends RegisteredThread{
         new RegisteredThread(this).start();
     }
     public void run(){
-        while(Main.Running){
+        Register("RemoteClientMonitor");
+        while(!_terminated){
             try {
                 Iterable<RemoteClient> clients = GameServer.ConnectedClients();
                 for(RemoteClient client : clients){
@@ -21,5 +22,6 @@ public class RemoteClientMonitor extends RegisteredThread{
                 Main.LogStackTrace(e);
             }
         }
+        Deregister();
     }
 }

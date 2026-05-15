@@ -3,7 +3,7 @@ public class ResistanceSpell extends CastSpell{
         super(caster, castID, baseReference, matchReference);
     }
     @Override
-    protected AppliedEffect CreateEffect(MatchCharacter target, byte effectCode){
-        return new ResistanceEffect(_casterReference, target, _baseReference, _spellLevel, effectCode, _baseReference.GetDuration());
+    protected AppliedEffect CreateEffect(MatchCharacter target, Effect baseEffect){
+        return new ResistanceEffect(_casterReference, target, baseEffect, _baseReference, _spellLevel);
     }
 }

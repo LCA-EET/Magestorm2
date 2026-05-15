@@ -34,7 +34,10 @@ public class Match {
     private long _spellExpirationElapsed = 0;
     private long _expCheckElapsed = 0;
     private final long _expReportInterval = 30000;
-    protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, long creationTime, byte duration, byte matchType, byte matchOptions){
+    protected boolean _quickMatch;
+
+
+    protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchType, byte matchOptions){
         _playersJoined = new HashSet<>();
         _matchOptions = new MatchOptions(matchOptions);
         _regenTick = _matchOptions.IsOptionSet(ControlCodes.MatchOptions_FastRegen)?1000:5000;
@@ -51,8 +54,8 @@ public class Match {
         _nextPlayerID = 1;
         _matchID = matchID;
         _creatorID = creatorID;
-        _expirationTime = creationTime + (3600000 - (duration * 900000)); // 0 = one hour
-        //_expirationTime = creationTime+30000;
+        _expirationTime = System.currentTimeMillis() + (3600000 - (duration * 900000)); // 0 = one hour
+        //_expirationTime = System.currentTimeMillis() + 60000;
         LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime + " on port " + _matchPort);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + 1 + nameBytesLength + 1];
@@ -78,6 +81,9 @@ public class Match {
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
         InitializeActivatables();
+    }
+    public boolean IsQuickMatch(){
+        return _quickMatch;
     }
     public boolean IsOptionEnabled(int optionCode){
         return _matchOptions.IsOptionSet(optionCode);
@@ -413,7 +419,12 @@ public class Match {
                     _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 }
                 else if(spellReference.IsHealing()){
-                    _castSpells.put(castID, new HealingSpell(caster, castID, spellReference, this));
+                    if(_matchOptions.IsOptionSet(ControlCodes.MatchOptions_NoHealOther)){
+                        castID = -1;
+                    }
+                    else{
+                        _castSpells.put(castID, new HealingSpell(caster, castID, spellReference, this));
+                    }
                 }
                 break;
             case ControlCodes.SpellTypes_SelfHeal:
@@ -741,7 +752,7 @@ public class Match {
                 MatchCharacter devoured = GetMatchCharacter(decrypted[2]);
                 if(devoured != null){
                     if(!devoured.IsAlive()){
-                        byte skillLevel = caster.GetSkillLevel(ControlCodes.Discipline_SpiritLaw);
+                        byte skillLevel = caster.GetSkillLevel(ControlCodes.Discipline_Necromancy);
                         short manaRecovered = 0;
                         if(skillLevel == 2){
                             manaRecovered = devoured.GetLevel();

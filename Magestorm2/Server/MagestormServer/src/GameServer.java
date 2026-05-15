@@ -1,3 +1,4 @@
+import java.sql.Connection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -25,12 +26,26 @@ public class GameServer extends Thread {
         _activeCharacters = new ConcurrentHashMap<>();
         _poolData = new ConcurrentHashMap<>();
         _objectData = new ConcurrentHashMap<>();
-        SpellManager.init();
+        try(Connection conn = Database.DBConnection()){
+            CharacterClassManager.init(conn);
+            DisciplineManager.init(conn);
+            EffectManager.init(conn);
+            SpellManager.init(conn);
+        }
+        catch(Exception ex){
+            Main.LogError("GameServer.init(): " + ex.getMessage());
+            Main.LogStackTrace(ex);
+            TerminateServer();
+            return;
+        }
         MatchManager.init(ServerParams.MaxMatches);
         _rcMonitor = new RemoteClientMonitor();
         _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
         _levelData = Database.GetLevelsList((byte)1);
         _usedMatchPorts = new ConcurrentSkipListSet<>();
+        if(ServerParams.QMEnabled == 1){
+            MatchManager.AddQuickMatch();
+        }
     }
 
     public static void AddActiveCharacter(int accountID, PlayerCharacter active){

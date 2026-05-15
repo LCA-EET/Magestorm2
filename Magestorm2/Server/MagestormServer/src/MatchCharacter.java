@@ -67,7 +67,7 @@ public class MatchCharacter {
         _currentMana = joinAlive?_maxMana:0;
         _verified = false;
         _owningMatch = match;
-        _ley = _pc.GetCharacterClass().GetClass() == CharacterClass.Mentalist? 0.6f : 0.0f;
+        _ley = _pc.GetCharacterClass().GetClassID() == CharacterClass.Mentalist? 0.6f : 0.0f;
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
         _teamID = team.GetTeamID();
@@ -220,7 +220,7 @@ public class MatchCharacter {
     }
 
     public byte GetClassCode(){
-        return _pc.GetCharacterClass().GetClass();
+        return _pc.GetCharacterClass().GetClassID();
     }
 
     public byte[] GetINLCTABytes(){
@@ -272,11 +272,11 @@ public class MatchCharacter {
     }
 
     //region Effects
-    public void TerminateEffects(ArrayList<Byte> cancelled, byte spellID){
+    public void TerminateEffects(ArrayList<Byte> cancelled){
         for(byte b : cancelled){
             _activeEffects.remove(b);
         }
-        _owningMatch.SendToAll(Packets.EffectsCancellationPacket(_idInMatch, spellID));
+        _owningMatch.SendToAll(Packets.EffectsCancellationPacket(_idInMatch, cancelled));
     }
     public boolean IsShocked(){
         return _activeEffects.containsKey(ControlCodes.EffectCode_Shock);
@@ -396,7 +396,7 @@ public class MatchCharacter {
         if(IsAlive()){
             byte spellCost = cast.SpellCost();
             byte skillRequired = cast.GetSkillRequired();
-            byte discipline = cast.GetDiscipline();
+            byte discipline = cast.GetDisciplineCode();
             if(spellCost < _currentMana && skillRequired <= _pc.GetSkillLevel(discipline)){
                 toReturn = _owningMatch.SpellCast(this, cast, decrypted); // instantiation happens here
                 if(toReturn != -1){

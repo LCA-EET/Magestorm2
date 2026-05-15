@@ -14,8 +14,7 @@ public class MainCamera : MonoBehaviour
     }
     public void Start()
     {
-        
-        if(ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Cleric)
+        if(CharacterClassManager.GetCharacterClassData(Game.PCAvatar.PlayerClass).CanSeeDeadPlayers)
         {
             Debug.Log("Changing culling masks");
             Camera.cullingMask |= LayerManager.DeadPlayerLayerMask;

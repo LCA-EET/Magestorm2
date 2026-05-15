@@ -38,7 +38,7 @@ public class SkillPanel : ValidateableObject
     }
     public void RefreshClass(byte playerClass)
     {
-        byte[] availableDisciplines = SharedFunctions.DisciplinesByClass(playerClass);
+        byte[] availableDisciplines = CharacterClassManager.GetDisciplineCodesOfClass(playerClass);
         int index = 0;
         for (int i = 0; i < availableDisciplines.Length; i++)
         {

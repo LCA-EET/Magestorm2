@@ -1,14 +1,13 @@
-public class RegisteredThread extends Thread{
+public class RegisteredThread extends Thread implements Comparable<RegisteredThread>{
     private int _threadID;
     protected boolean _terminated;
-
+    private String _descriptor, _formattedDT;
     public RegisteredThread(){
         super();
     }
 
     public RegisteredThread(Runnable toRun){
         super(toRun);
-        _terminated = false;
     }
     public int GetThreadID(){
         return _threadID;
@@ -18,12 +17,25 @@ public class RegisteredThread extends Thread{
         return _terminated;
     }
 
-    protected void Deregister(){
-        Main.ThreadMonitor.DeregisterThread(_threadID);
+    protected void Register(String desc){
+        _formattedDT = SharedFunctions.GetDateTimeString();
+        _threadID = Main.ThreadMonitor.RegisterThread(this);
+        _terminated = false;
+        _descriptor = desc;
+        Main.LogMessage("Registered thread " + _threadID + " (" + _descriptor + ")");
     }
 
-    @Override public void start(){
-        _threadID = Main.ThreadMonitor.RegisterThread(this);
-        super.start();
+    protected void Deregister(){
+        Main.ThreadMonitor.DeregisterThread(_threadID);
+        Main.LogMessage("Deregistered thread " + _threadID + " (" + _descriptor + ")");
+    }
+
+    public String ToString(){
+        return _threadID + ": " + _descriptor + ", started on " + _formattedDT;
+    }
+
+    @Override
+    public int compareTo(RegisteredThread o) {
+        return Integer.compare(_threadID, o.GetThreadID());
     }
 }

@@ -7,19 +7,21 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Log extends RegisteredThread{
     private final DateTimeFormatter _formatter;
     private final LinkedBlockingQueue<LogEvent> _eventQueue;
-    private final FileWriter _logFileWriter, _errorFileWriter, _debugFileWriter;
-    public Log(String logFile, String errorFile, String debugFile){
+    private final FileWriter _logFileWriter, _errorFileWriter, _debugFileWriter, _chatFileWriter;
+    public Log(String logFile, String errorFile, String debugFile, String chatFile){
         _formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         try {
             _logFileWriter = new FileWriter(logFile, true);
             _errorFileWriter = new FileWriter(errorFile, true);
             _debugFileWriter = new FileWriter(debugFile, true);
+            _chatFileWriter = new FileWriter(chatFile, true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         _eventQueue = new LinkedBlockingQueue<>();
     }
     public void run(){
+        Register("Log");
         Main.LogMessage("Log started.");
         Main.LogError("Log started.");
         Main.LogDebug("Log started.");
@@ -57,6 +59,10 @@ public class Log extends RegisteredThread{
                     _errorFileWriter.append(event.GetEventText());
                     _errorFileWriter.flush();
                     break;
+                case ControlCodes.LogID_Chat:
+                    _chatFileWriter.append(event.GetEventText());
+                    _chatFileWriter.flush();
+                    break;
             }
         }
         catch(Exception e){
@@ -74,5 +80,10 @@ public class Log extends RegisteredThread{
     }
     public void LogDebug(String toLog){
         _eventQueue.add(new LogEvent(ControlCodes.LogID_Debug, FormatString(toLog)));
+    }
+    public void LogChat(MatchCharacter sender, String message, byte matchID){
+        String toLog = "M" + matchID + ", " + sender.GetCharacterName() + " (A" + sender.PC().GetAccountID()
+                +", C" + sender.GetCharacterID() + "): " + message;
+        _eventQueue.add(new LogEvent(ControlCodes.LogID_Chat, FormatString(toLog)));
     }
 }

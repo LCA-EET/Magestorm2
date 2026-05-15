@@ -1,17 +1,15 @@
 import java.net.DatagramPacket;
-import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class UDPProcessor extends RegisteredThread{
 
+    protected RegisteredThread _processor, _sender, _listener;
     protected RemoteClient _remote;
     protected DatagramPacket _received;
     protected final UDPClient _udpClient;
-    protected final PacketSender _sender;
-    protected final ConcurrentLinkedQueue<OutgoingPacket> _outgoingPackets;
+    protected final BlockingQueue<OutgoingPacket> _outgoingPackets;
     protected final BlockingQueue<DatagramPacket> _toProcess;
     protected byte[] _decrypted;
     protected final int _listeningPort;
@@ -20,15 +18,22 @@ public class UDPProcessor extends RegisteredThread{
     public UDPProcessor(int listeningPort){
         _listeningPort = listeningPort;
         _udpClient = new UDPClient(listeningPort, this);
-        _outgoingPackets = new ConcurrentLinkedQueue<>();
+        _outgoingPackets = new LinkedBlockingQueue<>();
         _toProcess = new LinkedBlockingQueue<>();
         _terminated = false;
-        _sender = new PacketSender(_udpClient, this);
-        new RegisteredThread(this).start();
+
+        _listener = new RegisteredThread(_udpClient);
+        _listener.start();
+        _processor = new RegisteredThread(this);
+        _processor.start();
+        _sender = new RegisteredThread(new PacketSender(_udpClient, this));
+        _sender.start();
     }
     public void TerminateProcessor(){
         _terminated = true;
-        this.interrupt(); // interrupt the blocking take()
+        _listener.interrupt();
+        _processor.interrupt(); // interrupt the blocking take()
+        _sender.interrupt();
     }
     protected void PreProcess(DatagramPacket received){
         _decrypted = Cryptographer.Decrypt(received.getData());
@@ -39,6 +44,9 @@ public class UDPProcessor extends RegisteredThread{
     protected RemoteClient LoggedInClient(){
         int accountID = ByteUtils.ExtractInt(_decrypted, 1);
         return GameServer.GetClient(accountID);
+    }
+    public BlockingQueue<OutgoingPacket> OutgoingQueue(){
+        return _outgoingPackets;
     }
     public ArrayList<OutgoingPacket> OutgoingPackets(){
         ArrayList<OutgoingPacket> toReturn = new ArrayList<>();
@@ -70,6 +78,7 @@ public class UDPProcessor extends RegisteredThread{
 
     @Override
     public void run(){
+        Register("UDPProcessor, port " + _listeningPort);
         while(!_terminated){
             try{
                 ProcessPacket(_toProcess.take());

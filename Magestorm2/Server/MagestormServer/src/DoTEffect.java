@@ -1,10 +1,11 @@
 public class DoTEffect extends AppliedEffect{
     private long _elapsedSinceLastHit;
-    private final float _damagePerTick;
-    public DoTEffect(MatchCharacter caster, MatchCharacter target, Spell baseReference, byte degree, byte effectCode,
-                     byte duration, float damagePerTick) {
-        super(caster, target, baseReference, degree, effectCode, duration);
-        _damagePerTick = damagePerTick;
+    private float _damagePerTick;
+    public DoTEffect(MatchCharacter caster, MatchCharacter target, Effect baseReference, byte degree,
+                     float spellDamage) {
+        super(caster, target, baseReference, degree);
+        _damagePerTick = (spellDamage * baseReference.PercentOverTime()) / baseReference.GetDuration();
+        //_damagePerTick += (degree - 1) * (0.5f * _damagePerTick);
     }
 
     @Override

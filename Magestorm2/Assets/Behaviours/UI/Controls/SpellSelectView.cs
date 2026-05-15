@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class SpellSelectView : ScrollSelectView
 {
@@ -16,7 +15,7 @@ public class SpellSelectView : ScrollSelectView
 
     public void PopulateOptions(byte disciplineCode)
     {
-        List<SpellData> spellData = SpellManager.GetSpellsOfDiscipline(new byte[] { (byte)disciplineCode });
+        List<SpellData> spellData = DisciplineManager.GetSpellsOfDiscipline(new byte[] { (byte)disciplineCode });
         Dictionary<byte, int> options = new Dictionary<byte, int>();
         foreach(SpellData sd in spellData)
         {

@@ -9,21 +9,16 @@ public class SpellData
     private byte _discipline;
     private byte _spellType;
     private short _cancelsEffects;
-    private List<byte> _cancelledEffects;
     public SpellData(string[] fields, string contents)
     {
         string[] split = contents.Split("<br>");
         string fieldID, fieldValue;
-        _cancelledEffects = new List<byte>();
         for (int i = 0; i < fields.Length; i++)
         {
             fieldID = fields[i];
             fieldValue = split[i + 1];
             switch (fieldID)
             {
-                case SpellAttributes.CANCELSEFFECTS:
-                    ProcessCancellationData(short.Parse(fieldValue));
-                    break;
                 case SpellAttributes.ELEMENT0:
                     _element0 = byte.Parse(fieldValue); 
                     break;
@@ -69,7 +64,7 @@ public class SpellData
                 case SpellAttributes.SPELLTYPE:
                     _spellType = byte.Parse(fieldValue);
                     break;
-                case SpellAttributes.EFFECTRADIUS:
+                case SpellAttributes.RADIUS:
                     _effectRadius = byte.Parse(fieldValue);
                     break;
                 case SpellAttributes.RANGE:
@@ -88,19 +83,6 @@ public class SpellData
     {
         get { return _element0; }
     }
-    private void ProcessCancellationData(short number)
-    {
-        _cancelsEffects = number;
-        BitArray ba = ByteUtils.ShortToBoolArray(_cancelsEffects);
-        for (byte b = 0; b < 15; b++)
-        {
-            if (ba[b])
-            {
-                _cancelledEffects.Add(b);
-            }
-        }
-    }
-    public List<byte> CancelledEffects { get { return _cancelledEffects; } }
     public float GetStaminaCost(byte characterLevel)
     {
         int difference = characterLevel - MinLevel;
@@ -259,9 +241,8 @@ public static class SpellAttributes
     public const string MAX_DAMAGE_PER_ROLL1 = "maxdamageperroll1";
     public const string ELEMENT0 = "element0";
     public const string ELEMENT1 = "element1";
-    public const string EFFECTRADIUS = "effectradius";
+    public const string RADIUS = "radius";
     public const string RANGE = "range";
     public const string PROJECTILESPEED = "projectilespeed";
     public const string SHAKEPREVENTION = "shakeprevention";
-    public const string CANCELSEFFECTS = "cancelseffects";
 }

@@ -64,6 +64,10 @@ public static class ByteUtils
         BitArray bitArray = new BitArray(bytes);
         return bitArray;
     }
+    public static BitArray ByteToBoolArray(byte toConvert)
+    {
+        return new BitArray(new byte[] { toConvert });
+    }
     public static void FillBooleanArray(ref bool[] toFill, int value, int startIndex)
     {
         switch (value)

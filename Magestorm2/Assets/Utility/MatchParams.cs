@@ -54,6 +54,7 @@ public static class MatchParams
         _maxHP = BitConverter.ToSingle(_decrypted, 10);
         _maxMana = BitConverter.ToSingle(_decrypted, 14);
         _maxStamina = _decrypted[18];
+        MatchParams.ExpirationTime = BitConverter.ToInt64(_decrypted, 19);
         MatchTeam = (Team)MatchTeamID;
         byte type = MatchType;
         switch (type)
@@ -72,8 +73,8 @@ public static class MatchParams
     public static void InitDM()
     {
         UnityEngine.Debug.Log("InitDM");
-        ShrineManager.Init(_decrypted, 19);
-        PoolManager.Init(_decrypted, 22);
+        ShrineManager.Init(_decrypted, 27);
+        PoolManager.Init(_decrypted, 30);
         TorchManager.Init();
         TriggerManager.Init();
         IncludeShrines = true;
@@ -89,8 +90,8 @@ public static class MatchParams
         IncludeFlags = true;
         IncludePools = true;
         IncludeTeams = true;
-        byte flagByteLength = _decrypted[22];
-        int index = 23;
+        byte flagByteLength = _decrypted[30];
+        int index = 31;
         FlagManager.Init(_decrypted, index);
         PoolManager.Init(_decrypted, index + flagByteLength);
     }

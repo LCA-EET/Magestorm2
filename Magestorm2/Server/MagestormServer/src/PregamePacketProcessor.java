@@ -89,7 +89,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 AssignRC();
                 HandleCharacterDataRequest();
                 return true;
-            /*
+               /*
             RemoteClient doesn't exist
              */
             case Pregame_Receive.LogIn:
@@ -102,6 +102,19 @@ public class PregamePacketProcessor extends UDPProcessor
                 break;
         }
         return true;
+    }
+    private void HandleQMJoin(){
+        Match toJoin = MatchManager.GetMatch(MatchManager.GetQMID());
+        if(toJoin != null){
+            if(toJoin.HasRoomForAnotherPlayer()){
+                RemoteClient remote = GameServer.GetClient(_accountID);
+                remote.UnsubscribeFromMatches();
+                toJoin.JoinMatch(remote, (byte)0);
+            }
+            else{
+                EnqueueForSend(Packets.MatchIsFullPacket(), _remote);
+            }
+        }
     }
     private void AssignRC(){
         _remote = LoggedInClient();
@@ -187,7 +200,13 @@ public class PregamePacketProcessor extends UDPProcessor
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);
         MatchManager.Subscribe(_accountID, subscribe, characterID, remote);
         byte priorMatchID = _decrypted[9];
-        SendMatchScore(priorMatchID, remote);
+        if(_decrypted[10] == 1){ // qm
+            HandleQMJoin();
+        }
+        else{
+            SendMatchScore(priorMatchID, remote);
+        }
+
     }
 
     public String[] LogInDetails(){

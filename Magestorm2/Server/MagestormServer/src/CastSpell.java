@@ -1,3 +1,4 @@
+import javax.sound.sampled.Control;
 import java.util.ArrayList;
 
 public class CastSpell {
@@ -15,7 +16,7 @@ public class CastSpell {
         _castID = castID;
         _spellID = (byte)baseReference.GetSpellID();
         _baseReference = baseReference;
-        _spellLevel = _casterReference.GetSkillLevel(_baseReference.GetDiscipline());
+        _spellLevel = _casterReference.GetSkillLevel(_baseReference.GetDisciplineCode());
         _expiration = System.currentTimeMillis() + 60000;
     }
     public boolean IsExpired(long currentTimeInMillis){
@@ -43,22 +44,23 @@ public class CastSpell {
     public void ProcessSpell(MatchCharacter affectedPlayer){
         ProcessEffect(affectedPlayer);
     }
-    private void DetermineEffectChance(){
 
-    }
-    protected void ProcessEffect(MatchCharacter target){
+    protected void ProcessEffect(MatchCharacter spellTarget){
         byte effectCode = _baseReference.GetEffectCode();
         Main.LogMessage("Effect code for base reference " + _baseReference.GetSpellID() + ": " + _baseReference.GetEffectCode());
-        boolean successfullyApplied;
-        float chance, random;
+        boolean successfullyApplied = false;
+        MatchCharacter effectTarget;
         if(effectCode > 0 ){
-            if(target.GetIDinMatch() == _casterReference.GetIDinMatch()){
-                //self-applied effect
+            Effect baseEffect = EffectManager.GetEffect(effectCode);
+            if(spellTarget.GetIDinMatch() == _casterReference.GetIDinMatch() || baseEffect.GetEffectTarget() == ControlCodes.EffectTarget_Caster){
+                //self-applied effect. Target is the caster.
                 successfullyApplied = true;
+                effectTarget = _casterReference;
             }
             else{
-                if(!target.IsEffectPrevented(effectCode)){
-                    successfullyApplied = SharedFunctions.EffectApplied(0.1f, 0.9f, _baseReference.GetEffectStatCode(), target, _casterReference);
+                if(!spellTarget.IsEffectPrevented(effectCode)){
+                    successfullyApplied = SharedFunctions.EffectApplied(0.1f, 0.9f, _baseReference.GetDiscipline().GetStatCode(), spellTarget, _casterReference);
+                    effectTarget = spellTarget;
                 }
                 else{
                     return;
@@ -66,17 +68,27 @@ public class CastSpell {
             }
             if(successfullyApplied){
                 Main.LogMessage("Effect triggered.");
-                target.TerminateEffects(_baseReference.GetEffectsCancelled(), _spellID);
-                target.AddEffect(CreateEffect(target, effectCode));
-                _matchReference.SendToAll(Packets.ApplyEffectPacket(target.GetIDinMatch(), _casterReference.GetIDinMatch(),
-                        effectCode, _baseReference.GetDuration(), _spellLevel));
+                effectTarget.TerminateEffects(baseEffect.GetEffectsCancelled());
+                effectTarget.AddEffect(CreateEffect(effectTarget, baseEffect));
+                byte notificationCode = baseEffect.GetEffectNotificationCode();
+                switch(notificationCode){
+                    case ControlCodes.EffectNotification_All:
+                        _matchReference.SendToAll(Packets.ApplyEffectPacket(effectTarget.GetIDinMatch(), _casterReference.GetIDinMatch(),
+                                effectCode, baseEffect.GetDuration(), _spellLevel));
+                        break;
+                    case ControlCodes.EffectTarget_Caster:
+                        _matchReference.SendToPlayer(Packets.ApplyEffectPacket(effectTarget.GetIDinMatch(), spellTarget.GetIDinMatch(),
+                                effectCode, baseEffect.GetDuration(), _spellLevel), effectTarget);
+                        break;
+                }
             }
             else{
                 Main.LogMessage("Effect not triggered.");
             }
         }
     }
-    protected AppliedEffect CreateEffect(MatchCharacter target, byte effectCode){
-        return new AppliedEffect(_casterReference, target, _baseReference, _spellLevel, effectCode, _baseReference.GetDuration());
+    protected AppliedEffect CreateEffect(MatchCharacter target, Effect baseEffect){
+        return new AppliedEffect(_casterReference, target, baseEffect, _spellLevel);
     }
+
 }

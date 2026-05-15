@@ -55,7 +55,7 @@ public class TeamPlayerList : MonoBehaviour
             if (i < PlayerEntries.Length)
             {
                 entry = PlayerEntries[i];
-                entry.SetText(teamPlayer.Name + " " + teamPlayer.Level + " " + SharedFunctions.ClassAbbreviation(teamPlayer.PlayerClass));
+                entry.SetText(teamPlayer.Name + " " + teamPlayer.Level + " " + CharacterClassManager.GetCharacterClassData(teamPlayer.PlayerClass).Abbreviation);
                 entry.gameObject.SetActive(true);
             }
             i = i + 1;
