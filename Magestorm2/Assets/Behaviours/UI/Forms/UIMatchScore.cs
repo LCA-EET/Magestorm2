@@ -49,9 +49,9 @@ public class UIMatchScore : ValidatableForm
             MatchParams.MatchID = 0;
         }
     }
-    private byte DetermineScore(byte kills, byte deaths, byte raises)
+    private short DetermineScore(byte kills, byte deaths, byte raises)
     {
-        return (byte)((kills - deaths) + Mathf.Floor(0.5f * raises));
+        return (short)((kills - deaths) + Mathf.Floor(0.5f * raises));
     }
     void Start()
     {

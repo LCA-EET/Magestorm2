@@ -1,8 +1,4 @@
-import java.rmi.Remote;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public class OutgoingPacket {
     private byte[] _data;
