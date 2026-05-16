@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _priorStep, _priorPosition;
 
     private bool _isSlowed, _isFrozen, _isHasted, _isEntangled;
-
+    private bool _inFlight = false;
     private bool _positionChanged = false;
     private bool _midJump = false;
     private bool _onGround = false;
@@ -200,6 +200,46 @@ public class PlayerMovement : MonoBehaviour
         UpdateGroundedStatus();
         return moving;
     }
+    private void FlightMovement()
+    {
+        float forwardAcceleration = _forwardAcceleration;
+        float lateralAcceleration = _lateralAcceleration;
+        float maxForwardSpeed = _maxForwardSpeed;
+        float maxLateralSpeed = _maxLateralSpeed;
+        bool fastmove = false;
+        if (InputControls.Run && _pc.CurrentStamina > 0)
+        {
+            forwardAcceleration *= 2;
+            maxForwardSpeed *= 2;
+            fastmove = true;
+        }
+        if (InputControls.Jump)
+        {
+            _verticalSpeed = 1.0f;
+            Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+        }
+        else if (InputControls.Crouch)
+        {
+            _verticalSpeed = -1.0f;
+            Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
+        }
+        bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
+        if (moving)
+        {
+            if (fastmove)
+            {
+                _pc.UseStamina(Time.deltaTime * 12.5f);
+            }
+            else
+            {
+                _pc.RegenStamina(Time.deltaTime * 0.1f, false);
+            }
+        }
+        else if (!moving)
+        {
+            _pc.RegenStamina(Time.deltaTime * 0.5f, false);
+        }
+    }
     private void DeadMovement()
     {
         float forwardAcceleration = _forwardAcceleration * 0.5f;
@@ -209,7 +249,10 @@ public class PlayerMovement : MonoBehaviour
         MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, 1f);
         MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, Camera.main.transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, 1f);
     }
-
+    public void MarkInFlight(bool inFlight)
+    {
+        _inFlight = inFlight;
+    }
     private bool MoveAlongAxes(ref float lateralSpeed, ref float forwardSpeed, float maxLateralSpeed, float maxForwardSpeed, float lateralAcceleration, float forwardAcceleration)
     {
         float xAxisInput = MoveAlongAxis(ref lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
@@ -230,22 +273,30 @@ public class PlayerMovement : MonoBehaviour
         Game.PlayerPMDByte.SetRunning(false);
         if (_pc.IsAlive)
         {
-            if (InputControls.Crouch && !_csChanging)
+            if (_inFlight)
             {
-                _csChanging = true;
-            }
-            if (_csChanging)
-            {
-                CrouchStandLerp(_cameraLocalPosition, _cameraCrouchedPosition);
-            }
-            if (_csChanging || Game.PlayerPMDByte.IsCrouched)
-            {
-                CrouchedMovement();
+                FlightMovement();
             }
             else
             {
-                UprightMovement();
+                if (InputControls.Crouch && !_csChanging)
+                {
+                    _csChanging = true;
+                }
+                if (_csChanging)
+                {
+                    CrouchStandLerp(_cameraLocalPosition, _cameraCrouchedPosition);
+                }
+                if (_csChanging || Game.PlayerPMDByte.IsCrouched)
+                {
+                    CrouchedMovement();
+                }
+                else
+                {
+                    UprightMovement();
+                }
             }
+            
         }
         else
         {
