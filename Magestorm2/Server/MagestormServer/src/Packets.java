@@ -290,15 +290,15 @@ public class Packets {
         System.arraycopy(ByteUtils.ShortToByteArray(wallID), 0, toEncrypt, 2, 2);
         return Cryptographer.Encrypt(toEncrypt);
     }
-    public static byte[] WallsExpirationPacket(ArrayList<Short> wallIDs){
-        byte numWalls = (byte)wallIDs.size();
-        byte[] toEncrypt = new byte[1 + 1 + (numWalls * 2)];
-        toEncrypt[0] = InGame_Send.WallExpired;
-        toEncrypt[1] = numWalls;
+    public static byte[] TimedObjectExpirationPacket(byte opCode, ArrayList<Short> objectIDs){
+        byte numExpired = (byte)objectIDs.size();
+        byte[] toEncrypt = new byte[1 + 1 + (numExpired * 2)];
+        toEncrypt[0] = opCode;
+        toEncrypt[1] = numExpired;
         int index = 2;
-        for(Short wallID : wallIDs){
-            byte[] wallIDBytes = ByteUtils.ShortToByteArray(wallID);
-            System.arraycopy(wallIDBytes, 0, toEncrypt, index, 2);
+        for(Short objectID : objectIDs){
+            byte[] objectIDBytes = ByteUtils.ShortToByteArray(objectID);
+            System.arraycopy(objectIDBytes, 0, toEncrypt, index, 2);
             index += 2;
         }
         return Cryptographer.Encrypt(toEncrypt);
@@ -419,6 +419,7 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
+    /*
     public static byte[] TimedObjectExpirationPacket(ArrayList<Byte> expired){
         byte[] toEncrypt = new byte[1 + expired.size()];
         toEncrypt[0] = InGame_Send.TimedObjectExpired;
@@ -426,6 +427,7 @@ public class Packets {
         System.arraycopy(expiredArray, 0, toEncrypt, 1, expiredArray.length );
         return Cryptographer.Encrypt(toEncrypt);
     }
+*/
 
     public static byte[] ExperienceUpdatePacket(float experience){
         byte[] toEncrypt = new byte[5];

@@ -181,7 +181,11 @@ public static class Match
             if (_matchPlayers.ContainsKey(playerID))
             {
                 Avatar toUpdate = _matchPlayers[playerID];
-                toUpdate.PMD.SetPMD(pmd);
+                if(toUpdate.PMD.Posture != pmd)
+                {
+                    toUpdate.PMD.SetPMD(pmd);
+                    toUpdate.UpdateModelRotation();
+                }
                 int packetID = BitConverter.ToInt32(decrypted, 2);
                 if(packetID > toUpdate.LastPRPacketID)
                 {

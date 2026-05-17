@@ -203,4 +203,17 @@ public static class InGame_Packets
         Array.Copy(slots, 0, unencrypted, 2, slots.Length);
         return unencrypted;
     }
+
+    public static byte[] PlacedSigilPacket(byte spellID, Vector3 position)
+    {
+        byte[] unencrypted = new byte[1 + 1 + 1 + 1 + 1 +  12];
+        unencrypted[0] = InGame_Send.Cast;
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = ControlCodes.SpellTypes_Sigil;
+        unencrypted[3] = spellID;
+        unencrypted[4] = MatchParams.MatchTeamID;
+        byte[] positionBytes = ByteUtils.Vector3ToBytes(position);
+        Array.Copy(positionBytes, 0, unencrypted, 5, 12);
+        return unencrypted;
+    }
 }

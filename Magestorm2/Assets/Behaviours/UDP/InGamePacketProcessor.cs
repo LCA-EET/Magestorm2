@@ -312,6 +312,7 @@ public class InGamePacketProcessor : UDPProcessor
             if (Match.GetAvatar(avatarID, ref avatar))
             {
                 avatar.PMD.SetPMD(_decrypted[2]);
+                
             }
         }
     }

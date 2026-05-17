@@ -1,14 +1,13 @@
 import javax.sound.sampled.Control;
 import java.util.ArrayList;
 
-public class CastSpell {
+public class CastSpell implements ITimedObject{
     protected final short _castID;
     protected Spell _baseReference;
     protected MatchCharacter _casterReference;
     protected Match _matchReference;
-    protected long _expiration;
     protected byte _castingTeam, _spellID, _spellLevel;
-
+    protected final Duration _duration;
     public CastSpell(MatchCharacter caster, short castID, Spell baseReference, Match matchReference){
         _casterReference = caster;
         _matchReference = matchReference;
@@ -17,10 +16,11 @@ public class CastSpell {
         _spellID = (byte)baseReference.GetSpellID();
         _baseReference = baseReference;
         _spellLevel = _casterReference.GetSkillLevel(_baseReference.GetDisciplineCode());
-        _expiration = System.currentTimeMillis() + 60000;
-    }
-    public boolean IsExpired(long currentTimeInMillis){
-        return currentTimeInMillis >= _expiration;
+        int duration = _baseReference.GetDuration();
+        if(duration == 0){
+            duration = 60000;
+        }
+        _duration = new Duration(duration);
     }
     public Spell GetBaseSpell(){
         return _baseReference;
@@ -91,4 +91,15 @@ public class CastSpell {
         return new AppliedEffect(_casterReference, target, baseEffect, _spellLevel);
     }
 
+    public boolean ReduceDuration(long msReduction) {
+        return _duration.ReduceDuration(msReduction);
+    }
+
+    public boolean IsExpired() {
+        return _duration.DurationExpired();
+    }
+
+    public short TimedObjectID() {
+        return _castID;
+    }
 }

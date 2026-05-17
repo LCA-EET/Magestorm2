@@ -20,9 +20,8 @@ public class Match {
     protected final ConcurrentHashMap<Integer, MatchCharacter> _unverifiedCharacters;
     protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     protected ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
-    protected final ConcurrentHashMap<Short, CastSpell> _castSpells;
     protected final ConcurrentHashMap<Integer, Score> _playerScores;
-    protected final ConcurrentHashMap<Short, Wall> _walls;
+    protected final TimedObjectCollection _walls, _sigils, _castSpells;
     protected final HashSet<Integer> _playersJoined;
     protected byte _nextPlayerID;
     protected final int _matchPort;
@@ -44,8 +43,9 @@ public class Match {
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
         _sceneID = sceneID;
-        _castSpells = new ConcurrentHashMap<>();
-        _walls = new ConcurrentHashMap<>();
+        _castSpells = new TimedObjectCollection(30000);
+        _walls = new TimedObjectCollection(1000);
+        _sigils = new TimedObjectCollection(1000);
         _matchCharacters = new ConcurrentHashMap<>();
         _unverifiedCharacters = new ConcurrentHashMap<>();
         _playerScores = new ConcurrentHashMap<>();
@@ -413,17 +413,25 @@ public class Match {
     public short SpellCast(MatchCharacter caster, Spell spellReference, byte[] decrypted){
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
+            case ControlCodes.SpellTypes_Sigil:
+                if(spellReference.IsDamaging()){
+                    _castSpells.AddTimedObject(castID, new DamagingSpell(caster, castID, spellReference, this));
+                }
+                else{
+                    //_castSpells.put(castID, new Sigil(caster, castID, spellReference, this));
+                }
+                break;
             case ControlCodes.SpellTypes_Projectile:
             case ControlCodes.SpellTypes_PBAoE:
                 if(spellReference.IsDamaging()){
-                    _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
+                    _castSpells.AddTimedObject(castID, new DamagingSpell(caster, castID, spellReference, this));
                 }
                 else if(spellReference.IsHealing()){
                     if(_matchOptions.IsOptionSet(ControlCodes.MatchOptions_NoHealOther)){
                         castID = -1;
                     }
                     else{
-                        _castSpells.put(castID, new HealingSpell(caster, castID, spellReference, this));
+                        _castSpells.AddTimedObject(castID, new HealingSpell(caster, castID, spellReference, this));
                     }
                 }
                 break;
@@ -436,10 +444,10 @@ public class Match {
                 resistanceSpell.ProcessSpell(caster);
                 break;
             case ControlCodes.SpellTypes_Resistable:
-                _castSpells.put(castID, new ResistableSpell(caster, castID, spellReference, this));
+                _castSpells.AddTimedObject(castID, new ResistableSpell(caster, castID, spellReference, this));
                 break;
             case ControlCodes.SpellTypes_Bolt:
-                _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
+                _castSpells.AddTimedObject(castID, new DamagingSpell(caster, castID, spellReference, this));
                 break;
             case ControlCodes.SpellTypes_Self:
                 CastSpell selfCast = new CastSpell(caster, castID, spellReference, this);
@@ -458,8 +466,8 @@ public class Match {
                         castID = -1;
                     }
                     else{
-                        _castSpells.put(castID, wall);
-                        _walls.put(castID, wall);
+                        //_castSpells.put(castID, wall);
+                        _walls.AddTimedObject(castID, wall);
                     }
                 }
                 else{
@@ -487,10 +495,10 @@ public class Match {
         _processor.EnqueueForSend(encrypted, recipients);
     }
     public void RequestWallData(MatchCharacter requester){
-        if(!_walls.isEmpty()){
+        if(!_walls.IsEmpty()){
             ArrayList<Wall> wallData = new ArrayList<>();
-            for(Wall wall : _walls.values()){
-                wallData.add(wall);
+            for(ITimedObject wall : _walls.GetObjects()){
+                wallData.add((Wall)wall);
                 if(wallData.size() == 19){
                     SendToPlayer(Packets.WallDataPacket(wallData), requester);
                     wallData.clear();
@@ -504,8 +512,7 @@ public class Match {
     public void Tick(long msElapsed){
         CountDownTimedObjects(msElapsed);
         PlayerTick(msElapsed);
-        ClearExpiredSpells(msElapsed);
-        CountdownWalls(msElapsed);
+        //ClearExpiredSpells(msElapsed);
         ExpTick(msElapsed);
     }
     private void ExpTick(long msElapsed){
@@ -520,42 +527,9 @@ public class Match {
             }
         }
     }
-    private void CountdownWalls(long msElapsed){
-        if(!_walls.isEmpty()){
-            ArrayList<Short> expiredWalls = new ArrayList<>();
-            for(Wall wall : _walls.values()){
-                if(wall.ReduceDuration(msElapsed)){
-                    expiredWalls.add(wall.CastID());
-                }
-            }
-            for(Short wallID : expiredWalls){
-                _walls.remove(wallID);
-            }
-            if(!expiredWalls.isEmpty()){
-                SendToAll(Packets.WallsExpirationPacket(expiredWalls));
-            }
-        }
-    }
+
     public Wall GetWall(short wallID){
-        return _walls.get(wallID);
-    }
-    private void ClearExpiredSpells(long elapsed){
-        _spellExpirationElapsed += elapsed;
-        if(_spellExpirationElapsed >= 60000){
-            _spellExpirationElapsed = 0;
-            ArrayList<Short> expiredSpells = new ArrayList<>();
-            long currentTimeMillis= System.currentTimeMillis();
-            for(CastSpell spell : _castSpells.values()){
-                if(spell.IsExpired(currentTimeMillis)){
-                    expiredSpells.add(spell.CastID());
-                }
-            }
-            if(!expiredSpells.isEmpty()){
-                for(short spellID : expiredSpells){
-                    _castSpells.remove(spellID);
-                }
-            }
-        }
+        return (Wall)_walls.GetTimedObject(wallID);
     }
     private short IncrementCastID(){
         _nextCastID++;
@@ -585,12 +559,20 @@ public class Match {
             }
         }
     }
-
     private void CountDownTimedObjects(long msElapsed){
         for(ActivatableObject ao : _objectStatus.values()){
-            if(ao.TimeRemaining() > 0){
-                ao.Tick(msElapsed);
+            if(!ao.IsExpired()){
+                ao.ReduceDuration(msElapsed);
             }
+        }
+        ProcessExpirations(InGame_Send.WallExpired, _walls, msElapsed);
+        ProcessExpirations(InGame_Send.SigilExpired, _sigils, msElapsed);
+        _castSpells.CountdownObjects(msElapsed);
+    }
+    private void ProcessExpirations(byte opCode, TimedObjectCollection collection, long msElapsed){
+        if(collection.CountdownObjects(msElapsed)){
+            SendToAll(Packets.TimedObjectExpirationPacket(opCode, collection.GetExpiredObjects()));
+            collection.ClearExpirations();
         }
     }
     public void CheckForInactivity(){
@@ -622,7 +604,7 @@ public class Match {
     }
     public CastSpell GetCastSpell(short id)
     {
-        return _castSpells.get(id);
+        return (CastSpell)_castSpells.GetTimedObject(id);
     }
     public MatchCharacter GetMatchCharacter(byte id){
         return _matchCharacters.get(id);

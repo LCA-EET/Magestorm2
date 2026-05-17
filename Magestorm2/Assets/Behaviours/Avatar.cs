@@ -25,7 +25,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     private float _effectTick = 0.5f;
     private Renderer[] _renderers;
     private Dictionary<byte, AppliedEffect> _appliedEffects;
-    private GameObject _model;
+    private CharacterModel _model;
+    
     private TMP_Text _nameText;
     private List<PeriodicAction> _actionList;
     private PeriodicAction _lookAtCamera, _effectsTick;
@@ -115,7 +116,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     }
     public void CreateDeadBody()
     {
-        ComponentRegister.Spawner.SpawnDeadBody(_model, transform.position, transform.eulerAngles.y, _isMale?AvatarAnimation.MaleDeath: AvatarAnimation.FemaleDeath, this);
+        ComponentRegister.Spawner.SpawnDeadBody(_model.gameObject, transform.position, transform.eulerAngles.y, _isMale?AvatarAnimation.MaleDeath: AvatarAnimation.FemaleDeath, this);
     }
     private void EffectTick()
     {
@@ -248,6 +249,17 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
             ComponentRegister.EffectsList.RefreshEffects(ByteUtils.BitArrayToBytes(effectBits));
         }
     }
+    public void UpdateModelRotation()
+    {
+        if (PMD.IsAirborne)
+        {
+            _model.SetFlyingRotation();
+        }
+        else
+        {
+            _model.SetUprightRotation();
+        }
+    }
     public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
     {
         _name = name;
@@ -259,7 +271,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _nameText.text = name;
         _nameText.color = Teams.GetTeamColor(_team);
         _playerID = id;
-        _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject, ref _isMale);
+        _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject, ref _isMale).GetComponent<CharacterModel>();
         _animator = _model.GetComponentInChildren<Animator>();
         _animator.applyRootMotion = false;
         AvatarAnimation.Init(_animator, appearance[0] == 0);

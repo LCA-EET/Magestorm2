@@ -43,6 +43,7 @@
     public const byte SpellTypes_NonSolidWall = 8;
     public const byte SpellTypes_SolidWall = 9;
     public const byte SpellTypes_Resistable = 10;
+    public const byte SpellTypes_Sigil = 11;
 
     public const byte SpellDiscipline_FireLaw = 0;
     public const byte SpellDiscipline_IceLaw = 1;

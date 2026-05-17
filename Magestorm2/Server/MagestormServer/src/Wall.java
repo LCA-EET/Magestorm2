@@ -1,8 +1,7 @@
-public class Wall extends DamagingSpell{
+public class Wall extends DamagingSpell implements ITimedObject{
     protected final byte[] _wallBytes;
     protected byte _elementCode;
-    protected long _durationRemaining;
-
+    protected Duration _duration;
     public Wall(MatchCharacter caster, short castID, Spell baseReference, Match matchReference, byte[] prBytes){
         super(caster, castID, baseReference, matchReference);
         _wallBytes = new byte[27];
@@ -10,24 +9,21 @@ public class Wall extends DamagingSpell{
         _wallBytes[0] = _spellID;
         System.arraycopy(castIDBytes, 0, _wallBytes, 1, 2);
         System.arraycopy(prBytes, 0, _wallBytes, 3, 24);
-        _durationRemaining = _baseReference.GetDuration() * 1000;
+        _duration = new Duration(_baseReference.GetDuration() * 1000);
         _elementCode = _baseReference.GetElement0();
         caster.IncrementWallCount();
-        Main.LogDebug("Wall " + _castID + " created. Duration: " + _durationRemaining);
+        Main.LogDebug("Wall " + _castID + " created. Duration: " + _duration.DurationRemaining());
     }
     public boolean IsSolidWall(){
         return _baseReference.SpellType() == ControlCodes.SpellTypes_SolidWall;
     }
+    @Override
     public boolean ReduceDuration(long msElapsed){
-        _durationRemaining -= msElapsed;
-        Main.LogDebug("Wall " + _castID + " duration remaining: " + _durationRemaining);
-        if(_durationRemaining <= 0){
+        boolean expired = super.ReduceDuration(msElapsed);
+        if(expired){
             _casterReference.DecrementWallCount();
-            return true;
         }
-        else{
-            return false;
-        }
+        return expired;
     }
     public void TakeDamage(DamagingSpell spell){
         if(_elementCode != spell.GetBaseSpell().GetElement0()){

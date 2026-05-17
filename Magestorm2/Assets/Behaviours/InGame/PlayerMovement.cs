@@ -223,7 +223,10 @@ public class PlayerMovement : MonoBehaviour
             _verticalSpeed = -1.0f;
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
         }
-        bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
+        //bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
+        float x = MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, 1f);
+        float z = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, Camera.main.transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, 1f);
+        bool moving = x != 0 || z != 0;
         if (moving)
         {
             if (fastmove)
@@ -235,7 +238,7 @@ public class PlayerMovement : MonoBehaviour
                 _pc.RegenStamina(Time.deltaTime * 0.1f, false);
             }
         }
-        else if (!moving)
+        else
         {
             _pc.RegenStamina(Time.deltaTime * 0.5f, false);
         }
@@ -252,13 +255,12 @@ public class PlayerMovement : MonoBehaviour
     public void MarkInFlight(bool inFlight)
     {
         _inFlight = inFlight;
+        Game.PlayerPMDByte.SetLocalPosture(inFlight?Postures.Airborne:Postures.Standing);
     }
     private bool MoveAlongAxes(ref float lateralSpeed, ref float forwardSpeed, float maxLateralSpeed, float maxForwardSpeed, float lateralAcceleration, float forwardAcceleration)
     {
         float xAxisInput = MoveAlongAxis(ref lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
         float zDirection = MoveAlongAxis(ref forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, SpeedModifier);
-        //Debug.Log("X-Axis Input: " + xAxisInput + ", Z-Direction: " + zDirection);
-        //Debug.Log("Lateral Speed: " + _lateralSpeed + ", Forward Speed: " + _forwardSpeed);
         bool moving = Mathf.Abs(lateralSpeed) >= 0.2f || Mathf.Abs(forwardSpeed) >= 0.2f;
         Game.PlayerPMDByte.SetMovingAndDirection(moving, zDirection > 0);
         return moving;
