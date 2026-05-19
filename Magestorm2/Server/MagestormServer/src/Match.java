@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Match {
+public class Match extends TimedObject{
     protected final byte _matchID;
     protected final int _creatorID;
     protected final byte _sceneID;
@@ -16,12 +16,14 @@ public class Match {
     protected final MatchOptions _matchOptions;
     protected final byte _lastIndex;
     protected ConcurrentHashMap<Byte, MatchTeam> _matchTeams;
-    protected final ConcurrentHashMap<Byte, MatchCharacter> _matchCharacters;
+    protected final TimedObjectCollection<Byte, MatchCharacter> _matchCharacters;
     protected final ConcurrentHashMap<Integer, MatchCharacter> _unverifiedCharacters;
     protected final ConcurrentHashMap<Byte, RemoteClient> _verifiedClients;
     protected ConcurrentHashMap<Byte, ActivatableObject> _objectStatus;
     protected final ConcurrentHashMap<Integer, Score> _playerScores;
-    protected final TimedObjectCollection _walls, _sigils, _castSpells;
+    protected final TimedObjectCollection<Short, Wall> _walls;
+    protected final TimedObjectCollection<Short, Sigil> _sigils;
+    protected final TimedObjectCollection<Short, CastSpell> _castSpells;
     protected final HashSet<Integer> _playersJoined;
     protected byte _nextPlayerID;
     protected final int _matchPort;
@@ -43,10 +45,10 @@ public class Match {
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
         _sceneID = sceneID;
-        _castSpells = new TimedObjectCollection(30000);
-        _walls = new TimedObjectCollection(1000);
-        _sigils = new TimedObjectCollection(1000);
-        _matchCharacters = new ConcurrentHashMap<>();
+        _castSpells = new TimedObjectCollection<>(30000);
+        _walls = new TimedObjectCollection<>(1000);
+        _sigils = new TimedObjectCollection<>(1000);
+        _matchCharacters = new TimedObjectCollection<>(5000);
         _unverifiedCharacters = new ConcurrentHashMap<>();
         _playerScores = new ConcurrentHashMap<>();
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
@@ -54,8 +56,9 @@ public class Match {
         _nextPlayerID = 1;
         _matchID = matchID;
         _creatorID = creatorID;
-        _expirationTime = System.currentTimeMillis() + (3600000 - (duration * 900000)); // 0 = one hour
-        //_expirationTime = System.currentTimeMillis() + 60000;
+        long matchDuration = 3600000 - (duration * 900000);
+        _expirationTime = System.currentTimeMillis() + matchDuration;
+        SetDurationRemaining(matchDuration);
         LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime + " on port " + _matchPort);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + 1 + nameBytesLength + 1];
@@ -93,10 +96,31 @@ public class Match {
         byte[] objectData = GameServer.GetActivatablesData(_sceneID);
         for(int i = 0; i < objectData.length; i+=2){
             byte objectKey = objectData[i];
-            _objectStatus.put(objectKey, new ActivatableObject(this,objectKey, objectData[i+1]));
+            _objectStatus.put(objectKey, new ActivatableObject(objectKey, objectData[i+1]));
         }
     }
-    
+
+    @Override
+    public boolean ReduceDuration(long msReduction) {
+        boolean expired = super.ReduceDuration(msReduction);
+        if(!expired){
+            Tick(msReduction);
+            if(ScoreUpdated()){
+                MatchManager.UpdateScore(_matchID, _scoreBytes);
+            }
+            if(_matchCharacters.CountdownObjects(msReduction)){
+                ArrayList<MatchCharacter> inactiveCharacters = _matchCharacters.GetExpiredObjects();
+                byte[] dcPacket = Packets.IGInactivityDisconnectPacket();
+                for(MatchCharacter inactive : inactiveCharacters){
+                    SendToClient(dcPacket, inactive.GetRemoteClient());
+                    LeaveMatch(inactive.GetIDinMatch(), false, true);
+                }
+                SendToAll(Packets.PlayersLeftMatchPacket(inactiveCharacters));
+            }
+        }
+        return expired;
+    }
+
     public void IncrementPlayerDeaths(MatchCharacter mc){
         int characterID = mc.GetCharacterID();
         if(!_playerScores.containsKey(characterID)){
@@ -129,7 +153,7 @@ public class Match {
         }
         else{
             if(!_objectStatus.containsKey(objectID)){
-                _objectStatus.put(objectID, new ActivatableObject(this, objectID, 0));
+                _objectStatus.put(objectID, new ActivatableObject(objectID, 0));
                 // by default objects will hold their state indefinitely. This can be overridden by
                 // adding the appropriate entry to the activatables field in the levels table
             }
@@ -214,7 +238,7 @@ public class Match {
     }
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID){
         byte playerID = ObtainNextPlayerID();
-        PlayerCharacter joining = GameServer.GetActiveCharacter(rc.AccountID());
+        PlayerCharacter joining = GameServer.GetActiveCharacter((int)rc.ObjectID());
         int characterID = joining.GetCharacterID();
         boolean newToMatch;
         if(_playersJoined.contains(characterID)){
@@ -226,7 +250,7 @@ public class Match {
         }
         MatchCharacter toAdd = new MatchCharacter(joining, playerID, this,
                 _regenTick, _matchTeams.get(teamID), newToMatch);
-        _unverifiedCharacters.put(rc.AccountID(), toAdd);
+        _unverifiedCharacters.put((int)rc.ObjectID(), toAdd);
         LogMessage("Added player " + playerID + " to team " + teamID + ", scene: " + _sceneID);
         return toAdd;
     }
@@ -264,7 +288,7 @@ public class Match {
         return true;
     }
     public void PlayerTapped(byte playerID){
-        MatchCharacter mc = _matchCharacters.get(playerID);
+        MatchCharacter mc = GetMatchCharacter(playerID);
         LogMessage("DM tap: " + playerID + "." );
         if(!mc.IsAlive()){
             mc.SetToMaxHP();
@@ -278,7 +302,7 @@ public class Match {
             LogMessage("Invalid ley: " + newLey + " for player " + playerID);
         }
         else{
-            MatchCharacter mc = _matchCharacters.get(playerID);
+            MatchCharacter mc = GetMatchCharacter(playerID);
             mc.SetLey(newLey);
             SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.LeyUpdate, newLey), mc);
         }
@@ -371,9 +395,6 @@ public class Match {
             return toReturn;
         }
     }
-    public long GetExpiration(){
-        return _expirationTime;
-    }
     public void MarkExpired(){
         MatchManager.RemoveMatch(_matchID);
         LogMessage("The match has ended. Notifying players...");
@@ -388,7 +409,7 @@ public class Match {
     public boolean IsPlayerVerified(byte playerID){
         MatchCharacter toCheck = _matchCharacters.get(playerID);
         if(toCheck != null){
-            toCheck.MarkPacketReceived();
+            toCheck.ResetDuration();
             return toCheck.IsVerified();
         }
         else{
@@ -415,7 +436,7 @@ public class Match {
         switch(spellReference.SpellType()){
             case ControlCodes.SpellTypes_Sigil:
                 if(spellReference.IsDamaging()){
-                    _castSpells.AddTimedObject(castID, new DamagingSpell(caster, castID, spellReference, this));
+                    _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 }
                 else{
                     //_castSpells.put(castID, new Sigil(caster, castID, spellReference, this));
@@ -424,14 +445,14 @@ public class Match {
             case ControlCodes.SpellTypes_Projectile:
             case ControlCodes.SpellTypes_PBAoE:
                 if(spellReference.IsDamaging()){
-                    _castSpells.AddTimedObject(castID, new DamagingSpell(caster, castID, spellReference, this));
+                    _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 }
                 else if(spellReference.IsHealing()){
                     if(_matchOptions.IsOptionSet(ControlCodes.MatchOptions_NoHealOther)){
                         castID = -1;
                     }
                     else{
-                        _castSpells.AddTimedObject(castID, new HealingSpell(caster, castID, spellReference, this));
+                        _castSpells.put(castID, new HealingSpell(caster, castID, spellReference, this));
                     }
                 }
                 break;
@@ -444,10 +465,10 @@ public class Match {
                 resistanceSpell.ProcessSpell(caster);
                 break;
             case ControlCodes.SpellTypes_Resistable:
-                _castSpells.AddTimedObject(castID, new ResistableSpell(caster, castID, spellReference, this));
+                _castSpells.put(castID, new ResistableSpell(caster, castID, spellReference, this));
                 break;
             case ControlCodes.SpellTypes_Bolt:
-                _castSpells.AddTimedObject(castID, new DamagingSpell(caster, castID, spellReference, this));
+                _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 break;
             case ControlCodes.SpellTypes_Self:
                 CastSpell selfCast = new CastSpell(caster, castID, spellReference, this);
@@ -467,7 +488,7 @@ public class Match {
                     }
                     else{
                         //_castSpells.put(castID, wall);
-                        _walls.AddTimedObject(castID, wall);
+                        _walls.put(castID, wall);
                     }
                 }
                 else{
@@ -495,10 +516,10 @@ public class Match {
         _processor.EnqueueForSend(encrypted, recipients);
     }
     public void RequestWallData(MatchCharacter requester){
-        if(!_walls.IsEmpty()){
+        if(!_walls.isEmpty()){
             ArrayList<Wall> wallData = new ArrayList<>();
-            for(ITimedObject wall : _walls.GetObjects()){
-                wallData.add((Wall)wall);
+            for(Wall wall : _walls.values()){
+                wallData.add(wall);
                 if(wallData.size() == 19){
                     SendToPlayer(Packets.WallDataPacket(wallData), requester);
                     wallData.clear();
@@ -529,7 +550,7 @@ public class Match {
     }
 
     public Wall GetWall(short wallID){
-        return (Wall)_walls.GetTimedObject(wallID);
+        return _walls.get(wallID);
     }
     private short IncrementCastID(){
         _nextCastID++;
@@ -561,50 +582,29 @@ public class Match {
     }
     private void CountDownTimedObjects(long msElapsed){
         for(ActivatableObject ao : _objectStatus.values()){
-            if(!ao.IsExpired()){
-                ao.ReduceDuration(msElapsed);
+            if(!ao.DurationExpired()){
+                if(ao.ReduceDuration(msElapsed)){
+                    byte status = ao.GetStatus();
+                    if(status > 0){
+                        ao.ChangeState((byte)0);
+                        SendToAll(Packets.ObjectStateChangePacket((byte)ao.ObjectID(), status));
+                    }
+                }
             }
         }
-        ProcessExpirations(InGame_Send.WallExpired, _walls, msElapsed);
-        ProcessExpirations(InGame_Send.SigilExpired, _sigils, msElapsed);
+        ProcessExpirations(msElapsed, InGame_Send.WallExpired, _walls);
+        ProcessExpirations(msElapsed, InGame_Send.SigilExpired, _sigils);
         _castSpells.CountdownObjects(msElapsed);
-    }
-    private void ProcessExpirations(byte opCode, TimedObjectCollection collection, long msElapsed){
-        if(collection.CountdownObjects(msElapsed)){
-            SendToAll(Packets.TimedObjectExpirationPacket(opCode, collection.GetExpiredObjects()));
-            collection.ClearExpirations();
-        }
-    }
-    public void CheckForInactivity(){
-        ArrayList<RemoteClient> _inactiveClients = new ArrayList<>();
-        ArrayList<MatchCharacter> _departedCharacters = new ArrayList<>();
-        ArrayList<RemoteClient> _warningClients = new ArrayList<>();
-        for(MatchCharacter mc: _matchCharacters.values()){
-            if(mc.InactivityExceededMaximumThreshold()){
-                LogMessage("Sending inactivity termination.");
-                _inactiveClients.add(mc.GetRemoteClient());
-                _departedCharacters.add(mc);
-            }
-            else if (mc.InactivityExceededWarningThreshold()){
-                LogMessage("Sending inactivity warning.");
-                _warningClients.add(mc.GetRemoteClient());
-            }
-        }
-        if(!_warningClients.isEmpty()){
-            SendToCollection(Packets.InactivityWarningPacket(), _warningClients);
-        }
-        if(!_inactiveClients.isEmpty()){
-            SendToCollection(Packets.IGInactivityDisconnectPacket(), _inactiveClients);
-            for(MatchCharacter mc : _departedCharacters){
-                LeaveMatch(mc.GetIDinMatch(), false, true);
-            }
-            SendToAll(Packets.PlayersLeftMatchPacket(_departedCharacters));
-        }
 
     }
-    public CastSpell GetCastSpell(short id)
+    private void ProcessExpirations(long msElapsed, byte opCode, TimedObjectCollection<Short, ? extends TimedObject> collection){
+        if(collection.CountdownObjects(msElapsed)){
+            SendToAll(Packets.TimedObjectExpirationPacket(opCode, collection.GetExpiredIDs()));
+        }
+    }
+        public CastSpell GetCastSpell(short id)
     {
-        return (CastSpell)_castSpells.GetTimedObject(id);
+        return _castSpells.get(id);
     }
     public MatchCharacter GetMatchCharacter(byte id){
         return _matchCharacters.get(id);

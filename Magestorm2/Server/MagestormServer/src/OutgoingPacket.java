@@ -1,8 +1,8 @@
 import java.util.Collections;
 
 public class OutgoingPacket {
-    private byte[] _data;
-    private Iterable _recipients;
+    private final byte[] _data;
+    private final Iterable<RemoteClient> _recipients;
     
     public OutgoingPacket(byte[] bytes, RemoteClient rc){
         _data = bytes;

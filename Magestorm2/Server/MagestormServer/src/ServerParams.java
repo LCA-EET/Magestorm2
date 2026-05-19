@@ -9,8 +9,8 @@ public class ServerParams {
     public static String DebugFilePath;
     public static String ChatFilePath;
     public static String EmailCredsPath;
-    public static long InactivityWarning = 60000;
-    public static long InactivityDisconnect = 120000;
+    public static long IngameInactivityWarning = 60000;
+    public static long IngameInactivityDisconnect = 120000;
     public static long PregameInactivity = 60000;
     public static byte TickInterval = 10;
     public static byte MaxMatches = 20;
@@ -38,8 +38,8 @@ public class ServerParams {
             LogFilePath = paramScanner.nextLine();
             DebugFilePath = paramScanner.nextLine();
             ChatFilePath = paramScanner.nextLine();
-            InactivityWarning = Long.parseLong(paramScanner.nextLine());
-            InactivityDisconnect = Long.parseLong(paramScanner.nextLine());
+            IngameInactivityWarning = Long.parseLong(paramScanner.nextLine());
+            IngameInactivityDisconnect = Long.parseLong(paramScanner.nextLine());
             PregameInactivity = Long.parseLong(paramScanner.nextLine());
             SymmetricEncryption = Boolean.parseBoolean(paramScanner.nextLine());
             TickInterval = Byte.parseByte(paramScanner.nextLine());

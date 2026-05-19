@@ -197,7 +197,8 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
 
     private void InactivityCheckResponse(){
-        _owningMatch.GetMatchCharacter(_decrypted[1]).MarkPacketReceived();
+        _owningMatch.GetMatchCharacter(_decrypted[1]).ResetDuration();
+        Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
     }
     private void HandleQuitGame(){
         _owningMatch.LeaveMatch(_decrypted[1], true, true);
@@ -289,7 +290,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     private int CheckAccountAndCharacter(){
         RemoteClient remote = LoggedInClient();
         if(remote != null){
-            int accountID = remote.AccountID();
+            int accountID = (int)remote.ObjectID();
             if(ByteUtils.ExtractInt(_decrypted, 5) == GameServer.GetActiveCharacter(accountID).GetCharacterID()){
                 Main.LogMessage("Account check passed: " + accountID + ", match " + _owningMatch.MatchID());
                 return accountID;
@@ -298,6 +299,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         return -1;
     }
     protected boolean IsVerified(){
+        Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
         return _owningMatch.IsPlayerVerified(_decrypted[1]);
     }
     private boolean IsVerified(byte playerID){

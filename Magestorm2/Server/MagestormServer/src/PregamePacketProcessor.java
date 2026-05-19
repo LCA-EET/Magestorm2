@@ -54,7 +54,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 break;
             case Pregame_Receive.RequestLevelsList:
                 AssignRC();
-                Main.LogMessage("Level Request Received from " + _remote.AccountID());
+                Main.LogMessage("Level Request Received from " + _remote.ObjectID());
                 EnqueueForSend(Packets.LevelListPacket(), _remote);
                 break;
             case Pregame_Receive.RequestMatchDetails:
@@ -122,7 +122,7 @@ public class PregamePacketProcessor extends UDPProcessor
             if(_remote.PortSwitchPending()){
                 _remote.UpdateRemotePort(_received.getPort());
             }
-            _accountID = _remote.AccountID();
+            _accountID =(int)_remote.ObjectID();
         }
     }
     private void HandleSkillUpdate(){

@@ -1,55 +1,46 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TimedObjectCollection {
-    private final ConcurrentHashMap<Short, ITimedObject> _collection;
+public class TimedObjectCollection<K extends Number, V extends TimedObject> extends ConcurrentHashMap<K, V>{
     private final long _interval;
-    private long _elapsed;
-    private final ArrayList<Short> _expiredObjects;
+    private float _elapsed;
+    private final ArrayList<V> _expiredObjects;
+    private final ArrayList<? super Number> _expiredIDs;
     public TimedObjectCollection(long interval){
-        _collection = new ConcurrentHashMap<>();
+        super();
         _interval = interval;
         _elapsed = 0;
+        _expiredIDs = new ArrayList<>();
         _expiredObjects = new ArrayList<>();
     }
-
-    public void AddTimedObject(short id, ITimedObject timedObject)
-    {
-        _collection.put(id, timedObject);
-    }
-
-    public ITimedObject GetTimedObject(short id){
-        return _collection.get(id);
-    }
-
-    public Collection<ITimedObject> GetObjects(){
-        return _collection.values();
-    }
-    public boolean IsEmpty(){
-        return _collection.isEmpty();
-    }
-    public void ClearExpirations(){
+    private void ClearExpirations(){
         _expiredObjects.clear();
+        _expiredIDs.clear();
     }
-    public ArrayList<Short> GetExpiredObjects(){
+    public ArrayList<V> GetExpiredObjects(){
         return _expiredObjects;
     }
     public boolean CountdownObjects(long msElapsed){
         _elapsed += msElapsed;
         if(_elapsed >= _interval){
-            _elapsed -= _interval;
-            if(!_collection.isEmpty()){
-                for(ITimedObject to : _collection.values()){
-                    if(to.ReduceDuration(msElapsed)){
-                        _expiredObjects.add(to.TimedObjectID());
+            ClearExpirations();
+            int intervalsElapsed = (int)Math.floor(_elapsed / _interval);
+            _elapsed -= intervalsElapsed * _interval;
+            if(!isEmpty()){
+                for(V to : values()){
+                    if(to.ReduceDuration(intervalsElapsed * _interval)){
+                        _expiredObjects.add(to);
+                        _expiredIDs.add(to.ObjectID());
                     }
                 }
-                for(Short toID : _expiredObjects){
-                    _collection.remove(toID);
+                for(TimedObject to: _expiredObjects){
+                    remove(to.ObjectID());
                 }
             }
         }
         return !_expiredObjects.isEmpty();
+    }
+    public ArrayList<? super Number> GetExpiredIDs(){
+        return _expiredIDs;
     }
 }

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchManager{
-    private static ConcurrentHashMap<Byte, Match> _activeMatches;
+    private static TimedObjectCollection<Byte, Match> _activeMatches;
     private static byte _nextMatchID = 1;
     private static byte _maxMatches;
     private static byte _qmID;
@@ -13,7 +13,7 @@ public class MatchManager{
         UpdatesNeeded = false;
         _scores = new ConcurrentHashMap<>();
         _maxMatches = maxMatches;
-        _activeMatches = new ConcurrentHashMap<>();
+        _activeMatches = new TimedObjectCollection<>(1000);
         new MatchMonitor();
     }
     public static byte GetQMID(){
@@ -47,8 +47,9 @@ public class MatchManager{
         if(rc != null){
             if(subscribe){
                 if(rc.PortSwitchPending()){
-                    Main.LogMessage("RemoteClient port switch from " + rc.GetRemotePort() + " to " + remote.GetRemotePort() + ", for account: " + remote.AccountID());
-                    remote.SetNameAndID(rc.GetUserName(), rc.AccountID());
+                    Main.LogMessage("RemoteClient port switch from " + rc.GetRemotePort() + " to " +
+                            remote.GetRemotePort() + ", for account: " + remote.ObjectID());
+                    remote.SetNameAndID(rc.GetUserName(), (int)rc.ObjectID());
                     rc = remote;
                     GameServer.ClientLoggedIn(remote);
                 }
@@ -66,7 +67,7 @@ public class MatchManager{
         }
     }
     public static void NotifySubscribers(){
-        Iterable<RemoteClient> connectedClients = GameServer.ConnectedClients();
+        Iterable<RemoteClient> connectedClients = GameServer.LoggedInClients.values();
         ArrayList<RemoteClient> subscribedClients = new ArrayList<>();
         for (RemoteClient rc : connectedClients) {
             if (rc.IsSubscribedToMatches()) {
@@ -167,11 +168,7 @@ public class MatchManager{
         UpdatesNeeded = true;
     }
 
-    public static ArrayList<Match> GetMatches(){
-        ArrayList<Match> toReturn = new ArrayList<>();
-        for(Match match : _activeMatches.values()){
-            toReturn.add(match);
-        }
-        return toReturn;
+    public static TimedObjectCollection<Byte, Match> GetMatches(){
+        return _activeMatches;
     }
 }

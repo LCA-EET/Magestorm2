@@ -1,32 +1,21 @@
-import javax.sound.sampled.Control;
-import java.util.ArrayList;
-
-public class CastSpell implements ITimedObject{
-    protected final short _castID;
+public class CastSpell extends TimedObject{
     protected Spell _baseReference;
     protected MatchCharacter _casterReference;
     protected Match _matchReference;
     protected byte _castingTeam, _spellID, _spellLevel;
-    protected final Duration _duration;
     public CastSpell(MatchCharacter caster, short castID, Spell baseReference, Match matchReference){
         _casterReference = caster;
         _matchReference = matchReference;
         _castingTeam = caster.GetTeamID();
-        _castID = castID;
+        _objectID = castID;
         _spellID = (byte)baseReference.GetSpellID();
         _baseReference = baseReference;
         _spellLevel = _casterReference.GetSkillLevel(_baseReference.GetDisciplineCode());
-        int duration = _baseReference.GetDuration();
-        if(duration == 0){
-            duration = 60000;
-        }
-        _duration = new Duration(duration);
+        byte spellDuration = _baseReference.GetDuration();
+        SetDurationRemaining(spellDuration == 0 ? 60000 : spellDuration * 1000);
     }
     public Spell GetBaseSpell(){
         return _baseReference;
-    }
-    public short CastID(){
-        return _castID;
     }
     public byte GetCasterID(){
         return _casterReference.GetIDinMatch();
@@ -89,17 +78,5 @@ public class CastSpell implements ITimedObject{
     }
     protected AppliedEffect CreateEffect(MatchCharacter target, Effect baseEffect){
         return new AppliedEffect(_casterReference, target, baseEffect, _spellLevel);
-    }
-
-    public boolean ReduceDuration(long msReduction) {
-        return _duration.ReduceDuration(msReduction);
-    }
-
-    public boolean IsExpired() {
-        return _duration.DurationExpired();
-    }
-
-    public short TimedObjectID() {
-        return _castID;
     }
 }

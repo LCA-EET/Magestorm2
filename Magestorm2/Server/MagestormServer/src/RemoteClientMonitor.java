@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class RemoteClientMonitor extends RegisteredThread{
 
     public RemoteClientMonitor(){
@@ -5,18 +8,18 @@ public class RemoteClientMonitor extends RegisteredThread{
     }
     public void run(){
         Register("RemoteClientMonitor");
+        int tick = 30000;
         while(!_terminated){
             try {
-                Iterable<RemoteClient> clients = GameServer.ConnectedClients();
-                for(RemoteClient client : clients){
-                    if(client.TimeOut()){
-                        int accountID = client.AccountID();
-                        GameServer.ClientLoggedOut(accountID);
-                        Main.LogMessage("Client " + accountID + " disconnected for inactivity.");
-                        GameServer.EnqueueForSend(Packets.PGInactivityDisconnectPacket(), client);
+                Thread.sleep(tick);
+                if(GameServer.LoggedInClients.CountdownObjects(tick)){
+                    List<RemoteClient> expiredClients = GameServer.LoggedInClients.GetExpiredObjects();
+                    for(RemoteClient expiredClient : expiredClients){
+                        Main.LogMessage("Client " + expiredClient.ObjectID() + " disconnected for inactivity.");
+                        //GameServer.ClientLoggedOut(expiredClient.AccountID());
+                        GameServer.EnqueueForSend(Packets.PGInactivityDisconnectPacket(), expiredClient);
                     }
                 }
-                Thread.sleep(30000);
             } catch (Exception e) {
                 Main.LogError(e.getMessage());
                 Main.LogStackTrace(e);

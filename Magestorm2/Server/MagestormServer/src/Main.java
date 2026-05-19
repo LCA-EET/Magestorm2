@@ -19,7 +19,7 @@ public class Main {
         Mailer = new Emailer(ServerParams.EmailCredsPath);
         new RegisteredThread(_serverLog).start();
         Main.LogMessage("Pregame Inactivity Timeout: " + ServerParams.PregameInactivity);
-        Main.LogMessage("Ingame Inactivity Timeout: " + ServerParams.InactivityDisconnect);
+        Main.LogMessage("Ingame Inactivity Timeout: " + ServerParams.IngameInactivityDisconnect);
 
         Cryptographer.GenerateKeyAndIV();
         if(Database.TestDBConnection()){
@@ -56,7 +56,7 @@ public class Main {
     }
 
     private static void ProcessListRCCommand(){
-        Iterable<RemoteClient> remoteClientList = GameServer.ConnectedClients();
+        Iterable<RemoteClient> remoteClientList = GameServer.LoggedInClients.values();
         int count = 0;
         for(RemoteClient rc : remoteClientList){
             System.out.println(rc.ToString());

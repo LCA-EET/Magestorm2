@@ -41,7 +41,7 @@ public class DamagingSpell extends CastSpell{
             appliedDamage *= (1.0f - resistance );
             Main.LogDebug("DamagingSpell.ApplyDamage(): Post-resist appliedDamage: " + appliedDamage);
         }
-        if(target.IsSplashHit(_castID)){
+        if(target.IsSplashHit((int)_objectID)){
             byte skillLevel = _casterReference.GetSkillLevel(_baseReference.GetDisciplineCode());
             appliedDamage *= Math.max(1,_baseReference.GetSplashFactor(skillLevel));
             Main.LogMessage("DamagingSpell.ApplyDamage(): Splash hit applied damage = " + appliedDamage);

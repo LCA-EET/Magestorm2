@@ -1,10 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.lang.Short;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class MatchCharacter {
+public class MatchCharacter extends TimedObject{
     private final MatchTeam _team;
     private final Match _owningMatch;
     private RemoteClient _remote;
@@ -21,7 +18,6 @@ public class MatchCharacter {
     private final int _positionIndex, _directionIndex;
     private boolean _verified;
 
-    private long _lastPacketReceived;
     private final long _manaRegenTick;
     private long _manaRegenElapsed;
     private final long _hpRegenTick;
@@ -35,15 +31,15 @@ public class MatchCharacter {
     private int _lastPRPacketID;
     private final float[] _resistance;
     private final boolean _newToMatch;
-    private final HashSet<Short> _splashHits;
-    private final ConcurrentHashMap<Byte, AppliedEffect> _activeEffects;
+    private final HashSet<Integer> _splashHits;
     private byte _wallCount;
     private byte[] _scoreBytes;
     private final byte _maxWalls;
     private int _startingXP;
     private float _endingXP, _priorXP;
+    private final TimedObjectCollection<Byte, AppliedEffect> _activeEffects;
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
-        MarkPacketReceived();
+        SetDurationRemaining(ServerParams.IngameInactivityDisconnect);
         _team = team;
         _wallCount = 0;
         _resistance = new float[10];
@@ -84,7 +80,7 @@ public class MatchCharacter {
         _positionIndex = _INLCTA.length;
         _directionIndex = _positionIndex + 12;
         _splashHits = new HashSet<>();
-        _activeEffects = new ConcurrentHashMap<>();
+        _activeEffects = new TimedObjectCollection<>(1000);
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
         InitializeScoreBytes(nameLevelClass);
     }
@@ -116,13 +112,13 @@ public class MatchCharacter {
         return _wallCount < _maxWalls;
     }
     //endregion
-    public void RegisterSplashHit(short castID){
+    public void RegisterSplashHit(int castID){
         _splashHits.add(castID);
     }
-    public void DeregisterSplashHit(short castID){
+    public void DeregisterSplashHit(int castID){
         _splashHits.remove(castID);
     }
-    public boolean IsSplashHit(short castID){
+    public boolean IsSplashHit(int castID){
         return _splashHits.contains(castID);
     }
     public byte IsNewToMatch(){
@@ -201,9 +197,6 @@ public class MatchCharacter {
         _hpRegenWaitElapsed = 0;
         _currentHP = Math.min(_currentHP + healAmount, _maxHP);
     }
-    public float GetRemainingMana(){
-        return _currentMana;
-    }
     public boolean IsAlive(){
         return _currentHP > 0;
     }
@@ -247,10 +240,11 @@ public class MatchCharacter {
 
     public void MarkVerified(RemoteClient remote){
         Main.LogMessage("Player " + _idInMatch + " verified for team " + _teamID);
-        MarkPacketReceived();
+        SetDurationRemaining(ServerParams.IngameInactivityDisconnect);
         _remote = remote;
         _verified = true;
     }
+
     public void AddMana(short amount){
         float newMana = _currentMana + amount;
         _currentMana = Math.min(newMana, _maxMana);
@@ -264,9 +258,6 @@ public class MatchCharacter {
         return _remote;
     }
 
-    public void MarkPacketReceived(){
-        _lastPacketReceived = System.currentTimeMillis();
-    }
     public float GetMaxHP(){
         return _maxHP;
     }
@@ -283,41 +274,16 @@ public class MatchCharacter {
     }
     public void AddEffect(AppliedEffect toAdd){
         byte effectCode = toAdd.GetEffectCode();
-        _activeEffects.remove(effectCode);
         _activeEffects.put(effectCode, toAdd);
     }
-    public void RemoveAllEffects(){
+    public void RemoveAllEffects()
+    {
         _activeEffects.clear();
     }
     public void CountdownEffects(long msElapsed){
-        if(!_activeEffects.isEmpty()){
-            ArrayList<AppliedEffect> expiredEffects = null;
-            for(AppliedEffect ae : _activeEffects.values()){
-                if(ae.Tick(msElapsed)){
-                    if(expiredEffects == null){
-                        expiredEffects = new ArrayList<>();
-                    }
-                    expiredEffects.add(ae);
-                }
-            }
-            if(expiredEffects != null){
-                if(!expiredEffects.isEmpty()){
-                    for(AppliedEffect ae : expiredEffects){
-                        _activeEffects.remove(ae.GetEffectCode());
-                    }
-                }
-            }
-        }
+        _activeEffects.CountdownObjects(msElapsed);
     }
     // endregion
-
-    public boolean InactivityExceededWarningThreshold(){
-        return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityWarning;
-    }
-    public boolean InactivityExceededMaximumThreshold(){
-        return (System.currentTimeMillis() - _lastPacketReceived) >= ServerParams.InactivityDisconnect;
-    }
-
     public boolean RegenerateHP(long msElapsed){
         if(_hpRegenWaitElapsed >= _waitForHPRegen){
             if(_hpRegenElapsed >= _hpRegenTick){

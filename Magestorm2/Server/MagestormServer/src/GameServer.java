@@ -5,8 +5,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class GameServer extends Thread {
     public static final boolean SymmetricEncryption = false;
 
+    public static TimedObjectCollection<Integer, RemoteClient> LoggedInClients;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
-    public static ConcurrentHashMap<Integer, RemoteClient> _loggedInClients;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
     private static ConcurrentHashMap<Byte, byte[]> _poolData;
@@ -21,7 +21,7 @@ public class GameServer extends Thread {
         ByteUtils.init();
         GameUtils.init();
         CharacterManager.init();
-        _loggedInClients = new ConcurrentHashMap<>();
+        LoggedInClients = new TimedObjectCollection<>(30000);
         _maxPlayerData = new ConcurrentHashMap<>();
         _activeCharacters = new ConcurrentHashMap<>();
         _poolData = new ConcurrentHashMap<>();
@@ -72,7 +72,7 @@ public class GameServer extends Thread {
 
 
     public static boolean IsLoggedIn(int accountID){
-        return _loggedInClients.containsKey(accountID);
+        return LoggedInClients.containsKey(accountID);
     }
 
     public static int GetNextMatchPort()
@@ -89,16 +89,15 @@ public class GameServer extends Thread {
     }
     public static void ClientLoggedIn(RemoteClient rc)
     {
-        int accountID = rc.AccountID();
+        int accountID = (int)rc.ObjectID();
         Main.LogMessage("Client logged in: " + accountID + rc.IPAddress().toString() + ":" + rc.GetRemotePort());
-        _loggedInClients.put(accountID, rc);
+        LoggedInClients.put(accountID, rc);
     }
 
     public static RemoteClient GetClient(int accountID){
         RemoteClient toReturn = null;
-        if(_loggedInClients.containsKey(accountID)){
-            toReturn = _loggedInClients.get(accountID);
-            //Main.LogMessage("RemoteClient returned for account " + accountID + ", " + toReturn.IPAddress() + ":" + toReturn.GetRemotePort());
+        if(LoggedInClients.containsKey(accountID)){
+            toReturn = LoggedInClients.get(accountID);
         }
         else{
             Main.LogMessage("RemoteClient is null for account " + accountID);
@@ -106,13 +105,9 @@ public class GameServer extends Thread {
         return toReturn;
     }
 
-    public static Iterable<RemoteClient> ConnectedClients(){
-        return _loggedInClients.values();
-    }
-
     public static RemoteClient ClientLoggedOut(int accountID){
         Main.LogMessage("Client logged out: " + accountID);
-        RemoteClient removed = _loggedInClients.remove(accountID);
+        RemoteClient removed = LoggedInClients.remove(accountID);
         PlayerCharacter removedCharacter = _activeCharacters.remove(accountID);
         if(removedCharacter != null){
             byte matchID = removedCharacter.GetMatchID();

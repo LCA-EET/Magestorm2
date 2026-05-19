@@ -283,20 +283,22 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] WallExpirationPacket(short wallID){
+    public static byte[] WallExpirationPacket(int wallID){
         byte[] toEncrypt = new byte[1 + 1 + 2];
         toEncrypt[0] = InGame_Send.WallExpired;
         toEncrypt[1] = 1;
-        System.arraycopy(ByteUtils.ShortToByteArray(wallID), 0, toEncrypt, 2, 2);
+        System.arraycopy(ByteUtils.ShortToByteArray((short)wallID), 0, toEncrypt, 2, 2);
         return Cryptographer.Encrypt(toEncrypt);
     }
-    public static byte[] TimedObjectExpirationPacket(byte opCode, ArrayList<Short> objectIDs){
+    @SuppressWarnings("unchecked")
+    public static byte[] TimedObjectExpirationPacket(byte opCode, ArrayList objectIDs){
         byte numExpired = (byte)objectIDs.size();
+        ArrayList<Short> expiredIDs = (ArrayList<Short>) objectIDs;
         byte[] toEncrypt = new byte[1 + 1 + (numExpired * 2)];
         toEncrypt[0] = opCode;
         toEncrypt[1] = numExpired;
         int index = 2;
-        for(Short objectID : objectIDs){
+        for(short objectID : expiredIDs){
             byte[] objectIDBytes = ByteUtils.ShortToByteArray(objectID);
             System.arraycopy(objectIDBytes, 0, toEncrypt, index, 2);
             index += 2;

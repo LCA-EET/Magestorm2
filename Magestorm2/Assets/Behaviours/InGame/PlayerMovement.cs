@@ -68,6 +68,15 @@ public class PlayerMovement : MonoBehaviour
         
         if (_moveCheck != transform.position || _yRotateCheck != transform.eulerAngles.y || _postureCheck != Game.PlayerPMDByte.Posture)
         {
+            /*
+            Debug.Log("Movement Comparison");
+            Debug.Log(_moveCheck);
+            Debug.Log(transform.position);
+            Debug.Log(_yRotateCheck);
+            Debug.Log(transform.eulerAngles.y);
+            Debug.Log(_postureCheck);
+            Debug.Log(Game.PlayerPMDByte.Posture);
+            */
             _moveCheck = transform.position;
             _yRotateCheck = transform.eulerAngles.y;
             _postureCheck = Game.PlayerPMDByte.Posture;
@@ -79,14 +88,17 @@ public class PlayerMovement : MonoBehaviour
                 ByteUtils.FillArray(ref prData, 0, _priorPosition);
                 ByteUtils.FillArray(ref prData, 12, _yRotateCheck);
                 Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData, ref _prPacketID));
+                //Debug.Log("A. Sending movement packet.");
             }
             else if (positionExceedance)
             {
                 Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
+                //Debug.Log("B. Sending movement packet.");
             }
-            else
+            else if (rotationExceedance)
             {
                 Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, BitConverter.GetBytes(_priorY), ref _prPacketID));
+                //Debug.Log("C. Sending movement packet.");
             }
         }
 

@@ -1,13 +1,10 @@
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
-public class RemoteClient {
-
+public class RemoteClient extends TimedObject{
     private final InetAddress _address;
-    private int _accountID;
     private int _remotePort;
     private String _username;
-    private long _timeLastReceived = 0;
     private int _cidJustExited = 0;
     private boolean _subscribedToMatches, _portSwitchPending, _inGame;
 
@@ -16,8 +13,7 @@ public class RemoteClient {
         _inGame = false;
         _address = received.getAddress();
         _remotePort = received.getPort();
-        MarkPacketReceived();
-        //Main.LogMessage("Remote client IP: " + _address.getHostAddress() + ":" + _emanatingPort);
+        SetDurationRemaining(ServerParams.PregameInactivity);
     }
 
     public InetAddress IPAddress(){
@@ -33,7 +29,7 @@ public class RemoteClient {
         _cidJustExited = cid;
     }
     public void SetNameAndID(String username, int ID){
-        _accountID = ID;
+        _objectID = ID;
         _username = username;
     }
 
@@ -54,16 +50,7 @@ public class RemoteClient {
         return _portSwitchPending;
     }
 
-    public int AccountID(){
-        return _accountID;
-    }
 
-    public boolean TimeOut(){
-        if(_inGame){
-            _timeLastReceived = System.currentTimeMillis();
-        }
-        return (System.currentTimeMillis() - _timeLastReceived) > ServerParams.PregameInactivity;
-    }
     public void SubscribeToMatches(){
         _subscribedToMatches = true;
     }
@@ -79,11 +66,22 @@ public class RemoteClient {
     public String GetUserName(){
         return _username;
     }
-    public void MarkPacketReceived()
-    {
-        _timeLastReceived = System.currentTimeMillis();
-    }
+
     public String ToString(){
-        return "ID: " + _accountID + ", " + _address.toString() + ":" + _remotePort + " " + _username;
+        return "ID: " + _objectID + ", " + _address.toString() + ":" + _remotePort + " " + _username;
+    }
+
+    @Override
+    public boolean ReduceDuration(long msElapsed){
+
+        if(!_inGame){
+            boolean toReturn = super.ReduceDuration(msElapsed);
+            Main.LogDebug("RemoteClient.ReduceDuration(): client " + _objectID + " duration remaining: " + _durationRemaining);
+            return toReturn;
+        }
+        else{
+            Main.LogDebug("RemoteClient.ReduceDuration(): client " + _objectID + " is in-game.");
+        }
+        return false;
     }
 }

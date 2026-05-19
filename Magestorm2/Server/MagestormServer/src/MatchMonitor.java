@@ -3,12 +3,13 @@ import java.util.ArrayList;
 public class MatchMonitor extends RegisteredThread{
 
     private final long _tick = 500;
-    private long _inactivityCheckElapsed = 0;
+    private TimedObjectCollection<Byte, Match> _activeMatches;
     public MatchMonitor(){
         new RegisteredThread(this).start();
     }
     public void run(){
         Register("MatchMonitor");
+        _activeMatches = MatchManager.GetMatches();
         while(!_terminated){
             try {
                 CheckForExpiration();
@@ -31,31 +32,12 @@ public class MatchMonitor extends RegisteredThread{
 
     private void CheckForExpiration()
     {
-        long currentTime = System.currentTimeMillis();
-        ArrayList<Match> activeMatches = MatchManager.GetMatches();
-        boolean checkPlayerInactivity = false;
-        long _inactivityInterval = 30000;
-        if(_inactivityCheckElapsed >= _inactivityInterval){
-            _inactivityCheckElapsed = 0;
-            checkPlayerInactivity = true;
-        }
-        else{
-            _inactivityCheckElapsed += _tick;
-        }
-        for(Match match : activeMatches){
-            if(currentTime >= match.GetExpiration()){
-                match.MarkExpired();
-                if(match.IsQuickMatch()){
+        if(_activeMatches.CountdownObjects(_tick)){
+            ArrayList<Match> expiredMatches = _activeMatches.GetExpiredObjects();
+            for(Match expired : expiredMatches){
+                expired.MarkExpired();
+                if(expired.IsQuickMatch()){
                     MatchManager.AddQuickMatch();
-                }
-            }
-            else{
-                match.Tick(_tick);
-                if(match.ScoreUpdated()){
-                    MatchManager.UpdateScore(match.MatchID(), match.GetScoreBytes());
-                }
-                if(checkPlayerInactivity){
-                    match.CheckForInactivity();
                 }
             }
         }
