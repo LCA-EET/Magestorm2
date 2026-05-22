@@ -157,6 +157,9 @@ public class SpellData
             byte[] toSend = null;
             switch (SpellType)
             {
+                case ControlCodes.SpellTypes_Sigil:
+                    toSend = InGame_Packets.PlacedSigilPacket(SpellID);
+                    break;
                 case ControlCodes.SpellTypes_Projectile:
                     toSend = InGame_Packets.ProjectileCastPacket(SpellID);
                     break;

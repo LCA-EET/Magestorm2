@@ -50,4 +50,6 @@ public class InGame_Send {
     public static final byte SpellResisted = 47;
     public static final byte SpawnVFXonPlayer = 48;
     public static final byte SigilExpired = 49;
+    public static final byte SigilRequestResponse = 50;
+
 }

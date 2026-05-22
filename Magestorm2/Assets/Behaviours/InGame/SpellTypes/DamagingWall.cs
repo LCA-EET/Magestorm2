@@ -22,7 +22,7 @@ public class DamagingWall : NonSolidWall
     private void DamageTick()
     {
         Debug.Log("Damage Tick.");
-        Game.SendInGameBytes(InGame_Packets.ReportHitPacket(_castID));
+        Game.SendInGameBytes(InGame_Packets.ReportHitByWallPacket(_castID));
     }
 
 }

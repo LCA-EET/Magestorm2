@@ -37,10 +37,10 @@ public class SharedFunctions {
         Main.LogMessage("Difference: " + difference);
         float chance = (50 + (difference * 10)) / 100.0f;
         Main.LogMessage("Chance of effect: " + chance);
-        if(chance > 0.9f){
+        if(chance > maxChance){
             chance = 0.9f;
         }
-        if(chance < 0.1f){
+        if(chance < minChance){
             chance = 0.1f;
         }
         return chance > SharedFunctions.GetRandomFloat();

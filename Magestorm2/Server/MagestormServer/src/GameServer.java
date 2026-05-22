@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GameServer extends Thread {
     public static final boolean SymmetricEncryption = false;
-
+    public static int MaxUDPPayload = 508;
     public static TimedObjectCollection<Integer, RemoteClient> LoggedInClients;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;

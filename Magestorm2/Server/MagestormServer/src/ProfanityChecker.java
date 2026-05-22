@@ -32,9 +32,7 @@ public class ProfanityChecker {
         for (String prohibited : _prohibitedTerms){
             additionalTerms.add(prohibited.replace(letter, number));
         }
-        for (String prohibited : additionalTerms){
-            _prohibitedTerms.add(prohibited);
-        }
+        _prohibitedTerms.addAll(additionalTerms);
     }
     public static boolean ContainsProhibitedLanguage(String text){
         String lower = text.toLowerCase(Locale.ROOT);

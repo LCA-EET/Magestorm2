@@ -32,7 +32,6 @@ public class Match extends TimedObject{
     protected byte _matchType;
     protected short _nextCastID = 0;
     protected boolean _scoreUpdated = false;
-    private long _spellExpirationElapsed = 0;
     private long _expCheckElapsed = 0;
     private final long _expReportInterval = 30000;
     protected boolean _quickMatch;
@@ -120,27 +119,12 @@ public class Match extends TimedObject{
         }
         return expired;
     }
-
-    public void IncrementPlayerDeaths(MatchCharacter mc){
+    public Score GetPlayerScore(MatchCharacter mc){
         int characterID = mc.GetCharacterID();
         if(!_playerScores.containsKey(characterID)){
             _playerScores.put(characterID, new Score(mc));
         }
-        _playerScores.get(characterID).IncrementDeaths();
-    }
-    public void IncrementPlayerKills(MatchCharacter mc){
-        int characterID = mc.GetCharacterID();
-        if(!_playerScores.containsKey(characterID)){
-            _playerScores.put(characterID, new Score(mc));
-        }
-        _playerScores.get(characterID).IncrementKills();
-    }
-    public void IncrementPlayerRaises(MatchCharacter mc){
-        int characterID = mc.GetCharacterID();
-        if(!_playerScores.containsKey(characterID)){
-            _playerScores.put(characterID, new Score(mc));
-        }
-        _playerScores.get(characterID).IncrementRaises();
+        return _playerScores.get(characterID);
     }
     public MatchTeam GetMatchTeam(byte teamID){
         return _matchTeams.get(teamID);
@@ -299,7 +283,7 @@ public class Match extends TimedObject{
         byte playerID = decrypted[1];
         float newLey = ByteUtils.ExtractFloat(decrypted, 2);
         if(newLey < 0.0f || newLey > 1.0f){
-            LogMessage("Invalid ley: " + newLey + " for player " + playerID);
+            LogError("Invalid ley: " + newLey + " for player " + playerID);
         }
         else{
             MatchCharacter mc = GetMatchCharacter(playerID);
@@ -372,28 +356,13 @@ public class Match extends TimedObject{
     public int GetMatchPort(){
         return _matchPort;
     }
-    public byte ObtainNextPlayerID(){
-        boolean idUsed = false;
-        for(MatchTeam team : _matchTeams.values()){
-            if(team.PlayerIDUsed(_nextPlayerID)){
-               idUsed = true;
-               break;
-            }
+    public synchronized byte ObtainNextPlayerID(){
+        while(_matchCharacters.containsKey(_nextPlayerID)){
+            _nextPlayerID = (byte)(_nextPlayerID > 100 ? 1 : _nextPlayerID + 1);
         }
-        if(idUsed){
-            if(_nextPlayerID > 100){
-                _nextPlayerID = 1;
-            }
-            else{
-                _nextPlayerID++;
-            }
-            return ObtainNextPlayerID();
-        }
-        else{
-            byte toReturn = _nextPlayerID;
-            _nextPlayerID ++;
-            return toReturn;
-        }
+        byte toReturn = _nextPlayerID;
+        _nextPlayerID ++;
+        return toReturn;
     }
     public void MarkExpired(){
         MatchManager.RemoveMatch(_matchID);
@@ -410,7 +379,7 @@ public class Match extends TimedObject{
         MatchCharacter toCheck = _matchCharacters.get(playerID);
         if(toCheck != null){
             toCheck.ResetDuration();
-            return toCheck.IsVerified();
+            return true; // the player is verified by the fact they are in the _matchCharacters collection
         }
         else{
             LogMessage("toCheck in IsPlayerVerified is null, for player: " + playerID);
@@ -435,12 +404,7 @@ public class Match extends TimedObject{
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
             case ControlCodes.SpellTypes_Sigil:
-                if(spellReference.IsDamaging()){
-                    _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
-                }
-                else{
-                    //_castSpells.put(castID, new Sigil(caster, castID, spellReference, this));
-                }
+                _sigils.put(castID, new Sigil(caster, castID, spellReference, this, decrypted));
                 break;
             case ControlCodes.SpellTypes_Projectile:
             case ControlCodes.SpellTypes_PBAoE:
@@ -515,25 +479,34 @@ public class Match extends TimedObject{
     protected void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
         _processor.EnqueueForSend(encrypted, recipients);
     }
-    public void RequestWallData(MatchCharacter requester){
-        if(!_walls.isEmpty()){
-            ArrayList<Wall> wallData = new ArrayList<>();
-            for(Wall wall : _walls.values()){
-                wallData.add(wall);
-                if(wallData.size() == 19){
-                    SendToPlayer(Packets.WallDataPacket(wallData), requester);
-                    wallData.clear();
+    public void HandleWallAndSigilRequest(byte mcID){
+        if(_matchCharacters.containsKey(mcID)){
+            MatchCharacter requester = _matchCharacters.get(mcID);
+            SendTOC(InGame_Send.WallRequestResponse, _walls, requester);
+            SendTOC(InGame_Send.SigilRequestResponse, _sigils, requester);
+        }
+    }
+    public void SendTOC(byte opCode, TimedObjectCollection<? extends Number, ? extends TimedObject> collection,
+                        MatchCharacter recipient){
+        if(!collection.isEmpty()){
+            int maxPayloadLength = GameServer.MaxUDPPayload - 2;
+            ArrayList<byte[]> payload = new ArrayList<>();
+            int payloadLength = 0;
+            for(TimedObject obj : collection.values()){
+                byte[] objectBytes = obj.GetBytes();
+                if((payloadLength + objectBytes.length) > maxPayloadLength){
+                    SendToPlayer(Packets.TimedObjectDataPacket(opCode, payload, payloadLength), recipient);
+                    payload.clear();
                 }
+                payloadLength += objectBytes.length;
+                payload.add(objectBytes);
             }
-            if(!wallData.isEmpty()){
-                SendToPlayer(Packets.WallDataPacket(wallData), requester);
-            }
+            SendToPlayer(Packets.TimedObjectDataPacket(opCode, payload, payloadLength), recipient);
         }
     }
     public void Tick(long msElapsed){
         CountDownTimedObjects(msElapsed);
         PlayerTick(msElapsed);
-        //ClearExpiredSpells(msElapsed);
         ExpTick(msElapsed);
     }
     private void ExpTick(long msElapsed){
@@ -602,7 +575,7 @@ public class Match extends TimedObject{
             SendToAll(Packets.TimedObjectExpirationPacket(opCode, collection.GetExpiredIDs()));
         }
     }
-        public CastSpell GetCastSpell(short id)
+    public CastSpell GetCastSpell(short id)
     {
         return _castSpells.get(id);
     }
@@ -618,9 +591,12 @@ public class Match extends TimedObject{
     public byte GetSceneID(){
         return _sceneID;
     }
+    public Sigil GetSigil(short sigilID){
+        return _sigils.get(sigilID);
+    }
 
-    public void PlayerHit(MatchCharacter hitPlayer, short castID){
-        CastSpell spell = GetCastSpell(castID);
+    public void PlayerHit(MatchCharacter hitPlayer, short castID, boolean wall){
+        CastSpell spell = !wall?GetCastSpell(castID):GetWall(castID);
         if(spell != null){
             spell.ProcessSpell(hitPlayer);
             if(spell.GetBaseSpell().IsDamaging()){
@@ -632,10 +608,10 @@ public class Match extends TimedObject{
             Main.LogError("Match.PlayerHit: Spell " + castID + " is null.");
         }
     }
-    public void PlayerHit(byte hitPlayerID, short castID){
+    public void PlayerHit(byte hitPlayerID, short castID, boolean hitByWall){
         MatchCharacter hitPlayer = GetMatchCharacter(hitPlayerID);
         if(hitPlayer != null){
-            PlayerHit(hitPlayer, castID);
+            PlayerHit(hitPlayer, castID, hitByWall);
         }
         else{
             Main.LogError("Match.PlayerHit: Player " + hitPlayerID + " is null.");
@@ -656,8 +632,8 @@ public class Match extends TimedObject{
 
     protected void PlayerKilled(MatchCharacter killed, MatchCharacter killer){
         SendToAll(Packets.PlayerKilledPacket(killed.GetIDinMatch(), killer.GetIDinMatch()));
-        IncrementPlayerKills(killer);
-        IncrementPlayerDeaths(killed);
+        GetPlayerScore(killer).IncrementKills();
+        GetPlayerScore(killed).IncrementDeaths();
         killed.GetTeam().GetScore().IncrementDeaths();
         killer.GetTeam().GetScore().IncrementKills();
         killer.AdjustExperience(killed.GetMaxHP() * (int)(1 + Math.floor(killed.GetLevel() / 8.0f)));

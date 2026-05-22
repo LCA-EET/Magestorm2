@@ -1,4 +1,3 @@
-import javax.sound.sampled.Control;
 import java.net.DatagramPacket;
 import java.util.Arrays;
 
@@ -69,14 +68,20 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.WallHit:
                     HandleWallHit();
                     return true;
-                case InGame_Receive.RequestWallData:
-                    HandleWallRequestPacket();
+                case InGame_Receive.RequestWallsAndSigils:
+                    _owningMatch.HandleWallAndSigilRequest(_decrypted[1]);
                     return true;
                 case InGame_Receive.LeaderboardRequest:
                     HandleLeaderboardRequest();
                     return true;
                 case InGame_Receive.UpdateSlotting:
                     HandleUpdateSlotting();
+                    return true;
+                case InGame_Receive.TriggeredSigil:
+                    HandleSigilTrigger();
+                    return true;
+                case InGame_Receive.ReportHitByWall:
+                    HandleReportHitByWallPacket();
                     return true;
             }
         }
@@ -85,6 +90,19 @@ public class InGamePacketProcessor extends UDPProcessor{
             return HandleJoinMatchPacket(_remote);
         }
         return false;
+    }
+    private void HandleSigilTrigger() {
+        MatchCharacter triggeredBy = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        if (triggeredBy != null)
+        {
+            if(triggeredBy.IsAlive()){
+                short sigilID = ByteUtils.ExtractShort(_decrypted,2);
+                Sigil triggered = _owningMatch.GetSigil(sigilID);
+                if(triggered != null){
+                    triggered.SigilTriggered(triggeredBy);
+                }
+            }
+        }
     }
     private void HandleResistableHitPacket(){
         MatchCharacter target = _owningMatch.GetMatchCharacter(_decrypted[1]);
@@ -111,9 +129,6 @@ public class InGamePacketProcessor extends UDPProcessor{
                     _owningMatch.GetMatchCharacter(_decrypted[1]));
         }
     }
-    private void HandleWallRequestPacket(){
-        _owningMatch.RequestWallData(_owningMatch.GetMatchCharacter(_decrypted[1]));
-    }
     private void HandleWallHit(){
         short castID = ByteUtils.ExtractShort(_decrypted, 2);
         DamagingSpell projectile = (DamagingSpell)_owningMatch.GetCastSpell(castID);
@@ -130,7 +145,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         if(hit != null){
             short castID = ByteUtils.ExtractShort(_decrypted, 2);
             hit.RegisterSplashHit(castID);
-            _owningMatch.PlayerHit(hit, castID);
+            _owningMatch.PlayerHit(hit, castID, false);
             hit.DeregisterSplashHit(castID);
         }
     }
@@ -171,9 +186,11 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
     }
     private void HandleReportHitPacket(){
-        _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2));
+        _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2), false);
     }
-
+    private void HandleReportHitByWallPacket(){
+        _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2), true);
+    }
     private void HandlePostureChange(){
         _owningMatch.SendToAll(Packets.PostureChangePacket(_decrypted));
     }
@@ -198,7 +215,7 @@ public class InGamePacketProcessor extends UDPProcessor{
 
     private void InactivityCheckResponse(){
         _owningMatch.GetMatchCharacter(_decrypted[1]).ResetDuration();
-        Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
+        //Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
     }
     private void HandleQuitGame(){
         _owningMatch.LeaveMatch(_decrypted[1], true, true);
@@ -299,7 +316,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         return -1;
     }
     protected boolean IsVerified(){
-        Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
+        //Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
         return _owningMatch.IsPlayerVerified(_decrypted[1]);
     }
     private boolean IsVerified(byte playerID){

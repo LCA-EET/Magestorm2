@@ -31,9 +31,12 @@
                         Devour = 30,
                         ReportSplash = 31,
                         WallHit = 32,
-                        RequestWallData = 33,
+                        RequestWallsAndSigils = 33,
                         LeaderboardRequest = 34,
                         UpdateSlots = 35,
-                        ReportResistableHit = 36;
+                        ReportResistableHit = 36,
+                        ReportHitByWall = 37,
+                        TriggeredSigil = 38;
+                        
                         
 }

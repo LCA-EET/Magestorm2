@@ -73,14 +73,8 @@ public class RemoteClient extends TimedObject{
 
     @Override
     public boolean ReduceDuration(long msElapsed){
-
         if(!_inGame){
-            boolean toReturn = super.ReduceDuration(msElapsed);
-            Main.LogDebug("RemoteClient.ReduceDuration(): client " + _objectID + " duration remaining: " + _durationRemaining);
-            return toReturn;
-        }
-        else{
-            Main.LogDebug("RemoteClient.ReduceDuration(): client " + _objectID + " is in-game.");
+            return super.ReduceDuration(msElapsed);
         }
         return false;
     }

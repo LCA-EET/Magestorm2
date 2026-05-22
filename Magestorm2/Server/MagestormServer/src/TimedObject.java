@@ -1,12 +1,13 @@
 public class TimedObject {
     protected long _priorDuration, _durationRemaining;
     protected Number _objectID;
+    protected byte[] _bytes;
 
     public TimedObject(){ }
 
     public boolean ReduceDuration(long msReduction){
         _durationRemaining -= msReduction;
-        Main.LogDebug("Duration remaining for object " + _objectID + ": " + _durationRemaining);
+        //Main.LogDebug("Duration remaining for object " + _objectID + ": " + _durationRemaining);
         return _durationRemaining <= 0;
     }
 
@@ -29,5 +30,9 @@ public class TimedObject {
 
     public Number ObjectID(){
         return _objectID;
+    }
+
+    public byte[] GetBytes(){
+        return _bytes;
     }
 }

@@ -10,6 +10,7 @@ public static class Match
     private static Dictionary<byte, ActivateableObject> _objects;
     private static Dictionary<byte, Avatar> _deadAvatarsOnPCTeam;
     private static Dictionary<short, Wall> _walls;
+    private static Dictionary<short, Sigil> _sigils;
     public static bool Running;
     
     public static void Init()
@@ -18,6 +19,7 @@ public static class Match
         _deadAvatarsOnPCTeam = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>();
         _walls = new Dictionary<short, Wall>();
+        _sigils = new Dictionary<short, Sigil>();
     }
     
     
@@ -79,9 +81,22 @@ public static class Match
         MatchParams.ReturningFromMatch = true;
         SceneManager.LoadScene("Pregame");
     }
+    public static void AddSigil(short castID, Sigil sigil)
+    {
+        _sigils.Add(castID, sigil);
+    }
     public static void AddWall(short castID, Wall wall)
     {
         _walls.Add(castID, wall);
+    }
+    public static void RemoveSigil(short castID)
+    {
+        if (_sigils.ContainsKey(castID))
+        {
+            Sigil toRemove = _sigils[castID];
+            _sigils.Remove(castID);
+            toRemove.DestroySigil();
+        }
     }
     public static void RemoveWall(short castID)
     {
@@ -169,7 +184,7 @@ public static class Match
             added.UpdatePosition(positionBytes, 0, true);
             added.UpdateDirection(directionBytes, 0, true);
         }
-        Game.SendInGameBytes(InGame_Packets.WallDataRequest());
+        Game.SendInGameBytes(InGame_Packets.WallAndSigilRequest());
     }
     public static void UpdatePlayerLocation(byte[] decrypted)
     {

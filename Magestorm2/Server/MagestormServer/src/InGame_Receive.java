@@ -34,8 +34,10 @@ public class InGame_Receive {
     public static final byte Devour = 30;
     public static final byte ReportSplash = 31;
     public static final byte WallHit = 32;
-    public static final byte RequestWallData = 33;
+    public static final byte RequestWallsAndSigils = 33;
     public static final byte LeaderboardRequest = 34;
     public static final byte UpdateSlotting = 35;
     public static final byte ReportResistableHit = 36;
+    public static final byte ReportHitByWall = 37;
+    public static final byte TriggeredSigil = 38;
 }

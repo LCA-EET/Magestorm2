@@ -53,11 +53,21 @@ public class SpellSpawner : MonoBehaviour
             case ControlCodes.SpellTypes_SolidWall:
                 InitializeWall();
                 break;
+            case ControlCodes.SpellTypes_Sigil:
+                InitializeSigil();
+                break;
         }
         if (_casterID == MatchParams.IDinMatch)
         {
             UseStamina();
         }
+    }
+    private void InitializeSigil()
+    {
+        byte teamID = _payload[0];
+        Vector3 position = ByteUtils.BytesToVector3(_payload, 1);
+        transform.position = position;
+
     }
     private void InitializeWall()
     {

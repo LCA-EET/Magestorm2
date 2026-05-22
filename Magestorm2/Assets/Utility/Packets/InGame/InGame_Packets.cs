@@ -170,6 +170,14 @@ public static class InGame_Packets
         BitConverter.GetBytes(castID).CopyTo(unencrypted, 2);
         return unencrypted;
     }
+    public static byte[] ReportHitByWallPacket(short castID)
+    {
+        byte[] unencrypted = new byte[4];
+        unencrypted[0] = InGame_Send.ReportHitByWall;
+        unencrypted[1] = MatchParams.IDinMatch;
+        BitConverter.GetBytes(castID).CopyTo(unencrypted, 2);
+        return unencrypted;
+    }
 
     public static byte[] ReportSplashHit(short castID)
     {
@@ -190,11 +198,10 @@ public static class InGame_Packets
         return unencrypted;
     }
 
-    public static byte[] WallDataRequest()
+    public static byte[] WallAndSigilRequest()
     {
-        return new byte[] { InGame_Send.RequestWallData, MatchParams.IDinMatch};
+        return new byte[] { InGame_Send.RequestWallsAndSigils, MatchParams.IDinMatch};
     }
-
     public static byte[] UpdateSlots(byte[] slots)
     {
         byte[] unencrypted = new byte[slots.Length + 2];
@@ -204,16 +211,21 @@ public static class InGame_Packets
         return unencrypted;
     }
 
-    public static byte[] PlacedSigilPacket(byte spellID, Vector3 position)
+    public static byte[] PlacedSigilPacket(byte spellID)
     {
-        byte[] unencrypted = new byte[1 + 1 + 1 + 1 + 1 +  12];
-        unencrypted[0] = InGame_Send.Cast;
+        byte[] unencrypted = GenericCastPacket(13, spellID, ControlCodes.SpellTypes_Sigil);
+        unencrypted[ControlCodes.CastPayloadStartIndex] = MatchParams.IDinMatch;
+        byte[] positionBytes = SharedFunctions.GetCameraPositionBytes(1.0f);
+        Array.Copy(positionBytes, 0, unencrypted, ControlCodes.CastPayloadStartIndex + 1, 12);
+        return unencrypted;
+    }
+
+    public static byte[] TriggeredSigilPacket(short castID)
+    {
+        byte[] unencrypted = new byte[4];
+        unencrypted[0] = InGame_Send.TriggeredSigil;
         unencrypted[1] = MatchParams.IDinMatch;
-        unencrypted[2] = ControlCodes.SpellTypes_Sigil;
-        unencrypted[3] = spellID;
-        unencrypted[4] = MatchParams.MatchTeamID;
-        byte[] positionBytes = ByteUtils.Vector3ToBytes(position);
-        Array.Copy(positionBytes, 0, unencrypted, 5, 12);
+        BitConverter.GetBytes(castID).CopyTo(unencrypted, 2);
         return unencrypted;
     }
 }

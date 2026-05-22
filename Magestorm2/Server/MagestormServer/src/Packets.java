@@ -238,15 +238,14 @@ public class Packets {
         System.arraycopy(castIDBytes, 0, toEncrypt, idxCastID, 2);
         return Cryptographer.Encrypt(toEncrypt);
     }
-    public static byte[] WallDataPacket(ArrayList<Wall> wallData){
-        byte[] toEncrypt = new byte[1 + 1 + (wallData.size() * 27)];
-        toEncrypt[0] = InGame_Send.WallRequestResponse;
-        toEncrypt[1] = (byte)wallData.size();
+    public static byte[] TimedObjectDataPacket(byte opCode, ArrayList<byte[]> payload, int payloadSize){
+        byte[] toEncrypt = new byte[1 + 1 + payloadSize];
+        toEncrypt[0] = opCode;
+        toEncrypt[1] = (byte)payload.size();
         int index = 2;
-        for(Wall wall : wallData){
-            byte[] wallBytes = wall.GetWallBytes();
-            System.arraycopy(wallBytes, 0, toEncrypt, index, wallBytes.length);
-            index += wallBytes.length;
+        for(byte[] payloadBytes : payload){
+            System.arraycopy(payloadBytes,0, toEncrypt,index, payloadBytes.length);
+            index += payloadBytes.length;
         }
         return Cryptographer.Encrypt(toEncrypt);
     }
@@ -256,11 +255,8 @@ public class Packets {
         toEncrypt[0] = InGame_Send.EffectsCancellation;
         toEncrypt[1] = subjectID;
         toEncrypt[2] = cancelSize;
-        byte index = 3;
-        for(byte b = 0; b < cancelSize; b++){
-            toEncrypt[index] = cancelled.get(b);
-            index++;
-        }
+        Byte[] cancelledBytes = cancelled.toArray(new Byte[0]);
+        System.arraycopy(cancelledBytes, 0, toEncrypt, 3, cancelledBytes.length);
         return Cryptographer.Encrypt(toEncrypt);
     }
 
@@ -283,13 +279,14 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] WallExpirationPacket(int wallID){
+    public static byte[] TimedObjectExpirationPacket(byte opCode, Number objectID){
         byte[] toEncrypt = new byte[1 + 1 + 2];
-        toEncrypt[0] = InGame_Send.WallExpired;
+        toEncrypt[0] = opCode;
         toEncrypt[1] = 1;
-        System.arraycopy(ByteUtils.ShortToByteArray((short)wallID), 0, toEncrypt, 2, 2);
+        System.arraycopy(ByteUtils.ShortToByteArray((short)objectID), 0, toEncrypt, 2, 2);
         return Cryptographer.Encrypt(toEncrypt);
     }
+
     @SuppressWarnings("unchecked")
     public static byte[] TimedObjectExpirationPacket(byte opCode, ArrayList objectIDs){
         byte numExpired = (byte)objectIDs.size();
@@ -420,16 +417,6 @@ public class Packets {
         toEncrypt[toEncrypt.length-1] = newToMatch;
         return Cryptographer.Encrypt(toEncrypt);
     }
-
-    /*
-    public static byte[] TimedObjectExpirationPacket(ArrayList<Byte> expired){
-        byte[] toEncrypt = new byte[1 + expired.size()];
-        toEncrypt[0] = InGame_Send.TimedObjectExpired;
-        Byte[] expiredArray = expired.toArray(new Byte[0]);
-        System.arraycopy(expiredArray, 0, toEncrypt, 1, expiredArray.length );
-        return Cryptographer.Encrypt(toEncrypt);
-    }
-*/
 
     public static byte[] ExperienceUpdatePacket(float experience){
         byte[] toEncrypt = new byte[5];

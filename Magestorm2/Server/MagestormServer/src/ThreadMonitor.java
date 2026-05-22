@@ -10,8 +10,11 @@ public class ThreadMonitor  {
     }
 
     public int RegisterThread(RegisteredThread thread){
-        int localID = _nextThreadID;
-        _nextThreadID++;
+        int localID;
+        synchronized (this) {
+            localID = _nextThreadID;
+            _nextThreadID++;
+        }
         _threads.put(localID, thread);
         Main.LogMessage("Active threads: " + _threads.size());
         return localID;

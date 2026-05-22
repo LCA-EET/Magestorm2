@@ -55,5 +55,7 @@ public static class InGame_Receive
                         ExperienceUpdate = 45,
                         MatchScores = 46,
                         SpellResisted = 47,
-                        SpawnVFXonPlayer = 48;
+                        SpawnVFXonPlayer = 48,
+                        SigilExpired = 49,
+                        SigilRequestResponse = 50;
 }

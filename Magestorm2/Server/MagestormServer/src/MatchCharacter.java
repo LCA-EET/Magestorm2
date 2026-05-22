@@ -16,7 +16,6 @@ public class MatchCharacter extends TimedObject{
     private final int _idxLevel = 7;
     private final int _idxClass = 8;
     private final int _positionIndex, _directionIndex;
-    private boolean _verified;
 
     private final long _manaRegenTick;
     private long _manaRegenElapsed;
@@ -31,7 +30,7 @@ public class MatchCharacter extends TimedObject{
     private int _lastPRPacketID;
     private final float[] _resistance;
     private final boolean _newToMatch;
-    private final HashSet<Integer> _splashHits;
+    private final HashSet<Short> _splashHits;
     private byte _wallCount;
     private byte[] _scoreBytes;
     private final byte _maxWalls;
@@ -61,7 +60,6 @@ public class MatchCharacter extends TimedObject{
         _maxMana = _pc.GetMaxMana();
         _currentHP = joinAlive?_maxHP:0;
         _currentMana = joinAlive?_maxMana:0;
-        _verified = false;
         _owningMatch = match;
         _ley = _pc.GetCharacterClass().GetClassID() == CharacterClass.Mentalist? 0.6f : 0.0f;
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
@@ -112,13 +110,13 @@ public class MatchCharacter extends TimedObject{
         return _wallCount < _maxWalls;
     }
     //endregion
-    public void RegisterSplashHit(int castID){
+    public void RegisterSplashHit(short castID){
         _splashHits.add(castID);
     }
-    public void DeregisterSplashHit(int castID){
+    public void DeregisterSplashHit(short castID){
         _splashHits.remove(castID);
     }
-    public boolean IsSplashHit(int castID){
+    public boolean IsSplashHit(short castID){
         return _splashHits.contains(castID);
     }
     public byte IsNewToMatch(){
@@ -242,16 +240,11 @@ public class MatchCharacter extends TimedObject{
         Main.LogMessage("Player " + _idInMatch + " verified for team " + _teamID);
         SetDurationRemaining(ServerParams.IngameInactivityDisconnect);
         _remote = remote;
-        _verified = true;
     }
 
     public void AddMana(short amount){
         float newMana = _currentMana + amount;
         _currentMana = Math.min(newMana, _maxMana);
-    }
-
-    public boolean IsVerified(){
-        return _verified;
     }
 
     public RemoteClient GetRemoteClient(){

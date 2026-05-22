@@ -125,7 +125,10 @@ public class InGamePacketProcessor : UDPProcessor
                         HandleWallExpiration();
                         break;
                     case InGame_Receive.WallRequestResponse:
-                        HandleWallRequestResponse();
+                        HandleTOCRequestResponse(24);
+                        break;
+                    case InGame_Receive.SigilRequestResponse:
+                        HandleTOCRequestResponse(13);
                         break;
                     case InGame_Receive.ExperienceUpdate:
                         HandleExperienceUpdate();                
@@ -139,8 +142,46 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.SpawnVFXonPlayer:
                         HandleSpawnVFXonPlayer();
                         break;
+                    case InGame_Receive.SigilExpired:
+                        HandleSigilExpiration();
+                        break;
+                    
                 }
             }
+        }
+    }
+    private void HandleTOCRequestResponse(int payloadLength)
+    {
+        byte numTO = _decrypted[1];
+        int index = 2;
+        for (int i = 0; i < numTO; i++)
+        {
+            byte spellID = _decrypted[index];
+            index++;
+            SpellData baseReference = null;
+            if (SpellManager.GetSpell(spellID, ref baseReference))
+            {
+                short castID = BitConverter.ToInt16(_decrypted, index);
+                index += 2;
+                byte[] payload = new byte[payloadLength];
+                Array.Copy(_decrypted, index, payload, 0, payloadLength);
+                index += payloadLength;
+                SpellSpawner spawner = null;
+                ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner);
+                spawner.Initialize(Game.PCAvatar, baseReference.SpellType, castID, payload);
+            }
+        }
+    }
+    private void HandleSigilExpiration()
+    {
+        byte numSigils = _decrypted[1];
+        Debug.Log("Sigils to remove: " + numSigils);
+        int index = 2;
+        for (int i = 0; i < numSigils; i++)
+        {
+            short sigilID = BitConverter.ToInt16(_decrypted, index);
+            Match.RemoveSigil(sigilID);
+            index += 2;
         }
     }
     private void HandleSpawnVFXonPlayer()
@@ -180,29 +221,6 @@ public class InGamePacketProcessor : UDPProcessor
         int experience = (int)exp;
         PlayerAccount.SelectedCharacter.SetExperience(experience);
         ComponentRegister.PlayerStatusPanel.SetExperience(experience);
-    }
-    private void HandleWallRequestResponse()
-    {
-        byte numWalls = _decrypted[1];
-        int index = 2;
-        for(int i = 0; i < numWalls; i++)
-        {
-            byte spellID = _decrypted[index];
-            index++;
-            SpellData baseReference = null;
-            if (SpellManager.GetSpell(spellID, ref baseReference))
-            {
-                short castID = BitConverter.ToInt16(_decrypted, index);
-                index += 2;
-                byte[] payload = new byte[24];
-                Array.Copy(_decrypted, index, payload, 0, 24);
-                index += 24;
-                SpellSpawner spawner = null;
-                ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner);
-                spawner.Initialize(Game.PCAvatar, baseReference.SpellType, castID, payload);
-            }
-        }
-        
     }
     private void HandleWallExpiration()
     {
