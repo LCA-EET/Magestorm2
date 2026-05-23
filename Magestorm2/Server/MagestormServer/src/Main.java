@@ -71,7 +71,7 @@ public class Main {
     public static void LogMessage(String toLog){
         _serverLog.LogMessage(toLog);
     }
-    public static void LogChat(MatchCharacter sender, String message, byte matchID){
+    public static void LogChat(MatchCharacter sender, String message, Number matchID){
         _serverLog.LogChat(sender, message, matchID);
     }
     public static void LogDebug(String toLog){

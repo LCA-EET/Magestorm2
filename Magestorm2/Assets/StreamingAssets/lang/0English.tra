@@ -355,5 +355,9 @@ Fly
 Allows the caster to fly.
 Cancel Flight
 Cancel's the caster's existing flight spell.
-Players that come into contact with this sigil will be soar upward.
+Players that come into contact with this sigil will soar upward.
 Expulse
+Enemy targets that come into contact with this sigil will suffer damage.
+Explosion
+Slow
+Enemy targets that come into contact with this sigil be slowed.

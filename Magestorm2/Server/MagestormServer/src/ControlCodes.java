@@ -58,6 +58,7 @@ public class ControlCodes {
         public static final byte SpellTypes_SolidWall = 9;
         public static final byte SpellTypes_Resistable = 10;
         public static final byte SpellTypes_Sigil = 11;
+        public static final byte SpellTypes_HarmfulSigil = 12;
     //endregion
 
     //region Discipline

@@ -17,13 +17,8 @@ public class SpawnedSpell : MonoBehaviour
     {
         if(Match.GetAvatar(casterID, ref _casterReference))
         {
-            _spellReference = spellReference;
-            _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
-            transform.parent = parent;
             _casterID = casterID;
-            _castingTeam = castingTeam;
-            _castID = castID;
-            ComponentRegister.Spawner.RegisterSpawnedSpell(this);
+            InitializeNoCaster(castingTeam, castID, parent, spellReference);
             if (casterID == MatchParams.IDinMatch && CastClip != null)
             {
                 if (CastClip != null)
@@ -36,6 +31,15 @@ public class SpawnedSpell : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+    public virtual void InitializeNoCaster(Team castingTeam, short castID, Transform parent, SpellData spellReference)
+    {
+        _spellReference = spellReference;
+        _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
+        transform.parent = parent;
+        _castingTeam = castingTeam;
+        _castID = castID;
+        ComponentRegister.Spawner.RegisterSpawnedSpell(this);
     }
     public bool IsExpired(float currentTime)
     {

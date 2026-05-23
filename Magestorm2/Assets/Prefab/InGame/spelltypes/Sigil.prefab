@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 588364540657432792}
   - component: {fileID: 4983354794674109739}
-  m_Layer: 0
+  - component: {fileID: 6093735506526369715}
+  m_Layer: 23
   m_Name: Sigil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,3 +48,24 @@ MonoBehaviour:
   CastClip: {fileID: 0}
   ExpireAfter: 0
   DestroyAfter: 0
+--- !u!65 &6093735506526369715
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555053324658010828}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

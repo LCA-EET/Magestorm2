@@ -249,14 +249,13 @@ public class Packets {
         }
         return Cryptographer.Encrypt(toEncrypt);
     }
-    public static byte[] EffectsCancellationPacket(byte subjectID,  ArrayList<Byte> cancelled){
-        byte cancelSize = (byte)cancelled.size();
+    public static byte[] EffectsCancellationPacket(byte subjectID,  byte[] cancelled){
+        byte cancelSize = (byte)cancelled.length;
         byte[] toEncrypt = new byte[2 + 1 + cancelSize];
         toEncrypt[0] = InGame_Send.EffectsCancellation;
         toEncrypt[1] = subjectID;
         toEncrypt[2] = cancelSize;
-        Byte[] cancelledBytes = cancelled.toArray(new Byte[0]);
-        System.arraycopy(cancelledBytes, 0, toEncrypt, 3, cancelledBytes.length);
+        System.arraycopy(cancelled, 0, toEncrypt, 3, cancelSize);
         return Cryptographer.Encrypt(toEncrypt);
     }
 

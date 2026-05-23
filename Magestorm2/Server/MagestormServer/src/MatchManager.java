@@ -22,10 +22,10 @@ public class MatchManager{
     public static void SetQMID(byte qmID){
         _qmID = qmID;
     }
-    public static void UpdateScore(byte matchID, byte[] scoreBytes){
+    public static void UpdateScore(Byte matchID, byte[] scoreBytes){
         _scores.put(matchID, scoreBytes);
     }
-    public static byte[] GetScoreBytes(byte matchID){
+    public static byte[] GetScoreBytes(Byte matchID){
         return _scores.get(matchID);
     }
 
@@ -125,7 +125,7 @@ public class MatchManager{
             }
         }
         if(toDelete != null){
-            _activeMatches.remove(toDelete.MatchID());
+            _activeMatches.remove(toDelete.ObjectID());
             UpdatesNeeded = true;
         }
     }
@@ -162,7 +162,7 @@ public class MatchManager{
         return null;
     }
 
-    public static void RemoveMatch(byte matchID){
+    public static void RemoveMatch(Number matchID){
         Match removed = _activeMatches.remove(matchID);
 
         UpdatesNeeded = true;

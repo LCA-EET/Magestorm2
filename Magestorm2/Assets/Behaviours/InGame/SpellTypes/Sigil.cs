@@ -1,37 +1,45 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 public class Sigil : SpawnedSpell, ITrigger
 {
     public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
     {
         base.Initialize(casterID, castingTeam, castID, parent, spellReference);
+    }
+    public override void InitializeNoCaster(Team castingTeam, short castID, Transform parent, SpellData spellReference)
+    {
+        base.InitializeNoCaster(castingTeam, castID, parent, spellReference);
         Match.AddSigil(castID, this);
     }
-    public void EnterAction()
+    public virtual void EnterAction()
     {
         if (Game.PCAvatar.IsAlive)
         {
-            Game.SendInGameBytes(InGame_Packets.TriggeredSigilPacket(_castID));
+            ReportTrigger();
         }
     }
-
+    protected void ReportTrigger()
+    {
+        Game.SendInGameBytes(InGame_Packets.TriggeredSigilPacket(_castID));
+    }
     public void ExitAction()
     {
-        throw new System.NotImplementedException();
+        return;
     }
 
     public int GetTriggerID()
     {
-        throw new System.NotImplementedException();
+        return -1;
     }
 
     public bool HasEntered()
     {
-        throw new System.NotImplementedException();
+        return false;
     }
 
     public bool HasExited()
     {
-        throw new System.NotImplementedException();
+        return false;
     }
     public void DestroySigil()
     {

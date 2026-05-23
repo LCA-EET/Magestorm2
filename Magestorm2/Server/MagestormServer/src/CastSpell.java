@@ -48,7 +48,8 @@ public class CastSpell extends TimedObject{
             }
             else{
                 if(!spellTarget.IsEffectPrevented(effectCode)){
-                    successfullyApplied = SharedFunctions.EffectApplied(0.1f, 0.9f, _baseReference.GetDiscipline().GetStatCode(), spellTarget, _casterReference);
+                    successfullyApplied = _baseReference.SpellType() == ControlCodes.SpellTypes_HarmfulSigil ||
+                            SharedFunctions.EffectApplied(0.1f, 0.9f, _baseReference.GetDiscipline().GetStatCode(), spellTarget, _casterReference);
                     effectTarget = spellTarget;
                 }
                 else{

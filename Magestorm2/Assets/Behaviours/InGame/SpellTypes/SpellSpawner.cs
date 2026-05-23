@@ -7,31 +7,31 @@ public class SpellSpawner : MonoBehaviour
     protected SpellData _spellReference;
     private byte[] _payload;
     private short _castID;
+    private bool _flowDown;
     private Team _castingTeam;
     private Avatar _caster;
-    private Vector3 _boltYAdjustment;
     public void Start()
     {
-        _boltYAdjustment = new Vector3(0, 0.5f, 0);
         SpawnedSpell[] childObjects = GetComponentsInChildren<SpawnedSpell>();
         foreach (SpawnedSpell obj in childObjects)
         {
-            obj.Initialize(_casterID, _castingTeam, _castID, transform.parent, _spellReference);
+            if (_flowDown)
+            {
+                obj.InitializeNoCaster(_castingTeam, _castID, transform.parent, _spellReference);
+            }
+            else
+            {
+                obj.Initialize(_casterID, _castingTeam, _castID, transform.parent, _spellReference);
+            }
+                
         }
         Destroy(gameObject);
     }
-    public void Initialize(Avatar caster, byte spellType, short castID, byte[] payload)
+    public void InitializeWithoutCaster(byte spellType, short castID, byte[] payload, bool flowDown)
     {
-        if (!SpellManager.GetSpell(SpellKey, ref _spellReference))
-        {
-            Destroy(gameObject);
-            return;
-        }
+        _flowDown = flowDown;
         _castID = castID;
         _payload = payload;
-        _caster = caster;
-        _casterID = _caster.PlayerID;
-        _castingTeam = caster.PlayerTeam;
         switch (spellType)
         {
             case ControlCodes.SpellTypes_PBAoE:
@@ -53,13 +53,29 @@ public class SpellSpawner : MonoBehaviour
             case ControlCodes.SpellTypes_SolidWall:
                 InitializeWall();
                 break;
+            case ControlCodes.SpellTypes_HarmfulSigil:
             case ControlCodes.SpellTypes_Sigil:
                 InitializeSigil();
                 break;
         }
-        if (_casterID == MatchParams.IDinMatch)
+    }
+    public void Initialize(Avatar caster, byte spellType, short castID, byte[] payload)
+    {
+        if (!SpellManager.GetSpell(SpellKey, ref _spellReference))
         {
-            UseStamina();
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            _caster = caster;
+            _casterID = _caster.PlayerID;
+            _castingTeam = caster.PlayerTeam;
+            InitializeWithoutCaster(spellType, castID, payload, false);
+            if (_casterID == MatchParams.IDinMatch)
+            {
+                UseStamina();
+            }
         }
     }
     private void InitializeSigil()
@@ -84,7 +100,7 @@ public class SpellSpawner : MonoBehaviour
         Vector3 direction;        
         if(Match.GetAvatar(targetID, ref target))
         {
-            direction = SharedFunctions.DirectionVector(_caster.transform.position, target.transform.position - _boltYAdjustment);
+            direction = SharedFunctions.DirectionVector(_caster.transform.position, target.transform.position - new Vector3(0, 0.5f, 0));
             Debug.Log("Direction2: " + direction.ToString());
         }
         else

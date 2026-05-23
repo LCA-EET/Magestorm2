@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Match extends TimedObject{
-    protected final byte _matchID;
     protected final int _creatorID;
     protected final byte _sceneID;
     protected final long _expirationTime;
@@ -53,12 +52,12 @@ public class Match extends TimedObject{
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
         _creatorName = creatorName;
         _nextPlayerID = 1;
-        _matchID = matchID;
+        _objectID = matchID;
         _creatorID = creatorID;
         long matchDuration = 3600000 - (duration * 900000);
         _expirationTime = System.currentTimeMillis() + matchDuration;
         SetDurationRemaining(matchDuration);
-        LogMessage("Initializing match " + _matchID + " with expiration time: " + _expirationTime + " on port " + _matchPort);
+        LogMessage("Initializing match " + _objectID + " with expiration time: " + _expirationTime + " on port " + _matchPort);
         byte nameBytesLength = (byte)_creatorName.length;
         _matchBytes = new byte[1 + 1 + 8 + 4 + 1 + 1 + 1 + nameBytesLength + 1];
         _lastIndex = (byte)(_matchBytes.length-1);
@@ -105,7 +104,7 @@ public class Match extends TimedObject{
         if(!expired){
             Tick(msReduction);
             if(ScoreUpdated()){
-                MatchManager.UpdateScore(_matchID, _scoreBytes);
+                MatchManager.UpdateScore((byte)_objectID, _scoreBytes);
             }
             if(_matchCharacters.CountdownObjects(msReduction)){
                 ArrayList<MatchCharacter> inactiveCharacters = _matchCharacters.GetExpiredObjects();
@@ -172,9 +171,6 @@ public class Match extends TimedObject{
             _matchTeams.put(teamID, new MatchTeam(teamID, this));
         }
         LogMessage("Teams initialized.");
-    }
-    public byte MatchID(){
-        return _matchID;
     }
     public int CreatorAccountID(){
         return _creatorID;
@@ -341,7 +337,7 @@ public class Match extends TimedObject{
         }
         byte[] toReturn = ByteUtils.ArrayListToByteArray(teamBytes, length, 2);
         toReturn[0] = opCode;
-        toReturn[1] = _matchID;
+        toReturn[1] = (byte)_objectID;
         return toReturn;
     }
     public void SendPlayerData(byte requesterID, byte idInMatch){
@@ -365,7 +361,7 @@ public class Match extends TimedObject{
         return toReturn;
     }
     public void MarkExpired(){
-        MatchManager.RemoveMatch(_matchID);
+        MatchManager.RemoveMatch(_objectID);
         LogMessage("The match has ended. Notifying players...");
         ArrayList<RemoteClient> remainingClients = new ArrayList<>(_verifiedClients.values());
         SendToCollection(Packets.MatchEndedPacket(), remainingClients);
@@ -403,6 +399,7 @@ public class Match extends TimedObject{
     public short SpellCast(MatchCharacter caster, Spell spellReference, byte[] decrypted){
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
+            case ControlCodes.SpellTypes_HarmfulSigil:
             case ControlCodes.SpellTypes_Sigil:
                 _sigils.put(castID, new Sigil(caster, castID, spellReference, this, decrypted));
                 break;
@@ -728,9 +725,9 @@ public class Match extends TimedObject{
         }
     }
     public void LogMessage(String toLog){
-        Main.LogMessage("Match " + _matchID +": " + toLog);
+        Main.LogMessage("Match " + _objectID +": " + toLog);
     }
     public void LogError(String toLog){
-        Main.LogError("Match " + _matchID + ": " + toLog);
+        Main.LogError("Match " + _objectID + ": " + toLog);
     }
 }

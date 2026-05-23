@@ -12,6 +12,7 @@ public class Sigil extends DamagingSpell{
 
     public void SigilTriggered(MatchCharacter mc)
     {
+        ProcessSpell(mc);
         _matchReference.SendToAll(Packets.TimedObjectExpirationPacket(InGame_Send.SigilExpired, _objectID));
         SetDurationRemaining(0);
     }

@@ -123,7 +123,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
     }
     private void HandleLeaderboardRequest(){
-        byte[] toEncrypt = MatchManager.GetScoreBytes(_owningMatch._matchID);
+        byte[] toEncrypt = MatchManager.GetScoreBytes((byte)_owningMatch.ObjectID());
         if(toEncrypt != null){
             _owningMatch.SendToPlayer(Packets.MatchScoresPacket(InGame_Send.MatchScores, toEncrypt),
                     _owningMatch.GetMatchCharacter(_decrypted[1]));
@@ -236,7 +236,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         else{
             MatchCharacter sender = _owningMatch.GetMatchCharacter(_decrypted[1]);
             if(sender != null){
-                Main.LogChat(sender, messageString, _owningMatch._matchID);
+                Main.LogChat(sender, messageString, _owningMatch.ObjectID());
                 if(messageString.startsWith("/")){
                     String[] split = messageString.split(" ");
                     _owningMatch.ParseCommand(split[0].toLowerCase().substring(1), split, _decrypted[1]);
@@ -263,7 +263,7 @@ public class InGamePacketProcessor extends UDPProcessor{
             else{
                 MatchCharacter sender = _owningMatch.GetMatchCharacter(_decrypted[1]);
                 if(sender != null){
-                    Main.LogChat(sender, messageString, _owningMatch._matchID);
+                    Main.LogChat(sender, messageString, _owningMatch.ObjectID());
                     RemoteClient messageRecipient = _owningMatch.GetMatchCharacter(recipientID).GetRemoteClient();
                     Iterable<RemoteClient> recipients = Arrays.asList(_remote, messageRecipient);
                     EnqueueForSend(Packets.MessagePacket(_decrypted, messageLength + 7), recipients);
@@ -282,7 +282,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         if(accountID >= 0){
             byte idInMatch = _decrypted[9];
             byte teamID = _decrypted[10];
-            Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.MatchID() + ", team " + teamID);
+            Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.ObjectID() + ", team " + teamID);
             if(_owningMatch.IsAwaitingVerification(accountID)){
                 GameServer.GetClient(accountID).MarkInGame();
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID, accountID, remote);
@@ -295,7 +295,7 @@ public class InGamePacketProcessor extends UDPProcessor{
                 return true;
             }
             else{
-                Main.LogMessage("Player " + idInMatch + " NOT verified for match " + _owningMatch.MatchID() + ", team " + teamID);
+                Main.LogMessage("Player " + idInMatch + " NOT verified for match " + _owningMatch.ObjectID() + ", team " + teamID);
             }
         }
         return false;
@@ -309,7 +309,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         if(remote != null){
             int accountID = (int)remote.ObjectID();
             if(ByteUtils.ExtractInt(_decrypted, 5) == GameServer.GetActiveCharacter(accountID).GetCharacterID()){
-                Main.LogMessage("Account check passed: " + accountID + ", match " + _owningMatch.MatchID());
+                Main.LogMessage("Account check passed: " + accountID + ", match " + _owningMatch.ObjectID());
                 return accountID;
             }
         }

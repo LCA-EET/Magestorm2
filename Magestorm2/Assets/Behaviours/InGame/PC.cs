@@ -282,7 +282,12 @@ public class PC : MonoBehaviour
         ITrigger toProcess = null;
         if (ObtainTrigger(other, ref toProcess))
         {
-            _inTriggers.Add(toProcess.GetTriggerID());
+            int triggerID = toProcess.GetTriggerID();
+            if (triggerID != -1)
+            {
+                _inTriggers.Add(triggerID);
+            }
+            
         }
     }
     private bool ObtainTrigger(Collider other, ref ITrigger trigger)

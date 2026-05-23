@@ -81,7 +81,7 @@ public class Log extends RegisteredThread{
     public void LogDebug(String toLog){
         _eventQueue.add(new LogEvent(ControlCodes.LogID_Debug, FormatString(toLog)));
     }
-    public void LogChat(MatchCharacter sender, String message, byte matchID){
+    public void LogChat(MatchCharacter sender, String message, Number matchID){
         String toLog = "M" + matchID + ", " + sender.GetCharacterName() + " (A" + sender.PC().GetAccountID()
                 +", C" + sender.GetCharacterID() + "): " + message;
         _eventQueue.add(new LogEvent(ControlCodes.LogID_Chat, FormatString(toLog)));

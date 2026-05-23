@@ -19,6 +19,13 @@ public class SharedFunctions {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return now.format(formatter);
     }
+    public static byte[] ConvertArrayList(ArrayList<Byte> toConvert){
+        byte[] toReturn = new byte[toConvert.size()];
+        for(int i = 0; i < toReturn.length; i++){
+            toReturn[0] = toConvert.get(i);
+        }
+        return toReturn;
+    }
     public static void FillEffects(long number, Collection<Byte> collection){
         boolean[] converted = ByteUtils.LongToBoolArray(number);
         for(byte b = 0; b < converted.length; b++){
@@ -56,7 +63,7 @@ public class SharedFunctions {
         else{
             MatchCharacter sender = owner.GetMatchCharacter(decrypted[1]);
             if(sender != null) {
-                Main.LogChat(sender, messageString, owner._matchID);
+                Main.LogChat(sender, messageString, owner.ObjectID());
                 if (sender.GetTeamID() == teamID) {
                     proc.EnqueueForSend(Packets.MessagePacket(decrypted, InGame_Send.TeamMessage),
                             owner.GetMatchTeam(teamID).GetRemoteClients());

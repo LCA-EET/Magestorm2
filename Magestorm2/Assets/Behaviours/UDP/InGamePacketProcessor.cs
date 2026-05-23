@@ -168,7 +168,7 @@ public class InGamePacketProcessor : UDPProcessor
                 index += payloadLength;
                 SpellSpawner spawner = null;
                 ComponentRegister.Spawner.SpawnSpellPrefab(spellID, ref spawner);
-                spawner.Initialize(Game.PCAvatar, baseReference.SpellType, castID, payload);
+                spawner.InitializeWithoutCaster(baseReference.SpellType, castID, payload, true);
             }
         }
     }

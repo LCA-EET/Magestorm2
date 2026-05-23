@@ -65,7 +65,7 @@ public class MatchCharacter extends TimedObject{
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
         _teamID = team.GetTeamID();
-        _pc.SetMatchDetails(idInMatch, match.MatchID(), _teamID);
+        _pc.SetMatchDetails(idInMatch, (byte)match.ObjectID(), _teamID);
         _idInMatch = idInMatch;
         byte[] nameLevelClass = _pc.GetNameLevelClassBytes();
         _INLCTA = new byte[nameLevelClass.length + 7];
@@ -256,7 +256,7 @@ public class MatchCharacter extends TimedObject{
     }
 
     //region Effects
-    public void TerminateEffects(ArrayList<Byte> cancelled){
+    public void TerminateEffects(byte[] cancelled){
         for(byte b : cancelled){
             _activeEffects.remove(b);
         }

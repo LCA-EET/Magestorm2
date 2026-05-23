@@ -7,14 +7,15 @@ public class Effect {
     private final float _percentOverTime;
 
     private final HashSet<Byte> _effectsPrevented;
-    private final ArrayList<Byte> _effectsCancelled;
+    private final byte[] _effectsCancelled;
     public Effect(byte effectID, String effectName, long effectsPrevented, long effectsCancelled, byte[] attrib){
         _effectCode = effectID;
         _effectName = effectName;
         _effectsPrevented = new HashSet<>();
-        _effectsCancelled = new ArrayList<>();
+        ArrayList<Byte> effectCodes = new ArrayList<>();
         SharedFunctions.FillEffects(effectsPrevented, _effectsPrevented);
-        SharedFunctions.FillEffects(effectsCancelled, _effectsCancelled);
+        SharedFunctions.FillEffects(effectsCancelled, effectCodes);
+        _effectsCancelled = SharedFunctions.ConvertArrayList(effectCodes);
         _effectTarget = attrib[0];
         _notificationCode = attrib[1];
         _effectType = attrib[2];
@@ -23,7 +24,7 @@ public class Effect {
         _element = attrib[5];
         _vfxCode = attrib[6];
     }
-    public ArrayList<Byte> GetEffectsCancelled(){
+    public byte[] GetEffectsCancelled(){
         return _effectsCancelled;
     }
     public byte GetEffectNotificationCode(){
