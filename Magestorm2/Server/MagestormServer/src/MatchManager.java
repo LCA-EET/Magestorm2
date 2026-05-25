@@ -31,28 +31,14 @@ public class MatchManager{
 
     public static void SendMatchListToClient(RemoteClient rc){
         GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
-        int cid = rc.GetDepartedCharacterID();
-        if(cid > 0){
-            PlayerCharacter pc = CharacterManager.GetCharacter(cid);
-            if(pc != null){
-                GameServer.EnqueueForSend(Packets.ExpLevelUpdatePacket(pc), rc);
-            }
-        }
     }
 
-    public static void Subscribe(int accountID, boolean subscribe, int charID, RemoteClient remote){
+    public static RemoteClient Subscribe(int accountID, boolean subscribe, int charID){
         Main.LogMessage("MatchManager.Subscribe: " + charID +", " + subscribe);
-        RemoteClient rc = GameServer.GetClient(accountID);
+        RemoteClient rc = RemoteClientManager.GetClient(accountID);
 
         if(rc != null){
             if(subscribe){
-                if(rc.PortSwitchPending()){
-                    Main.LogMessage("RemoteClient port switch from " + rc.GetRemotePort() + " to " +
-                            remote.GetRemotePort() + ", for account: " + remote.ObjectID());
-                    remote.SetNameAndID(rc.GetUserName(), (int)rc.ObjectID());
-                    rc = remote;
-                    GameServer.ClientLoggedIn(remote);
-                }
                 rc.SubscribeToMatches();
                 GameServer.AddActiveCharacter(accountID, CharacterManager.GetCharacter(charID));
                 GameServer.EnqueueForSend(Packets.AcknowledgeSubscriptionPacket(), rc);
@@ -60,14 +46,14 @@ public class MatchManager{
             else{
                 rc.UnsubscribeFromMatches();
             }
-
         }
         else{
             Main.LogMessage("MatchManager.Subscribe: rc is null for account id: " + accountID);
         }
+        return rc;
     }
     public static void NotifySubscribers(){
-        Iterable<RemoteClient> connectedClients = GameServer.LoggedInClients.values();
+        Iterable<RemoteClient> connectedClients = RemoteClientManager.GetConnectedClients();
         ArrayList<RemoteClient> subscribedClients = new ArrayList<>();
         for (RemoteClient rc : connectedClients) {
             if (rc.IsSubscribedToMatches()) {
@@ -78,7 +64,7 @@ public class MatchManager{
         UpdatesNeeded = false;
     }
     public static void RequestMatchCreation(int accountID, byte sceneID, byte duration, byte matchType, byte matchOptions){
-        RemoteClient rc = GameServer.GetClient(accountID);
+        RemoteClient rc = RemoteClientManager.GetClient(accountID);
         if(rc != null){
             if(CheckOtherMatchesCreatedByAccount(accountID)){
                 GameServer.EnqueueForSend(Packets.MatchAlreadyCreatedPacket(), rc);
@@ -125,8 +111,7 @@ public class MatchManager{
             }
         }
         if(toDelete != null){
-            _activeMatches.remove(toDelete.ObjectID());
-            UpdatesNeeded = true;
+            toDelete.SetDurationRemaining(0);
         }
     }
     public static void AddQuickMatch(){
@@ -146,7 +131,7 @@ public class MatchManager{
         return false;
     }
 
-    private static byte NextMatchID(){
+    private synchronized static byte NextMatchID(){
         byte toReturn = _nextMatchID;
         _nextMatchID++;
         if(_nextMatchID > 100){
@@ -156,16 +141,7 @@ public class MatchManager{
     }
 
     public static Match GetMatch(byte matchID){
-        if(_activeMatches.containsKey(matchID)){
-            return _activeMatches.get(matchID);
-        }
-        return null;
-    }
-
-    public static void RemoveMatch(Number matchID){
-        Match removed = _activeMatches.remove(matchID);
-
-        UpdatesNeeded = true;
+        return _activeMatches.get(matchID);
     }
 
     public static TimedObjectCollection<Byte, Match> GetMatches(){

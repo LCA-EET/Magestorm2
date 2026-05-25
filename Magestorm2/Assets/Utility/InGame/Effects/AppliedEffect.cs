@@ -6,7 +6,7 @@ public class AppliedEffect : MonoBehaviour
     public byte VFXCode;
     protected Avatar _appliedTo, _applier;
     private float _duration;
-    private byte _degree;
+    protected byte _degree;
     private GameObject _vfxContainer;
     protected bool _appliedToPlayer;
     public void Initialize(Avatar applier, float duration, byte degree)
@@ -24,7 +24,7 @@ public class AppliedEffect : MonoBehaviour
     {
         _appliedTo = appliedTo;
         _appliedToPlayer = SharedFunctions.IsPlayerAvatar(_appliedTo);
-        if (!_appliedToPlayer)
+        if (!_appliedToPlayer && VFXCode != ControlCodes.VFX_None)
         {
             ComponentRegister.Spawner.SpawnVFX(VFXCode, _appliedTo.transform, ref _vfxContainer);
         }
@@ -43,7 +43,10 @@ public class AppliedEffect : MonoBehaviour
     }
     public virtual void ReverseEffect()
     {
-        DestroyVFX();
+        if (VFXCode != ControlCodes.VFX_None)
+        {
+            DestroyVFX();
+        }
     }
 
     public float TimeRemaining

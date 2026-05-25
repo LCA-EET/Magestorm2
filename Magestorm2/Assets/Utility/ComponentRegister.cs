@@ -42,7 +42,19 @@ public static class ComponentRegister
     private static AvailableSpellsPanel _availableSpellsPanel;
     private static DamageDirectionPanel _ddiPanel;
     private static ResistanceNotice _resistanceNotice;
-    
+    private static InputController _inputController;
+
+    public static InputController InputController
+    {
+        get
+        {
+            return _inputController;
+        }
+        set
+        {
+            _inputController = value;
+        }
+    }
     public static Minimap Minimap
     {
         get

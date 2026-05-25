@@ -178,10 +178,10 @@ public class CaptureTheFlag extends Match{
     }
 
     @Override
-    public void LeaveMatch(byte id, boolean send, boolean quitGame){
+    public void LeaveMatch(byte id, boolean quitGame){
         Main.LogMessage("Player " + id + " is leaving CTF match.");
         SeeIfFlagDropped(id, (byte)0);
-        super.LeaveMatch(id, send, quitGame);
+        super.LeaveMatch(id, quitGame);
     }
 
     @Override

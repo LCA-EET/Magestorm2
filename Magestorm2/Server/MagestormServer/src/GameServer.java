@@ -5,23 +5,18 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class GameServer extends Thread {
     public static final boolean SymmetricEncryption = false;
     public static int MaxUDPPayload = 508;
-    public static TimedObjectCollection<Integer, RemoteClient> LoggedInClients;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
     private static ConcurrentHashMap<Byte, byte[]> _poolData;
     private static ConcurrentHashMap<Byte, byte[]> _objectData;
-
-    private static RemoteClientMonitor _rcMonitor;
-
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
-    private static int _threadID = 0;
+
     public static void init(){
         ByteUtils.init();
         GameUtils.init();
         CharacterManager.init();
-        LoggedInClients = new TimedObjectCollection<>(30000);
         _maxPlayerData = new ConcurrentHashMap<>();
         _activeCharacters = new ConcurrentHashMap<>();
         _poolData = new ConcurrentHashMap<>();
@@ -38,8 +33,8 @@ public class GameServer extends Thread {
             TerminateServer();
             return;
         }
+        RemoteClientManager.init();
         MatchManager.init(ServerParams.MaxMatches);
-        _rcMonitor = new RemoteClientMonitor();
         _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
         _levelData = Database.GetLevelsList((byte)1);
         _usedMatchPorts = new ConcurrentSkipListSet<>();
@@ -70,11 +65,6 @@ public class GameServer extends Thread {
         return _poolData.get(sceneID);
     }
 
-
-    public static boolean IsLoggedIn(int accountID){
-        return LoggedInClients.containsKey(accountID);
-    }
-
     public static int GetNextMatchPort()
     {
         int nextAvailablePort = ServerParams.ListeningPort + 1;
@@ -87,38 +77,7 @@ public class GameServer extends Thread {
     public static void RemoveUsedPort(int portNumber){
         _usedMatchPorts.remove(portNumber);
     }
-    public static void ClientLoggedIn(RemoteClient rc)
-    {
-        int accountID = (int)rc.ObjectID();
-        Main.LogMessage("Client logged in: " + accountID + rc.IPAddress().toString() + ":" + rc.GetRemotePort());
-        LoggedInClients.put(accountID, rc);
-    }
 
-    public static RemoteClient GetClient(int accountID){
-        RemoteClient toReturn = null;
-        if(LoggedInClients.containsKey(accountID)){
-            toReturn = LoggedInClients.get(accountID);
-        }
-        else{
-            Main.LogMessage("RemoteClient is null for account " + accountID);
-        }
-        return toReturn;
-    }
-
-    public static RemoteClient ClientLoggedOut(int accountID){
-        Main.LogMessage("Client logged out: " + accountID);
-        RemoteClient removed = LoggedInClients.remove(accountID);
-        PlayerCharacter removedCharacter = _activeCharacters.remove(accountID);
-        if(removedCharacter != null){
-            byte matchID = removedCharacter.GetMatchID();
-            byte idInMatch = removedCharacter.GetIDinMatch();
-            Match match = MatchManager.GetMatch(matchID);
-            if(match != null){
-                match.LeaveMatch(idInMatch, true, false);
-            }
-        }
-        return removed;
-    }
     public static void EnqueueForSend(byte[] encrypted, RemoteClient recipient){
         _pgProcessor.EnqueueForSend(encrypted, recipient);
     }

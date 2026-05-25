@@ -8,7 +8,6 @@ public class MatchCharacter extends TimedObject{
     private final PlayerCharacter _pc;
 
     private final byte _teamID;
-    private final byte _idInMatch;
     private final float _hpRegenAmount, _spRegenAmount;
     private byte _pmd;
 
@@ -31,16 +30,19 @@ public class MatchCharacter extends TimedObject{
     private final float[] _resistance;
     private final boolean _newToMatch;
     private final HashSet<Short> _splashHits;
-    private byte _wallCount;
+    private byte _wallCount, _sigilCount;
     private byte[] _scoreBytes;
-    private final byte _maxWalls;
+    private final byte _maxWalls, _maxSigils;
     private int _startingXP;
     private float _endingXP, _priorXP;
     private final TimedObjectCollection<Byte, AppliedEffect> _activeEffects;
+    private boolean _quitGame;
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
+        _objectID = idInMatch;
         SetDurationRemaining(ServerParams.IngameInactivityDisconnect);
         _team = team;
         _wallCount = 0;
+        _sigilCount = 0;
         _resistance = new float[10];
         _lastPRPacketID = 0;
         _hpRegenElapsed = 0;
@@ -55,7 +57,7 @@ public class MatchCharacter extends TimedObject{
         _endingXP = _startingXP;
         _priorXP = _endingXP;
         _maxWalls = (byte) (3 + Math.floor(pc.GetCharacterLevel() / 3.0f));
-        Main.LogDebug("Max walls for player " + pc.GetCharacterName() + ", level " + pc.GetCharacterLevel() + " is " + _maxWalls);
+        _maxSigils = _maxWalls;
         _maxHP = _pc.GetMaxHP();
         _maxMana = _pc.GetMaxMana();
         _currentHP = joinAlive?_maxHP:0;
@@ -66,7 +68,6 @@ public class MatchCharacter extends TimedObject{
         _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
         _teamID = team.GetTeamID();
         _pc.SetMatchDetails(idInMatch, (byte)match.ObjectID(), _teamID);
-        _idInMatch = idInMatch;
         byte[] nameLevelClass = _pc.GetNameLevelClassBytes();
         _INLCTA = new byte[nameLevelClass.length + 7];
         _INLCTA[0] = idInMatch;
@@ -82,6 +83,13 @@ public class MatchCharacter extends TimedObject{
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
         InitializeScoreBytes(nameLevelClass);
     }
+    public void QuitGame(){
+        SetDurationRemaining(0);
+        _quitGame = true;
+    }
+    public boolean PlayerQuit(){
+        return _quitGame;
+    }
     private void InitializeScoreBytes(byte[] nlc){
         _scoreBytes = new byte[3 + nlc.length];
         System.arraycopy(nlc, 0, _scoreBytes, 3, nlc.length);
@@ -89,22 +97,19 @@ public class MatchCharacter extends TimedObject{
     public byte[] GetScoreBytes(){
         return _scoreBytes;
     }
+    //region Sigils
+    public void IncrementSigilCount() { _sigilCount++; }
+    public void DecrementSigilCount() { _sigilCount--; }
+    public boolean CanCastAdditionalSigil() {return _sigilCount < _maxSigils; }
+    //endregion
+
     //region Walls
     public void IncrementWallCount()
     {
         _wallCount++;
     }
-    public void ResetWallCount(){
-        _wallCount = 0;
-    }
     public void DecrementWallCount(){
         _wallCount--;
-    }
-    public byte GetWallCount(){
-        return _wallCount;
-    }
-    public byte GetMaxWalls(){
-        return _maxWalls;
     }
     public boolean CanCastAdditionalWall(){
         return _wallCount < _maxWalls;
@@ -139,7 +144,7 @@ public class MatchCharacter extends TimedObject{
     }
     public void Revive(byte reviverID, float hp){
         _currentHP = hp;
-        _owningMatch.SendToAll(Packets.PlayerRevivedPacket(_idInMatch, reviverID, _currentHP));
+        _owningMatch.SendToAll(Packets.PlayerRevivedPacket((byte)_objectID, reviverID, _currentHP));
     }
     //region Experience
     public void SetExperience(int experience){
@@ -229,7 +234,7 @@ public class MatchCharacter extends TimedObject{
     }
 
     public byte GetIDinMatch(){
-        return _idInMatch;
+        return (byte)_objectID;
     }
 
     public String GetCharacterName(){
@@ -237,7 +242,7 @@ public class MatchCharacter extends TimedObject{
     }
 
     public void MarkVerified(RemoteClient remote){
-        Main.LogMessage("Player " + _idInMatch + " verified for team " + _teamID);
+        Main.LogMessage("Player " + _objectID + " verified for team " + _teamID);
         SetDurationRemaining(ServerParams.IngameInactivityDisconnect);
         _remote = remote;
     }
@@ -260,17 +265,19 @@ public class MatchCharacter extends TimedObject{
         for(byte b : cancelled){
             _activeEffects.remove(b);
         }
-        _owningMatch.SendToAll(Packets.EffectsCancellationPacket(_idInMatch, cancelled));
+        _owningMatch.SendToAll(Packets.EffectsCancellationPacket((byte)_objectID, cancelled));
     }
     public boolean IsShocked(){
         return _activeEffects.containsKey(ControlCodes.EffectCode_Shock);
     }
     public void AddEffect(AppliedEffect toAdd){
         byte effectCode = toAdd.GetEffectCode();
+        Main.LogDebug("Match " + _owningMatch.ObjectID() + ": applied effect " + effectCode +" to player " + _objectID);
         _activeEffects.put(effectCode, toAdd);
     }
     public void RemoveAllEffects()
     {
+        Main.LogDebug("Match " + _owningMatch.ObjectID() + ": All effects removed for player " + _objectID);
         _activeEffects.clear();
     }
     public void CountdownEffects(long msElapsed){
@@ -375,7 +382,7 @@ public class MatchCharacter extends TimedObject{
     }
     @Override
     public String toString(){
-        return "MCID: " + _idInMatch + ", TeamID: " + _teamID;
+        return "MCID: " + _objectID + ", TeamID: " + _teamID + ", RC: " + _remote.toString();
     }
 
 }

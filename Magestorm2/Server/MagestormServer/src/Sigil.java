@@ -8,12 +8,21 @@ public class Sigil extends DamagingSpell{
         System.arraycopy(castIDBytes, 0, _bytes, 1, 2);
         _bytes[3] = decrypted[ControlCodes.CastPayloadStartIndex]; // teamID
         System.arraycopy(decrypted,ControlCodes.CastPayloadStartIndex+1,_bytes, 4, 12);
+        caster.IncrementSigilCount();
     }
 
     public void SigilTriggered(MatchCharacter mc)
     {
         ProcessSpell(mc);
-        _matchReference.SendToAll(Packets.TimedObjectExpirationPacket(InGame_Send.SigilExpired, _objectID));
+        _matchReference.SendToAll(Packets.TimedObjectExpirationPacket(InGame_Send.SigilExpired, _objectIDAsShort));
         SetDurationRemaining(0);
+    }
+    @Override
+    public boolean ReduceDuration(long msElapsed){
+        boolean expired = super.ReduceDuration(msElapsed);
+        if(expired){
+            _casterReference.DecrementSigilCount();
+        }
+        return expired;
     }
 }

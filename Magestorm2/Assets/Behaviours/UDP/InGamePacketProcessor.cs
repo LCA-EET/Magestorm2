@@ -303,12 +303,11 @@ public class InGamePacketProcessor : UDPProcessor
             if (applierID != appliedToID)
             {
                 Avatar applier = null;
-                if(Match.GetAvatar(applierID, ref applier)){
-                    if(ComponentRegister.Spawner.SpawnAppliedEffect(effectCode, ref ae))
-                    {
-                        ae.Initialize(applier, duration, degree);
-                        appliedTo.AddEffect(ae);
-                    }
+                Match.GetAvatar(applierID, ref applier);
+                if (ComponentRegister.Spawner.SpawnAppliedEffect(effectCode, ref ae))
+                {
+                    ae.Initialize(applier, duration, degree);
+                    appliedTo.AddEffect(ae);
                 }
             }
             else

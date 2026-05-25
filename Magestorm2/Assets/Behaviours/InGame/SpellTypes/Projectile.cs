@@ -13,14 +13,14 @@ public class Projectile : SpawnedSpell
     {
         if (!_destroyOnNextUpdate)
         {
-            Propel();
+            Propel(Time.fixedDeltaTime);
         }
     }
-    protected void Propel()
+    protected void Propel(float delta)
     {
         if (!_destroyOnNextUpdate)
         {
-            float toAdvance = _spellReference.ProjectileSpeed * Time.deltaTime;
+            float toAdvance = _spellReference.ProjectileSpeed * delta;
             transform.position += (transform.forward * toAdvance);
             RaycastHit hitInfo;
             if (Physics.Raycast(transform.position, transform.forward, out hitInfo, toAdvance, _impactMask))

@@ -56,13 +56,12 @@ public class Main {
     }
 
     private static void ProcessListRCCommand(){
-        Iterable<RemoteClient> remoteClientList = GameServer.LoggedInClients.values();
-        int count = 0;
-        for(RemoteClient rc : remoteClientList){
-            System.out.println(rc.ToString());
-            count++;
-        }
-        System.out.println(count + " connected clients.");
+        System.out.println("Pregame Clients");
+        System.out.println("===============");
+        System.out.println(RemoteClientManager.PregameClients().toString());
+        System.out.println("Ingame Clients");
+        System.out.println("===============");
+        System.out.println(MatchManager.GetMatches().toString());
     }
     public static void InitLog(){
         _serverLog = new Log(ServerParams.LogFilePath, ServerParams.ErrorFilePath,

@@ -30,7 +30,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 break;
             case Pregame_Receive.LogOut:
                 AssignRC();
-                GameServer.ClientLoggedOut(_accountID);
+                RemoteClientManager.ClientLoggedOut(_accountID);
                 break;
             case Pregame_Receive.DeleteCharacter:
                 AssignRC();
@@ -38,11 +38,11 @@ public class PregamePacketProcessor extends UDPProcessor
                 break;
             case Pregame_Receive.SubscribeToMatches:
                 AssignRC();
-                HandleMatchSubscribePacket(true, _remote);
+                HandleMatchSubscribePacket(true);
                 break;
             case Pregame_Receive.UnsubscribeFromMatches:
                 AssignRC();
-                HandleMatchSubscribePacket(false, _remote);
+                HandleMatchSubscribePacket(false);
                 break;
             case Pregame_Receive.CreateMatch:
                 AssignRC();
@@ -71,7 +71,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 break;
             case Pregame_Receive.JoinMatch:
                 AssignRC();
-                HandleJoinMatchPacket();
+                HandleJoinMatchPacket(_decrypted[5], _decrypted[6]);
                 break;
             case Pregame_Receive.RequestMatchList:
                 AssignRC();
@@ -89,6 +89,10 @@ public class PregamePacketProcessor extends UDPProcessor
                 AssignRC();
                 HandleCharacterDataRequest();
                 return true;
+            case Pregame_Receive.RequestMatchScore:
+                AssignRC();
+                HandleMatchScoreRequest();
+                return true;
                /*
             RemoteClient doesn't exist
              */
@@ -103,25 +107,15 @@ public class PregamePacketProcessor extends UDPProcessor
         }
         return true;
     }
+    private void HandleMatchScoreRequest(){
+        SendMatchScore(_decrypted[5], _remote);
+    }
     private void HandleQMJoin(){
-        Match toJoin = MatchManager.GetMatch(MatchManager.GetQMID());
-        if(toJoin != null){
-            if(toJoin.HasRoomForAnotherPlayer()){
-                RemoteClient remote = GameServer.GetClient(_accountID);
-                remote.UnsubscribeFromMatches();
-                toJoin.JoinMatch(remote, (byte)0);
-            }
-            else{
-                EnqueueForSend(Packets.MatchIsFullPacket(), _remote);
-            }
-        }
+        HandleJoinMatchPacket(MatchManager.GetQMID(), (byte)0);
     }
     private void AssignRC(){
         _remote = LoggedInClient();
         if(_remote != null){
-            if(_remote.PortSwitchPending()){
-                _remote.UpdateRemotePort(_received.getPort());
-            }
             _accountID =(int)_remote.ObjectID();
         }
     }
@@ -147,14 +141,12 @@ public class PregamePacketProcessor extends UDPProcessor
             EnqueueForSend(Cryptographer.Encrypt(_decrypted), _remote);
         }
     }
-    private void HandleJoinMatchPacket()
+    private void HandleJoinMatchPacket(byte matchID, byte teamID)
     {
-        byte matchID = _decrypted[5];
-        byte teamID = _decrypted[6];
         Match toJoin = MatchManager.GetMatch(matchID);
         if(toJoin != null){
             if(toJoin.HasRoomForAnotherPlayer()){
-                RemoteClient remote = GameServer.GetClient(_accountID);
+                RemoteClient remote = RemoteClientManager.GetClient(_accountID);
                 remote.UnsubscribeFromMatches();
                 toJoin.JoinMatch(remote, teamID);
             }
@@ -196,17 +188,16 @@ public class PregamePacketProcessor extends UDPProcessor
         MatchManager.RequestMatchCreation(_accountID, sceneID, duration, matchType, matchOptions);
     }
 
-    public void HandleMatchSubscribePacket(boolean subscribe, RemoteClient remote){
+    public void HandleMatchSubscribePacket(boolean subscribe){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);
-        MatchManager.Subscribe(_accountID, subscribe, characterID, remote);
+        RemoteClient rc = MatchManager.Subscribe(_accountID, subscribe, characterID);
         byte priorMatchID = _decrypted[9];
         if(_decrypted[10] == 1){ // qm
             HandleQMJoin();
         }
         else{
-            SendMatchScore(priorMatchID, remote);
+            SendMatchScore(priorMatchID, rc);
         }
-
     }
 
     public String[] LogInDetails(){
@@ -275,9 +266,9 @@ public class PregamePacketProcessor extends UDPProcessor
         int accountID = (int)validationResult[1];
         byte[] toSend;
         if(validCreds){
-            if(GameServer.IsLoggedIn(accountID)){
+            if(RemoteClientManager.IsLoggedIn(accountID)){
                 toSend = Packets.AlreadyLoggedInPacket();
-                RemoteClient alreadyExisting = GameServer.ClientLoggedOut(accountID);
+                RemoteClient alreadyExisting = RemoteClientManager.ClientLoggedOut(accountID);
                 if(alreadyExisting != null){
                     EnqueueForSend(Packets.RemovedFromServerPacket(RemovalReason.AlreadyLoggedIn),
                             alreadyExisting);
@@ -285,7 +276,7 @@ public class PregamePacketProcessor extends UDPProcessor
             }
             else {
                 _remote.SetNameAndID(username, accountID);
-                GameServer.ClientLoggedIn(_remote);
+                RemoteClientManager.ClientLoggedIn(_remote);
                 toSend = Packets.LoginSucceededPacket(accountID);
             }
         }

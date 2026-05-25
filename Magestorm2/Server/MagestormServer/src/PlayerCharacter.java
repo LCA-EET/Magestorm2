@@ -19,7 +19,6 @@ public class PlayerCharacter {
     private final int _indexLevel = 16;
     private final int _indexSlotStart = 25;
     private final int _accountID;
-    private final RemoteClient _remoteClient;
     private final Hashtable<Byte, Byte> _skillsTable;
 
     private byte _currentMatchID, _idInCurrentMatch, _currentTeam;
@@ -29,7 +28,6 @@ public class PlayerCharacter {
     public PlayerCharacter(byte[] fetched, int accountID){
         _inMatch = false;
         _skillsTable = new Hashtable<>();
-        _remoteClient = GameServer.GetClient(accountID);
         _accountID = accountID;
         _characterBytes = fetched;
         _characterID = ByteUtils.ExtractInt(fetched, 0);
@@ -150,9 +148,7 @@ public class PlayerCharacter {
     public int GetAccountID(){
         return _accountID;
     }
-    public RemoteClient GetRemoteClient(){
-        return _remoteClient;
-    }
+
     public void SetMatchDetails(byte id, byte match, byte team){
         _idInCurrentMatch = id;
         _currentMatchID = match;

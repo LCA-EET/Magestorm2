@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-public enum InputControl
+public enum InputControl : byte
 {
     Forward = 0,
     Backward = 1,
@@ -28,7 +28,7 @@ public enum InputControl
     MiniMapZoomOut=23,
     MiniMapZoomDefault=24,
     InGameMenu = 25,
-    //Tap = 26,
+
     Slot1 = 100,
     Slot2 = 101,
     Slot3 = 102,
@@ -85,6 +85,17 @@ public static class InputControls
         if (_controls.ContainsKey(key))
         {
             return _controls[key];
+        }
+        else
+        {
+            return KeyCode.None;
+        }
+    }
+    public static KeyCode GetKeyCode(InputControl control)
+    {
+        if (_controls.ContainsKey(control))
+        {
+            return _controls[control];
         }
         else
         {
@@ -160,13 +171,7 @@ public static class InputControls
             return (Input.GetKeyDown(_controls[InputControl.SetSecondary])) && Game.GameMode;
         }
     }
-    public static bool Crouch
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.Crouch])) && Game.GameMode;
-        }
-    }
+
     public static bool MouseMode
     {
         get
@@ -224,20 +229,6 @@ public static class InputControls
             return (Input.GetKeyDown(_controls[InputControl.ChatScrollDown])) && !Game.MenuMode;
         }
     }
-    public static bool Run
-    {
-        get
-        {
-            return (Input.GetKey(_controls[InputControl.Run]) && !Backward) && Game.GameMode;
-        }
-    }
-    public static bool Jump
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.Jump]) && Game.GameMode;
-        }
-    }
     public static bool ShootPrimary
     {
         get
@@ -250,34 +241,6 @@ public static class InputControls
         get
         {
             return Input.GetKey(_controls[InputControl.ShootSecondary]) && Game.GameMode;
-        }
-    }
-    public static bool Forward
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.Forward]) && Game.GameMode;
-        }
-    }
-    public static bool Backward
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.Backward]) && Game.GameMode;
-        }
-    }
-    public static bool StrafeLeft
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.StrafeLeft]) && Game.GameMode;
-        }
-    }
-    public static bool StrafeRight
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.StrafeRight]) && Game.GameMode;
         }
     }
     public static bool Ascend

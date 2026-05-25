@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Match extends TimedObject{
+    protected final byte _objectIDAsByte;
     protected final int _creatorID;
     protected final byte _sceneID;
     protected final long _expirationTime;
@@ -37,6 +38,8 @@ public class Match extends TimedObject{
 
 
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchType, byte matchOptions){
+        _objectID = matchID;
+        _objectIDAsByte = (byte)_objectID;
         _playersJoined = new HashSet<>();
         _matchOptions = new MatchOptions(matchOptions);
         _regenTick = _matchOptions.IsOptionSet(ControlCodes.MatchOptions_FastRegen)?1000:5000;
@@ -52,7 +55,6 @@ public class Match extends TimedObject{
         _maxPlayers = GameServer.RetrieveMaxPlayerData(sceneID);
         _creatorName = creatorName;
         _nextPlayerID = 1;
-        _objectID = matchID;
         _creatorID = creatorID;
         long matchDuration = 3600000 - (duration * 900000);
         _expirationTime = System.currentTimeMillis() + matchDuration;
@@ -104,14 +106,14 @@ public class Match extends TimedObject{
         if(!expired){
             Tick(msReduction);
             if(ScoreUpdated()){
-                MatchManager.UpdateScore((byte)_objectID, _scoreBytes);
+                MatchManager.UpdateScore(_objectIDAsByte, _scoreBytes);
             }
             if(_matchCharacters.CountdownObjects(msReduction)){
                 ArrayList<MatchCharacter> inactiveCharacters = _matchCharacters.GetExpiredObjects();
                 byte[] dcPacket = Packets.IGInactivityDisconnectPacket();
                 for(MatchCharacter inactive : inactiveCharacters){
                     SendToClient(dcPacket, inactive.GetRemoteClient());
-                    LeaveMatch(inactive.GetIDinMatch(), false, true);
+                    LeaveMatch(inactive, false);
                 }
                 SendToAll(Packets.PlayersLeftMatchPacket(inactiveCharacters));
             }
@@ -209,9 +211,6 @@ public class Match extends TimedObject{
         _scoreBytes[0] = InGame_Send.MatchScores;
         _scoreBytes[1] = (byte)scoreBytes.size();
     }
-    public byte[] GetScoreBytes(){
-        return _scoreBytes;
-    }
     //endregion
     public boolean HasRoomForAnotherPlayer(){
         return NumPlayersInMatch() < _maxPlayers;
@@ -288,12 +287,8 @@ public class Match extends TimedObject{
         }
     }
     private void RemoveAllPlayers(){
-        ArrayList<Byte> playerIDs = new ArrayList<>();
         for (MatchCharacter matchCharacter : _matchCharacters.values()){
-            playerIDs.add(matchCharacter.GetIDinMatch());
-        }
-        for (byte id : playerIDs){
-            LeaveMatch(id, false, false);
+            matchCharacter.SetDurationRemaining(0);
         }
     }
     public boolean ScoreUpdated(){
@@ -303,28 +298,24 @@ public class Match extends TimedObject{
         }
         return toReturn;
     }
-    public void LeaveMatch(byte id, boolean send, boolean quitGame){
-        MatchCharacter departee = _matchCharacters.remove(id);
-        if(departee != null){
-            PlayerCharacter pc = departee.PC();
-            _verifiedClients.remove(id);
-            _matchTeams.get(departee.GetTeamID()).RemovePlayer(id);
-            if(quitGame){
-                GameServer.ClientLoggedOut(pc.GetAccountID());
-            }
-            else{
-                RemoteClient rc = GameServer.GetClient(pc.GetAccountID());
-                if(rc != null){
-                    rc.MarkPortSwitchPending();
-                    rc.SetDepartingCharacterID(departee.GetCharacterID());
-                    pc.MarkRemovedFromMatch();
-                }
-            }
-            Main.AsyncDBUpdater.AddToQueue(new AsyncDBUpdate(ControlCodes.AsyncDBUpdate_Experience, departee, null));
-        }
+    public void LeaveMatch(MatchCharacter departee, boolean send){
+        byte id = departee.GetIDinMatch();
+        PlayerCharacter pc = departee.PC();
+        _verifiedClients.remove(id);
+        _matchTeams.get(departee.GetTeamID()).RemovePlayer(id);
+        Main.AsyncDBUpdater.AddToQueue(new AsyncDBUpdate(ControlCodes.AsyncDBUpdate_Experience, departee, null));
         LogMessage("Player " + id + " has left the match. Players remaining: " + _matchCharacters.size());
         if(send){
             SendToAll(Packets.PlayerLeftMatchPacket(id));
+        }
+    }
+    public void LeaveMatch(byte id, boolean quitGame){
+        MatchCharacter departee = _matchCharacters.get(id);
+        if(quitGame){
+            departee.QuitGame();
+        }
+        else{
+            departee.SetDurationRemaining(0);
         }
     }
     public byte[] PlayersInMatch(byte opCode){
@@ -337,7 +328,7 @@ public class Match extends TimedObject{
         }
         byte[] toReturn = ByteUtils.ArrayListToByteArray(teamBytes, length, 2);
         toReturn[0] = opCode;
-        toReturn[1] = (byte)_objectID;
+        toReturn[1] = _objectIDAsByte;
         return toReturn;
     }
     public void SendPlayerData(byte requesterID, byte idInMatch){
@@ -361,7 +352,7 @@ public class Match extends TimedObject{
         return toReturn;
     }
     public void MarkExpired(){
-        MatchManager.RemoveMatch(_objectID);
+        MatchManager.UpdatesNeeded = true;
         LogMessage("The match has ended. Notifying players...");
         ArrayList<RemoteClient> remainingClients = new ArrayList<>(_verifiedClients.values());
         SendToCollection(Packets.MatchEndedPacket(), remainingClients);
@@ -401,7 +392,12 @@ public class Match extends TimedObject{
         switch(spellReference.SpellType()){
             case ControlCodes.SpellTypes_HarmfulSigil:
             case ControlCodes.SpellTypes_Sigil:
-                _sigils.put(castID, new Sigil(caster, castID, spellReference, this, decrypted));
+                if(caster.CanCastAdditionalSigil()) {
+                    _sigils.put(castID, new Sigil(caster, castID, spellReference, this, decrypted));
+                }
+                else{
+                    castID = -1;
+                }
                 break;
             case ControlCodes.SpellTypes_Projectile:
             case ControlCodes.SpellTypes_PBAoE:
@@ -729,5 +725,14 @@ public class Match extends TimedObject{
     }
     public void LogError(String toLog){
         Main.LogError("Match " + _objectID + ": " + toLog);
+    }
+    public byte GetMatchID(){
+        return _objectIDAsByte;
+    }
+    @Override
+    public String toString(){
+        String toReturn = "Match ID: " + _objectID + System.lineSeparator();
+        toReturn = toReturn.concat(_matchCharacters.toString());
+        return toReturn;
     }
 }

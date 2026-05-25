@@ -22,6 +22,8 @@
     public const byte EffectCode_ViewTeam = 13;
     public const byte EffectCode_ViewAll = 14;
     public const byte EffectCode_Fly = 15;
+    public const byte EffectCode_Leap = 16;
+    public const byte EffectCode_Expulse = 17;
 
     public const byte Element_Fire = 1;
     public const byte Element_Ice = 2;
@@ -65,6 +67,11 @@
     public const byte MatchTypes_DeathMatch = 0;
     public const byte MatchTypes_FreeForAll = 1;
     public const byte MatchTypes_CaptureTheFlag = 2;
+
+    public const byte SkillLevel_None = 0;
+    public const byte SkillLevel_Basic = 1;
+    public const byte SkillLevel_Expert = 2;
+    public const byte SkillLevel_Master = 3;
 
     public const byte PlayerStats_Strength = 0; // affects jump height & resistance to camera shake
     public const byte PlayerStats_Dexterity = 1; // affects stamina

@@ -143,8 +143,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     }
     private void NameRotate()
     {
-        CharacterName.transform.LookAt(Camera.main.transform.position);
-        CharacterName.transform.Rotate(0, 180, 0);
+        SharedFunctions.RotateToCamera(CharacterName.transform);
     }
     private void SwapMaterials(bool opaque)
     {

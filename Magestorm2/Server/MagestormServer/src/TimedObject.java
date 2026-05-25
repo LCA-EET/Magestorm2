@@ -2,12 +2,13 @@ public class TimedObject {
     protected long _priorDuration, _durationRemaining;
     protected Number _objectID;
     protected byte[] _bytes;
+    protected boolean _timedOut;
 
     public TimedObject(){ }
 
     public boolean ReduceDuration(long msReduction){
         _durationRemaining -= msReduction;
-        //Main.LogDebug("Duration remaining for object " + _objectID + ": " + _durationRemaining);
+        CheckTimeOut();
         return _durationRemaining <= 0;
     }
 
@@ -18,14 +19,21 @@ public class TimedObject {
     public void SetDurationRemaining(long durationRemaining){
         _durationRemaining = durationRemaining;
         _priorDuration = _durationRemaining;
+        CheckTimeOut();
     }
-
+    public void CheckTimeOut(){
+        if(_durationRemaining <= 0){
+            _timedOut = true;
+        }
+    }
     public void ResetDuration(){
-        _durationRemaining = _priorDuration;
+        if(!_timedOut){
+            _durationRemaining = _priorDuration;
+        }
     }
 
     public boolean DurationExpired(){
-        return _durationRemaining <= 0;
+        return _timedOut || _durationRemaining <= 0;
     }
 
     public Number ObjectID(){

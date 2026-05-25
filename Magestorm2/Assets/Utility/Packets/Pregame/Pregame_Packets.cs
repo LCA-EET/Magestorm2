@@ -83,10 +83,10 @@ public static class Pregame_Packets
 
         return unencryptedPayload;
     }
-    public static byte[] LogInPacket(string username, string hashedPassword)
+    public static byte[] LogInPacket()
     {
-        byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(username);
-        byte[] hashedBytes = Convert.FromBase64String(hashedPassword);
+        byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(PlayerAccount.Username);
+        byte[] hashedBytes = Convert.FromBase64String(PlayerAccount.HashedPassword);
 
         byte[] unencryptedPayload = new byte[usernameBytes.Length + hashedBytes.Length + 3];
         unencryptedPayload[0] = Pregame_Send.LogIn;
@@ -174,6 +174,14 @@ public static class Pregame_Packets
     public static byte[] RequestMatchListPacket()
     {
         return OpCodePlusAccountIDBytes(Pregame_Send.RequestMatchList);
+    }
+    public static byte[] MatchScoreRequestPacket()
+    {
+        byte[] toSend = new byte[1 + 4 + 1];
+        toSend[0] = Pregame_Send.RequestMatchScore;
+        PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
+        toSend[5] = MatchParams.MatchID;
+        return toSend;
     }
     public static byte[] SubscribeToMatchesPacket(bool qm)
     {

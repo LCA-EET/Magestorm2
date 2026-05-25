@@ -9,7 +9,7 @@ public class SpellManager {
     }
 
     public static void AddSpell(Spell toAdd){
-        Main.LogMessage("Added spell " + toAdd.GetSpellID());
+        //Main.LogMessage("Added spell " + toAdd.GetSpellID());
         _spellTable.put(toAdd.GetSpellID(), toAdd);
     }
 

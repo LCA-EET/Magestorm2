@@ -278,11 +278,11 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] TimedObjectExpirationPacket(byte opCode, Number objectID){
+    public static byte[] TimedObjectExpirationPacket(byte opCode, short objectID){
         byte[] toEncrypt = new byte[1 + 1 + 2];
         toEncrypt[0] = opCode;
         toEncrypt[1] = 1;
-        System.arraycopy(ByteUtils.ShortToByteArray((short)objectID), 0, toEncrypt, 2, 2);
+        System.arraycopy(ByteUtils.ShortToByteArray((objectID)), 0, toEncrypt, 2, 2);
         return Cryptographer.Encrypt(toEncrypt);
     }
 

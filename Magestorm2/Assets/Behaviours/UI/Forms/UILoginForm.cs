@@ -16,22 +16,24 @@ public class UILoginForm : ValidatableForm
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-  
         Debug.Log("Time since epoch: " + TimeUtil.CurrentTime());
         AssociateFormToButtons();
-        
         if(Game.GameServerPort > 0)
         {
             ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
             if (MatchParams.ReturningFromMatch)
             {
+                Cursor.lockState = CursorLockMode.None;
                 MatchParams.ReturningFromMatch = false;
+                PassedValidation();
+                /*
                 ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
                 if (PlayerAccount.SelectedCharacter != null)
                 {
-                    Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket(false));
+                    Game.SendPregameBytes(Pregame_Packets.MatchScoreRequestPacket());
+                    Debug.Log("Send score request packet.");
                 }
-                Cursor.lockState = CursorLockMode.None;
+                */
             }
         }
         else
@@ -47,17 +49,16 @@ public class UILoginForm : ValidatableForm
         if (Game.ForceLogin)
         {
             Game.ForceLogin = false;
-            string hashedPassword = Cryptography.SHA256Hash("test2");
-            Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket("test2", hashedPassword));
+            PlayerAccount.StoreCredentials("test2", Cryptography.SHA256Hash("test2"));
+            Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket());
+
         }
-        #endif
+#endif
     }
     protected override void PassedValidation()
     {
         //Debug.Log("Passed validation.");
-        string username = ((TextField)EntriesToValidate[0]).GetValue().ToString();
-        string hashedPassword = Cryptography.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString());
-        Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket(username, hashedPassword)); 
+        Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket()); 
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
@@ -66,6 +67,8 @@ public class UILoginForm : ValidatableForm
             case ButtonType.LogIn:
                 if (ValidateForm())
                 {
+                    PlayerAccount.StoreCredentials(((TextField)EntriesToValidate[0]).GetValue().ToString(),
+                        Cryptography.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString()));
                     PassedValidation();
                 }
                 else

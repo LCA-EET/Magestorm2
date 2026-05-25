@@ -22,8 +22,10 @@ public class TimedObjectCollection<K extends Number, V extends TimedObject> exte
     }
     public boolean CountdownObjects(long msElapsed){
         _elapsed += msElapsed;
-        if(_elapsed >= _interval){
+        if(!_expiredObjects.isEmpty()){
             ClearExpirations();
+        }
+        if(_elapsed >= _interval){
             int intervalsElapsed = (int)Math.floor(_elapsed / _interval);
             _elapsed -= intervalsElapsed * _interval;
             if(!isEmpty()){
@@ -35,6 +37,7 @@ public class TimedObjectCollection<K extends Number, V extends TimedObject> exte
                 }
                 for(TimedObject to: _expiredObjects){
                     remove(to.ObjectID());
+
                 }
             }
         }
@@ -42,5 +45,13 @@ public class TimedObjectCollection<K extends Number, V extends TimedObject> exte
     }
     public ArrayList<? super Number> GetExpiredIDs(){
         return _expiredIDs;
+    }
+    @Override
+    public String toString(){
+        String toReturn = "";
+        for(TimedObject to : values()){
+            toReturn = toReturn.concat(to.toString() + System.lineSeparator());
+        }
+        return toReturn;
     }
 }

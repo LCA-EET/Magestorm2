@@ -56,7 +56,10 @@ public class PregamePacketProcessor : UDPProcessor
                         break;
                     case Pregame_Receive.RemovedFromServer:
                     case Pregame_Receive.InactivityDisconnect:
-                        QuitWithMessage(32);
+                        if (Game.LoggedIn)
+                        {
+                            QuitWithMessage(32);
+                        }
                         break;
                     case Pregame_Receive.CharacterExists:
                         MessageBox(34);
@@ -122,6 +125,7 @@ public class PregamePacketProcessor : UDPProcessor
     }
     private void HandleMatchScoreRequest()
     {
+        Debug.Log("Match score request response received.");
         ComponentRegister.UIPrefabManager.InstantiateMatchScores(_decrypted, true);
     }
     private void HandleExperienceUpdate()

@@ -18,6 +18,7 @@ public class SpriteSheetRenderer : MonoBehaviour
         new PeriodicAction(CycleDuration / _numFrames, AdvanceFrame, _actions);
         _currentFrame = StartingFrame;
         Renderer.sprite = Frames[_currentFrame];
+        RotateToCamera();
     }
     private void Update()
     {
@@ -61,7 +62,6 @@ public class SpriteSheetRenderer : MonoBehaviour
     }
     private void RotateToCamera()
     {
-        transform.LookAt(Camera.main.transform.position);
-        transform.Rotate(0, 180, 0);
+        SharedFunctions.RotateToCamera(transform);
     }
 }

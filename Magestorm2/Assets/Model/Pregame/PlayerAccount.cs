@@ -1,5 +1,3 @@
-using NUnit.Framework;
-using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -11,6 +9,7 @@ public static class PlayerAccount
     private static bool _init = false;
     public static PlayerCharacter SelectedCharacter; 
     public static bool UpdatesMade;
+    private static string _username, _hashedPassword;
     public static void Init(int accountID)
     {
         _characterList = new Dictionary<int, PlayerCharacter>();
@@ -56,5 +55,18 @@ public static class PlayerAccount
     public static byte[] AccountIDBytes
     {
         get { return _accountIDBytes; }
+    }
+    public static string Username
+    {
+        get { return _username; }
+    }
+    public static string HashedPassword
+    {
+        get { return _hashedPassword; }
+    }
+    public static void StoreCredentials(string username, string hash)
+    {
+        _username = username;
+        _hashedPassword = hash;
     }
 }

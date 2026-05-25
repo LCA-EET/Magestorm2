@@ -60,6 +60,10 @@ public class UICharacterSelectForm : ValidatableForm
     {
         AssociateFormToButtons();
         InputControls.Init();
+        if(MatchParams.IDinMatch != 0)
+        {
+            Game.SendPregameBytes(Pregame_Packets.MatchScoreRequestPacket());
+        }
     }
 
     // Update is called once per frame
@@ -102,6 +106,7 @@ public class UICharacterSelectForm : ValidatableForm
                 }
                 break;
             case ButtonType.Cancel:
+                Game.LoggedIn = false;
                 CloseForm();
                 break;
             case ButtonType.Submit:

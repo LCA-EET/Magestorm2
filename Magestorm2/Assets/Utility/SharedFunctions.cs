@@ -35,10 +35,6 @@ public static class SharedFunctions
         }
         return 0;
     }
-    public static void FaceCamera(GameObject go)
-    {
-        go.transform.LookAt(Camera.main.transform.position);
-    }
     public static float AngleBetween(Transform objectA, Transform objectB)
     {
         Vector3 direction = (objectB.position - objectA.position).normalized;
@@ -229,8 +225,12 @@ public static class SharedFunctions
             SetLayerRecursive(child.gameObject, newLayer);
         }
     }
-    
-    
+
+    public static void RotateToCamera(Transform toRotate)
+    {
+        toRotate.LookAt(Camera.main.transform.position);
+        toRotate.Rotate(0, 180, 0);
+    }
     public static byte GetMaxSkillPointsForLevel(byte characterLevel)
     {
         return (byte)(3 + Math.Floor(characterLevel / 8.0));

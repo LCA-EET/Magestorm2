@@ -30,6 +30,7 @@ public class UDPProcessor extends RegisteredThread{
         _sender.start();
     }
     public void TerminateProcessor(){
+        Main.LogMessage("Terminating UDPProcessor for port: " + _listeningPort);
         _terminated = true;
         _listener.interrupt();
         _processor.interrupt(); // interrupt the blocking take()
@@ -43,7 +44,7 @@ public class UDPProcessor extends RegisteredThread{
 
     protected RemoteClient LoggedInClient(){
         int accountID = ByteUtils.ExtractInt(_decrypted, 1);
-        return GameServer.GetClient(accountID);
+        return RemoteClientManager.GetClient(accountID);
     }
     public BlockingQueue<OutgoingPacket> OutgoingQueue(){
         return _outgoingPackets;

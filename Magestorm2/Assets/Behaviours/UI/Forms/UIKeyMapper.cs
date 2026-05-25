@@ -60,6 +60,10 @@ public class UIKeyMapper : ValidatableForm
             PlayerPrefs.SetInt(PlayerAccount.AccountID + "key:" + keySelector.InputKey, (int)keySelector.KeyCode);
             Debug.Log("Setting key preference: " + PlayerAccount.AccountID + "key:" + keySelector.InputKey + ", " + (int)keySelector.KeyCode);
             InputControls.SetKey(keySelector.InputKey, keySelector.KeyCode);
+            if(ComponentRegister.InputController != null)
+            {
+                ComponentRegister.InputController.RefreshKeyCodes();
+            }
         }
         if(ComponentRegister.AvailableSpellsPanel != null)
         {

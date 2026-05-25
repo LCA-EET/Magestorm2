@@ -41,6 +41,14 @@ public static class Game
                     Application.Quit();
         #endif
     }
+    public static bool GameInputSet(InputControl toCheck)
+    {
+        return ComponentRegister.InputController.IsSet(toCheck, GameMode);
+    }
+    public static bool InputSet(InputControl toCheck, bool gameMode)
+    {
+        return ComponentRegister.InputController.IsSet(toCheck, gameMode);
+    }
     public static void SendPregameBytes(byte[] unencrypted)
     {
         ComponentRegister.PregamePacketProcessor.SendBytes(unencrypted);

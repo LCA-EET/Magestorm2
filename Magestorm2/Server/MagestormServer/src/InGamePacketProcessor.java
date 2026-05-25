@@ -218,12 +218,10 @@ public class InGamePacketProcessor extends UDPProcessor{
         //Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
     }
     private void HandleQuitGame(){
-        _owningMatch.LeaveMatch(_decrypted[1], true, true);
-        int accountID = ByteUtils.ExtractInt(_decrypted, 3);
-        GameServer.ClientLoggedOut(accountID);
+        _owningMatch.LeaveMatch(_decrypted[1], true);
     }
     private void HandleLeaveMatch(){
-        _owningMatch.LeaveMatch(_decrypted[1], true, false);
+        _owningMatch.LeaveMatch(_decrypted[1], false);
     }
 
     private void HandleBroadcastMessage(){
@@ -284,8 +282,10 @@ public class InGamePacketProcessor extends UDPProcessor{
             byte teamID = _decrypted[10];
             Main.LogMessage("Verifying player " + idInMatch + " for match " + _owningMatch.ObjectID() + ", team " + teamID);
             if(_owningMatch.IsAwaitingVerification(accountID)){
-                GameServer.GetClient(accountID).MarkInGame();
+                RemoteClient pregameClient = RemoteClientManager.GetClient(accountID);
+                pregameClient.MarkInGame();
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID, accountID, remote);
+                remote.SetNameAndID(pregameClient.GetUserName(), accountID);
                 SendPlayerDataForJoinee(_owningMatch.GetMatchCharacter(idInMatch));
                 _owningMatch.ProcessObjectStatusPacket(_decrypted[9]);
                 return true;

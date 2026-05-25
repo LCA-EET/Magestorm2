@@ -26,7 +26,7 @@ public class Wall extends DamagingSpell{
         if(_elementCode != spell.GetBaseSpell().GetElement0()){
             long damageToWall = spell.GetDamage0() * 1000;
             if(ReduceDuration(damageToWall)){
-                _matchReference.SendToAll(Packets.TimedObjectExpirationPacket(InGame_Send.WallExpired, _objectID));
+                _matchReference.SendToAll(Packets.TimedObjectExpirationPacket(InGame_Send.WallExpired, _objectIDAsShort));
                 Main.LogDebug("Wall " + _objectID + " has taken " + damageToWall + " damage.");
             }
         }

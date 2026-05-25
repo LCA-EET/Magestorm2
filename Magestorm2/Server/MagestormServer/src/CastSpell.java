@@ -3,11 +3,13 @@ public class CastSpell extends TimedObject{
     protected MatchCharacter _casterReference;
     protected Match _matchReference;
     protected byte _castingTeam, _spellID, _spellLevel;
+    protected final short _objectIDAsShort;
     public CastSpell(MatchCharacter caster, short castID, Spell baseReference, Match matchReference){
         _casterReference = caster;
         _matchReference = matchReference;
         _castingTeam = caster.GetTeamID();
         _objectID = castID;
+        _objectIDAsShort = (short)_objectID;
         _spellID = (byte)baseReference.GetSpellID();
         _baseReference = baseReference;
         _spellLevel = _casterReference.GetSkillLevel(_baseReference.GetDisciplineCode());
@@ -65,10 +67,12 @@ public class CastSpell extends TimedObject{
                     case ControlCodes.EffectNotification_All:
                         _matchReference.SendToAll(Packets.ApplyEffectPacket(effectTarget.GetIDinMatch(), _casterReference.GetIDinMatch(),
                                 effectCode, baseEffect.GetDuration(), _spellLevel));
+                        Main.LogDebug("NC " + notificationCode);
                         break;
                     case ControlCodes.EffectTarget_Caster:
                         _matchReference.SendToPlayer(Packets.ApplyEffectPacket(effectTarget.GetIDinMatch(), spellTarget.GetIDinMatch(),
                                 effectCode, baseEffect.GetDuration(), _spellLevel), effectTarget);
+                        Main.LogDebug("NC " + notificationCode);
                         break;
                 }
             }
