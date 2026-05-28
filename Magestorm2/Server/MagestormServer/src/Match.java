@@ -35,13 +35,16 @@ public class Match extends TimedObject{
     private long _expCheckElapsed = 0;
     private final long _expReportInterval = 30000;
     protected boolean _quickMatch;
-
+    protected AntiStack _antiStack;
 
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchType, byte matchOptions){
         _objectID = matchID;
         _objectIDAsByte = (byte)_objectID;
         _playersJoined = new HashSet<>();
         _matchOptions = new MatchOptions(matchOptions);
+        if(_matchOptions.IsOptionSet(ControlCodes.MatchOptions_AntiStack)){
+            _antiStack = new AntiStack(this);
+        }
         _regenTick = _matchOptions.IsOptionSet(ControlCodes.MatchOptions_FastRegen)?1000:5000;
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
@@ -84,6 +87,9 @@ public class Match extends TimedObject{
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
         InitializeActivatables();
+    }
+    public byte GetASTeam(){
+        return _antiStack.GetTeamToJoin();
     }
     public boolean IsQuickMatch(){
         return _quickMatch;

@@ -1,8 +1,7 @@
 import java.net.DatagramPacket;
-import java.util.ArrayList;
 
 public class DMPacketProcessor extends InGamePacketProcessor{
-    DeathMatch _owningDM;
+    private final DeathMatch _owningDM;
     public DMPacketProcessor(int port, DeathMatch owningMatch){
         super(port, owningMatch);
         _owningDM = owningMatch;
@@ -20,7 +19,6 @@ public class DMPacketProcessor extends InGamePacketProcessor{
                 case InGame_Receive.AdjustShrineHealth:
                     return HandleShrineAdjustment();
             }
-
         }
         return false;
     }

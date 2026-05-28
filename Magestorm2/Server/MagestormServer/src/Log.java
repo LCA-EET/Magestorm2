@@ -46,23 +46,16 @@ public class Log extends RegisteredThread{
         try{
             LogEvent event = _eventQueue.take();
             byte logID = event.GetLogID();
-            switch(logID){
-                case ControlCodes.LogID_Main:
-                    _logFileWriter.append(event.GetEventText());
-                    _logFileWriter.flush();
-                    break;
-                case ControlCodes.LogID_Debug:
-                    _debugFileWriter.append(event.GetEventText());
-                    _debugFileWriter.flush();
-                    break;
-                case ControlCodes.LogID_Error:
-                    _errorFileWriter.append(event.GetEventText());
-                    _errorFileWriter.flush();
-                    break;
-                case ControlCodes.LogID_Chat:
-                    _chatFileWriter.append(event.GetEventText());
-                    _chatFileWriter.flush();
-                    break;
+            FileWriter writer = switch (logID) {
+                case ControlCodes.LogID_Main -> _logFileWriter;
+                case ControlCodes.LogID_Debug -> _debugFileWriter;
+                case ControlCodes.LogID_Error -> _errorFileWriter;
+                case ControlCodes.LogID_Chat -> _chatFileWriter;
+                default -> null;
+            };
+            if(writer != null){
+                writer.append(event.GetEventText());
+                writer.flush();
             }
         }
         catch(Exception e){

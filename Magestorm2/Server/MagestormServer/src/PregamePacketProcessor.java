@@ -176,7 +176,13 @@ public class PregamePacketProcessor extends UDPProcessor
         byte matchID = _decrypted[5];
         Match match = MatchManager.GetMatch(matchID);
         if(match != null){
-            EnqueueForSend(Packets.MatchDetailsPacket(match), _remote);
+            if(match.IsOptionEnabled(ControlCodes.MatchOptions_AntiStack)){
+                byte teamToJoin = match.GetASTeam();
+                HandleJoinMatchPacket(matchID, teamToJoin);
+            }
+            else{
+                EnqueueForSend(Packets.MatchDetailsPacket(match), _remote);
+            }
         }
     }
     public void HandleMatchCreatedPacket(){
