@@ -403,11 +403,14 @@ public class PlayerMovement : MonoBehaviour
             _distanceTravelled += Vector3.Distance(transform.position, _priorStep);
             _priorStep = transform.position;
             PlayStepSound();
+            
         }
+        /*
         if (priorState != _onGround)
         {
             Debug.Log("Grounded: " + _onGround);
         }
+        */
     }
     
     private void PlayStepSound()

@@ -24,11 +24,13 @@ public class Trigger : MonoBehaviour, ITrigger
     {
         _entered = true;
         _exited = false;
+        Debug.Log("Entered trigger " + gameObject.name);
     }
     public virtual void ExitAction() 
     {
         _entered = false;
         _exited = true;
+        Debug.Log("Exited trigger " + gameObject.name);
     }
     public bool HasEntered()
     {

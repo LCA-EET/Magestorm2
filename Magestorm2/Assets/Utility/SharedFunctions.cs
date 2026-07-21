@@ -271,7 +271,7 @@ public static class SharedFunctions
         value = Mathf.Lerp(startValue, endValue, percentComplete);
         return percentComplete == 1.0f;
     }
-    public static bool ProcessVector3Lerp(ref float elapsed, float lerpPeriod, Vector3 starting, Vector3 ending, Transform mover, bool local, bool position)
+    public static Vector3 CalculateVector3Lerp(ref float elapsed, float lerpPeriod, Vector3 starting, Vector3 ending)
     {
         elapsed += Time.deltaTime;
         float percentComplete = elapsed / lerpPeriod;
@@ -280,8 +280,10 @@ public static class SharedFunctions
             percentComplete = 1.0f;
             elapsed = 0.0f;
         }
-        Vector3 result = Vector3.Lerp(starting, ending, percentComplete);
-        
+        return Vector3.Lerp(starting, ending, percentComplete);
+    }
+    public static void ApplyVector3Lerp(Vector3 result, Transform mover, bool local, bool position)
+    {
         if (local)
         {
             if (position)
@@ -304,11 +306,12 @@ public static class SharedFunctions
                 mover.eulerAngles = result;
             }
         }
-        if(percentComplete == 1.0f)
-        {
-            return true;
-        }
-        return false;
+    }
+    public static bool ProcessVector3Lerp(ref float elapsed, float lerpPeriod, Vector3 starting, Vector3 ending, Transform mover, bool local, bool position)
+    {
+        Vector3 result = CalculateVector3Lerp(ref elapsed, lerpPeriod, starting, ending);
+        ApplyVector3Lerp(result, mover, local, position);
+        return elapsed == 0.0f;
     }
     public static bool ProcessRotation(float rotationAmount, Transform toRotate, ref float elapsed, float lerpPeriod)
     {

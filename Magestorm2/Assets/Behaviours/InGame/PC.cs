@@ -403,4 +403,9 @@ public class PC : MonoBehaviour
         transform.position = position;
         ComponentRegister.PlayerController.enabled = true;
     }
+    public void ApplyPositionDelta(Vector3 delta)
+    {
+        Vector3 newPosition = transform.position + delta;
+        UpdatePosition(newPosition);
+    }
 }

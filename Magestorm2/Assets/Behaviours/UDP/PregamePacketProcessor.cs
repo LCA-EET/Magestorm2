@@ -376,11 +376,13 @@ public class PregamePacketProcessor : UDPProcessor
                 index += 6;
                 byte[] appearanceBytes = FillSegment(_decrypted, index, 5);
                 index += 5;
+                /*
                 Debug.Log("Appearance Bytes - LISP " + characterID );
                 for(int i = 0; i < appearanceBytes.Length; i++)
                 {
                     Debug.Log(appearanceBytes[i]);
                 }
+                */
                 byte level = _decrypted[index];
                 index++;
                 /* STRUCTURE

@@ -92,6 +92,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &2652473089087069023
 BoxCollider:
@@ -231,6 +232,7 @@ MonoBehaviour:
   ActuatingObject: {fileID: 4881829896708155552}
   ActuationSpeed: 2
   EndPosition: {fileID: 6067563931420970297}
+  PlatformTrigger: {fileID: 0}
 --- !u!1 &6067563931420970297
 GameObject:
   m_ObjectHideFlags: 0

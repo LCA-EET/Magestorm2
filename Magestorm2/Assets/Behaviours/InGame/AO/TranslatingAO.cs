@@ -3,14 +3,22 @@
 public class TranslatingAO : ActuatingAO
 {
     public GameObject EndPosition;
+    private Vector3 _priorPosition;
+    public Trigger PlatformTrigger;
     protected override void Start()
     {
         base.Start();
         _default = ActuatingObject.transform.position;
+        _priorPosition = _default;
         _end = EndPosition.transform.position;
         _a = _default;
         _b = _end;
+
         _actuationTime = Vector3.Distance(_a, _b) / ActuationSpeed;
+    }
+    private void AdjustPCPosition()
+    {
+
     }
     protected override void Update()
     {
@@ -21,7 +29,35 @@ public class TranslatingAO : ActuatingAO
         }
         if (_actuating)
         {
-            if (SharedFunctions.ProcessVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b, ActuatingObject.transform, false, true))
+            Vector3 calculatedLerp = SharedFunctions.CalculateVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b);
+            Vector3 delta = calculatedLerp - _priorPosition;
+            bool movingUpward = delta.y > 0;
+            _priorPosition = calculatedLerp;
+            if (movingUpward) // if moving up, adjust player first, then platform
+            {
+                if (PlatformTrigger != null)
+                {
+                    if (PlatformTrigger.HasEntered())
+                    {
+                        Debug.Log("Adjusting player position.");
+                        ComponentRegister.PC.ApplyPositionDelta(delta);
+                    }
+                }
+                SharedFunctions.ApplyVector3Lerp(calculatedLerp, ActuatingObject.transform, false, true);
+            }
+            else
+            {
+                SharedFunctions.ApplyVector3Lerp(calculatedLerp, ActuatingObject.transform, false, true);
+                if (PlatformTrigger != null)
+                {
+                    if (PlatformTrigger.HasEntered())
+                    {
+                        Debug.Log("Adjusting player position.");
+                        ComponentRegister.PC.ApplyPositionDelta(delta);
+                    }
+                }
+            }
+            if (_actuationElapsed == 0) // this is 0 when it is reset by the CalculateVector3Lerp function above. It is reset when elapsed >= actuationTime.
             {
                 _actuating = false;
                 if (ActuatingObject.transform.position == _end)
