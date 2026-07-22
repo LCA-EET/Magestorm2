@@ -16,10 +16,6 @@ public class TranslatingAO : ActuatingAO
 
         _actuationTime = Vector3.Distance(_a, _b) / ActuationSpeed;
     }
-    private void AdjustPCPosition()
-    {
-
-    }
     protected override void Update()
     {
         base.Update();
@@ -31,32 +27,16 @@ public class TranslatingAO : ActuatingAO
         {
             Vector3 calculatedLerp = SharedFunctions.CalculateVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b);
             Vector3 delta = calculatedLerp - _priorPosition;
-            bool movingUpward = delta.y > 0;
             _priorPosition = calculatedLerp;
-            if (movingUpward) // if moving up, adjust player first, then platform
+            if (PlatformTrigger != null)
             {
-                if (PlatformTrigger != null)
+                if (PlatformTrigger.HasEntered())
                 {
-                    if (PlatformTrigger.HasEntered())
-                    {
-                        Debug.Log("Adjusting player position.");
-                        ComponentRegister.PC.ApplyPositionDelta(delta);
-                    }
-                }
-                SharedFunctions.ApplyVector3Lerp(calculatedLerp, ActuatingObject.transform, false, true);
-            }
-            else
-            {
-                SharedFunctions.ApplyVector3Lerp(calculatedLerp, ActuatingObject.transform, false, true);
-                if (PlatformTrigger != null)
-                {
-                    if (PlatformTrigger.HasEntered())
-                    {
-                        Debug.Log("Adjusting player position.");
-                        ComponentRegister.PC.ApplyPositionDelta(delta);
-                    }
+                    Debug.Log("Adjusting player position.");
+                    ComponentRegister.PC.ApplyPositionDelta(delta);
                 }
             }
+            SharedFunctions.ApplyVector3Lerp(calculatedLerp, ActuatingObject.transform, false, true);
             if (_actuationElapsed == 0) // this is 0 when it is reset by the CalculateVector3Lerp function above. It is reset when elapsed >= actuationTime.
             {
                 _actuating = false;
