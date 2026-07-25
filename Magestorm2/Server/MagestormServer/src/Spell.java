@@ -4,7 +4,7 @@ public class Spell {
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
             _spellType, _disciplineCode, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
             _notificationCode, _radius, _effectCode, _duration, _levelsForRoll, _iceResist, _fireResist, _elecResist, _earthResist,
-            _manaResist;
+            _manaResist, _minForcePerRoll, _maxForcePerRoll, _forceDuration;
     private final DisciplineData _associatedDiscipline;
     private final float _splashFactor0, _splashFactor1, _splashFactor2;
     private final float[] _resistances;
@@ -39,6 +39,9 @@ public class Spell {
         _elecResist = params[27];
         _earthResist = params[28];
         _manaResist = params[29];
+        _minForcePerRoll = params[30];
+        _maxForcePerRoll = params[31];
+        _forceDuration = params[32];
         _resistances[ControlCodes.Element_Fire] = _fireResist / 100.0f;
         _resistances[ControlCodes.Element_Earth] = _earthResist / 100.0f;
         _resistances[ControlCodes.Element_Ice] = _iceResist / 100.0f;
@@ -58,7 +61,15 @@ public class Spell {
     public int GetSpellID(){
         return _spellID;
     }
-
+    public byte GetMinForcePerRoll(){
+        return _minForcePerRoll;
+    }
+    public byte GetMaxForcePerRoll(){
+        return _maxForcePerRoll;
+    }
+    public byte GetForceDuration(){
+        return _forceDuration;
+    }
     public byte GetMinDamagePerRoll0(){
         return _minDamagePerRoll0;
     }

@@ -4,6 +4,7 @@ public class ResistanceSpell extends CastSpell{
     }
     @Override
     protected AppliedEffect CreateEffect(MatchCharacter target, Effect baseEffect){
-        return new ResistanceEffect(_casterReference, target, baseEffect, _baseReference, _spellLevel);
+        return new ResistanceEffect(_casterReference, target, baseEffect, _baseReference,
+                _spellLevel, _matchReference.IncrementEffectID());
     }
 }

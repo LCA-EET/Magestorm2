@@ -51,6 +51,10 @@ public class SpawnedSpell : MonoBehaviour
         {
             if(_destructionElapsed >= DestroyAfter)
             {
+                if (_spellReference.ForceDuration > 0)
+                {
+                    Match.AddStoredVector(_castID, transform.forward);
+                }
                 ComponentRegister.Spawner.DeregisterSpawnedSpell(this);
                 Destroy(gameObject);
             }

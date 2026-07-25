@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     private PeriodicAction _reportMovement;
     private float _jumpSpeed = 6.0f;
     private float gravityValue = 9.81f;
-    private float _downwardAcceleration;
     private float _lateralSpeed = 0.0f;
     private float _maxLateralSpeed = 3.0f;
     private float _lateralAcceleration = 6.0f;
@@ -29,21 +28,25 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _controllerCenter, _controllerCrouchCenter, _cameraLocalPosition, _cameraCrouchedPosition;
     private Vector3 _moveCheck;
     private Vector3 _priorStep, _priorPosition;
-
+    private Vector3 _forceDirection;
     private bool _isSlowed, _isFrozen, _isHasted, _isEntangled;
     private bool _inFlight = false;
     private bool _positionChanged = false;
     private bool _midJump = false;
     private bool _onGround = false;
     private bool _csChanging = false;
-    private byte _postureCheck;
+    private byte _pmdCheck;
     private RaycastHit _hitInfo;
     private PC _pc;
     private byte _insideWallCount;
-    private bool _expulseFrame;
+    private float _forceElapsed = 0;
+    private float _forceAcceleration = 0;
+    private float _accelerationPeriod;
+    private PMDByte _pmd;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
+        _pmd = new PMDByte();
         _priorPosition = transform.position;
         _reportMovement = new PeriodicAction(Game.MovementPolling, ReportMovement, null);
         ComponentRegister.PlayerTransform = transform;
@@ -56,47 +59,33 @@ public class PlayerMovement : MonoBehaviour
         _cameraLocalPosition = Camera.main.transform.localPosition;
         _cameraCrouchedPosition = new Vector3(_cameraLocalPosition.x, _cameraLocalPosition.y / 1.66f, _cameraCrouchedPosition.z);
     }
-    public void ApplyExpulse(byte degree)
+    public void ApplyForceVector(float forceMagnitude, float seconds, Vector3 forceDirection)
     {
-        _expulseFrame = true;
-        _downwardAcceleration -= 250 + (degree * 250.0f);
-    }
-    private void RecalculateDownwardAcceleration()
-    {
-        if (_onGround)
+        _forceAcceleration = forceMagnitude / seconds;
+        _forceElapsed = 0;
+        _accelerationPeriod = seconds;
+        _forceDirection = forceDirection;
+        if(forceDirection.y > 0)
         {
-            _downwardAcceleration = gravityValue;
+            _verticalSpeed = 0;
         }
-        else
-        {
-            if (_downwardAcceleration < gravityValue)
-            {
-                _downwardAcceleration += gravityValue * Time.deltaTime;
-            }
-            else if (_downwardAcceleration > gravityValue)
-            {
-                _downwardAcceleration = gravityValue;
-            }
-        }
-        
     }
     public void IncrementInsideWallCount()
     {
         _insideWallCount++;
-        //Debug.Log("Wall count: " + _insideWallCount);
     }
     public void DecrementInsideWallCount()
     {
         _insideWallCount--;
-        //Debug.Log("Wall count: " + _insideWallCount);
     }
     private void ReportMovement()
     {
-        if (_moveCheck != transform.position || _yRotateCheck != transform.eulerAngles.y || _postureCheck != Game.PlayerPMDByte.Posture)
+        byte pmdByte = _pmd.ToByte();
+        if (_moveCheck != transform.position || _yRotateCheck != transform.eulerAngles.y || _pmdCheck != pmdByte)
         {
             _moveCheck = transform.position;
             _yRotateCheck = transform.eulerAngles.y;
-            _postureCheck = Game.PlayerPMDByte.Posture;
+            
             bool positionExceedance = MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit);
             bool rotationExceedance = MinimumReportingExceedance(_yRotateCheck, ref _priorY, _rotationLimit);
             if (positionExceedance && rotationExceedance)
@@ -104,16 +93,22 @@ public class PlayerMovement : MonoBehaviour
                 byte[] prData = new byte[16];
                 ByteUtils.FillArray(ref prData, 0, _priorPosition);
                 ByteUtils.FillArray(ref prData, 12, _yRotateCheck);
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData, ref _prPacketID));
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(2, prData, pmdByte, ref _prPacketID));
             }
             else if (positionExceedance)
             {
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition), ref _prPacketID));
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(0, ByteUtils.Vector3ToBytes(_priorPosition), pmdByte, ref _prPacketID));
             }
             else if (rotationExceedance)
             {
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, BitConverter.GetBytes(_priorY), ref _prPacketID));
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, BitConverter.GetBytes(_priorY), pmdByte, ref _prPacketID));
             }
+            else if (_pmdCheck != pmdByte)
+            {
+                Debug.Log("PMDUpdate IsMoving: " + _pmd.IsMoving + " " + _pmd.IsMovingForward + " " + _pmd.IsMovingBackward);
+                Game.SendInGameBytes(InGame_Packets.PostureChangePacket(pmdByte));
+            }
+            _pmdCheck = pmdByte;
         }
     }
     public void MarkSlow(bool slow)
@@ -142,11 +137,13 @@ public class PlayerMovement : MonoBehaviour
         float distance = current - prior;
         if (distance < -180)
         {
-            distance += 365;
+            distance += 360;
+            //365
         }
         else if (distance > 180)
         {
-            distance -= 365;
+            distance -= 360;
+            //365?
         }
         if (Mathf.Abs(distance) > limit)
         {
@@ -178,42 +175,32 @@ public class PlayerMovement : MonoBehaviour
         
         if (Game.InputSet(InputControl.Run, Game.GameMode) && _pc.CurrentStamina > 0)
         {
-            Game.PlayerPMDByte.SetRunning(true);
+            _pmd.SetRunning(true);
             forwardAcceleration *= 3;
             maxForwardSpeed *= 3;
         }
         bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
         
-        if (Game.PlayerPMDByte.IsRunning && moving)
+        if (_pmd.IsRunning && moving)
         {
             _pc.UseStamina(Time.deltaTime * 10.0f);
         }
-        if (!Game.PlayerPMDByte.IsRunning)
+        if (!_pmd.IsRunning)
         {
             _pc.RegenStamina(Time.deltaTime, moving);
         }
 
-        if (!_onGround)
+        if (!_onGround && _forceDirection.y <= 0)// && _accelerationPeriod == 0)
         {
-            Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, _midJump ? gravityValue : _downwardAcceleration);
+            Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);//_midJump ? gravityValue : _downwardAcceleration);
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
         }
-        else if ((Game.GameInputSet(InputControl.Jump) || _expulseFrame ) && !_isEntangled)
+        else if ((Game.GameInputSet(InputControl.Jump)) && !_isEntangled)
         {
-            Debug.Log("A");
-            if (!_expulseFrame)
-            {
-                _verticalSpeed = _verticalSpeed + _jumpSpeed;
-            }
-            else
-            {
-                Debug.Log("DWA: " + _downwardAcceleration);
-                _expulseFrame = false;
-                Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, _downwardAcceleration);
-            }
+            _verticalSpeed = _verticalSpeed + _jumpSpeed;
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
             _midJump = true;
-            Game.PlayerPMDByte.SetLocalPosture(Postures.Jump);
+            _pmd.SetLocalPosture(Postures.Jump);
         }
         UpdateGroundedStatus();
         return moving;
@@ -227,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
         bool moving = MoveAlongAxes(ref _lateralSpeed, ref _forwardSpeed, maxLateralSpeed, maxForwardSpeed, lateralAcceleration, forwardAcceleration);
         _pc.RegenStamina(Time.deltaTime, false);
 
-        if (!_onGround)
+        if (!_onGround && _forceDirection.y <=0)
         {
             Accelerate(ref _verticalSpeed, _maxVerticalSpeed, -1.0f, gravityValue);
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
@@ -289,15 +276,33 @@ public class PlayerMovement : MonoBehaviour
     public void MarkInFlight(bool inFlight)
     {
         _inFlight = inFlight;
-        Game.PlayerPMDByte.SetLocalPosture(inFlight?Postures.Airborne:Postures.Standing);
+        _pmd.SetLocalPosture(inFlight?Postures.Airborne:Postures.Standing);
     }
     private bool MoveAlongAxes(ref float lateralSpeed, ref float forwardSpeed, float maxLateralSpeed, float maxForwardSpeed, float lateralAcceleration, float forwardAcceleration)
     {
         float xAxisInput = MoveAlongAxis(ref lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, SpeedModifier);
         float zDirection = MoveAlongAxis(ref forwardSpeed, maxForwardSpeed, transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, SpeedModifier);
         bool moving = Mathf.Abs(lateralSpeed) >= 0.2f || Mathf.Abs(forwardSpeed) >= 0.2f;
-        Game.PlayerPMDByte.SetMovingAndDirection(moving, zDirection > 0);
+        _pmd.SetMovingAndDirection(moving, zDirection > 0);
         return moving;
+    }
+    private void HandleForceAcceleration()
+    {
+        if(_accelerationPeriod > 0)
+        {
+            float delta = Time.deltaTime;
+            if(_forceElapsed + delta > _accelerationPeriod)
+            {
+                delta = _accelerationPeriod - _forceElapsed;
+            }
+            _forceElapsed += delta;
+            Controller.Move(_forceDirection * delta * (_forceAcceleration - _forceAcceleration*(_forceElapsed / _accelerationPeriod)));
+            if(_accelerationPeriod - _forceElapsed == 0)
+            {
+                _accelerationPeriod = 0;
+                _forceDirection = Vector3.zero;
+            }
+        }
     }
     private void FixedUpdate()
     {
@@ -305,8 +310,9 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        Game.PlayerPMDByte.SetRunning(false);
-        if (_pc.IsAlive)
+        _pmd.SetRunning(false);
+        HandleForceAcceleration();
+        if (Game.PCAvatar.IsAlive)
         {
             if (_inFlight)
             {
@@ -322,7 +328,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     CrouchStandLerp(_cameraLocalPosition, _cameraCrouchedPosition);
                 }
-                if (_csChanging || Game.PlayerPMDByte.IsCrouched)
+                if (_csChanging || _pmd.IsCrouched)
                 {
                     CrouchedMovement();
                 }
@@ -330,7 +336,6 @@ public class PlayerMovement : MonoBehaviour
                 {
                     UprightMovement();
                 }
-                RecalculateDownwardAcceleration();
             }
         }
         else
@@ -349,7 +354,7 @@ public class PlayerMovement : MonoBehaviour
     private void CrouchStandLerp(Vector3 start, Vector3 end)
     {
         Vector3 a, b;
-        if (Game.PlayerPMDByte.IsCrouched)
+        if (_pmd.IsCrouched)
         {
             a = end;
             b = start;
@@ -363,17 +368,17 @@ public class PlayerMovement : MonoBehaviour
         {
             _csChanging = false;
             
-            if (Game.PlayerPMDByte.IsCrouched)
+            if (_pmd.IsCrouched)
             {
-                Game.PlayerPMDByte.SetLocalPosture(Postures.Standing);
+                _pmd.SetLocalPosture(Postures.Standing);
                 SetControllerHC(_controllerCenter, _controllerHeight);
             }
             else
             {
-                Game.PlayerPMDByte.SetLocalPosture(Postures.Crouched); 
+                _pmd.SetLocalPosture(Postures.Crouched); 
                 SetControllerHC(_controllerCrouchCenter, _controllerCrouchHeight);
             }
-            Game.SendInGameBytes(InGame_Packets.PostureChangePacket(Game.PlayerPMDByte));
+            Game.SendInGameBytes(InGame_Packets.PostureChangePacket(_pmd.ToByte()));
         }
     }
     private void SetControllerHC(Vector3 center, float height)
@@ -383,7 +388,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public void DeathResetCameraAndController()
     {
-        Game.PlayerPMDByte.SetLocalPosture(Postures.Airborne);
+        _pmd.SetLocalPosture(Postures.Airborne);
         _csChanging = false;
         Camera.main.transform.localPosition = _cameraLocalPosition;
         SetControllerHC(_controllerCenter, _controllerHeight);
@@ -394,9 +399,9 @@ public class PlayerMovement : MonoBehaviour
         _onGround = isOnGround(out _hitInfo);
         if (_onGround)
         {
-            if(Game.PlayerPMDByte.IsJumping && !_isEntangled)
+            if(_pmd.IsJumping && !_isEntangled)
             {
-                Game.PlayerPMDByte.SetLocalPosture(Postures.Standing);
+                _pmd.SetLocalPosture(Postures.Standing);
             }
             _midJump = false;
             _verticalSpeed = 0.0f;
@@ -405,12 +410,6 @@ public class PlayerMovement : MonoBehaviour
             PlayStepSound();
             
         }
-        /*
-        if (priorState != _onGround)
-        {
-            Debug.Log("Grounded: " + _onGround);
-        }
-        */
     }
     
     private void PlayStepSound()
@@ -424,14 +423,9 @@ public class PlayerMovement : MonoBehaviour
                 Surface standingOn = _hitInfo.collider.gameObject.GetComponent<Surface>();
                 if (standingOn != null)
                 {
-                    if (Game.PlayerPMDByte.IsRunning)
+                    if (_pmd.IsRunning)
                     {
                         ComponentRegister.PC.PlaySFX(standingOn.FootstepClip);
-                        //Debug.Log("Play Footstep");
-                    }
-                    else
-                    {
-                        //Debug.Log("Not Running");
                     }
                 }
             }
@@ -546,6 +540,14 @@ public class PlayerMovement : MonoBehaviour
         set
         {
             _positionChanged = value;
+        }
+    }
+
+    public PMDByte PMD
+    {
+        get
+        {
+            return _pmd;
         }
     }
 }

@@ -83,6 +83,7 @@ public class InGamePacketProcessor : UDPProcessor
                         Match.ProcessPlayerJoinedPacket(_decrypted);
                         break;
                     case InGame_Receive.HPandManaUpdate:
+                        Debug.Log("HMU Received");
                         ComponentRegister.PC.HPandManaUpdate(_decrypted);
                         break;
                     case InGame_Receive.HPUpdate:
@@ -145,9 +146,43 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.SigilExpired:
                         HandleSigilExpiration();
                         break;
-                    
+                    case InGame_Receive.ApplyForce:
+                        HandleForceApplication();
+                        break;
+                    case InGame_Receive.AllPlayerData:
+                        Debug.Log("AllPlayerData Handle");
+                        HandleAllPlayerData();
+                        break;
                 }
             }
+        }
+    }
+    private void HandleAllPlayerData()
+    {
+        int index = 2;
+        byte numberInDataset = _decrypted[1];
+        byte numProcessed = 0;
+        while (numProcessed < numberInDataset)
+        {
+            Avatar toAdd = Match.CreateAvatar(_decrypted, ref index);
+            if(toAdd != null)
+            {
+                Match.AddAvatar(toAdd);
+            }
+            numProcessed++;
+        }
+    }
+    private void HandleForceApplication()
+    {
+        byte magnitude = _decrypted[1];
+        byte duration = _decrypted[2];
+        short castID = BitConverter.ToInt16(_decrypted, 3);
+        Debug.Log("Force " + magnitude + " " + duration);
+        Vector3 stored = Vector3.zero;
+        if(Match.GetStoredVector(castID, ref stored))
+        {
+            Debug.Log("Force Vector: " + stored.ToString());
+            ComponentRegister.PlayerMovement.ApplyForceVector(magnitude, duration / 10.0f, stored);
         }
     }
     private void HandleTOCRequestResponse(int payloadLength)
@@ -323,14 +358,10 @@ public class InGamePacketProcessor : UDPProcessor
     private void HandlePostureChange()
     {
         byte avatarID = _decrypted[1];
-        if(avatarID != MatchParams.IDinMatch)
+        Avatar avatar = null;
+        if (Match.GetAvatar(avatarID, ref avatar))
         {
-            Avatar avatar = null;
-            if (Match.GetAvatar(avatarID, ref avatar))
-            {
-                avatar.PMD.SetPMD(_decrypted[2]);
-                
-            }
+            avatar.PMD.SetPMD(_decrypted[2]);
         }
     }
     private void HandleTap()
@@ -342,7 +373,7 @@ public class InGamePacketProcessor : UDPProcessor
         {
             if(tapperID == MatchParams.IDinMatch)
             {
-                Game.PlayerPMDByte.SetLocalPosture(Postures.Standing);
+                ComponentRegister.PlayerMovement.PMD.SetLocalPosture(Postures.Standing);
                 ComponentRegister.Valhalla.EnterValhalla();
                 ComponentRegister.PC.UpdateHP(MatchParams.MaxHP);
                 new MessageData(Language.BuildString(213, Teams.GetTeamName((Team)MatchParams.MatchTeamID)), Language.GetBaseString(304));

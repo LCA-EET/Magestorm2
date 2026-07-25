@@ -47,7 +47,7 @@ public static class LayerManager
             _remotePlayerLayerMask = LayerMask.GetMask(Layer_RemotePlayer);
             _surfaceLayerMask = LayerMask.GetMask(Layer_Surface);
             _interactableMask = LayerMask.GetMask(Layer_Interactable);
-            _floorMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid });
+            _floorMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid, Layer_Interactable });
             _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_PlayerWallSolid, Layer_PlayerWallNonSolid });
             _mindImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable});
             _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid , Layer_PlayerWallNonSolid });

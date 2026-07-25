@@ -44,7 +44,7 @@ public class Flag : Trigger
     public override void EnterAction()
     {
         Debug.Log("Flag Enter Action");
-        if (ComponentRegister.PC.IsAlive)
+        if (Game.PCAvatar.IsAlive)
         {
             if (!FlagManager.FlagJustDropped)
             {

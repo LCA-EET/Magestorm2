@@ -5,7 +5,7 @@
         base.ApplyEffect(appliedTo);
         if(appliedTo.PlayerID == Game.PCAvatar.PlayerID)
         {
-            ComponentRegister.PlayerMovement.ApplyExpulse(_degree);
+            ComponentRegister.PlayerMovement.ApplyForceVector(5 + (_degree * 5), 1.5f, transform.up);
         }
     }
 }

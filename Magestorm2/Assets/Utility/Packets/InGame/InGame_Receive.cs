@@ -31,7 +31,7 @@ public static class InGame_Receive
                         FlagCaptured = 20,
                         FlagReturned = 21,
                         FlagDropped = 22,
-                        PlayerDamaged = 23,
+                        PostureChange = 23,
                         Cast = 24,
                         PlayerKilled = 25,
                         HMLUpdate = 26,
@@ -44,7 +44,7 @@ public static class InGame_Receive
                         LeyUpdate = 33,
                         PlayerRevived = 34,
                         PlayerTapped = 35,
-                        PostureChange = 36,
+
                         ApplyEffect = 37,
                         InactivityDisconnect = 39,
                         HitNotification = 40,
@@ -57,5 +57,7 @@ public static class InGame_Receive
                         SpellResisted = 47,
                         SpawnVFXonPlayer = 48,
                         SigilExpired = 49,
-                        SigilRequestResponse = 50;
+                        SigilRequestResponse = 50,
+                        ApplyForce = 51,
+                        AllPlayerData = 52;
 }

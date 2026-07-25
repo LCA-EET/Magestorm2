@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public static class Match
 {
@@ -11,17 +12,34 @@ public static class Match
     private static Dictionary<byte, Avatar> _deadAvatarsOnPCTeam;
     private static Dictionary<short, Wall> _walls;
     private static Dictionary<short, Sigil> _sigils;
+    private static Dictionary<short, Vector3> _storedVectors;
     public static bool Running;
     
     public static void Init()
     {
         _matchPlayers = new Dictionary<byte, Avatar>();
+        _storedVectors = new Dictionary<short, Vector3>();
         _deadAvatarsOnPCTeam = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>();
         _walls = new Dictionary<short, Wall>();
         _sigils = new Dictionary<short, Sigil>();
     }
     
+    public static void AddStoredVector(short castID,  Vector3 vector)
+    {
+        _storedVectors.Add(castID, vector);
+    }
+
+    public static bool GetStoredVector(short castID, ref Vector3 stored)
+    {
+        if (_storedVectors.ContainsKey(castID))
+        {
+            stored = _storedVectors[castID];
+            _storedVectors.Remove(castID);
+            return true;
+        }
+        return false;
+    }
     
     public static void AddAvatar(Avatar avatar)
     {
@@ -141,69 +159,96 @@ public static class Match
             ChangeObjectState(decrypted[i], decrypted[i+1], true);
         }
     }
-    public static void ProcessPlayerJoinedPacket(byte[] decrypted)
+    public static Avatar CreateAvatar(byte[] decrypted, ref int index)
     {
-        byte playerID = decrypted[1];
-        byte teamID = decrypted[2];
+        byte playerID = decrypted[index];
+        index++;
+        byte teamID = decrypted[index];
+        index++;
         byte[] appearance = new byte[5];
-        System.Array.Copy(decrypted, 3, appearance, 0, appearance.Length);
-        byte level = decrypted[8];
-        byte characterClass = decrypted[9];
-        byte[] nameBytes = new byte[decrypted[10]];
-        System.Array.Copy(decrypted, 11, nameBytes, 0, nameBytes.Length);
+        System.Array.Copy(decrypted, index, appearance, 0, appearance.Length);
+        index += appearance.Length;
+        byte level = decrypted[index];
+        index++;
+        byte characterClass = decrypted[index];
+        index++;
+        byte[] nameBytes = new byte[decrypted[index]];
+        index++;
+        System.Array.Copy(decrypted, index, nameBytes, 0, nameBytes.Length);
+        index += nameBytes.Length;
         string name = ByteUtils.BytesToUTF8(nameBytes, 0, nameBytes.Length);
         byte[] positionBytes = new byte[12];
         byte[] directionBytes = new byte[4];
-        Array.Copy(decrypted, decrypted.Length - 18, positionBytes, 0, 12);
-        Array.Copy(decrypted, decrypted.Length - 6, directionBytes, 0, 4);
-        byte alive = decrypted[decrypted.Length - 2];
-        byte newToMatch = decrypted[decrypted.Length - 1];
+        Array.Copy(decrypted, index, positionBytes, 0, 12);
+        index += 12;
+        Array.Copy(decrypted, index, directionBytes, 0, 4);
+        index += 4;
+        byte alive = decrypted[index];
+        Debug.Log("ALIVE BYTE VALUE: " + alive);
+        index++;
         Avatar added = ComponentRegister.Spawner.SpawnAvatar();
-        added.SetAttributes(playerID, name, level, characterClass, (Team)teamID, appearance);
-        MessageData md = new MessageData(name + " has joined the match.", "Server");
-        ComponentRegister.PlayerStatusPanel.SetExperience(PlayerAccount.SelectedCharacter.GetExperience());
-        AddAvatar(added);
-        if (playerID == MatchParams.IDinMatch)
+        added.SetAttributes(playerID, name, level, characterClass, (Team)teamID, appearance, alive == 1);
+        if(playerID != MatchParams.IDinMatch)
         {
-            if(alive == 1)
-            {
-                ComponentRegister.PC.RestoreHPandMana();
-                if(newToMatch == 0)
-                {
-                    ComponentRegister.Valhalla.EnterValhalla();
-                }
-            }
-            
-            ComponentRegister.PC.JoinedMatch = true;
-            Debug.Log("MaxHP: " + MatchParams.MaxHP);
-            Debug.Log("MaxMana: " + MatchParams.MaxMana);
-        }
-        else
-        {
-            added.SetAlive(alive == 1);
             added.UpdatePosition(positionBytes, 0, true);
             added.UpdateDirection(directionBytes, 0, true);
         }
-        Game.SendInGameBytes(InGame_Packets.WallAndSigilRequest());
+        return added;
+    }
+    public static void ProcessPlayerJoinedPacket(byte[] decrypted)
+    {
+        int index = 1;
+        Avatar added = CreateAvatar(decrypted, ref index);
+        if (added != null)
+        {
+            byte newToMatch = decrypted[index];
+            MessageData md = new MessageData(added.Name + " has joined the match.", "Server");
+            AddAvatar(added);
+            if (added.PlayerID == MatchParams.IDinMatch)
+            {
+                if (added.IsAlive)
+                {
+                    ComponentRegister.PC.RestoreHPandMana();
+                    if (newToMatch == 0)
+                    {
+                        ComponentRegister.Valhalla.EnterValhalla();
+                    }
+                }
+                ComponentRegister.PC.JoinedMatch = true;
+                Debug.Log("MaxHP: " + MatchParams.MaxHP);
+                Debug.Log("MaxMana: " + MatchParams.MaxMana);
+                ComponentRegister.PlayerStatusPanel.SetExperience(PlayerAccount.SelectedCharacter.GetExperience());
+                Game.SendInGameBytes(InGame_Packets.AllPlayerData());
+                Game.SendInGameBytes(InGame_Packets.WallAndSigilRequest());
+            }
+            else
+            {
+                Debug.Log("Non PC entry: " + added.PlayerID);
+            }
+        }
+        else
+        {
+            Debug.Log("Added is null!");
+        }
     }
     public static void UpdatePlayerLocation(byte[] decrypted)
     {
         byte playerID = decrypted[1];
-        if(playerID != MatchParams.IDinMatch)
+        if (_matchPlayers.ContainsKey(playerID))
         {
             byte pmd = decrypted[6];
-            byte controlCode = decrypted[7];
-            if (_matchPlayers.ContainsKey(playerID))
+            Avatar toUpdate = _matchPlayers[playerID];
+            if(toUpdate.PMD.ToByte() != pmd)
             {
-                Avatar toUpdate = _matchPlayers[playerID];
-                if(toUpdate.PMD.Posture != pmd)
-                {
-                    toUpdate.PMD.SetPMD(pmd);
-                    toUpdate.UpdateModelRotation();
-                }
+                toUpdate.PMD.SetPMD(pmd);
+                toUpdate.UpdateModelRotation();
+            }
+            if(playerID != MatchParams.IDinMatch)
+            {
                 int packetID = BitConverter.ToInt32(decrypted, 2);
-                if(packetID > toUpdate.LastPRPacketID)
+                if (packetID > toUpdate.LastPRPacketID)
                 {
+                    byte controlCode = decrypted[7];
                     toUpdate.LastPRPacketID = packetID;
                     switch (controlCode)
                     {
@@ -220,10 +265,10 @@ public static class Match
                     }
                 }
             }
-            else
-            {
-                Game.SendInGameBytes(InGame_Packets.FetchPlayerPacket(playerID));
-            }
+        }
+        else
+        {
+            Game.SendInGameBytes(InGame_Packets.FetchPlayerPacket(playerID));
         }
     }
     public static void ChangeObjectState(byte key, byte state, bool force)

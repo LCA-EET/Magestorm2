@@ -40,4 +40,5 @@ public class InGame_Receive {
     public static final byte ReportResistableHit = 36;
     public static final byte ReportHitByWall = 37;
     public static final byte TriggeredSigil = 38;
+    public static final byte AllPlayerData = 39;
 }

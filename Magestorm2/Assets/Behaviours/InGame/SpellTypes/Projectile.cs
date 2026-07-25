@@ -76,19 +76,14 @@ public class Projectile : SpawnedSpell
                 _hitPlayer = null;
                 if(SharedFunctions.WasRemoteHit(other, out _hitPlayer))
                 {
-                    byte shieldID = SharedFunctions.IsShieldedFromElement(_spellReference.Element0, _hitPlayer);
-                    if(shieldID > 0 && ShieldVFX != ControlCodes.VFX_None)
-                    {
-                        ComponentRegister.Spawner.SpawnVFX(ShieldVFX, _hitPlayer.transform);
-                    }
+                    OnRemoteHit();
                 }
                 Wall hitWall = null;
                 if (_casterID == MatchParams.IDinMatch)
                 {
                     if (SharedFunctions.WasWallHit(other, out hitWall))
                     {
-                        Game.SendInGameBytes(InGame_Packets.WallHitPacket(_castID, hitWall.CastID));
-                        Debug.Log("Wall hit.");
+                        OnWallHit(hitWall);
                     }
                 }
                 _impact = true;
@@ -101,6 +96,18 @@ public class Projectile : SpawnedSpell
             {
                 MarkForDestruction();
             }
+        }
+    }
+    protected virtual void OnWallHit(Wall hitWall)
+    {
+        Game.SendInGameBytes(InGame_Packets.WallHitPacket(_castID, hitWall.CastID));
+    }
+    protected virtual void OnRemoteHit()
+    {
+        byte shieldID = SharedFunctions.IsShieldedFromElement(_spellReference.Element0, _hitPlayer);
+        if (shieldID > 0 && ShieldVFX != ControlCodes.VFX_None)
+        {
+            ComponentRegister.Spawner.SpawnVFX(ShieldVFX, _hitPlayer.transform);
         }
     }
     public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)

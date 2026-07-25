@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections;
-
+﻿using System.Collections;
+using UnityEngine;
 public class PMDByte
 {
     private static byte idxPostureLSB = 0;
@@ -8,7 +7,6 @@ public class PMDByte
     private static byte idxDirection = 3;
     private static byte idxRunning = 4;
     private byte _postureByte = Postures.Standing;
-    
     private BitArray _bitArray;
     public PMDByte()
     {
@@ -16,6 +14,7 @@ public class PMDByte
     }
     public void SetPMD(byte pmd)
     {
+        
         _bitArray = new BitArray(new byte[] { pmd });
         if (IsStanding)
         {
@@ -33,6 +32,7 @@ public class PMDByte
         {
             _postureByte = Postures.Jump;
         }
+        Debug.Log("SetPMD " + IsMoving + " " + IsMovingForward + " " + IsMovingBackward);
     }
     public void SetMoving(bool moving)
     {
@@ -62,7 +62,7 @@ public class PMDByte
     public void SetLocalPosture(byte posture)
     {
         _postureByte = posture;
-        bool msb = false;
+        bool msb = false; // 0, 00 (Standing)
         bool lsb = false;
         switch (posture)
         {
@@ -81,6 +81,7 @@ public class PMDByte
         }
         _bitArray[idxPostureLSB + 1] = msb;
         _bitArray[idxPostureLSB] = lsb;
+        Debug.Log("SLP " + lsb + " " + msb);
     }
     public bool IsStanding
     {

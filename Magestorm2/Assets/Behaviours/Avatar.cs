@@ -38,19 +38,17 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     public GameObject TeamIndicator, InnerIndicator;
     void Awake()
     {
-        _actionList = new List<PeriodicAction>();
-        _lookAtCamera = new PeriodicAction(0.2f, NameRotate, _actionList);
-        _effectsTick = new PeriodicAction(_effectTick, EffectTick, _actionList);
-        _nameText = CharacterName.GetComponent<TMP_Text>();
-        _pmd = new PMDByte();
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
         _appliedEffects = new Dictionary<byte, AppliedEffect>();
         _positionElapsed = 0.0f;
         _rotationElapsed = 0.0f;
-        
+        _nameText = CharacterName.GetComponent<TMP_Text>();
+        _pmd = new PMDByte();
+    }
+    void Start()
+    {
+        _actionList = new List<PeriodicAction>();
+        _lookAtCamera = new PeriodicAction(0.2f, NameRotate, _actionList);
+        _effectsTick = new PeriodicAction(_effectTick, EffectTick, _actionList);
     }
     private void AssignIndicatorLayer()
     {
@@ -73,18 +71,20 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     }
     private void AssignIndicatorColor()
     {
+        Color toUse = Colors.Neutral;
         switch (_team)
         {
             case Team.Chaos:
-                InnerIndicator.GetComponent<SpriteRenderer>().color = Colors.Chaos;
+                toUse = Colors.Chaos;
                 break;
             case Team.Balance:
-                InnerIndicator.GetComponent<SpriteRenderer>().color = Colors.Balance;
+                toUse = Colors.Balance;
                 break;
             case Team.Order:
-                InnerIndicator.GetComponent<SpriteRenderer>().color = Colors.Order;
+                toUse = Colors.Order;
                 break;
         }
+        InnerIndicator.GetComponent<SpriteRenderer>().color = toUse;
     }
     private void FixedUpdate()
     {
@@ -259,7 +259,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
             _model.SetUprightRotation();
         }
     }
-    public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance)
+    public void SetAttributes(byte id, string name, byte level, byte playerClass, Team team, byte[] appearance, bool alive)
     {
         _name = name;
         _class = playerClass;
@@ -279,7 +279,6 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         {
             _playersAvatar = true;
             ComponentRegister.PlayerAvatar = this;
-            Game.PlayerPMDByte = _pmd;
             gameObject.layer = LayerMask.NameToLayer("Player");
             gameObject.transform.SetParent(ComponentRegister.PC.transform, false);
             SharedFunctions.SetLayerRecursive(gameObject, LayerManager.PlayerLayer);
@@ -290,6 +289,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         {
             gameObject.layer = LayerMask.NameToLayer("RemotePlayer");
         }
+        SetAlive(alive);
         AssignIndicatorColor();
         AssignIndicatorLayer();
     }
@@ -358,7 +358,8 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
    
     public bool IsAlive 
     {
-        get { return MatchParams.IDinMatch == _playerID?ComponentRegister.PC.IsAlive:_isAlive; }
+        //get { return MatchParams.IDinMatch == _playerID?ComponentRegister.PC.IsAlive:_isAlive; }
+        get { return _isAlive; }
     }
     public bool UpdateNeeded
     {

@@ -60,8 +60,9 @@ public class InputField : MonoBehaviour
                     }
                     if (message.StartsWith("/"))
                     {
-                        string command = message.Substring(1);
-                        switch (command)
+                        string[] command = message.Substring(1).Split(" ");
+                        //Debug.Log("Command: " + command[0].ToString());
+                        switch (command[0])
                         {
                             case "shake":
                                 ComponentRegister.MainCamera.Shake();
@@ -77,6 +78,11 @@ public class InputField : MonoBehaviour
                                 break;
                             case "markertoggle":
                                 ComponentRegister.Spawner.MarkerToggle();
+                                send = false;
+                                break;
+                            case "exp":
+                                float magnitude = float.Parse(command[1]);
+                                ComponentRegister.PlayerMovement.ApplyForceVector(magnitude, 1.5f, new Vector3(0, 1, 0));
                                 send = false;
                                 break;
                         }

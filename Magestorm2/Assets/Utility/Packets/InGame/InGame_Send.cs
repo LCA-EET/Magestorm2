@@ -36,7 +36,6 @@
                         UpdateSlots = 35,
                         ReportResistableHit = 36,
                         ReportHitByWall = 37,
-                        TriggeredSigil = 38;
-                        
-                        
+                        TriggeredSigil = 38,
+                        AllPlayerData = 39;
 }

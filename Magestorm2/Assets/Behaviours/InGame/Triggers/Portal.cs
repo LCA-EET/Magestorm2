@@ -7,7 +7,7 @@ public class Portal : Trigger
     public override void EnterAction()
     {
         Debug.Log("Entered Portal.");
-        if (ComponentRegister.PC.IsAlive)
+        if (Game.PCAvatar.IsAlive)
         {
             int exitID = Random.Range(0, Exits.Length);
             GameObject selectedExit = Exits[exitID];

@@ -31,6 +31,7 @@ public class Match extends TimedObject{
     protected final byte _maxPlayers;
     protected byte _matchType;
     protected short _nextCastID = 0;
+    protected short _nextEffectID = 0;
     protected boolean _scoreUpdated = false;
     private long _expCheckElapsed = 0;
     private final long _expReportInterval = 30000;
@@ -337,17 +338,31 @@ public class Match extends TimedObject{
         toReturn[1] = _objectIDAsByte;
         return toReturn;
     }
+    public void SendAllPlayerData(byte requesterID){
+        ArrayList<byte[]> playerData = new ArrayList<>();
+        int dataLength = 0;
+        for(MatchCharacter mc : _matchCharacters.values()){
+            if(mc.GetIDinMatch() != requesterID){
+                byte[] playerDataBytes = mc.GetPlayerData();
+                if((playerData.size() + playerDataBytes.length + 2) > GameServer.MaxUDPPayload){
+                    SendToPlayer(Packets.AllPlayersInMatch(playerData, dataLength), requesterID);
+                    dataLength = 0;
+                }
+                dataLength += playerDataBytes.length;
+                playerData.add(playerDataBytes);
+            }
+        }
+        if(dataLength > 0){
+            SendToPlayer(Packets.AllPlayersInMatch(playerData, dataLength), requesterID);
+        }
+    }
     public void SendPlayerData(byte requesterID, byte idInMatch){
         if(_matchCharacters.containsKey(requesterID)){
             MatchCharacter subject = _matchCharacters.get(idInMatch);
             if(subject != null){
-                byte alive = subject.IsAlive()?(byte)1:(byte)0;
-                SendToPlayer(Packets.PlayerDataPacket(subject.GetPlayerData(), alive, subject.IsNewToMatch()), requesterID);
+                SendToPlayer(Packets.PlayerDataPacket(subject.GetPlayerData(), subject.IsNewToMatch()), requesterID);
             }
         }
-    }
-    public int GetMatchPort(){
-        return _matchPort;
     }
     public synchronized byte ObtainNextPlayerID(){
         while(_matchCharacters.containsKey(_nextPlayerID)){
@@ -527,6 +542,10 @@ public class Match extends TimedObject{
     private short IncrementCastID(){
         _nextCastID++;
         return _nextCastID;
+    }
+    public short IncrementEffectID(){
+        _nextEffectID++;
+        return _nextEffectID;
     }
     private void PlayerTick(long msElapsed){
         for(MatchCharacter mc : _matchCharacters.values()){

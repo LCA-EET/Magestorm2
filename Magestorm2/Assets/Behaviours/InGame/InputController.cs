@@ -21,7 +21,7 @@ public class InputController : MonoBehaviour
         _gameModeControls.Add(new ControlInput(InputControl.Descend, KeyMode.KeyPressed));
         _gameModeControls.Add(new ControlInput(InputControl.Run, KeyMode.KeyPressed));
         _gameModeControls.Add(new ControlInput(InputControl.Jump, KeyMode.KeyPressed));
-        _gameModeControls.Add(new ControlInput(InputControl.Crouch, KeyMode.KeyDown));
+        _gameModeControls.Add(new ControlInput(InputControl.Crouch, KeyMode.KeyPressed));
 
         foreach (ControlInput ci in _gameModeControls)
         {

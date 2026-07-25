@@ -82,6 +82,6 @@ public class CastSpell extends TimedObject{
         }
     }
     protected AppliedEffect CreateEffect(MatchCharacter target, Effect baseEffect){
-        return new AppliedEffect(_casterReference, target, baseEffect, _spellLevel);
+        return new AppliedEffect(_casterReference, target, baseEffect, _spellLevel, _matchReference.IncrementEffectID());
     }
 }

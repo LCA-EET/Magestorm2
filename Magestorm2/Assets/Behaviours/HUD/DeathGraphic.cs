@@ -19,7 +19,7 @@ public class DeathGraphic : MonoBehaviour
     }
     private void DeathCheck()
     {
-        bool pcIsAlive = ComponentRegister.PC.IsAlive;
+        bool pcIsAlive = Game.PCAvatar.IsAlive;
         if (!pcIsAlive && !_deathGraphicShown)
         {
             ShowDeath(true);

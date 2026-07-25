@@ -10,7 +10,7 @@ public class DamageDirectionPanel : MonoBehaviour
     }
     public void InstantiateDDI(float angle)
     {
-        Debug.Log("Angle: " + angle);
+        //Debug.Log("Angle: " + angle);
         DamageDirectionIndicator ddi = Instantiate(DDIPrefab).GetComponent<DamageDirectionIndicator>();
         ddi.transform.parent = transform;
         ddi.transform.localPosition = Vector3.zero;

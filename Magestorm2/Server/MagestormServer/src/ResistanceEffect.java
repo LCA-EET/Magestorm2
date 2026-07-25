@@ -1,7 +1,8 @@
 public class ResistanceEffect extends AppliedEffect{
     private final float[] _resistances;
-    public ResistanceEffect(MatchCharacter caster, MatchCharacter target, Effect baseEffect, Spell baseReference, byte degree) {
-        super(caster, target, baseEffect, degree);
+    public ResistanceEffect(MatchCharacter caster, MatchCharacter target, Effect baseEffect, Spell baseReference,
+                            byte degree, short effectID) {
+        super(caster, target, baseEffect, degree, effectID);
         _resistances = baseReference.GetResistances();
         ApplyResistances(1.0f);
     }

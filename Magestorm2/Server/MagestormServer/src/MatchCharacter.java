@@ -14,7 +14,7 @@ public class MatchCharacter extends TimedObject{
     private final byte[] _INLCTA;
     private final int _idxLevel = 7;
     private final int _idxClass = 8;
-    private final int _positionIndex, _directionIndex;
+    private final int _positionIndex, _directionIndex, _aliveIndex;
 
     private final long _manaRegenTick;
     private long _manaRegenElapsed;
@@ -75,9 +75,11 @@ public class MatchCharacter extends TimedObject{
         byte[] appearanceBytes = pc.GetAppearanceBytes();
         System.arraycopy(appearanceBytes, 0, _INLCTA, 2, appearanceBytes.length);
         System.arraycopy(nameLevelClass, 0, _INLCTA, 7, nameLevelClass.length);
-        _playerData = new byte[_INLCTA.length + 16];
+        _playerData = new byte[_INLCTA.length + 17];
         _positionIndex = _INLCTA.length;
         _directionIndex = _positionIndex + 12;
+        _aliveIndex = _directionIndex + 4;
+        _playerData[_aliveIndex] = (byte)(IsAlive()?1:0);
         _splashHits = new HashSet<>();
         _activeEffects = new TimedObjectCollection<>(1000);
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
@@ -223,6 +225,7 @@ public class MatchCharacter extends TimedObject{
         return _INLCTA;
     }
     public byte[] GetPlayerData(){
+        _playerData[_aliveIndex] = (byte)(IsAlive() ? 1 : 0);
         return _playerData;
     }
     public MatchTeam GetTeam(){

@@ -1,6 +1,8 @@
 public class DamagingSpell extends CastSpell{
     protected short _damage0, _damage1;
+    protected byte _knockback;
     protected boolean _multiElement;
+    protected int _numRolls;
     public DamagingSpell(MatchCharacter caster, short castID, Spell baseReference, Match matchReference){
         super(caster, castID, baseReference, matchReference);
         _multiElement = (baseReference.GetMinDamagePerRoll1() > 0);
@@ -10,15 +12,35 @@ public class DamagingSpell extends CastSpell{
     {
         byte minRoll0 = _baseReference.GetMinDamagePerRoll0();
         byte maxRoll0 = _baseReference.GetMaxDamagePerRoll0();
-        _damage0 = GameUtils.DiceRoll(minRoll0, maxRoll0, _baseReference.GetNumRolls());
+        DetermineRolls();
+        _damage0 = GameUtils.DiceRoll(minRoll0, maxRoll0, _numRolls);
+    }
+
+    private void DetermineRolls(){
+        _numRolls = _baseReference.GetNumRolls() * _casterReference.GetSkillLevel(_baseReference.GetDisciplineCode());
     }
 
     private void CalculateDamage1(){
         byte minRoll1 = _baseReference.GetMinDamagePerRoll1();
         byte maxRoll1 = _baseReference.GetMaxDamagePerRoll1();
-        _damage1 = GameUtils.DiceRoll(minRoll1, maxRoll1, _baseReference.GetNumRolls());
+        _damage1 = GameUtils.DiceRoll(minRoll1, maxRoll1, _numRolls);
     }
 
+    public void CalculateKnockback(){
+        byte minForcePerRoll = _baseReference.GetMinForcePerRoll();
+        byte maxForcePerRoll = _baseReference.GetMaxForcePerRoll();
+        if(_numRolls ==0){
+            DetermineRolls();
+        }
+        _knockback = (byte)GameUtils.DiceRoll(minForcePerRoll, maxForcePerRoll, _numRolls);
+    }
+
+    public byte GetKnockback(){
+        if(_knockback == 0){
+            CalculateKnockback();
+        }
+        return _knockback;
+    }
     public short GetDamage0(){
         if(_damage0 == 0){
             CalculateDamage0();
@@ -58,9 +80,16 @@ public class DamagingSpell extends CastSpell{
         }
     }
 
+    private void ApplyKnockback(MatchCharacter affected){
+        _matchReference.SendToPlayer(Packets.ForceApplicationPacket(
+                _objectIDAsShort, GetKnockback(), _baseReference.GetForceDuration()), affected);
+    }
     @Override
     public void ProcessSpell(MatchCharacter affectedPlayer){
         Main.LogDebug("DamagingSpell.ProcessSpell(): PriorHP: " + affectedPlayer.GetCurrentHP());
+        if(_baseReference.GetForceDuration() > 0){
+            ApplyKnockback(affectedPlayer);
+        }
         ApplyDamage(GetDamage0(), _baseReference.GetElement0(), affectedPlayer);
         if(_multiElement){
             ApplyDamage(GetDamage1(), _baseReference.GetElement1(), affectedPlayer);
@@ -73,6 +102,6 @@ public class DamagingSpell extends CastSpell{
 
     @Override
     protected AppliedEffect CreateEffect(MatchCharacter target, Effect baseEffect){
-        return new DoTEffect(_casterReference, target, baseEffect, _spellLevel, GetDamage0());
+        return new DoTEffect(_casterReference, target, baseEffect, _spellLevel, GetDamage0(), _matchReference.IncrementEffectID());
     }
 }

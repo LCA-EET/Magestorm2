@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.LowLevelPhysics2D;
 
 public class AvatarAnimation : MonoBehaviour{
 
@@ -35,7 +36,7 @@ public class AvatarAnimation : MonoBehaviour{
                     {
                         animationKey = pmd.IsRunning ? AnimationKeys.Run : AnimationKeys.Walk_Forward;
                     }
-                    else
+                    else if(pmd.IsMovingBackward)
                     {
                         animationKey = AnimationKeys.Walk_Backward;
                     }

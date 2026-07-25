@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpellData
 {
     private int _spellNameReference, _descReference;
-    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost, _effectRadius, _range, _projectileSpeed, _shakePrevention;
+    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost, _effectRadius, _range, _projectileSpeed, _shakePrevention, _forceDuration;
     private byte _discipline;
     private byte _spellType;
     private short _cancelsEffects;
@@ -76,9 +76,13 @@ public class SpellData
                 case SpellAttributes.SHAKEPREVENTION:
                     _shakePrevention = byte.Parse(fieldValue);
                     break;
+                case SpellAttributes.FORCEDURATION:
+                    _forceDuration = byte.Parse(fieldValue);
+                    break;
             }
         }
     }
+    
     public byte Element0
     {
         get { return _element0; }
@@ -94,6 +98,13 @@ public class SpellData
         else
         {
             return staminaCost;
+        }
+    }
+    public byte ForceDuration
+    {
+        get
+        {
+            return _forceDuration;
         }
     }
     public byte ShakePrevention
@@ -249,4 +260,5 @@ public static class SpellAttributes
     public const string RANGE = "range";
     public const string PROJECTILESPEED = "projectilespeed";
     public const string SHAKEPREVENTION = "shakeprevention";
+    public const string FORCEDURATION = "forceduration";
 }

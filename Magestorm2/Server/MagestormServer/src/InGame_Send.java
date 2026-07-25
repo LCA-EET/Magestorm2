@@ -24,7 +24,7 @@ public class InGame_Send {
     public static final byte FlagCaptured = 20;
     public static final byte FlagReturned = 21;
     public static final byte FlagDropped = 22;
-    public static final byte PlayerDamaged = 23;
+    public static final byte PostureChange= 23;
     public static final byte Cast = 24;
     public static final byte PlayerKilled = 25;
     public static final byte HMLUpdate = 26;
@@ -37,7 +37,6 @@ public class InGame_Send {
     public static final byte LeyUpdate = 33;
     public static final byte PlayerRevived = 34;
     public static final byte PlayerTapped = 35;
-    public static final byte PostureChange = 36;
     public static final byte ApplyEffect = 37;
     public static final byte InactivityDisconnect = 39;
     public static final byte HitNotification = 40;
@@ -51,5 +50,7 @@ public class InGame_Send {
     public static final byte SpawnVFXonPlayer = 48;
     public static final byte SigilExpired = 49;
     public static final byte SigilRequestResponse = 50;
+    public static final byte ApplyForce = 51;
+    public static final byte AllPlayerData = 52;
 
 }

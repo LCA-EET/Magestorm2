@@ -1,0 +1,11 @@
+Please create icons for the following:
+Heal Self
+Heal Other
+Resurrect
+Prayer
+Smite (this spell launches a spiked mace at the target)
+Telekinesis (spell for actuating doors and switches from afar)
+Fly
+Leap
+Haste
+Slow

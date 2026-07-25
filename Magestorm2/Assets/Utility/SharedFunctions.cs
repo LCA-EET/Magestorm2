@@ -40,6 +40,10 @@ public static class SharedFunctions
         Vector3 direction = (objectB.position - objectA.position).normalized;
         return Vector3.SignedAngle(direction, objectA.forward, Vector3.up);
     }
+    public static bool DirectionalSphereCast(Transform origin, float radius, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
+    {
+        return Physics.SphereCast(origin.position, radius, origin.TransformDirection(direction), out hitInfo, distance, layerMask);
+    }
     public static bool DirectionalCast(Transform origin, int layerMask, float distance, Vector3 direction, out RaycastHit hitInfo)
     {
         return Physics.Raycast(origin.position, origin.TransformDirection(direction), out hitInfo, distance, layerMask);
@@ -198,7 +202,10 @@ public static class SharedFunctions
     {
         return Physics.BoxCast(origin.position, Vector3.one, direction, out hitInfo);
     }
-    
+    public static bool SphereCastForward(Transform origin, int layerMask, float radius, float distance, out RaycastHit hitInfo)
+    {
+        return DirectionalSphereCast(origin, radius, layerMask, distance, Vector3.forward, out hitInfo);
+    }
     public static bool CastForward(Transform origin, int layerMask, float distance, out RaycastHit hitInfo)
     {
         return DirectionalCast(origin, layerMask, distance, Vector3.forward, out hitInfo);

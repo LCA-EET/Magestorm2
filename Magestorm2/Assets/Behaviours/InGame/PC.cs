@@ -132,7 +132,7 @@ public class PC : MonoBehaviour
         }
         if (InputControls.Action)
         {
-            if (IsAlive)
+            if (Game.PCAvatar.IsAlive)
             {
                 Activate();
             }
@@ -142,7 +142,7 @@ public class PC : MonoBehaviour
             }
         }
         CheckSpellSlot();
-        if(_coolDownRemaining <= 0 && !InValhalla && IsAlive && !Game.PlayerPMDByte.IsRunning)
+        if(_coolDownRemaining <= 0 && !InValhalla && Game.PCAvatar.IsAlive && !ComponentRegister.PlayerMovement.PMD.IsRunning)
         {
             CheckCast();
         }
@@ -220,6 +220,7 @@ public class PC : MonoBehaviour
     }
     public void RestoreHPandMana()
     {
+        Debug.Log("Player's HP and Mana Restored");
         _hp.UpdateValue(MatchParams.MaxHP);
         _mana.UpdateValue(MatchParams.MaxMana);
     }
@@ -316,14 +317,6 @@ public class PC : MonoBehaviour
                 break;
         }
     }
-    public bool IsAlive
-    {
-        get
-        {
-            return _hp.Value > 0;
-        }
-    }
-
     private void Activate()
     {
         RaycastHit hitInfo;

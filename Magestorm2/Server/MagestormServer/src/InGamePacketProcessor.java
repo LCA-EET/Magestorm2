@@ -83,6 +83,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.ReportHitByWall:
                     HandleReportHitByWallPacket();
                     return true;
+                case InGame_Receive.AllPlayerData:
+                    HandleAllPlayerDataRequest();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -90,6 +93,9 @@ public class InGamePacketProcessor extends UDPProcessor{
             return HandleJoinMatchPacket(_remote);
         }
         return false;
+    }
+    private void HandleAllPlayerDataRequest(){
+        _owningMatch.SendAllPlayerData(_decrypted[1]);
     }
     private void HandleSigilTrigger() {
         MatchCharacter triggeredBy = _owningMatch.GetMatchCharacter(_decrypted[1]);
@@ -301,8 +307,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         return false;
     }
     private void SendPlayerDataForJoinee(MatchCharacter joinee){
-        byte alive = joinee.IsAlive()?(byte)1:(byte)0;
-        _owningMatch.SendToAll(Packets.PlayerDataPacket(joinee.GetPlayerData(), alive, joinee.IsNewToMatch()));
+        _owningMatch.SendToAll(Packets.PlayerDataPacket(joinee.GetPlayerData(), joinee.IsNewToMatch()));
     }
     private int CheckAccountAndCharacter(){
         RemoteClient remote = LoggedInClient();

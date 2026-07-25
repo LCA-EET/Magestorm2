@@ -19,7 +19,7 @@ public static class Game
     public static int GameServerPort;
     public static IPAddress GameServerAddress;
     public static bool LoggedIn = false;
-    public static PMDByte PlayerPMDByte;
+    //public static PMDByte PlayerPMDByte;
     public static bool GameMode
     {
         get
