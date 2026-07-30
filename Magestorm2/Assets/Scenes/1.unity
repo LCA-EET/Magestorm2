@@ -1191,6 +1191,14 @@ PrefabInstance:
       propertyPath: ObjectKey
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4303815936000476436, guid: f52b6793d412dd142a2c264c7d894ae0, type: 3}
+      propertyPath: Interruptible
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303815936000476436, guid: f52b6793d412dd142a2c264c7d894ae0, type: 3}
+      propertyPath: ReactivationInterval
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4668609914869182086, guid: f52b6793d412dd142a2c264c7d894ae0, type: 3}
       propertyPath: ObjectKey
       value: 2
@@ -2232,6 +2240,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 961541736}
     m_Modifications:
+    - target: {fileID: 2794464813814121623, guid: 86c059f467ea1f94fbed867a57362374, type: 3}
+      propertyPath: Interruptible
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2794464813814121623, guid: 86c059f467ea1f94fbed867a57362374, type: 3}
+      propertyPath: ReactivationInterval
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4881829896708155552, guid: 86c059f467ea1f94fbed867a57362374, type: 3}
       propertyPath: m_Name
       value: SlidingDoor
@@ -2404,7 +2420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5823169312085774591, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6420716833901105419, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
       propertyPath: m_IsActive

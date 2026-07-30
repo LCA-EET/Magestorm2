@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpellData
 {
     private int _spellNameReference, _descReference;
-    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost, _effectRadius, _range, _projectileSpeed, _shakePrevention, _forceDuration;
+    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost, _effectRadius, _range, _projectileSpeed, _shakePrevention, _forceDuration, _autoAim;
     private byte _discipline;
     private byte _spellType;
     private short _cancelsEffects;
@@ -78,6 +78,9 @@ public class SpellData
                     break;
                 case SpellAttributes.FORCEDURATION:
                     _forceDuration = byte.Parse(fieldValue);
+                    break;
+                case SpellAttributes.AUTOAIM:
+                    _autoAim = byte.Parse(fieldValue);
                     break;
             }
         }
@@ -193,7 +196,8 @@ public class SpellData
                     SpellData spellReference = null;
                     if(SpellManager.GetSpell(SpellID, ref spellReference))
                     {
-                        byte target = SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 3.0f, TeamSelectionCode.Enemy, SpellType==ControlCodes.SpellTypes_Resistable?LayerManager.ResistableObstructionMask:LayerManager.AoEObstructionMask);
+
+                        byte target = (byte)(_autoAim == 1 ? SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 3.0f, TeamSelectionCode.Enemy, SpellType==ControlCodes.SpellTypes_Resistable?LayerManager.ResistableObstructionMask:LayerManager.AoEObstructionMask) : 0);
                         toSend = InGame_Packets.CastBoltPacket(SpellID, target);
                     }
                     break;
@@ -261,4 +265,5 @@ public static class SpellAttributes
     public const string PROJECTILESPEED = "projectilespeed";
     public const string SHAKEPREVENTION = "shakeprevention";
     public const string FORCEDURATION = "forceduration";
+    public const string AUTOAIM = "autoaim";
 }

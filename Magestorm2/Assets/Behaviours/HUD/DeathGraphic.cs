@@ -15,6 +15,7 @@ public class DeathGraphic : MonoBehaviour
     }
     private void Update()
     {
+
         _deathCheck.ProcessAction(Time.deltaTime);
     }
     private void DeathCheck()

@@ -20,6 +20,7 @@ public static class MatchParams
     private static float _maxHP;
     private static float _maxMana;
     private static byte _maxStamina;
+    public static bool JoinedMatch;
 
     public static bool IncludeFlags{
         get { return _includeFlags;}
@@ -42,6 +43,7 @@ public static class MatchParams
     }
     public static void Init(byte[] decrypted)
     {
+        JoinedMatch = false;
         _decrypted = decrypted;
         ReturningFromMatch = false;
         MatchType = decrypted[1];

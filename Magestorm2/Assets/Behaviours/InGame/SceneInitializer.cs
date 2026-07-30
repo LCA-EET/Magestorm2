@@ -16,7 +16,7 @@ public class SceneInitializer : MonoBehaviour
         else
         {
             ComponentRegister.SceneInitializer = this;
-            Match.Init();
+            Match.Reinitialize();
             InputControls.Init();
         }
         

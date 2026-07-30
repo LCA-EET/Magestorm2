@@ -39,6 +39,10 @@ public class SpawnedSpell : MonoBehaviour
         transform.parent = parent;
         _castingTeam = castingTeam;
         _castID = castID;
+        if (_spellReference.ForceDuration > 0)
+        {
+            Match.AddStoredVector(_castID, transform.forward);
+        }
         ComponentRegister.Spawner.RegisterSpawnedSpell(this);
     }
     public bool IsExpired(float currentTime)
@@ -51,10 +55,7 @@ public class SpawnedSpell : MonoBehaviour
         {
             if(_destructionElapsed >= DestroyAfter)
             {
-                if (_spellReference.ForceDuration > 0)
-                {
-                    Match.AddStoredVector(_castID, transform.forward);
-                }
+                
                 ComponentRegister.Spawner.DeregisterSpawnedSpell(this);
                 Destroy(gameObject);
             }
@@ -66,6 +67,7 @@ public class SpawnedSpell : MonoBehaviour
     }
     public void MarkForDestruction()
     {
+        Debug.Log("MarkForDestruction");
         _destroyOnNextUpdate = true;
     }
     public short CastID

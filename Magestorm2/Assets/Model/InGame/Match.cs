@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public static class Match
 {
@@ -12,35 +11,65 @@ public static class Match
     private static Dictionary<byte, Avatar> _deadAvatarsOnPCTeam;
     private static Dictionary<short, Wall> _walls;
     private static Dictionary<short, Sigil> _sigils;
-    private static Dictionary<short, Vector3> _storedVectors;
-    public static bool Running;
+    private static Dictionary<short, StoredVector> _storedVectors;
     
     public static void Init()
     {
         _matchPlayers = new Dictionary<byte, Avatar>();
-        _storedVectors = new Dictionary<short, Vector3>();
+        _storedVectors = new Dictionary<short, StoredVector>();
         _deadAvatarsOnPCTeam = new Dictionary<byte, Avatar>();
         _objects = new Dictionary<byte, ActivateableObject>();
         _walls = new Dictionary<short, Wall>();
         _sigils = new Dictionary<short, Sigil>();
     }
+
+    public static void Reinitialize()
+    {
+        _matchPlayers.Clear();
+        _storedVectors.Clear();
+        _deadAvatarsOnPCTeam.Clear();
+        _objects.Clear();
+        _walls.Clear();
+        _sigils.Clear();
+    }
     
     public static void AddStoredVector(short castID,  Vector3 vector)
     {
-        _storedVectors.Add(castID, vector);
+        _storedVectors.Add(castID, new StoredVector(vector));
     }
 
     public static bool GetStoredVector(short castID, ref Vector3 stored)
     {
         if (_storedVectors.ContainsKey(castID))
         {
-            stored = _storedVectors[castID];
+            stored = _storedVectors[castID].Vector;
             _storedVectors.Remove(castID);
             return true;
         }
         return false;
     }
     
+    public static void CountdownVectors()
+    {
+        if(_storedVectors.Count > 0)
+        {
+            long currentTime = DateTime.Now.Ticks;
+            List<short> expired = new List<short>();
+            foreach (short castID in _storedVectors.Keys)
+            {
+                if (_storedVectors[castID].IsExpired(currentTime))
+                {
+                    expired.Add(castID);
+                }
+            }
+            foreach(short castID in expired)
+            {
+                _storedVectors.Remove(castID);
+            }
+        }
+        
+    }
+
     public static void AddAvatar(Avatar avatar)
     {
         _matchPlayers.Add(avatar.PlayerID, avatar);
@@ -214,7 +243,7 @@ public static class Match
                         ComponentRegister.Valhalla.EnterValhalla();
                     }
                 }
-                ComponentRegister.PC.JoinedMatch = true;
+                MatchParams.JoinedMatch = true;
                 Debug.Log("MaxHP: " + MatchParams.MaxHP);
                 Debug.Log("MaxMana: " + MatchParams.MaxMana);
                 ComponentRegister.PlayerStatusPanel.SetExperience(PlayerAccount.SelectedCharacter.GetExperience());
@@ -276,7 +305,7 @@ public static class Match
         if (_objects.ContainsKey(key))
         {
             _objects[key].StatusChanged(state, force);
-            Debug.Log("Object state change: " + key + ", " + state);
+            //Debug.Log("Object state change: " + key + ", " + state);
         }
     }
     public static void Send(byte[] packetBytes)

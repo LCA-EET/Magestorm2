@@ -14,7 +14,6 @@ public class PC : MonoBehaviour
     private Camera _camera;
     public SFXPlayer SFXPlayer;
     public MusicPlayer MusicPlayer;
-    public bool JoinedMatch;
 
     private byte _class;
     private List<PeriodicAction> _actionList;
@@ -53,7 +52,8 @@ public class PC : MonoBehaviour
             _class = PlayerAccount.SelectedCharacter.CharacterClass;
             _actionList = new List<PeriodicAction>();
             new PeriodicAction(Game.TickInterval, UpdateIndicators, _actionList);
-            if(MatchParams.MatchTeam != Team.Neutral)
+            new PeriodicAction(1.0f, CountdownVectors, _actionList);
+            if (MatchParams.MatchTeam != Team.Neutral)
             {
                 if (_class == ControlCodes.PlayerClass_Cleric || _class == ControlCodes.PlayerClass_Magician)
                 {
@@ -63,7 +63,10 @@ public class PC : MonoBehaviour
             }
         }
     }
-    
+    private void CountdownVectors()
+    {
+        Match.CountdownVectors();
+    } 
     public void Start()
     {
         _hp = new HMLUpdater(0.1f, MatchParams.MaxHP, PlayerIndicator.Health, _hml);
@@ -75,7 +78,7 @@ public class PC : MonoBehaviour
         {
             _ley.UpdateValue(0.6f);
         }
-        if (!JoinedMatch)
+        if (!MatchParams.JoinedMatch)
         {
             _joinRerequest = new PeriodicAction(0.25f, Game.SendJoinMatchPacket, null);
         }
@@ -125,32 +128,35 @@ public class PC : MonoBehaviour
         {
             return;
         }
-        if (!JoinedMatch)
+        if (!MatchParams.JoinedMatch)
         {
             _joinRerequest.ProcessAction(Time.deltaTime);
             Debug.Log("Re-requesting to Join Match");
         }
-        if (InputControls.Action)
+        else
         {
-            if (Game.PCAvatar.IsAlive)
+            if (InputControls.Action)
             {
-                Activate();
+                if (Game.PCAvatar.IsAlive)
+                {
+                    Activate();
+                }
+                else
+                {
+                    Tap();
+                }
+            }
+            CheckSpellSlot();
+            if (_coolDownRemaining <= 0 && !InValhalla && Game.PCAvatar.IsAlive && !ComponentRegister.PlayerMovement.PMD.IsRunning)
+            {
+                CheckCast();
             }
             else
             {
-                Tap();
+                _coolDownRemaining -= Time.deltaTime;
             }
+            PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         }
-        CheckSpellSlot();
-        if(_coolDownRemaining <= 0 && !InValhalla && Game.PCAvatar.IsAlive && !ComponentRegister.PlayerMovement.PMD.IsRunning)
-        {
-            CheckCast();
-        }
-        else
-        {
-            _coolDownRemaining -= Time.deltaTime;
-        }
-        PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         MenuCheck();
     }
     private void CheckCast()

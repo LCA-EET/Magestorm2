@@ -59,7 +59,7 @@ public static class Game
     }
     public static void SendInGameBytes(byte[] unencrypted)
     {
-        if (ComponentRegister.PC.JoinedMatch)
+        if (MatchParams.JoinedMatch)
         {
             ComponentRegister.InGamePacketProcessor.SendBytes(unencrypted);
         }
@@ -93,6 +93,7 @@ public static class Game
             ProfanityChecker.Init();
             SpellIcons.Init();
             SharedFunctions.Initialize();
+            Match.Init();
             _init = true;
         }
     }

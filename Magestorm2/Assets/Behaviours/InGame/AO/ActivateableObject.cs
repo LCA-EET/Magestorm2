@@ -44,7 +44,7 @@ public class ActivateableObject : MonoBehaviour
         Match.RegisterActivateableObject(this);
     }
 
-    public void StateChangeRequest()
+    public virtual void StateChangeRequest()
     {
         if(_readyToActivate)
         {

@@ -4,17 +4,19 @@ public class Telekinesis : Bolt
 {
     protected override void OnTriggerEnter(Collider other)
     {
-        if (_casterID == Game.PCAvatar.PlayerID)
+        if (!_destroyOnNextUpdate)
         {
-            ActivateableObject hitObject = other.GetComponent<ActivateableObject>();
-            if (hitObject != null)
+            if (_casterID == Game.PCAvatar.PlayerID)
             {
-                SpawnImpactPrefab();
-                hitObject.StateChangeRequest();
-                return;
+                ActivateableObject hitObject = other.GetComponent<ActivateableObject>();
+                if (hitObject != null)
+                {
+                    hitObject.StateChangeRequest();
+                }
             }
+            base.OnTriggerEnter(other);
         }
-        base.OnTriggerEnter(other);
+        
     }
     protected override void OnWallHit(Wall hitWall)
     {

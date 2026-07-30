@@ -306,7 +306,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (!_pc.JoinedMatch)
+        if (!MatchParams.JoinedMatch)
         {
             return;
         }
@@ -346,7 +346,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-        if (!_pc.JoinedMatch)
+        if (!MatchParams.JoinedMatch)
         {
             return;
         }

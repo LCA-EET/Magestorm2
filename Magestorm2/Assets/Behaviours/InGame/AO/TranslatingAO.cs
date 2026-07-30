@@ -7,14 +7,12 @@ public class TranslatingAO : ActuatingAO
     public Trigger PlatformTrigger;
     protected override void Start()
     {
-        base.Start();
         _default = ActuatingObject.transform.position;
         _priorPosition = _default;
         _end = EndPosition.transform.position;
         _a = _default;
         _b = _end;
-
-        _actuationTime = Vector3.Distance(_a, _b) / ActuationSpeed;
+        base.Start();
     }
     protected override void Update()
     {
@@ -55,10 +53,9 @@ public class TranslatingAO : ActuatingAO
         }
         else
         {
-            base.ApplyStateChange(force);
             _a = _currentState == 0 ? _end : _default;
             _b = _currentState == 0 ? _default : _end;
+            base.ApplyStateChange(force);
         }
-            
     }
 }
