@@ -17,11 +17,11 @@ public class SpellSpawner : MonoBehaviour
         {
             if (_flowDown)
             {
-                obj.InitializeNoCaster(_castingTeam, _castID, transform.parent, _spellReference);
+                obj.InitializeNoCaster(_castingTeam, _castID, transform.parent, _spellReference, _payload);
             }
             else
             {
-                obj.Initialize(_casterID, _castingTeam, _castID, transform.parent, _spellReference);
+                obj.Initialize(_casterID, _castingTeam, _castID, transform.parent, _spellReference, _payload);
             }
                 
         }
@@ -77,6 +77,10 @@ public class SpellSpawner : MonoBehaviour
                 UseStamina();
             }
         }
+    }
+    private void InitializeHitScan()
+    {
+        
     }
     private void InitializeSigil()
     {

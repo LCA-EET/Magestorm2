@@ -10,7 +10,7 @@ public static class SpellIcons
         Sprite[] icons = Resources.LoadAll<Sprite>("icon/spells");
         for (int i = 0; i < icons.Length; i++)
         {
-            //Debug.Log("Loaded icon " + icons[i].name);
+            Debug.Log("Loaded icon " + icons[i].name);
             Sprite icon = icons[i];
             _spellIcons.Add(byte.Parse(icon.name), icon);
         }

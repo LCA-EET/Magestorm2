@@ -186,14 +186,16 @@ public class MatchCharacter extends TimedObject{
     }
     public void TakeDamage(float damageAmount, MatchCharacter attacker){
         _hpRegenWaitElapsed = 0;
-        Main.LogMessage("HP pre-adjustment: " + _currentHP);
-        _currentHP -= damageAmount;
-        Main.LogMessage("HP post-adjustment: " + _currentHP);
-        if(_currentHP <= 0){
+        float newHP = _currentHP - damageAmount;
+        _currentHP = newHP < 0 ? 0 : newHP;
+        if(_currentHP == 0){
             _owningMatch.PlayerKilled(this, attacker);
             RemoveAllEffects();
-
         }
+    }
+    public void DrainMana(float damageAmount){
+        float newMana = _currentMana - damageAmount;
+        _currentMana = newMana < 0 ? 0 : newMana;
     }
     public byte GetStatistic(byte statCode){
         return _pc.GetStatistic(statCode);

@@ -12,13 +12,13 @@ public class SpawnedSpell : MonoBehaviour
     protected SpellData _spellReference;
     protected Team _castingTeam;
     protected bool _destroyOnNextUpdate;
-
-    public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
+    protected byte[] _payload;
+    public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
     {
         if(Match.GetAvatar(casterID, ref _casterReference))
         {
             _casterID = casterID;
-            InitializeNoCaster(castingTeam, castID, parent, spellReference);
+            InitializeNoCaster(castingTeam, castID, parent, spellReference, payload);
             if (casterID == MatchParams.IDinMatch && CastClip != null)
             {
                 if (CastClip != null)
@@ -32,8 +32,9 @@ public class SpawnedSpell : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    public virtual void InitializeNoCaster(Team castingTeam, short castID, Transform parent, SpellData spellReference)
+    public virtual void InitializeNoCaster(Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
     {
+        _payload = payload;
         _spellReference = spellReference;
         _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
         transform.parent = parent;

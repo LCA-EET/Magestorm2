@@ -363,3 +363,9 @@ Slow
 Enemy targets that come into contact with this sigil be slowed.
 Telekinesis
 This spell allows the caster to manipulate objects, such as levers, switches, etc. from afar. When used against an enemy, the spell pushes them backward.
+Lightning Bolt
+Fires a bolt of lightning toward a target selected by the caster.
+Mana Bolt
+Fires a focused bolt of mana energy toward a target selected by the caster.
+Void Bolt
+Fires a nullifying bolt toward a target selected by the caster.

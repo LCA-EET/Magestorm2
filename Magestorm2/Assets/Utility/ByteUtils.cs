@@ -18,6 +18,11 @@ public static class ByteUtils
         toConvert.CopyTo(toReturn, 0);
         return toReturn;
     }
+    public static void InsertVector3AtIndex(byte[] array, Vector3 toInsert, int insertionIndex)
+    {
+        byte[] bytesToInsert = Vector3ToBytes(toInsert);
+        Array.Copy(bytesToInsert, 0, array, insertionIndex, 12);
+    }
     public static string BytesToUTF8(byte[] decrypted, int index, int length)
     {
         return Encoding.UTF8.GetString(decrypted, index, length);

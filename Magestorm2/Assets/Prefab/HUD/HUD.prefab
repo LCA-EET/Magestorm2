@@ -103,6 +103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -387,6 +388,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -935,6 +937,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1072,6 +1075,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1298,7 +1302,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell
+      value: AvailableSpell31
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1553,7 +1557,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell
+      value: AvailableSpell11
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1922,7 +1926,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (3)
+      value: AvailableSpell41
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2173,7 +2177,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (2)
+      value: AvailableSpell33
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2322,7 +2326,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (1)
+      value: AvailableSpell22
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2645,7 +2649,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (1)
+      value: AvailableSpell32
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3203,7 +3207,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (4)
+      value: AvailableSpell42
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3458,7 +3462,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (1)
+      value: AvailableSpell12
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3607,7 +3611,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell
+      value: AvailableSpell21
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4044,7 +4048,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (2)
+      value: AvailableSpell13
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4193,7 +4197,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (5)
+      value: AvailableSpell43
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4342,7 +4346,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 121554425081279094, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_Name
-      value: AvailableSpell (2)
+      value: AvailableSpell23
       objectReference: {fileID: 0}
     - target: {fileID: 929738211086903360, guid: d9ab6f33cb28ea94085f3ea8e91a025d, type: 3}
       propertyPath: m_AnchorMax.x

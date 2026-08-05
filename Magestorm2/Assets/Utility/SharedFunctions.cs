@@ -35,6 +35,22 @@ public static class SharedFunctions
         }
         return 0;
     }
+    public static bool AdvanceSphereCast(Transform origin, float distanceToAdvance, int hitMask, float radius, out RaycastHit hitInfo)
+    {
+        if(Physics.SphereCast(origin.position, radius, origin.forward, out hitInfo, distanceToAdvance, hitMask))
+        {
+            return true;
+        }
+        return false;
+    }
+    public static bool AdvanceCast(Transform origin, float distanceToAdvance, int hitMask, out RaycastHit hitInfo)
+    {
+        if (Physics.Raycast(origin.position, origin.forward, out hitInfo, distanceToAdvance, hitMask))
+        {
+            return true;
+        }
+        return false;
+    }
     public static float AngleBetween(Transform objectA, Transform objectB)
     {
         Vector3 direction = (objectB.position - objectA.position).normalized;
@@ -98,6 +114,7 @@ public static class SharedFunctions
     {
         return ByteUtils.Vector3ToBytes(Camera.main.transform.forward);
     }
+
     public static byte GetPlayerInSphereCast(Vector3 origin, float range, float radius, TeamSelectionCode tsc, int obstructionMask)
     {
         GameObjectDistanceComparer comparer = new GameObjectDistanceComparer(Game.PCAvatar.transform.position);

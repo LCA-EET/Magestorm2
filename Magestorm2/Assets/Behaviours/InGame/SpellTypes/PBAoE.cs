@@ -2,10 +2,10 @@
 
 public class PBAoE : SpawnedSpell
 {
-    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
+    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
     {
         bool reportHit = false;
-        base.Initialize(casterID, castingTeam, castID, parent, spellReference);
+        base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
         ComponentRegister.Spawner.SpawnMarker(transform.position, 1.0f);
         if(SharedFunctions.IsPlayerInRadius(transform.position, _spellReference.EffectRadius))
         {

@@ -445,6 +445,7 @@ public class Match extends TimedObject{
             case ControlCodes.SpellTypes_Resistable:
                 _castSpells.put(castID, new ResistableSpell(caster, castID, spellReference, this));
                 break;
+            case ControlCodes.SpellTypes_HitScan:
             case ControlCodes.SpellTypes_Bolt:
                 _castSpells.put(castID, new DamagingSpell(caster, castID, spellReference, this));
                 break;

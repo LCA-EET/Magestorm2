@@ -39,10 +39,10 @@ public class Bolt : Projectile
         }
     }
     
-    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
+    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
     {
         _maxRange = spellReference.Range;
-        base.Initialize(casterID, castingTeam, castID, parent, spellReference);
+        base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
         _priorPosition = transform.position;
     }
 }

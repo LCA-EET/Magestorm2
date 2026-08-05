@@ -171,6 +171,12 @@ public class SpellData
             byte[] toSend = null;
             switch (SpellType)
             {
+                case ControlCodes.SpellTypes_HitScan:
+                    Vector3 pointHit = Vector3.zero;
+                    if(ComponentRegister.PC.HitScanCheck(this, ref pointHit)){
+                        toSend = InGame_Packets.HitScanPacket(SpellID, pointHit);
+                    }
+                    break;
                 case ControlCodes.SpellTypes_HarmfulSigil:
                 case ControlCodes.SpellTypes_Sigil:
                     toSend = InGame_Packets.PlacedSigilPacket(SpellID, SpellType);
@@ -197,7 +203,7 @@ public class SpellData
                     if(SpellManager.GetSpell(SpellID, ref spellReference))
                     {
 
-                        byte target = (byte)(_autoAim == 1 ? SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 3.0f, TeamSelectionCode.Enemy, SpellType==ControlCodes.SpellTypes_Resistable?LayerManager.ResistableObstructionMask:LayerManager.AoEObstructionMask) : 0);
+                        byte target = (byte)(_autoAim == 1 ? SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 2.0f, TeamSelectionCode.Enemy, SpellType==ControlCodes.SpellTypes_Resistable?LayerManager.ResistableObstructionMask:LayerManager.AoEObstructionMask) : 0);
                         toSend = InGame_Packets.CastBoltPacket(SpellID, target);
                     }
                     break;

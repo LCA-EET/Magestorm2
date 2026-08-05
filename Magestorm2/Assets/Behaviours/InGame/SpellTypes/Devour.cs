@@ -2,9 +2,9 @@
 
 public class Devour : SpawnedSpell
 {
-    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference)
+    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
     {
-        base.Initialize(casterID, castingTeam, castID, parent, spellReference);
+        base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
         Debug.Log("Devour.Initialize");
         RaycastHit hitInfo;
         if (SharedFunctions.CastForward(Camera.main.transform, LayerManager.DeadPlayerLayerMask, 5.0f, out hitInfo))

@@ -74,7 +74,12 @@ public class DamagingSpell extends CastSpell{
         if(target.IsShocked()){
             appliedDamage *= 1.1f;
         }
-        target.TakeDamage(appliedDamage, _casterReference);
+        if(element == ControlCodes.Element_Void){
+            target.DrainMana(appliedDamage);
+        }
+        else{
+            target.TakeDamage(appliedDamage, _casterReference);
+        }
         if(target.GetIDinMatch() != _casterReference.GetIDinMatch()){
             _casterReference.AdjustExperience(appliedDamage * 2);
         }

@@ -63,6 +63,16 @@ public class PC : MonoBehaviour
             }
         }
     }
+    public bool HitScanCheck(SpellData spellReference, ref Vector3 pointHit)
+    {
+        RaycastHit hitInfo;
+        bool toReturn = SharedFunctions.AdvanceSphereCast(Camera.main.transform, spellReference.Range, LayerManager.ProjectileImpactMask, 0.25f, out hitInfo);
+        if (toReturn)
+        {
+            pointHit = hitInfo.point;
+        }
+        return toReturn;
+    }
     private void CountdownVectors()
     {
         Match.CountdownVectors();

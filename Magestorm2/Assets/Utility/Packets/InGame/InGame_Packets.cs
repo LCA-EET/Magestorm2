@@ -214,13 +214,17 @@ public static class InGame_Packets
         Array.Copy(slots, 0, unencrypted, 2, slots.Length);
         return unencrypted;
     }
-
+    public static byte[] HitScanPacket(byte spellID, Vector3 pointHit)
+    {
+        byte[] unencrypted = GenericCastPacket(12, spellID, ControlCodes.SpellTypes_HitScan);
+        ByteUtils.InsertVector3AtIndex(unencrypted, pointHit, ControlCodes.CastPayloadStartIndex);
+        return unencrypted;
+    }
     public static byte[] PlacedSigilPacket(byte spellID, byte spellType)
     {
         byte[] unencrypted = GenericCastPacket(13, spellID, spellType);
         unencrypted[ControlCodes.CastPayloadStartIndex] = MatchParams.IDinMatch;
-        byte[] positionBytes = SharedFunctions.GetCameraPositionBytes(1.25f);
-        Array.Copy(positionBytes, 0, unencrypted, ControlCodes.CastPayloadStartIndex + 1, 12);
+        Array.Copy(SharedFunctions.GetCameraPositionBytes(1.25f), unencrypted, ControlCodes.CastPayloadStartIndex + 1);
         return unencrypted;
     }
 

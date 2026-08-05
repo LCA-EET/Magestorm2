@@ -36,19 +36,18 @@ public class AvailableSpellsPanel : MonoBehaviour
     public void RefeshPanel()
     {
         byte index = 0;
-        byte slotIndex = 100;
         byte[] slottedSpells = PlayerAccount.SelectedCharacter.SlottedSpells;
         for (byte b = 0; b < slottedSpells.Length; b++)
         {
             byte spellID = slottedSpells[b];
             if(spellID > 0)
             {
-                AvailableSpell spell = AvailableSpells[b];
-                
+                AvailableSpell spell = AvailableSpells[index];
+                //Debug.Log("Available Spell " + spell.name + " index: " + b);
                 spell.SetAssociatedSpell(spellID);
                 spell.MarkVisible(true);
-                spell.UpdateKeyText(slotIndex);
-                slotIndex++;
+                //Debug.Log("b: " + b + " slotIndex: " + slotIndex + ". " + spellID);
+                spell.UpdateKeyText((byte)(b + 100));
                 index++;
             }
         }
