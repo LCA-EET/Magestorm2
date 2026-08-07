@@ -1,25 +1,40 @@
 ﻿using UnityEngine;
+using static Unity.Burst.Intrinsics.X86.Avx;
 public class OutwardCast : SpawnedSpell
 {
     public SpellImpact ImpactPrefab;
     public bool InvertImpactDirection;
     public float ImpactScaling = 1.0f;
+    public bool RecursiveImpactScaling = false;
     public byte ShieldVFX;
+    
     protected int _impactMask;
     protected bool _impact, _directHit;
     protected Avatar _hitPlayer;
     protected virtual void SpawnImpactPrefab()
     {
-        Debug.Log("Spawning Impact Prefab");
+        Debug.Log("Spawning Impact Prefab - Scale: " + ImpactScaling);
         SpellImpact impactObject = Instantiate(ImpactPrefab);
         if (ImpactScaling > 0)
         {
-            impactObject.transform.localScale = Vector3.one * ImpactScaling;
+            Vector3 newScale = Vector3.one * ImpactScaling;
+            ApplyRecursiveScaling(impactObject.transform, newScale);
         }
         impactObject.transform.position = transform.position;
         if (InvertImpactDirection)
         {
             impactObject.InvertDirection(transform.forward);
+        }
+    }
+    private void ApplyRecursiveScaling(Transform goTransform, Vector3 newScale)
+    {
+        goTransform.localScale = newScale;
+        if (RecursiveImpactScaling)
+        {
+            for (int i = 0; i < goTransform.childCount; i++)
+            {
+                ApplyRecursiveScaling(goTransform.GetChild(i), newScale);
+            }
         }
     }
     protected virtual void ReportHit()
@@ -73,6 +88,7 @@ public class OutwardCast : SpawnedSpell
                 MarkForDestruction();
             }
         }
+
     }
     protected virtual void OnWallHit(Wall hitWall)
     {

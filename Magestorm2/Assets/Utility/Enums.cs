@@ -1,6 +1,15 @@
 using UnityEngine;
 
-
+public enum Woosh
+{
+    None,
+    HeavyFast,
+    HeavyMedium,
+    HeavySlow,
+    NormalFast,
+    NormalMedium,
+    NormalSlow
+}
 public enum VFXDirection
 {
     NA,

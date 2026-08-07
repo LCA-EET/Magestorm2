@@ -14,7 +14,9 @@ public static class LayerManager
     private const string Layer_TeamIndicator_Chaos = "TeamChaos";
     private const string Layer_TeamIndicator_Balance = "TeamBalance";
     private const string Layer_TeamIndicator_Order = "TeamOrder";
+    private const string Layer_Woosh = "Woosh";
 
+    private static int _wooshLayer;
     private static int _teamChaosLayer, _teamBalanceLayer, _teamOrderLayer;
     private static int _teamChaosLayerMask, _teamBalanceLayerMask, _teamOrderLayerMask;
     private static int _playerLayer, _playerLayerMask;
@@ -32,6 +34,7 @@ public static class LayerManager
     {
         if (!_init)
         {
+            _wooshLayer = LayerMask.NameToLayer(Layer_Woosh);
             _teamChaosLayer = LayerMask.NameToLayer(Layer_TeamIndicator_Chaos);
             _teamBalanceLayer = LayerMask.NameToLayer(Layer_TeamIndicator_Balance);
             _teamOrderLayer = LayerMask.NameToLayer(Layer_TeamIndicator_Order);
@@ -55,7 +58,13 @@ public static class LayerManager
             _init = true;
         }
     }
-    
+    public static int WooshLayer
+    {
+        get
+        {
+            return _wooshLayer;
+        }
+    }
     public static int TeamLayerMask_Chaos
     {
         get { return _teamChaosLayerMask; }

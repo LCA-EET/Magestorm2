@@ -6,6 +6,13 @@ public class SFXPlayer : MonoBehaviour
     public AudioClip SFXButtonPress;
     public AudioClip SFXMessageNotification;
     public AudioClip SFXBias;
+    public AudioClip SFXWoosh_HeavyFast;
+    public AudioClip SFXWoosh_HeavyMedium;
+    public AudioClip SFXWoosh_HeavySlow;
+    public AudioClip SFXWoosh_NormalFast;
+    public AudioClip SFXWoosh_NormalMedium;
+    public AudioClip SFXWoosh_NormalSlow;
+
     private AudioSource[] _audioSources;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
@@ -29,7 +36,36 @@ public class SFXPlayer : MonoBehaviour
     {
         
     }
+    public void PlayWoosh(Woosh toPlay)
+    {
+        AudioClip clipToPlay = null;
+        switch (toPlay)
+        {
+            case Woosh.HeavyFast:
+                clipToPlay = SFXWoosh_HeavyFast;
+                break;
+            case Woosh.HeavyMedium:
+                clipToPlay = SFXWoosh_HeavyMedium;
+                break;
+            case Woosh.HeavySlow:
+                clipToPlay = SFXWoosh_HeavySlow;
+                break;
+            case Woosh.NormalFast:
+                clipToPlay = SFXWoosh_NormalFast;
+                break;
+            case Woosh.NormalMedium:
+                clipToPlay = SFXWoosh_NormalMedium;
+                break;
+            case Woosh.NormalSlow:
+                clipToPlay = SFXWoosh_NormalSlow;
+                break;
 
+        }
+        if (clipToPlay != null)
+        {
+            PlayClip(clipToPlay);
+        }
+    }
     public void PlayClip(AudioClip clip)
     {
         for(int i = 0; i < _audioSources.Length; i++)

@@ -369,3 +369,10 @@ Mana Bolt
 Fires a focused bolt of mana energy toward a target selected by the caster.
 Void Bolt
 Fires a nullifying bolt toward a target selected by the caster.
+Void Ball
+Fires a ball of null energy toward a target selected by the caster. Any enemies in the area of effect will have their mana drained.
+Void Spike
+Fires a null energy projectile toward a target selected by the caster.
+Mana Strike
+Fires a mana energy projectile toward a target selected by the caster.
+Server Address

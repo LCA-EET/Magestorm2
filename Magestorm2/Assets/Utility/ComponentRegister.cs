@@ -43,6 +43,13 @@ public static class ComponentRegister
     private static DamageDirectionPanel _ddiPanel;
     private static ResistanceNotice _resistanceNotice;
     private static InputController _inputController;
+    private static Scene _scene;
+
+    public static Scene Scene
+    {
+        get { return _scene; }
+        set { _scene = value; }
+    }
 
     public static InputController InputController
     {

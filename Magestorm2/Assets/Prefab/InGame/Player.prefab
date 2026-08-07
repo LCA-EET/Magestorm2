@@ -39,6 +39,7 @@ Transform:
   - {fileID: 5455308597271955020}
   - {fileID: 84992513041701559}
   - {fileID: 7536431974352290740}
+  - {fileID: 7926819269659044435}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0}
 --- !u!114 &3757165163785592636
@@ -59,7 +60,6 @@ MonoBehaviour:
   ForwardCaster: {fileID: 3065075244689392208}
   SFXPlayer: {fileID: 6762423067227231442}
   MusicPlayer: {fileID: 5049351411896219702}
-  JoinedMatch: 0
   InValhalla: 0
 --- !u!114 &5390107915583490957
 MonoBehaviour:
@@ -757,6 +757,59 @@ MonoBehaviour:
   MusicClips:
   - {fileID: 8300000, guid: c623bd51041284b46a9eb6cb7bbea431, type: 3}
   - {fileID: 8300000, guid: 365662a7a4445f24e934e2528a6b73ae, type: 3}
+--- !u!1 &9030759111604873514
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7926819269659044435}
+  - component: {fileID: 4369236616085079737}
+  m_Layer: 24
+  m_Name: Woosh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7926819269659044435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9030759111604873514}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4775328786490764483}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4369236616085079737
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9030759111604873514}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5, y: 5, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3219291730889702725
 PrefabInstance:
   m_ObjectHideFlags: 0

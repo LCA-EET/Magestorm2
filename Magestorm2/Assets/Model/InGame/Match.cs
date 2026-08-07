@@ -243,6 +243,10 @@ public static class Match
                         ComponentRegister.Valhalla.EnterValhalla();
                     }
                 }
+                if (!ComponentRegister.PC.InValhalla)
+                {
+                    ComponentRegister.Scene.AssignEntryPoint(ComponentRegister.PC);
+                }
                 MatchParams.JoinedMatch = true;
                 Debug.Log("MaxHP: " + MatchParams.MaxHP);
                 Debug.Log("MaxMana: " + MatchParams.MaxMana);

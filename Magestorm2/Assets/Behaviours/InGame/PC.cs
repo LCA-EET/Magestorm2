@@ -157,7 +157,11 @@ public class PC : MonoBehaviour
                 }
             }
             CheckSpellSlot();
-            if (_coolDownRemaining <= 0 && !InValhalla && Game.PCAvatar.IsAlive && !ComponentRegister.PlayerMovement.PMD.IsRunning)
+            if (_coolDownRemaining <= 0 && 
+                !InValhalla && 
+                Game.PCAvatar.IsAlive && 
+                !ComponentRegister.PlayerMovement.PMD.IsRunning &&
+                !ComponentRegister.PlayerMovement.PMD.IsCrouched)
             {
                 CheckCast();
             }
