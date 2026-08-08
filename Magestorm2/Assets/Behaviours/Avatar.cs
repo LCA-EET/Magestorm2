@@ -108,7 +108,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     {
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         AvatarAnimation.SetElapsed(Time.deltaTime);
-        AvatarAnimation.Animate(_pmd);
+        AvatarAnimation.Animate(_pmd, false);
+    }
+    public void ForceIdleAnimation()
+    {
+        AvatarAnimation.SwitchRTAC(AnimationKeys.Idle_Standing);
     }
     public void SetDeadBody(DeadBody deadBody)
     {
@@ -274,7 +278,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _animator = _model.GetComponentInChildren<Animator>();
         _animator.applyRootMotion = false;
         AvatarAnimation.Init(_animator, appearance[0] == 0);
-        gameObject.transform.localPosition = new Vector3(0, -0.08f, 0);
+        _model.transform.localPosition = new Vector3(0, -0.08f, 0);
         if(MatchParams.IDinMatch == id)
         {
             _playersAvatar = true;

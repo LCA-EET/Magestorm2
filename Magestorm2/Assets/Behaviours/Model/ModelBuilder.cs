@@ -71,6 +71,7 @@ public class ModelBuilder : MonoBehaviour
     private Dictionary<string, Material> _opaqueToTransparent;
     private Dictionary<string, Material> _transparentToOpaque;
 
+    private Dictionary<byte[], GameObject> _constructedModels;
     private int[] _componentIndices;
     private void Awake()
     {
@@ -79,6 +80,7 @@ public class ModelBuilder : MonoBehaviour
             ComponentRegister.ModelBuilder = this;
             DontDestroyOnLoad(this);
             BuildMaterialsTable();
+            _constructedModels = new Dictionary<byte[], GameObject>();
             _componentIndices = new int[4];
             _maleLightBodies = new GameObject[12];
             _femaleLightBodies = new GameObject[12];
@@ -168,20 +170,21 @@ public class ModelBuilder : MonoBehaviour
     }
     public GameObject ConstructModel(byte[] appearance, byte team, byte level, GameObject parent, ref bool male)
     {
-        GameObject toReturn = ConstructModel(appearance, team, level, parent);
+        GameObject toReturn;
+        if (_constructedModels.ContainsKey(appearance))
+        {
+            toReturn = _constructedModels[appearance];
+        }
+        else
+        {
+            toReturn = ConstructModel(appearance, team, level, parent);
+            _constructedModels.Add(appearance, toReturn);
+        }
         male = appearance[IndexModelSex] == MaleSex;
         return toReturn;
     }
     public GameObject ConstructModel(byte[] appearance, byte team, byte level, GameObject parent)
     {
-        /*
-        Debug.Log("Appearance Bytes");
-        Debug.Log("================");
-        for (int i =0; i < appearance.Length; i++)
-        {
-            Debug.Log(i + ":" + appearance[i]);
-        }
-        */
         byte sex = appearance[IndexModelSex];
         byte skin = appearance[IndexModelSkin];
         Dictionary<byte, GameObject[]> components = GetOptions(sex, skin);

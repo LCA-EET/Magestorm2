@@ -221,6 +221,7 @@ public static class Match
         {
             added.UpdatePosition(positionBytes, 0, true);
             added.UpdateDirection(directionBytes, 0, true);
+            added.PMD.SetLocalPosture(Postures.Standing);
         }
         return added;
     }

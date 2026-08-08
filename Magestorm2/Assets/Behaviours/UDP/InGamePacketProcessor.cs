@@ -168,6 +168,7 @@ public class InGamePacketProcessor : UDPProcessor
             if(toAdd != null)
             {
                 Match.AddAvatar(toAdd);
+                toAdd.ForceIdleAnimation();
             }
             numProcessed++;
         }

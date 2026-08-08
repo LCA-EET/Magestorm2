@@ -22,7 +22,7 @@ public class AvatarAnimation : MonoBehaviour{
         _nextAnimation = AnimationKeys.None;
         _action = new PeriodicAction(0.05f, CheckComplete, null);
     }
-    public void Animate(PMDByte pmd)
+    public void Animate(PMDByte pmd, bool force)
     {
         byte animationKey = AnimationKeys.None;
         byte currentPosture = pmd.Posture;
@@ -70,7 +70,7 @@ public class AvatarAnimation : MonoBehaviour{
                     break;
             }
         }
-        SetAnimation(animationKey, currentlyMoving != _priorMove || currentPosture != _priorPosture);
+        SetAnimation(animationKey, currentlyMoving != _priorMove || currentPosture != _priorPosture || force);
         _priorPosture = currentPosture;
         _priorMove = pmd.IsMoving;
     }
@@ -97,7 +97,7 @@ public class AvatarAnimation : MonoBehaviour{
     {
         _action.ProcessAction(deltaTime);
     }
-    private void SwitchRTAC(byte key)
+    public void SwitchRTAC(byte key)
     {
         _currentAnimation = key;
         _animator.runtimeAnimatorController = _male ? MaleAnimations[key] : FemaleAnimations[key];
