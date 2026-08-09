@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4700749825289245278}
   - component: {fileID: 5464894772833367884}
   - component: {fileID: 3895524325191350532}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: SFXPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

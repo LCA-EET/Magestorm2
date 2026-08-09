@@ -2,13 +2,11 @@ public class Pool {
     private byte _bias;
     private byte _team;
     private final byte _id;
-    private final byte _poolPower;
     private final Match _owningMatch;
 
-    public Pool(Match owningMatch, byte id, byte poolPower){
+    public Pool(Match owningMatch, byte id){
         _team = MatchTeam.Neutral;
         _id = id;
-        _poolPower = poolPower;
         _owningMatch = owningMatch;
     }
 
@@ -45,8 +43,5 @@ public class Pool {
         return _bias;
     }
 
-    public byte GetPoolPower(){
-        return _poolPower;
-    }
 
 }

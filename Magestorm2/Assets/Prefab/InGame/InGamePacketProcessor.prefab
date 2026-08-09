@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6313703572271438939}
   - component: {fileID: 518114169547086391}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: InGamePacketProcessor
   m_TagString: Untagged
   m_Icon: {fileID: 0}

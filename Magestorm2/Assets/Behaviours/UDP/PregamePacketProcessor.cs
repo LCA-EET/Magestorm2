@@ -247,18 +247,13 @@ public class PregamePacketProcessor : UDPProcessor
             index++;
             byte maxPlayers = _decrypted[index];
             index++;
-            byte poolLength = _decrypted[index];
-            index++;
-            byte[] poolData = new byte[poolLength];
-            Array.Copy(_decrypted, index, poolData, 0, poolLength);
-            index += poolLength;
             byte nameLength = _decrypted[index];
             index++;
             byte[] nameBytes = new byte[nameLength];
             Array.Copy(_decrypted, index, nameBytes, 0, nameLength);
             index += nameLength;
              levelIdx++;
-            LevelData.AddLevel(sceneID, maxPlayers, Encoding.UTF8.GetString(nameBytes), poolData);
+            LevelData.AddLevel(sceneID, maxPlayers, Encoding.UTF8.GetString(nameBytes));
         }
     }
     private void HandleMatchDataPacket()

@@ -27,12 +27,11 @@ public static class PoolManager
         }
     }
 
-    public static byte RegisterPool(ManaPool toRegister)
+    public static void RegisterPool(ManaPool toRegister)
     {
         _pools.Add(toRegister.PoolID, toRegister);
         InitialPoolData poolData = _initialPoolData[toRegister.PoolID];
         toRegister.SetBiasAmount(poolData.BiasAmount, poolData.BiasedToward);
-        return _level.GetPoolPower(toRegister.PoolID);
     }
 
     public static void PoolBiased(byte biaserID, byte poolID, byte teamID, byte biasAmount)

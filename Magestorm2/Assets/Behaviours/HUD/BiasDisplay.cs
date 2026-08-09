@@ -26,7 +26,7 @@ public class BiasDisplay : MonoBehaviour
         Power.color = toApply;
         Bias.color = toApply;
         Title.color = toApply;
-        Power.text = Language.GetBaseString(173) + " " + pool.GetPoolPower().ToString();    //
+        Power.text = Language.GetBaseString(173) + " " + pool.PoolPower.ToString();    //
         Bias.text = Language.GetBaseString(174) + " " + pool.BiasAmount.ToString();    //
         Title.text = Teams.GetTeamName(pool.BiasedToward) + " " + Language.GetBaseString(172); //
         Toggle(true);

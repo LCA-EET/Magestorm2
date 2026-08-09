@@ -34,10 +34,12 @@ public class TimedObjectCollection<K extends Number, V extends TimedObject> exte
                         _expiredObjects.add(to);
                         _expiredIDs.add(to.ObjectID());
                     }
+                    else{
+                        Main.LogDebug(to.ObjectID() + " duration remaining: " + to.DurationRemaining());
+                    }
                 }
                 for(TimedObject to: _expiredObjects){
                     remove(to.ObjectID());
-
                 }
             }
         }

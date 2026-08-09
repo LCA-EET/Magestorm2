@@ -10,32 +10,21 @@ public class PoolManager {
         _biasChange = true;
         _matchPools = new ConcurrentHashMap<>();
         _owningMatch = owningMatch;
-        InitializePools();
-    }
-
-    private void InitializePools(){
         _matchPools= new ConcurrentHashMap<>();
-        byte[] poolBytes = GameServer.GetPoolData(_owningMatch.GetSceneID());
-        for(int i = 0; i < poolBytes.length; i+=2){
-            byte poolID = poolBytes[i];
-            byte poolPower = poolBytes[i+1];
-            Pool toAdd = new Pool(_owningMatch, poolID, poolPower);
-            _matchPools.put(poolID, toAdd);
-        }
     }
-
     public void BiasPool(byte biaserID, byte poolID, RemoteClient rc) {
-        if(_matchPools.containsKey(poolID)){
-            MatchCharacter biaser = _owningMatch.GetMatchCharacter(biaserID);
-            if(biaser.IsAlive()){
-                short diceRoll = GameUtils.DiceRoll(100, 1);
-                if(biaser.GetClass().GetPoolBiasChance() >= diceRoll){
-                    _matchPools.get(poolID).Bias(biaser);
-                    _biasChange = true;
-                }
-                else{
-                    _owningMatch.SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
-                }
+        if(!_matchPools.containsKey(poolID)){
+            _matchPools.put(poolID, new Pool(_owningMatch, poolID));
+        }
+        MatchCharacter biaser = _owningMatch.GetMatchCharacter(biaserID);
+        if(biaser.IsAlive()){
+            short diceRoll = GameUtils.DiceRoll(100, 1);
+            if(biaser.GetClass().GetPoolBiasChance() >= diceRoll){
+                _matchPools.get(poolID).Bias(biaser);
+                _biasChange = true;
+            }
+            else{
+                _owningMatch.SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
             }
         }
     }
@@ -49,7 +38,6 @@ public class PoolManager {
                 _biasData[trIndex] = pool.GetPoolID();
                 _biasData[trIndex + 1] = pool.GetPoolTeam();
                 _biasData[trIndex + 2] = pool.GetPoolBiasAmount();
-                //_biasData[trIndex + 3] = pool.GetPoolPower();
                 trIndex += 3;
             }
             _biasChange = false;

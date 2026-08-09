@@ -523,7 +523,7 @@ public class Database {
     }
     public static byte[] GetLevelsList(byte status) {
         byte[] toReturn = null;
-        String sql = "SELECT id, scenename, maxplayers, pooldata, activatables FROM levels WHERE status=?";
+        String sql = "SELECT id, scenename, maxplayers FROM levels WHERE status=?";
         try (Connection conn = DBConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setByte(1, status);
@@ -534,22 +534,12 @@ public class Database {
                 byte sceneID = rs.getByte("id");
                 String sceneName = rs.getString("scenename");
                 byte maxPlayers = rs.getByte("maxplayers");
-                byte[] poolBytes = GetDelimitedBytes(rs, "pooldata");
-                GameServer.SetPoolData(sceneID, poolBytes);
-                GameServer.SetActivatables(sceneID, GetDelimitedBytes(rs, "activatables"));
                 byte[] nameBytes = sceneName.getBytes(UTF_8);
-                byte[] fetched = new byte[1 + 1 + 1 + poolBytes.length + 1 + nameBytes.length];
+                byte[] fetched = new byte[1 + 1 + 1 +  nameBytes.length];
                 int fIdx = 0;
                 fetched[fIdx] = sceneID;
                 fetched[fIdx + 1] = maxPlayers;
-                fetched[fIdx + 2] = (byte) poolBytes.length;
-                fIdx = 3;
-                int poolIdx = 0;
-                while (poolIdx < poolBytes.length) {
-                    fetched[fIdx] = poolBytes[poolIdx];
-                    poolIdx++;
-                    fIdx++;
-                }
+                fIdx = 2;
                 fetched[fIdx] = (byte) nameBytes.length;
                 GameServer.RecordMaxPlayerData(sceneID, maxPlayers);
                 System.arraycopy(nameBytes, 0, fetched, fIdx + 1, nameBytes.length);

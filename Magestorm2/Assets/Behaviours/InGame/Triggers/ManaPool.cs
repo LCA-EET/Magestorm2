@@ -2,11 +2,11 @@
 
 public class ManaPool : BiasableTrigger
 {
+    public byte PoolPower;
     public byte PoolID;
     public LeyInfluencer LeyInfluencer;
     public BiasIndicator Indicator;
     private bool _playerInPool = false;
-    private byte _poolPower;
     protected override void Awake()
     {
         if (!MatchParams.IncludePools)
@@ -21,17 +21,17 @@ public class ManaPool : BiasableTrigger
     public void Start()
     {
         InitTrigger(TriggerType.ManaPool);
-        _poolPower = PoolManager.RegisterPool(this);
+        PoolManager.RegisterPool(this);
         if (ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Magician)
         {
-            LeyInfluencer.AssignOwner(this, _poolPower, PoolID);
+            LeyInfluencer.AssignOwner(this, PoolPower, PoolID);
         }
         else
         {
             Destroy(LeyInfluencer.gameObject);
         }
         new PeriodicAction(5.0f, BiasPool, _actionList);
-        Debug.Log("Pool ID: " + PoolID + ", Power: " + _poolPower);
+        Debug.Log("Pool ID: " + PoolID + ", Power: " + PoolPower);
     }
     private void BiasPool()
     {
@@ -101,11 +101,6 @@ public class ManaPool : BiasableTrigger
             }
             ComponentRegister.Notifier.DisplayNotification(notificationText);
         }
-    }
-
-    public byte GetPoolPower()
-    {
-        return _poolPower;
     }
     public override void EnterAction()
     {

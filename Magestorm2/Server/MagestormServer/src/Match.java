@@ -87,7 +87,7 @@ public class Match extends TimedObject{
         System.arraycopy(_creatorName, 0, _matchBytes, index, nameBytesLength);
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
-        InitializeActivatables();
+        _objectStatus = new ConcurrentHashMap<>();
     }
     public byte GetASTeam(){
         return _antiStack.GetTeamToJoin();
@@ -97,14 +97,6 @@ public class Match extends TimedObject{
     }
     public boolean IsOptionEnabled(int optionCode){
         return _matchOptions.IsOptionSet(optionCode);
-    }
-    private void InitializeActivatables(){
-        _objectStatus = new ConcurrentHashMap<>();
-        byte[] objectData = GameServer.GetActivatablesData(_sceneID);
-        for(int i = 0; i < objectData.length; i+=2){
-            byte objectKey = objectData[i];
-            _objectStatus.put(objectKey, new ActivatableObject(objectKey, objectData[i+1]));
-        }
     }
 
     @Override
@@ -138,16 +130,14 @@ public class Match extends TimedObject{
         return _matchTeams.get(teamID);
     }
     
-    public void ChangeObjectState(byte objectID, byte status, byte changedBy, byte selfReset){
-        if(selfReset > 0){
-            // this is a self-resetting object. There is no need for the server to send a state reset, so just forward the packet.
+    public void ChangeObjectState(byte objectID, byte status, byte changedBy, byte selfResetInSeconds){
+        if(selfResetInSeconds > 0){
             SendToAll(Packets.ObjectStateChangePacket(objectID, status));
         }
         else{
             if(!_objectStatus.containsKey(objectID)){
-                _objectStatus.put(objectID, new ActivatableObject(objectID, 0));
-                // by default objects will hold their state indefinitely. This can be overridden by
-                // adding the appropriate entry to the activatables field in the levels table
+                _objectStatus.put(objectID, new ActivatableObject(objectID));
+                // if selfreset = 0, the object will maintain its state until a player manually resets it
             }
             ActivatableObject toChange = _objectStatus.get(objectID);
             if(toChange.GetStatus() != status){
@@ -158,7 +148,6 @@ public class Match extends TimedObject{
                 SendToPlayer(Packets.ObjectStateChangePacket(objectID, status), changedBy);
             }
         }
-
     }
 
     public void ProcessObjectStatusPacket(byte requesterID){
@@ -307,7 +296,6 @@ public class Match extends TimedObject{
     }
     public void LeaveMatch(MatchCharacter departee, boolean send){
         byte id = departee.GetIDinMatch();
-        PlayerCharacter pc = departee.PC();
         _verifiedClients.remove(id);
         _matchTeams.get(departee.GetTeamID()).RemovePlayer(id);
         Main.AsyncDBUpdater.AddToQueue(new AsyncDBUpdate(ControlCodes.AsyncDBUpdate_Experience, departee, null));
@@ -573,21 +561,9 @@ public class Match extends TimedObject{
         }
     }
     private void CountDownTimedObjects(long msElapsed){
-        for(ActivatableObject ao : _objectStatus.values()){
-            if(!ao.DurationExpired()){
-                if(ao.ReduceDuration(msElapsed)){
-                    byte status = ao.GetStatus();
-                    if(status > 0){
-                        ao.ChangeState((byte)0);
-                        SendToAll(Packets.ObjectStateChangePacket((byte)ao.ObjectID(), status));
-                    }
-                }
-            }
-        }
         ProcessExpirations(msElapsed, InGame_Send.WallExpired, _walls);
         ProcessExpirations(msElapsed, InGame_Send.SigilExpired, _sigils);
         _castSpells.CountdownObjects(msElapsed);
-
     }
     private void ProcessExpirations(long msElapsed, byte opCode, TimedObjectCollection<Short, ? extends TimedObject> collection){
         if(collection.CountdownObjects(msElapsed)){

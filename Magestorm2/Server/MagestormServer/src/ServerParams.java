@@ -9,8 +9,8 @@ public class ServerParams {
     public static String DebugFilePath;
     public static String ChatFilePath;
     public static String EmailCredsPath;
-    public static long IngameInactivityWarning = 60000;
-    public static long IngameInactivityDisconnect = 120000;
+    public static long IngameInactivityWarning = 30000;
+    public static long IngameInactivityDisconnect = 60000; // default one minute. Overriden by whatever is defind in serverparams.txt
     public static long PregameInactivity = 60000;
     public static byte TickInterval = 10;
     public static byte MaxMatches = 20;

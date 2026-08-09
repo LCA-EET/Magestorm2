@@ -2298,6 +2298,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2794464813814121623, guid: 86c059f467ea1f94fbed867a57362374, type: 3}
+      propertyPath: SelfResetInterval
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2794464813814121623, guid: 86c059f467ea1f94fbed867a57362374, type: 3}
       propertyPath: ReactivationInterval
       value: 0
       objectReference: {fileID: 0}
@@ -2419,10 +2423,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 3757165163785592636, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
-      propertyPath: CharacterController
-      value: 
-      objectReference: {fileID: 7368698380334257422}
     - target: {fileID: 4775328786490764483, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2479,25 +2479,12 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8382264357114602841, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 8743379
-      objectReference: {fileID: 0}
-    - target: {fileID: 8736013207565299092, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 1089
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5881578881911907491, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
---- !u!143 &7368698380334257422 stripped
-CharacterController:
-  m_CorrespondingSourceObject: {fileID: 5539272750606452207, guid: 3cf742abef268be408ac28dc0f3d913f, type: 3}
-  m_PrefabInstance: {fileID: 7368698380334257421}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7376151901078664380
 PrefabInstance:
   m_ObjectHideFlags: 0
