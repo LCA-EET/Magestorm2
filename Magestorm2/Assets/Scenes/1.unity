@@ -1625,18 +1625,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1378209265679141613, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
-      propertyPath: ChaosEntry
-      value: 
-      objectReference: {fileID: 4674388103406667885}
-    - target: {fileID: 1378209265679141613, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
-      propertyPath: OrderEntry
-      value: 
-      objectReference: {fileID: 4674388103406667883}
-    - target: {fileID: 1378209265679141613, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
-      propertyPath: BalanceEntry
-      value: 
-      objectReference: {fileID: 4674388103406667884}
     - target: {fileID: 1429600659406807699, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2190,39 +2178,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
---- !u!114 &4674388103406667883 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9158276809771858843, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
-  m_PrefabInstance: {fileID: 4674388103406667882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb1f7b048496fc468b3aa4d337502cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CTFTeamScore
---- !u!114 &4674388103406667884 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5470359107301428417, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
-  m_PrefabInstance: {fileID: 4674388103406667882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb1f7b048496fc468b3aa4d337502cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CTFTeamScore
---- !u!114 &4674388103406667885 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5284109916538488636, guid: 559cc55ec577bc34fa2335023975e2c9, type: 3}
-  m_PrefabInstance: {fileID: 4674388103406667882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb1f7b048496fc468b3aa4d337502cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CTFTeamScore
 --- !u!4 &5311193719373118137 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7279176463853166602, guid: a761488638ba8754dac695c096218069, type: 3}
@@ -2741,6 +2696,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneInitializer
       objectReference: {fileID: 0}
+    - target: {fileID: 8956406139463118005, guid: 80004fd8f56ef81488218d3edb46e5d5, type: 3}
+      propertyPath: SceneGO
+      value: 
+      objectReference: {fileID: 961541737}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

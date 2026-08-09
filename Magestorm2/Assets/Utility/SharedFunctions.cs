@@ -15,6 +15,19 @@ public static class SharedFunctions
         set { _params = value; }
     }
 
+    public static int CompareVectors(Vector3 a, Vector3 b)
+    {
+        int toReturn = a.x.CompareTo(b.x);
+        if(toReturn == 0)
+        {
+            toReturn = a.y.CompareTo(b.y);
+            if(toReturn == 0)
+            {
+                toReturn = a.z.CompareTo(b.z);
+            }
+        }
+        return toReturn;
+    }
     public static void Initialize()
     {
         _elementShieldEffects = new Dictionary<byte, byte>();

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using static Unity.Burst.Intrinsics.X86.Avx;
 public class OutwardCast : SpawnedSpell
 {
     public SpellImpact ImpactPrefab;

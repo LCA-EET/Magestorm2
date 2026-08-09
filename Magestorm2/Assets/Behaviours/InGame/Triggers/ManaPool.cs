@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class ManaPool : BiasableTrigger
+public class ManaPool : BiasableTrigger, IComparable<ManaPool>
 {
     public byte PoolPower;
-    public byte PoolID;
+    private byte _poolID;
     public LeyInfluencer LeyInfluencer;
     public BiasIndicator Indicator;
     private bool _playerInPool = false;
@@ -18,10 +19,26 @@ public class ManaPool : BiasableTrigger
             base.Awake();
         }
     }
+    public byte PoolID
+    {
+        get
+        {
+            return _poolID;
+        }
+    }
     public void Start()
     {
         InitTrigger(TriggerType.ManaPool);
+        if (ComponentRegister.PC.CharacterClass != ControlCodes.PlayerClass_Arcanist)
+        {
+            new PeriodicAction(5.0f, BiasPool, _actionList);
+        }
+    }
+    public void RegisterPool(byte poolID)
+    {
+        _poolID = poolID;
         PoolManager.RegisterPool(this);
+        Debug.Log("Registered Pool " + _poolID);
         if (ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Magician)
         {
             LeyInfluencer.AssignOwner(this, PoolPower, PoolID);
@@ -30,8 +47,6 @@ public class ManaPool : BiasableTrigger
         {
             Destroy(LeyInfluencer.gameObject);
         }
-        new PeriodicAction(5.0f, BiasPool, _actionList);
-        Debug.Log("Pool ID: " + PoolID + ", Power: " + PoolPower);
     }
     private void BiasPool()
     {
@@ -116,5 +131,10 @@ public class ManaPool : BiasableTrigger
         base.ExitAction();
         _playerInPool = false;
         ComponentRegister.BiasDisplay.Toggle(false);
+    }
+
+    public int CompareTo(ManaPool other)
+    {
+        return SharedFunctions.CompareVectors(transform.position, other.transform.position);
     }
 }

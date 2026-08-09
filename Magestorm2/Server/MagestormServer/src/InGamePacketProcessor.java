@@ -158,10 +158,11 @@ public class InGamePacketProcessor extends UDPProcessor{
     private void HandleCast(){
         byte casterID = _decrypted[1];
         byte spellID = _decrypted[3];
+        Main.LogDebug("Caster ID: " + casterID);
         if(_owningMatch.IsCharacterAlive(casterID) ){
             if(SpellManager.ContainsSpell(spellID)){
                 Spell spellReference = SpellManager.GetSpell(spellID);
-                MatchCharacter casterReference = _owningMatch.GetMatchCharacter(_decrypted[1]);
+                MatchCharacter casterReference = _owningMatch.GetMatchCharacter(casterID);
                 short castID = casterReference.CastSpell(spellReference, _decrypted); // instantiation downstream
                 if(castID != -1){
                     byte[] toSend = Packets.CastPacket(_decrypted, castID);

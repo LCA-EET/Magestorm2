@@ -196,6 +196,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -336,6 +337,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -586,6 +588,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -729,6 +732,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -874,6 +878,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -976,11 +981,10 @@ MonoBehaviour:
   - {fileID: 5563291494871185761}
   - {fileID: 5705110395491569635}
   - {fileID: 7291681760246071737}
-  - {fileID: 0}
   - {fileID: 684155193202866103}
   - {fileID: 2482610376934325990}
   - {fileID: 5862731853081674809}
-  StringReferences: 740000007100000072000000730000008a0000008b0000008c0000009100000093000000
+  StringReferences: 740000007100000072000000730000008a0000008c0000009100000093000000
 --- !u!114 &5503638845226585846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3738,6 +3742,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6733148289291613919, guid: 409efad0966963246af7e49a2d9dc6df, type: 3}
+      propertyPath: m_Name
+      value: cancel
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5319,6 +5327,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6733148289291613919, guid: 409efad0966963246af7e49a2d9dc6df, type: 3}
+      propertyPath: m_Name
+      value: default
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5465,6 +5477,10 @@ PrefabInstance:
     - target: {fileID: 6308149396278105835, guid: 409efad0966963246af7e49a2d9dc6df, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733148289291613919, guid: 409efad0966963246af7e49a2d9dc6df, type: 3}
+      propertyPath: m_Name
+      value: apply
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -19,11 +19,13 @@ public class PoolManager {
         MatchCharacter biaser = _owningMatch.GetMatchCharacter(biaserID);
         if(biaser.IsAlive()){
             short diceRoll = GameUtils.DiceRoll(100, 1);
-            if(biaser.GetClass().GetPoolBiasChance() >= diceRoll){
+            byte biasChance = biaser.GetClass().GetPoolBiasChance();
+            if(biasChance >= diceRoll){
                 _matchPools.get(poolID).Bias(biaser);
                 _biasChange = true;
             }
             else{
+                Main.LogMessage("Pool bias failure. Pool ID: " + poolID + ", Biaser ID: " + biaserID + ", Chance: " + biasChance + ", Dice: " + diceRoll);
                 _owningMatch.SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
             }
         }

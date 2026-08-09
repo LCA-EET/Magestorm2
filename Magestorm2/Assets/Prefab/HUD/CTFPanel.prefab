@@ -51,10 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f499fdd04b356664b92d1e12a3437531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CTFScorePanel
-  ScoreEntries:
-  - {fileID: 2279694688684651364}
-  - {fileID: 2097948842237868185}
-  - {fileID: 3021717407055466435}
+  ChaosEntry: {fileID: 2279694688684651364}
+  BalanceEntry: {fileID: 2097948842237868185}
+  OrderEntry: {fileID: 3021717407055466435}
 --- !u!1001 &1267506603981691814
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13,12 +13,11 @@ public class ActuatingAO : ActivateableObject
     protected float _actuationElapsed;
     public bool Interruptible;
 
-    protected override void Start()
+    protected virtual void Start()
     {
         _actuating = false;
         _actuationElapsed = 0;
         _actuationTime = Vector3.Distance(_a, _b) / ActuationSpeed;
-        base.Start();
     }
     protected override void ApplyStateChange(bool force)
     {

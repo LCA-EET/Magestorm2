@@ -223,8 +223,8 @@ public static class InGame_Packets
     public static byte[] PlacedSigilPacket(byte spellID, byte spellType)
     {
         byte[] unencrypted = GenericCastPacket(13, spellID, spellType);
-        unencrypted[ControlCodes.CastPayloadStartIndex] = MatchParams.IDinMatch;
-        Array.Copy(SharedFunctions.GetCameraPositionBytes(1.25f), unencrypted, ControlCodes.CastPayloadStartIndex + 1);
+        unencrypted[ControlCodes.CastPayloadStartIndex] = MatchParams.MatchTeamID;
+        Array.Copy(SharedFunctions.GetCameraPositionBytes(1.25f), 0, unencrypted, ControlCodes.CastPayloadStartIndex + 1, 12);
         return unencrypted;
     }
 

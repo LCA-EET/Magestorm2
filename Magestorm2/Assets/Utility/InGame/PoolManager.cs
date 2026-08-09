@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 public static class PoolManager
 {
@@ -18,7 +14,6 @@ public static class PoolManager
         _poolData = new byte[numPools * 3];
         Array.Copy(decrypted, index, _poolData, 0, _poolData.Length);
         index += _poolData.Length;
-        _pools = new Dictionary<byte, ManaPool>();
         _level = LevelData.GetLevel(MatchParams.SceneID);
         _initialPoolData = new Dictionary<byte, InitialPoolData>();
         for (int i = 0; i < _poolData.Length; i += 3)
@@ -26,12 +21,25 @@ public static class PoolManager
             _initialPoolData.Add(_poolData[i], new InitialPoolData(_poolData[i + 1], _poolData[i + 2]));
         }
     }
-
+    public static void InitializePools()
+    {
+        _pools = new Dictionary<byte, ManaPool>();
+    }
     public static void RegisterPool(ManaPool toRegister)
     {
         _pools.Add(toRegister.PoolID, toRegister);
-        InitialPoolData poolData = _initialPoolData[toRegister.PoolID];
-        toRegister.SetBiasAmount(poolData.BiasAmount, poolData.BiasedToward);
+        if(_initialPoolData != null)
+        {
+            if (_initialPoolData.ContainsKey(toRegister.PoolID))
+            {
+                InitialPoolData poolData = _initialPoolData[toRegister.PoolID];
+                toRegister.SetBiasAmount(poolData.BiasAmount, poolData.BiasedToward);
+            }
+        }
+        else
+        {
+            toRegister.SetBiasAmount(0, Team.Neutral);
+        }
     }
 
     public static void PoolBiased(byte biaserID, byte poolID, byte teamID, byte biasAmount)

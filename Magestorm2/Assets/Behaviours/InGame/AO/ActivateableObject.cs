@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
-public class ActivateableObject : MonoBehaviour
+public class ActivateableObject : MonoBehaviour, IComparable<ActivateableObject>
 {
-    public byte ObjectKey; // The unique key for this AO.
+    protected byte _objectKey;
     public byte NumStates = 2;
     public AudioSource ActivationAudio;
     public byte ReactivationInterval; // The minimum amount of time that must elapse, in seconds, before the AO can be reactivated.
@@ -13,6 +14,11 @@ public class ActivateableObject : MonoBehaviour
     protected PeriodicAction _reactivationCountdownPA;
     protected bool _resetCountDown;
     protected bool _readyToActivate;
+
+    public byte ObjectKey
+    {
+        get { return _objectKey; }
+    }
 
     private void Awake()
     {
@@ -26,10 +32,7 @@ public class ActivateableObject : MonoBehaviour
             _reactivationCountdownPA = new PeriodicAction(ReactivationInterval, MakeReadyForReactivation, null);
         }
     }
-    protected virtual void Start()
-    {
-        RegisterObject();
-    }
+    
     // Update is called once per frame
     protected virtual void Update()
     {
@@ -39,8 +42,10 @@ public class ActivateableObject : MonoBehaviour
         }
     }
 
-    protected void RegisterObject()
+    public void RegisterObject(byte objectKey)
     {
+        _objectKey = objectKey;
+        Debug.Log("Registered AO with key: " + _objectKey);
         Match.RegisterActivateableObject(this);
     }
 
@@ -54,7 +59,7 @@ public class ActivateableObject : MonoBehaviour
                 newState = (byte)(_currentState + 1);
             }
             Debug.Log("Object State Change Packet Sent");
-            Match.Send(InGame_Packets.ChangedObjectStatePacket(ObjectKey, newState, SelfResetInterval));
+            Match.Send(InGame_Packets.ChangedObjectStatePacket(_objectKey, newState, SelfResetInterval));
         }
     }
     protected virtual void ApplyStateChange(bool force)
@@ -81,5 +86,10 @@ public class ActivateableObject : MonoBehaviour
     private void MakeReadyForReactivation()
     {
         _readyToActivate = true;
+    }
+
+    public int CompareTo(ActivateableObject other)
+    {
+        return SharedFunctions.CompareVectors(transform.position, other.transform.position);
     }
 }

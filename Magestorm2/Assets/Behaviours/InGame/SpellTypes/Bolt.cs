@@ -21,6 +21,7 @@ public class Bolt : Projectile
         if (!_destroyOnNextUpdate)
         {
             _distanceTravelled += Vector3.Distance(_priorPosition, transform.position);
+            //Debug.Log("DT: " + _distanceTravelled);
             _priorPosition = transform.position;
             if (_distanceTravelled >= _maxRange)
             {
@@ -29,6 +30,7 @@ public class Bolt : Projectile
         }
         else
         {
+            // Stop emitting new particles. The gameObject is destroyed in SpawnedSpell.Update()
             if(ParticleSystem != null)
             {
                 if (_emitter.enabled)

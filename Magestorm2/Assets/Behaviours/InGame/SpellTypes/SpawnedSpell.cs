@@ -56,7 +56,6 @@ public class SpawnedSpell : MonoBehaviour
         {
             if(_destructionElapsed >= DestroyAfter)
             {
-                
                 ComponentRegister.Spawner.DeregisterSpawnedSpell(this);
                 Destroy(gameObject);
             }
