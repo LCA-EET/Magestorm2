@@ -68,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
         if(forceDirection.y > 0)
         {
             _verticalSpeed = 0;
+            _midJump = true;
         }
     }
     public void IncrementInsideWallCount()
