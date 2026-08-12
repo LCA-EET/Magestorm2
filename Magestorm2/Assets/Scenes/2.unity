@@ -131,6 +131,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TeamWing (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8463035282186846392, guid: a32f695f8e469004e97bc83384d68717, type: 3}
+      propertyPath: Team
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8802221058237551682, guid: a32f695f8e469004e97bc83384d68717, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.15
@@ -246,9 +250,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 62271108180734327}
     m_Modifications:
+    - target: {fileID: 3634410108103711621, guid: a32f695f8e469004e97bc83384d68717, type: 3}
+      propertyPath: m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3634410108103711621, guid: a32f695f8e469004e97bc83384d68717, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5996767872997617383, guid: a32f695f8e469004e97bc83384d68717, type: 3}
       propertyPath: m_Name
       value: TeamWing (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8463035282186846392, guid: a32f695f8e469004e97bc83384d68717, type: 3}
+      propertyPath: Team
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8802221058237551682, guid: a32f695f8e469004e97bc83384d68717, type: 3}
       propertyPath: m_LocalPosition.x
@@ -641,6 +657,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TeamWing
       objectReference: {fileID: 0}
+    - target: {fileID: 8463035282186846392, guid: a32f695f8e469004e97bc83384d68717, type: 3}
+      propertyPath: Team
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8802221058237551682, guid: a32f695f8e469004e97bc83384d68717, type: 3}
       propertyPath: m_LocalPosition.x
       value: 27.25
@@ -741,6 +761,10 @@ PrefabInstance:
     - target: {fileID: 2990943066077150280, guid: 62fae73edfc9b6b4db2bf07691c4f338, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4014213177057778906, guid: 62fae73edfc9b6b4db2bf07691c4f338, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4860692589306201550, guid: 62fae73edfc9b6b4db2bf07691c4f338, type: 3}
       propertyPath: m_IsActive
