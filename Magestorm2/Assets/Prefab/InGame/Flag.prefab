@@ -90,6 +90,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!135 &8668628744656339965
 SphereCollider:
@@ -124,4 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4498e82b1504ff141a612d60302de51f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Flag
-  Team: 0
+  Balance: {fileID: 2100000, guid: 4846f12e708bac745abfcd2ce80822ae, type: 2}
+  Order: {fileID: 2100000, guid: 82fc2a6bc4768ed4dabfea0c975d9046, type: 2}
+  Chaos: {fileID: 2100000, guid: b410e5760dd23ae4c91fcef9a8dad724, type: 2}
+  Renderer: {fileID: 156460997437454988}

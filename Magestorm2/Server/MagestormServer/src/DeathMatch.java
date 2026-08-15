@@ -1,8 +1,12 @@
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DeathMatch extends Match{
     private final PoolManager _poolManager;
     private final ConcurrentHashMap<Byte, Shrine> _shrines;
+    private long _victoryCountdownRemaining = GameServer.VictoryCountdown;
+    private byte _matchWinner;
+    private boolean _victoryCountdown = false;
 
     public DeathMatch(byte matchID, int creatorID, byte[] creatorName, byte sceneID,  byte duration, byte matchOptions) {
         super(matchID, creatorID, creatorName, sceneID, duration, MatchType.DeathMatch, matchOptions);
@@ -13,7 +17,10 @@ public class DeathMatch extends Match{
         }
         _processor = new DMPacketProcessor(_matchPort, this);
     }
-
+    public void ResetVictoryCountdown(){
+        _victoryCountdown = false;
+        _victoryCountdownRemaining = GameServer.VictoryCountdown;
+    }
     public PoolManager GetPoolManager(){
         return _poolManager;
     }
@@ -62,6 +69,49 @@ public class DeathMatch extends Match{
             return false;
         }
     }
+
+    public void CheckVictoryCondition(){
+        byte fullPower = 0;
+        byte destroyed = 0;
+        for(Shrine shrine : _shrines.values()){
+            if(shrine.ShrineHealth() == 100){
+                fullPower++;
+                _matchWinner = shrine.GetShrineTeam();
+            }
+            else if (shrine.ShrineHealth() == 0){
+                destroyed++;
+            }
+        }
+        if(fullPower == 1 && (destroyed == _shrines.size() - 1)){
+            _victoryCountdown = true;
+            LogMessage("Victory condition triggered - winning team: " + _matchWinner);
+        }
+        else{
+            LogMessage("Victory condition cancelled.");
+            ResetVictoryCountdown();
+        }
+    }
+
+    private void VictoryCountdown(long msElapsed){
+        _victoryCountdownRemaining -= msElapsed;
+        if(_victoryCountdownRemaining <= 0){
+            _durationRemaining = 0;
+        }
+    }
+
+
+    @Override
+    protected void MatchEndedNotification(ArrayList<RemoteClient> remainingClients){
+        SendToCollection(Packets.MatchEndedPacket(_matchWinner), remainingClients);
+    }
+    @Override
+    public void Tick(long msElapsed){
+        if(_victoryCountdown){
+            VictoryCountdown(msElapsed);
+        }
+        super.Tick(msElapsed);
+    }
+
 
     @Override
     public boolean ParseCommand(String command, String[] params, byte senderID) {

@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class Shrine : BiasableTrigger
 {
-    public Team Team;
+    
     public LeyInfluencer LeyInfluencer;
     public BiasIndicator Indicator;
     public byte ShrinePower = 100;
     private bool _playerInShrine = false;
+    private Team _team;
+
+    public Team Team
+    {
+        get { return _team; }
+    }
 
     protected override void Awake()
     {
@@ -21,14 +27,17 @@ public class Shrine : BiasableTrigger
             base.Awake();
         }
     }
-    public void Start()
+    public void AssignToTeam(Team team)
     {
+        _team = team;
+        BiasedToward = _team;
         ShrineManager.RegisterShrine(this);
-        BiasAmount = 100;
+        //BiasAmount = 100;
         InitTrigger(TriggerType.Shrine);
-        if(ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Cleric)
+        if (ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Cleric)
         {
-            LeyInfluencer.AssignOwner(this, ShrinePower, (byte)Team);
+            Debug.Log("Assigning Team to Ley Influencer: " + _team.ToString());
+            LeyInfluencer.AssignOwner(this, ShrinePower, (byte)_team);
         }
         else
         {
@@ -36,6 +45,10 @@ public class Shrine : BiasableTrigger
         }
         new PeriodicAction(5.0f, BiasShrine, _actionList);
         Indicator.ChangeBias(Team);
+    }
+    public void Start()
+    {
+        
     }
     public override void EnterAction()
     {
@@ -49,14 +62,15 @@ public class Shrine : BiasableTrigger
         _playerInShrine = false;
         ComponentRegister.ShrineDisplay.Toggle(false);
     }
-    public Team GetTeam()
-    {
-        return Team;
-    }
+   
     public void SetHealth(byte amount)
     {
         BiasAmount = amount;
         Indicator.gameObject.SetActive(BiasAmount > 0);
+        if(amount == 0 || amount == 100)
+        {
+            ShrineManager.CheckVictoryCondition();
+        }
         ComponentRegister.ShrinePanel.SetFill(Team, BiasAmount);
         TorchManager.AdjustTeamTorchIntensity(Team, BiasAmount / 100.0f);
     }
@@ -71,6 +85,7 @@ public class Shrine : BiasableTrigger
         else if (BiasAmount == 0)
         {
             ComponentRegister.Notifier.DisplayNotification(Language.BuildString(179, Teams.GetTeamName(Team))); //
+            ComponentRegister.AudioPlayer.PlayShrineDestruction();
         }
         if (_playerInShrine)
         {
@@ -81,25 +96,39 @@ public class Shrine : BiasableTrigger
             string notificationText = "";
             if (adjuster.PlayerID == MatchParams.IDinMatch)
             {
-                if (MatchParams.MatchTeam == Team)
+                if(BiasAmount > 0)
                 {
-                    notificationText = Language.BuildString(175, Language.GetBaseString(177), Teams.GetTeamName(Team)); //
+                    if (MatchParams.MatchTeam == Team)
+                    {
+                        notificationText = Language.BuildString(175, Language.GetBaseString(177), Teams.GetTeamName(Team)); //
+                    }
+                    else
+                    {
+                        notificationText = Language.BuildString(175, Language.GetBaseString(178), Teams.GetTeamName(Team)); //
+                    }
+                    ComponentRegister.AudioPlayer.PlayBiasSound();
                 }
                 else
                 {
-                    notificationText = Language.BuildString(175, Language.GetBaseString(178), Teams.GetTeamName(Team)); //
+                    notificationText = Language.BuildString(380, Teams.GetTeamName(Team));
                 }
-                ComponentRegister.AudioPlayer.PlayBiasSound();
             }
             else
             {
-                if (adjuster.PlayerTeam == Team)
+                if(BiasAmount > 0)
                 {
-                    notificationText = Language.BuildString(176, adjuster.Name, Language.GetBaseString(177), Teams.GetTeamName(Team)); //
+                    if (adjuster.PlayerTeam == Team)
+                    {
+                        notificationText = Language.BuildString(176, adjuster.Name, Language.GetBaseString(177), Teams.GetTeamName(Team)); //
+                    }
+                    else
+                    {
+                        notificationText = Language.BuildString(177, adjuster.Name, Language.GetBaseString(178), Teams.GetTeamName(Team)); //
+                    }
                 }
                 else
                 {
-                    notificationText = Language.BuildString(177, adjuster.Name, Language.GetBaseString(178), Teams.GetTeamName(Team)); //
+                    notificationText = Language.BuildString(381, adjuster.Name, Teams.GetTeamName(Team));
                 }
             }
             ComponentRegister.Notifier.DisplayNotification(notificationText);
@@ -110,6 +139,7 @@ public class Shrine : BiasableTrigger
         if ((MatchParams.MatchTeamID == (byte)Team && BiasAmount < 100)
                     || (MatchParams.MatchTeamID != (byte)Team && BiasAmount > 0))
         {
+            ComponentRegister.PC.UseStamina(255);
             Game.SendInGameBytes(InGame_Packets.AdjustShrinePacket((byte)Team));
         }
     }

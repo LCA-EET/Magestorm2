@@ -11,6 +11,7 @@ public class GameServer extends Thread {
     private static ConcurrentHashMap<Byte, byte[]> _objectData;
     private static PregamePacketProcessor _pgProcessor;
     private static byte[] _levelData;
+    public static int VictoryCountdown = 30000;
 
     public static void init(){
         ByteUtils.init();

@@ -1704,6 +1704,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 723683024030657200}
     m_Modifications:
+    - target: {fileID: 1363933136900130369, guid: 2c167c8b645bda345ad1a775af0c6fd6, type: 3}
+      propertyPath: VictoryNotification
+      value: 
+      objectReference: {fileID: 4128342354700452961}
     - target: {fileID: 1364749756339821708, guid: 2c167c8b645bda345ad1a775af0c6fd6, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -4599,6 +4603,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 723683024030657200}
     m_Modifications:
+    - target: {fileID: 4956799499438624771, guid: 434cdb978ad20f84ca6125fce987f0cd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5517723601260181160, guid: 434cdb978ad20f84ca6125fce987f0cd, type: 3}
       propertyPath: m_Name
       value: NotificationMessages
@@ -4693,3 +4701,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8421170478356418000, guid: 434cdb978ad20f84ca6125fce987f0cd, type: 3}
   m_PrefabInstance: {fileID: 8670623919757266072}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4128342354700452961 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4692451726123190521, guid: 434cdb978ad20f84ca6125fce987f0cd, type: 3}
+  m_PrefabInstance: {fileID: 8670623919757266072}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

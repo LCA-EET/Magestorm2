@@ -2,11 +2,19 @@
 
 public class Flag : Trigger
 {
-    public Team Team;
+    private Team _team;
     private Vector3 _worldLocation;
-
-    private void Start()
+    public Material Balance;
+    public Material Order;
+    public Material Chaos;
+    public Renderer Renderer;
+    public Team Team
     {
+        get { return _team; }
+    }
+    public void AssignToTeam(Team team)
+    {
+        
         if (!MatchParams.IncludeFlags)
         {
             //Debug.Log("Destroying Flag " + Team);
@@ -14,11 +22,25 @@ public class Flag : Trigger
         }
         else
         {
+            _team = team;
+            Material toUse = null;
+            switch (Team)
+            {
+                case Team.Chaos:
+                    toUse = Chaos;
+                    break;
+                case Team.Balance:
+                    toUse = Balance;
+                    break;
+                case Team.Order:
+                    toUse = Order;
+                    break;
+            }
+            Renderer.material = toUse;
             _worldLocation = transform.position;
             FlagManager.Register(this);
         }
     }
-
     public void FlagTaken()
     {
         gameObject.SetActive(false);

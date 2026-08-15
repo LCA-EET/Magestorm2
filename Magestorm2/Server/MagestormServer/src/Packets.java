@@ -207,12 +207,16 @@ public class Packets {
     }
 
     /////////////////////// IN-GAME PACKETS ////////////////////////
-    private static final byte[] MatchEnded_Bytes = new byte[]{InGame_Send.MatchEnded};
     private static final byte[] InactivityWarning_Bytes = new byte[]{InGame_Send.InactivityWarning};
     private static final byte[] PoolBiasFailure_Bytes = new byte[]{InGame_Send.PoolBiasFailure};
     private static final byte[] IGInactivityDisconnect_Bytes = new byte[]{InGame_Send.InactivityDisconnect};
 
-    public static byte[] MatchEndedPacket(){return Cryptographer.Encrypt(MatchEnded_Bytes);}
+    public static byte[] MatchEndedPacket(byte winner){
+        byte[] toEncrypt = new byte[2];
+        toEncrypt[0] = InGame_Send.MatchEnded;
+        toEncrypt[1] = winner;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
     public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
     public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
 

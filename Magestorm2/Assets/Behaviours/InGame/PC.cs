@@ -247,10 +247,14 @@ public class PC : MonoBehaviour
     private void ComputeLey()
     {
         //Debug.Log("COMPUTING LEY, INFLUENCER COUNT: " + _activeInfluencers.Count);
-        float newLey = 0.0f;
+        float newLey = ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Cleric ? 0.35f : 0.0f;
+        
         foreach(LeyInfluencer influence in _activeInfluencers.Values)
         {
-            newLey += influence.GetLeyContribution();
+            if(influence != null)
+            {
+                newLey += influence.GetLeyContribution();
+            }
         }
         newLey = (float)Math.Round(newLey, 2);
         if(newLey > 1.0f)

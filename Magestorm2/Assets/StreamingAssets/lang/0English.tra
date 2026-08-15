@@ -376,3 +376,7 @@ Fires a null energy projectile toward a target selected by the caster.
 Mana Strike
 Fires a mana energy projectile toward a target selected by the caster.
 Server Address
+destroyed
+You've destroyed the {0} shrine!
+{0} has destroyed the {1} shrine!
+{0} is on the cusp of victory!

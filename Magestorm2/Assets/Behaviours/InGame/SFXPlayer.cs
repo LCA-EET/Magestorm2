@@ -6,6 +6,7 @@ public class SFXPlayer : MonoBehaviour
     public AudioClip SFXButtonPress;
     public AudioClip SFXMessageNotification;
     public AudioClip SFXBias;
+    public AudioClip SFXDestroyedShrine;
     public AudioClip SFXWoosh_HeavyFast;
     public AudioClip SFXWoosh_HeavyMedium;
     public AudioClip SFXWoosh_HeavySlow;
@@ -89,6 +90,10 @@ public class SFXPlayer : MonoBehaviour
         PlayClip(SFXMessageNotification);
     }
 
+    public void PlayShrineDestruction()
+    {
+        PlayClip(SFXDestroyedShrine);
+    }
     public void PlayBiasSound()
     {
         PlayClip(SFXBias);

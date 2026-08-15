@@ -25,13 +25,18 @@ public class LeyInfluencer : Trigger
     }
     public float GetLeyContribution()
     {
-        if(_owner.BiasedToward == Team.Neutral)
+        float contribution = 0;
+        Debug.Log("Ley contribution from: " + _owner.name);
+        if(_owner.BiasedToward != Team.Neutral)
         {
-            return 0;
+            float distance = Vector3.Distance(transform.position, ComponentRegister.PC.transform.position);
+            Debug.Log("Distance: " + distance);
+            float distanceFactor = 1.0f - (distance / _power); 
+            Debug.Log("Distance Factir: " + distanceFactor);
+            contribution = (distanceFactor * (_owner.BiasAmount / 100.0f)) * (_owner.BiasedToward == MatchParams.MatchTeam ? 1.0f : -1.0f);
         }
-        float distance = Vector3.Distance(transform.position, ComponentRegister.PC.transform.position);
-        float distanceFactor = 1.0f - (distance / _power);
-        return (distanceFactor * (_owner.BiasAmount / 100.0f)) * (_owner.BiasedToward == MatchParams.MatchTeam ? 1.0f : -1.0f);
+        Debug.Log("Ley contribution: " + contribution);
+        return contribution;
     }
     public override void EnterAction()
     {

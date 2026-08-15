@@ -364,9 +364,12 @@ public class Match extends TimedObject{
         MatchManager.UpdatesNeeded = true;
         LogMessage("The match has ended. Notifying players...");
         ArrayList<RemoteClient> remainingClients = new ArrayList<>(_verifiedClients.values());
-        SendToCollection(Packets.MatchEndedPacket(), remainingClients);
+        MatchEndedNotification(remainingClients);
         RemoveAllPlayers();
         _processor.TerminateProcessor();
+    }
+    protected void MatchEndedNotification(ArrayList<RemoteClient> remainingClients){
+        SendToCollection(Packets.MatchEndedPacket((byte)(0)), remainingClients);
     }
     public boolean IsPlayerOnTeam(byte idInMatch, byte teamID){
         return _matchTeams.get(teamID).PlayerIDUsed(idInMatch);
