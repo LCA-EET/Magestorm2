@@ -17,7 +17,6 @@ public static class ShrineManager
 
     public static void CheckVictoryCondition()
     {
-        
         byte fullHealth = 0;
         byte destroyed = 0;
         foreach (Shrine shrine in _shrines.Values)
@@ -25,12 +24,12 @@ public static class ShrineManager
             if (shrine.BiasAmount == 100)
             {
                 fullHealth++;
-                Debug.Log("CVC: " + shrine.Team + " at full health.");
+                //Debug.Log("CVC: " + shrine.Team + " at full health.");
                 _winning = shrine.Team;
             }
             else if (shrine.BiasAmount == 0)
             {
-                Debug.Log("CVC: " + shrine.Team + " is destroyed.");
+                //Debug.Log("CVC: " + shrine.Team + " is destroyed.");
                 destroyed++;
             }
         }
@@ -47,7 +46,7 @@ public static class ShrineManager
     {
         _shrines.Add((byte)toRegister.Team, toRegister);
         toRegister.SetHealth(_shrineData[toRegister.Team]);
-        Debug.Log("Registered Shrine.");
+        //Debug.Log("Registered Shrine.");
     }
 
     public static void ProcessShrineAdjustment(byte shrineID, byte newHealth, byte adjuster)
