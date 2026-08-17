@@ -478,7 +478,6 @@ public class Packets {
         }
         return toReturn;
     }
-
     public static byte[] MatchScoresPacket(byte opCode, byte[] scoreData){
         scoreData[0] = opCode;
         return Cryptographer.Encrypt(scoreData);

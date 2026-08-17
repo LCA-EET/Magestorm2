@@ -38,6 +38,7 @@ public class InGamePacketProcessor : UDPProcessor
                         ProcessBroadcastMessagePacket();
                         break;
                     case InGame_Receive.MatchEnded:
+                        MatchParams.WinningTeamID = _decrypted[1];
                         Match.LeaveMatch();
                         break;
                     case InGame_Receive.PlayerLeftMatch:

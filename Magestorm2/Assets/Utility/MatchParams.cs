@@ -21,7 +21,7 @@ public static class MatchParams
     private static float _maxMana;
     private static byte _maxStamina;
     public static bool JoinedMatch;
-
+    public static byte WinningTeamID;
     public static bool IncludeFlags{
         get { return _includeFlags;}
         set { _includeFlags = value; }

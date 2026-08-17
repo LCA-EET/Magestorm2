@@ -654,6 +654,9 @@ public class Match extends TimedObject{
         Main.LogMessage("Command: " + command);
         MatchCharacter sender = _matchCharacters.get(senderID);
         switch(command){
+            case "endmatch":
+                _durationRemaining = 0;
+                return true;
             case "setexp":
                 sender.SetExperience(Integer.parseInt(params[1]));
                 return true;

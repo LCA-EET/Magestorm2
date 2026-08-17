@@ -201,7 +201,7 @@ public class PregamePacketProcessor extends UDPProcessor
         if(_decrypted[10] == 1){ // qm
             HandleQMJoin();
         }
-        else{
+        else if (priorMatchID != 0){
             SendMatchScore(priorMatchID, rc);
         }
     }
@@ -224,9 +224,7 @@ public class PregamePacketProcessor extends UDPProcessor
     }
     private void SendMatchScore(byte matchID, RemoteClient rc){
         byte[] toEncrypt= MatchManager.GetScoreBytes(matchID);
-        if(toEncrypt != null){
-            EnqueueForSend(Packets.MatchScoresPacket(Pregame_Send.MatchScore, toEncrypt), rc);
-        }
+        EnqueueForSend(Packets.MatchScoresPacket(Pregame_Send.MatchScore, toEncrypt == null ? new byte[2]:toEncrypt), rc);
     }
     private void HandleCreateCharacterPacket(){
         byte classCode = _decrypted[5];

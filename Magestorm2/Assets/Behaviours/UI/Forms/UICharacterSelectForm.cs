@@ -62,6 +62,7 @@ public class UICharacterSelectForm : ValidatableForm
         InputControls.Init();
         if(MatchParams.IDinMatch != 0)
         {
+            Debug.Log("MPID: " + MatchParams.IDinMatch);
             Game.SendPregameBytes(Pregame_Packets.MatchScoreRequestPacket());
         }
     }

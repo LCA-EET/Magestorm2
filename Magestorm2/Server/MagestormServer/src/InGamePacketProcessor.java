@@ -130,10 +130,8 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void HandleLeaderboardRequest(){
         byte[] toEncrypt = MatchManager.GetScoreBytes((byte)_owningMatch.ObjectID());
-        if(toEncrypt != null){
-            _owningMatch.SendToPlayer(Packets.MatchScoresPacket(InGame_Send.MatchScores, toEncrypt),
-                    _owningMatch.GetMatchCharacter(_decrypted[1]));
-        }
+        _owningMatch.SendToPlayer(Packets.MatchScoresPacket(InGame_Send.MatchScores, toEncrypt == null ? new byte[2] : toEncrypt),
+                _owningMatch.GetMatchCharacter(_decrypted[1]));
     }
     private void HandleWallHit(){
         short castID = ByteUtils.ExtractShort(_decrypted, 2);

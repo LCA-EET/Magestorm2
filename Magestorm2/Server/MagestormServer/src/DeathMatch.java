@@ -123,6 +123,14 @@ public class DeathMatch extends Match{
                 case "restoreshrine":
                     _shrines.get(Byte.parseByte(params[1])).SetShrineHealth((byte)100, senderID);
                     return true;
+                case "killothershrines":
+                    MatchCharacter sender = _matchCharacters.get(senderID);
+                    for(Shrine shrine : _shrines.values()){
+                        if(shrine.GetShrineTeam() != sender.GetTeamID()){
+                            shrine.SetShrineHealth((byte)0, senderID);
+                        }
+                    }
+                    return true;
             }
         }
         return false;

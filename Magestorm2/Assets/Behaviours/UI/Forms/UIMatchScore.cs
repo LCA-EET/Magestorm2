@@ -1,11 +1,41 @@
-﻿using System;
+﻿using TMPro;
 using UnityEngine;
 public class UIMatchScore : ValidatableForm
 {
     public PlayerScoreEntry[] PlayerScoreEntries;
-
+    public TMP_Text WinnerHeader;
+    private void AssignWinner(bool matchEnded)
+    {
+        Team winner = (Team)MatchParams.WinningTeamID;
+        if(winner != Team.Neutral)
+        {
+            string winnerString = "";
+            switch (winner)
+            {
+                case Team.Chaos:
+                    winnerString = Language.GetBaseString(11);
+                    break;
+                case Team.Balance:
+                    winnerString = Language.GetBaseString(12);
+                    break;
+                case Team.Order:
+                    winnerString = Language.GetBaseString(13);
+                    break;
+            }
+            WinnerHeader.text = Language.BuildString(385, winnerString);
+        }
+        else if(matchEnded)
+        {
+            WinnerHeader.text = Language.GetBaseString(386);
+        }
+        MatchParams.WinningTeamID = 0;
+    }
     public void PopulateForm(byte[] data, bool resetMatchID)
     {
+        if(MatchParams.WinningTeamID != 0)
+        {
+            AssignWinner(resetMatchID);
+        }
         int index = 1;
         byte numPlayers = data[index];
         index++;
@@ -55,6 +85,14 @@ public class UIMatchScore : ValidatableForm
     }
     void Start()
     {
-        AssociateFormToButtons();
+        //AssociateFormToButtons();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            CloseForm();
+        }
     }
 }

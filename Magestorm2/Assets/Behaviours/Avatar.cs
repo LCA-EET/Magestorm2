@@ -175,7 +175,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         {
             RemoveAllEffects();
             Debug.Log("Removed effects for player " + _name);
-            layer = LayerManager.DeadPlayerLayer;
+            layer = _playersAvatar ? LayerManager.PlayerLayer : LayerManager.DeadPlayerLayer;
         }
         else
         {
