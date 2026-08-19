@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ManaPool : BiasableTrigger, IComparable<ManaPool>
 {
+    public GameObject WaterPlane;
     public byte PoolPower;
     private byte _poolID;
     public LeyInfluencer LeyInfluencer;
@@ -33,6 +34,10 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
         {
             new PeriodicAction(5.0f, BiasPool, _actionList);
         }
+        Vector3 wpScale = gameObject.transform.localScale * 0.1f;
+        WaterPlane.transform.localScale = wpScale;
+        WaterPlane.gameObject.SetActive(true);
+
     }
     public void RegisterPool(byte poolID)
     {
@@ -119,6 +124,10 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
     }
     public override void EnterAction()
     {
+        if (Game.PCAvatar.IsAlive)
+        {
+            ComponentRegister.AudioPlayer.PlayWaterSplash();
+        }
         if(PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
         {
             base.EnterAction();

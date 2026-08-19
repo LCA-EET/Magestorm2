@@ -193,6 +193,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 62271108180734327}
     m_Modifications:
+    - target: {fileID: 1703065486379751909, guid: a32f695f8e469004e97bc83384d68717, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1703065486379751909, guid: a32f695f8e469004e97bc83384d68717, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355648359044021643, guid: a32f695f8e469004e97bc83384d68717, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5996767872997617383, guid: a32f695f8e469004e97bc83384d68717, type: 3}
       propertyPath: m_Name
       value: TeamWing (1)
@@ -956,6 +968,18 @@ PrefabInstance:
     - target: {fileID: 4014213177057778906, guid: 62fae73edfc9b6b4db2bf07691c4f338, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4592205150040675575, guid: 62fae73edfc9b6b4db2bf07691c4f338, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4592205150040675575, guid: 62fae73edfc9b6b4db2bf07691c4f338, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4592205150040675575, guid: 62fae73edfc9b6b4db2bf07691c4f338, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4860692589306201550, guid: 62fae73edfc9b6b4db2bf07691c4f338, type: 3}
       propertyPath: m_IsActive

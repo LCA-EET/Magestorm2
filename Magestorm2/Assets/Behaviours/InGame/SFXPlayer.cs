@@ -7,6 +7,7 @@ public class SFXPlayer : MonoBehaviour
     public AudioClip SFXMessageNotification;
     public AudioClip SFXBias;
     public AudioClip SFXDestroyedShrine;
+    public AudioClip[] SFXWaterSplash;
     public AudioClip SFXWoosh_HeavyFast;
     public AudioClip SFXWoosh_HeavyMedium;
     public AudioClip SFXWoosh_HeavySlow;
@@ -66,6 +67,11 @@ public class SFXPlayer : MonoBehaviour
         {
             PlayClip(clipToPlay);
         }
+    }
+    public void PlayWaterSplash()
+    {
+        int index = SharedFunctions.RandomInt(0, SFXWaterSplash.Length);
+        PlayClip(SFXWaterSplash[index]);
     }
     public void PlayClip(AudioClip clip)
     {

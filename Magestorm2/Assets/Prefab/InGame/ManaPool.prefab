@@ -91,6 +91,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &5801127451295552125
 BoxCollider:
@@ -127,7 +128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BiasAmount: 0
   BiasedToward: 0
-  PoolID: 0
+  WaterPlane: {fileID: 3184790261658877849}
+  PoolPower: 0
   LeyInfluencer: {fileID: 3056422097405324232}
   Indicator: {fileID: 3103008895376377860}
 --- !u!1 &7206494215088054738
@@ -161,6 +163,7 @@ Transform:
   m_Children:
   - {fileID: 1279227485158090597}
   - {fileID: 7146755062599889028}
+  - {fileID: 2844433772634219811}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &540135745919526831
@@ -240,6 +243,77 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0e3c09b72c3355498e0890f3cdad095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LeyInfluencer
+--- !u!1001 &2385570598698110672
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1727405269882703439}
+    m_Modifications:
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 948458587838525769, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_Name
+      value: Water Plane
+      objectReference: {fileID: 0}
+    - target: {fileID: 948458587838525769, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+--- !u!4 &2844433772634219811 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 460012179760409587, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+  m_PrefabInstance: {fileID: 2385570598698110672}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3184790261658877849 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 948458587838525769, guid: 59a7cd87095ec034b90f73dcfd36b14d, type: 3}
+  m_PrefabInstance: {fileID: 2385570598698110672}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8986963124832766940
 PrefabInstance:
   m_ObjectHideFlags: 0
