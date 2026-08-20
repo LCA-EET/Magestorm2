@@ -26,28 +26,28 @@ public class LeyInfluencer : Trigger
     public float GetLeyContribution()
     {
         float contribution = 0;
-        Debug.Log("Ley contribution from: " + _owner.name);
+        //Debug.Log("Ley contribution from: " + _owner.name);
         if(_owner.BiasedToward != Team.Neutral)
         {
             float distance = Vector3.Distance(transform.position, ComponentRegister.PC.transform.position);
-            Debug.Log("Distance: " + distance);
+            //Debug.Log("Distance: " + distance);
             float distanceFactor = 1.0f - (distance / _power); 
-            Debug.Log("Distance Factir: " + distanceFactor);
+            //Debug.Log("Distance Factir: " + distanceFactor);
             contribution = (distanceFactor * (_owner.BiasAmount / 100.0f)) * (_owner.BiasedToward == MatchParams.MatchTeam ? 1.0f : -1.0f);
         }
-        Debug.Log("Ley contribution: " + contribution);
+        //Debug.Log("Ley contribution: " + contribution);
         return contribution;
     }
     public override void EnterAction()
     {
         base.EnterAction();
         ComponentRegister.PC.RegisterLeyInfluencer(_key, this);
-        Debug.Log("Ley Influence Enter");
+        //Debug.Log("Ley Influence Enter");
     }
     public override void ExitAction()
     {
         base.ExitAction();
         ComponentRegister.PC.DeregisterLeyInfluencer(_key);
-        Debug.Log("Ley Influence Exit");
+        //Debug.Log("Ley Influence Exit");
     }
 }

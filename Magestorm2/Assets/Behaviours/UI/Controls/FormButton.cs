@@ -52,7 +52,7 @@ public class FormButton : MonoBehaviour
     }
     private void NotifyForm()
     {
-        UIAudio.PlayButtonPress();
+        Game.UIAudio.PlayButtonPress();
         _associatedForm.ButtonPressed(buttonType);
     }
     public void SetForm(ValidatableForm associatedForm)

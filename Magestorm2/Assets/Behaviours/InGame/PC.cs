@@ -12,7 +12,6 @@ public class PC : MonoBehaviour
     
     private float _staminaRegen;
     private Camera _camera;
-    public SFXPlayer SFXPlayer;
     public MusicPlayer MusicPlayer;
 
     private byte _class;
@@ -289,10 +288,7 @@ public class PC : MonoBehaviour
             Debug.Log("Menu Mode? " + Game.MenuMode);
         }
     }
-    public void PlaySFX(AudioClip clip)
-    {
-        SFXPlayer.PlayClip(clip);
-    }
+
 
     public void OnTriggerEnter(Collider other)
     {

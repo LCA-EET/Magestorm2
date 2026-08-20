@@ -97,5 +97,6 @@
     public const byte VFX_Shock = 13;
     public const byte VFX_Slow = 14;
     public const byte VFX_Wrack = 15;
+    public const byte VFX_Splash = 16;
 
 }

@@ -48,6 +48,7 @@ MonoBehaviour:
   VFXCode: 0
   AudioSource: {fileID: 1187541024978633339}
   AudioClip: {fileID: 0}
+  VFXDirection: 0
   ExpireAfter: 3
 --- !u!82 &1187541024978633339
 AudioSource:
@@ -71,9 +72,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 20
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -106,7 +107,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

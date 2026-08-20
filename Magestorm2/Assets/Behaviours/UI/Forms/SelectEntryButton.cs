@@ -20,7 +20,7 @@ public class SelectEntryButton : MonoBehaviour
 
     private void OnPress()
     {
-        UIAudio.PlayButtonPress();
+        Game.UIAudio.PlayButtonPress();
         if (Selected)
         {
             _owningGroup.DeselectAll();

@@ -16,6 +16,8 @@ public static class Game
     public static bool ControlMode = false;
     public static bool MouseMode = false;
     public static UDPGameClient UDP;
+    public static UIAudioPlayer UIAudio;
+    public static InGameClips Clips;
     public static int GameServerPort;
     public static IPAddress GameServerAddress;
     public static bool LoggedIn = false;

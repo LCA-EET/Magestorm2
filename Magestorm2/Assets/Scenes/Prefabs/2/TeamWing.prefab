@@ -96,6 +96,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4250578942280633011, guid: 9aa42acff8a74c54d92dd789e7f41adc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 7090840042428346397, guid: 9aa42acff8a74c54d92dd789e7f41adc, type: 3}
       propertyPath: m_Name
       value: ShrineChamber
@@ -118,6 +122,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8802221058237551682}
     m_Modifications:
+    - target: {fileID: 1751194072064535206, guid: bb7739943963d41488c511d6e259b76e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3140338192585455041, guid: bb7739943963d41488c511d6e259b76e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 7581598784677823134, guid: bb7739943963d41488c511d6e259b76e, type: 3}
       propertyPath: m_Name
       value: Corridor

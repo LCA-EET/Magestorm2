@@ -83,7 +83,7 @@ public class MessageRecorder : MonoBehaviour
         {
             _messagesReceived.Add(message);
             _messageIndex = _messagesReceived.Count - 1;
-            ComponentRegister.AudioPlayer.PlayNotificationSound();
+            Game.UIAudio.PlayNotificationSound();
         }
     }
     private void ChangeOpacity()

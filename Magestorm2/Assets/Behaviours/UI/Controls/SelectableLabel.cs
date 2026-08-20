@@ -30,7 +30,7 @@ public class SelectableLabel : MonoBehaviour
     }
     private void ButtonPressed()
     {
-        UIAudio.PlayButtonPress();
+        Game.UIAudio.PlayButtonPress();
         _owner.RecordSelection(_optionID);
     }
 

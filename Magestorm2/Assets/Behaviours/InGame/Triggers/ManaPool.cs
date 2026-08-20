@@ -58,7 +58,7 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
         if ((MatchParams.MatchTeamID != (byte)BiasedToward) || (BiasAmount < 100))
         {
             Game.SendInGameBytes(InGame_Packets.BiasPoolPacket(PoolID));
-            ComponentRegister.PC.UseStamina(255);
+            ComponentRegister.PC.UseStamina(ComponentRegister.PC.CurrentStamina);
             Debug.Log("Bias packet sent.");
         }
     }
@@ -101,8 +101,6 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
                         notificationText =  Language.GetBaseString(BiasedToward == biaser.PlayerTeam ? 160: 161); 
                         break;
                 }
-                ComponentRegister.AudioPlayer.PlayBiasSound();
-                ComponentRegister.PC.UseStamina(ComponentRegister.PC.CurrentStamina);
             }
             else
             {
@@ -120,13 +118,15 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
                 }
             }
             ComponentRegister.Notifier.DisplayNotification(notificationText);
+            Game.Clips.PlayBias(biaser.AudioSource);
         }
+
     }
     public override void EnterAction()
     {
         if (Game.PCAvatar.IsAlive)
         {
-            ComponentRegister.AudioPlayer.PlayWaterSplash();
+            Game.Clips.PlayRandomSplash(Game.PCAvatar.AudioSource);
         }
         if(PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
         {

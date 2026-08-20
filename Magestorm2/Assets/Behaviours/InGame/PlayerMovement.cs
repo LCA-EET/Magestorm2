@@ -420,13 +420,12 @@ public class PlayerMovement : MonoBehaviour
             _distanceTravelledSinceLastStep = _distanceTravelled;
             if(_hitInfo.collider != null)
             {
-                Debug.Log("Standing On: " + _hitInfo.collider.gameObject.name);
                 Surface standingOn = _hitInfo.collider.gameObject.GetComponent<Surface>();
                 if (standingOn != null)
                 {
                     if (_pmd.IsRunning)
                     {
-                        ComponentRegister.PC.PlaySFX(standingOn.FootstepClip);
+                        Game.Clips.PlayClip(standingOn.FootstepClip, Game.PCAvatar.AudioSource);
                     }
                 }
             }

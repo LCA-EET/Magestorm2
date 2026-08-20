@@ -3,6 +3,7 @@ public class Projectile : OutwardCast
 {
     public Woosh Woosh = Woosh.None;
     private bool _wooshPlayed;
+    protected RaycastHit _hitInfo;
     protected virtual void FixedUpdate()
     {
         if (!_destroyOnNextUpdate)
@@ -16,11 +17,10 @@ public class Projectile : OutwardCast
         {
             float toAdvance = _spellReference.ProjectileSpeed * delta;
             transform.position += (transform.forward * toAdvance);
-            
-            RaycastHit hitInfo;
-            if(SharedFunctions.AdvanceCast(transform, toAdvance, _impactMask, out hitInfo))
+
+            if(SharedFunctions.AdvanceCast(transform, toAdvance, _impactMask, out _hitInfo))
             {
-                OnTriggerEnter(hitInfo.collider);
+                OnTriggerEnter(_hitInfo.collider);
             }
         }
     }
@@ -31,12 +31,29 @@ public class Projectile : OutwardCast
             if(Woosh != Woosh.None && !_wooshPlayed && CasterID != MatchParams.IDinMatch)
             {
                 _wooshPlayed = true;
-                ComponentRegister.AudioPlayer.PlayWoosh(Woosh);
+                Game.Clips.PlayWoosh(Woosh, Game.PCAvatar.AudioSource);
             } 
         }
         else
         {
-            base.OnTriggerEnter(other);
+            if(other.gameObject.layer == LayerManager.BiasableLayer)
+            {
+                //Debug.Log("Biasable object hit.");
+                BiasableTrigger bt = other.gameObject.GetComponent<BiasableTrigger>();
+                if(bt != null)
+                {
+                    if (bt.TriggerType == TriggerType.ManaPool)
+                    {
+                        ComponentRegister.Spawner.SpawnVFX(ControlCodes.VFX_Splash, transform.position);
+                        //Debug.Log("Transform position: " + transform.position);
+                        MarkForDestruction();
+                    }
+                }
+            }
+            else
+            {
+                base.OnTriggerEnter(other);
+            }
         }
     }
 }

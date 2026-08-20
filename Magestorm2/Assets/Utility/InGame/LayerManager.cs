@@ -15,7 +15,9 @@ public static class LayerManager
     private const string Layer_TeamIndicator_Balance = "TeamBalance";
     private const string Layer_TeamIndicator_Order = "TeamOrder";
     private const string Layer_Woosh = "Woosh";
+    private const string Layer_Biasable = "Biasable";
 
+    private static int _biasableLayer;
     private static int _wooshLayer;
     private static int _teamChaosLayer, _teamBalanceLayer, _teamOrderLayer;
     private static int _teamChaosLayerMask, _teamBalanceLayerMask, _teamOrderLayerMask;
@@ -34,6 +36,7 @@ public static class LayerManager
     {
         if (!_init)
         {
+            _biasableLayer = LayerMask.NameToLayer(Layer_Biasable);
             _wooshLayer = LayerMask.NameToLayer(Layer_Woosh);
             _teamChaosLayer = LayerMask.NameToLayer(Layer_TeamIndicator_Chaos);
             _teamBalanceLayer = LayerMask.NameToLayer(Layer_TeamIndicator_Balance);
@@ -56,6 +59,13 @@ public static class LayerManager
             _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid , Layer_PlayerWallNonSolid });
             _resistableObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default });
             _init = true;
+        }
+    }
+    public static int BiasableLayer
+    {
+        get
+        {
+            return _biasableLayer;
         }
     }
     public static int WooshLayer

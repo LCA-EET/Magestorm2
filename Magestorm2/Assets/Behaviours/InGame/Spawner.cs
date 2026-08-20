@@ -59,7 +59,7 @@ public class Spawner : MonoBehaviour
         if (_vfxTable.ContainsKey(vfxCode))
         {
             VFX vfx = Instantiate(_vfxTable[vfxCode]);
-            vfx.transform.position = position;
+            vfx.gameObject.transform.position = position;
         }
     }
     public void SpawnVFX(byte vfxCode, Transform parent)
@@ -99,22 +99,22 @@ public class Spawner : MonoBehaviour
     {
         _vfxTable = new Dictionary<byte, VFX>();
         VFX[] vfxContainers = Resources.LoadAll<VFX>("VFX");
-        Debug.Log("LoadVFXPrefabs(): VFX count: " + vfxContainers.Length);
+        //Debug.Log("LoadVFXPrefabs(): VFX count: " + vfxContainers.Length);
         foreach (VFX vfx in vfxContainers)
         {
             _vfxTable.Add(vfx.VFXCode, vfx);
-            Debug.Log("LoadVFXPrefabs(): Loaded " + vfx.VFXCode + ", " + vfx.name);
+            //Debug.Log("LoadVFXPrefabs(): Loaded " + vfx.VFXCode + ", " + vfx.name);
         }
     }
     private void LoadAppliedEffectPrefabs()
     {
         _appliedEffects = new Dictionary<byte, AppliedEffect>();
         AppliedEffect[] effects = Resources.LoadAll<AppliedEffect>("AppliedEffects");
-        Debug.Log("LoadAppliedEffectPrefabs(): AE count: " + effects.Length);
+        //Debug.Log("LoadAppliedEffectPrefabs(): AE count: " + effects.Length);
         foreach (AppliedEffect ae in effects)
         {
             _appliedEffects.Add(ae.EffectCode, ae);
-            Debug.Log("LoadAppliedEffectPrefabs(): Loaded " + ae.EffectCode + ", " + ae.name);
+            //Debug.Log("LoadAppliedEffectPrefabs(): Loaded " + ae.EffectCode + ", " + ae.name);
         }
     }
     private void LoadSpellPrefabs()

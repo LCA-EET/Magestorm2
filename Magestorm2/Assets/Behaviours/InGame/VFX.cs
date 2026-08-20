@@ -11,15 +11,14 @@ public class VFX : MonoBehaviour
     {
         if(AudioClip != null && AudioSource != null)
         {
+            AudioSource.clip = AudioClip;
             AudioSource.Play();
         }
         if(VFXDirection == VFXDirection.Down)
         {
-            transform.localPosition =new Vector3(0,2,0);
-        }
-        else
-        {
-            transform.localPosition = Vector3.zero;
+            Vector3 adjusted = transform.localPosition;
+            adjusted.y += 2.0f;
+            transform.localPosition = adjusted;
         }
     }
 

@@ -26,7 +26,6 @@ public static class ComponentRegister
     private static Transform _uiParent;
     private static PregamePacketProcessor _pregamePacketProcessor;
     private static InGamePacketProcessor _inGamePacketProcessor;
-    private static SFXPlayer _audioPlayer;
     private static ModelBuilder _modelBuilder;
     private static MessageRecorder _messageRecorder;
     private static SceneInitializer _sceneInitializer;
@@ -169,11 +168,6 @@ public static class ComponentRegister
     {
         get { return _modelBuilder; }
         set { _modelBuilder = value; }
-    }
-    public static SFXPlayer AudioPlayer
-    {
-        get { return _audioPlayer; }
-        set { _audioPlayer = value; }
     }
 
     public static PregamePacketProcessor PregamePacketProcessor

@@ -85,7 +85,7 @@ public class Shrine : BiasableTrigger
         else if (BiasAmount == 0)
         {
             ComponentRegister.Notifier.DisplayNotification(Language.BuildString(179, Teams.GetTeamName(Team))); //
-            ComponentRegister.AudioPlayer.PlayShrineDestruction();
+            
         }
         if (_playerInShrine)
         {
@@ -106,7 +106,6 @@ public class Shrine : BiasableTrigger
                     {
                         notificationText = Language.BuildString(175, Language.GetBaseString(178), Teams.GetTeamName(Team)); //
                     }
-                    ComponentRegister.AudioPlayer.PlayBiasSound();
                 }
                 else
                 {
@@ -130,6 +129,14 @@ public class Shrine : BiasableTrigger
                 {
                     notificationText = Language.BuildString(381, adjuster.Name, Teams.GetTeamName(Team));
                 }
+            }
+            if(BiasAmount == 0)
+            {
+                Game.Clips.PlayShrineDestroyed();
+            }
+            else
+            {
+                Game.Clips.PlayBias(adjuster.AudioSource);
             }
             ComponentRegister.Notifier.DisplayNotification(notificationText);
         }

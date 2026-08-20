@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
 {
+    public AudioSource AudioSource;
     public GameObject CharacterName;
     private int _lastPRPacketID = 0;
     private string _name;
@@ -68,6 +69,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
                 break;
         }
         InnerIndicator.layer = TeamIndicator.layer;
+    }
+    public void PlayAudioClip(AudioClip toPlay)
+    {
+        AudioSource.PlayOneShot(toPlay);
     }
     private void AssignIndicatorColor()
     {

@@ -23,7 +23,7 @@ public class SpawnedSpell : MonoBehaviour
             {
                 if (CastClip != null)
                 {
-                    ComponentRegister.AudioPlayer.PlayClip(CastClip);
+                    Game.Clips.PlayClip(CastClip, Game.PCAvatar.AudioSource);
                 }
             }
         }
