@@ -58,7 +58,6 @@ MonoBehaviour:
   PlayerMovement: {fileID: 5390107915583490957}
   DownwardCaster: {fileID: 306485030820218903}
   ForwardCaster: {fileID: 3065075244689392208}
-  SFXPlayer: {fileID: 0}
   MusicPlayer: {fileID: 5049351411896219702}
   InValhalla: 0
 --- !u!114 &5390107915583490957

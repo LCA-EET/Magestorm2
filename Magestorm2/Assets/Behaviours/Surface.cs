@@ -3,8 +3,8 @@ using UnityEngine;
 public class Surface : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public AudioClip FootstepClip;
     public Collider Collider;
+    public Footstep FootstepType;
     void Start()
     {
         Debug.Log("SurfaceTest");

@@ -408,7 +408,7 @@ public class PlayerMovement : MonoBehaviour
             _verticalSpeed = 0.0f;
             _distanceTravelled += Vector3.Distance(transform.position, _priorStep);
             _priorStep = transform.position;
-            PlayStepSound();
+            //PlayStepSound();
             
         }
     }
@@ -425,7 +425,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (_pmd.IsRunning)
                     {
-                        Game.Clips.PlayClip(standingOn.FootstepClip, Game.PCAvatar.AudioSource);
+                        //Game.Clips.PlayClip(standingOn.FootstepClip, Game.PCAvatar.AudioSource);
                     }
                 }
             }

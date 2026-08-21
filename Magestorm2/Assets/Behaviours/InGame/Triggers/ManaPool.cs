@@ -124,10 +124,6 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
     }
     public override void EnterAction()
     {
-        if (Game.PCAvatar.IsAlive)
-        {
-            Game.Clips.PlayRandomSplash(Game.PCAvatar.AudioSource);
-        }
         if(PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
         {
             base.EnterAction();

@@ -8,6 +8,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
 {
     public AudioSource AudioSource;
     public GameObject CharacterName;
+    public RayCaster RayCaster;
     private int _lastPRPacketID = 0;
     private string _name;
     private byte _level, _class;
@@ -19,10 +20,12 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     private bool _updatedNeeded;
     private bool _isMale;
     private byte _playerID;
-    private Vector3 _startPostion, _nextPosition;
+    private Vector3 _startPostion, _nextPosition, _priorPosition;
     private Vector3 _nextRotation;
     private bool _positionChange, _rotationChange, _bodyShown;
     private float _positionElapsed, _rotationElapsed, _rotationAmount;
+    private float _distanceTravelled;
+    private float _yPeak;
     private float _effectTick = 0.5f;
     private Renderer[] _renderers;
     private Dictionary<byte, AppliedEffect> _appliedEffects;
@@ -30,7 +33,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     
     private TMP_Text _nameText;
     private List<PeriodicAction> _actionList;
-    private PeriodicAction _lookAtCamera, _effectsTick;
+    private PeriodicAction _lookAtCamera, _effectsTick, _stepSound;
     private Animator _animator;
     private PMDByte _pmd; // posture, movement, direction
     private DeadBody _deadBody;
@@ -50,6 +53,57 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _actionList = new List<PeriodicAction>();
         _lookAtCamera = new PeriodicAction(0.2f, NameRotate, _actionList);
         _effectsTick = new PeriodicAction(_effectTick, EffectTick, _actionList);
+        _stepSound = new PeriodicAction(0.1f, StepSoundCheck, _actionList);
+    }
+
+    private void StepSoundCheck()
+    {
+        if(transform.position.y > _yPeak)
+        {
+            _yPeak = transform.position.y;
+        }
+        if (IsAlive)
+        {
+            if (Vector3.Distance(Game.PCAvatar.transform.position, transform.position) <= Game.Clips.FootstepAudioDistance)
+            {
+                Surface standingOn;
+                if (RayCaster.GetSurface(transform, out standingOn))
+                {
+                    Footstep footstep = standingOn == null ? Footstep.Stone : standingOn.FootstepType;
+                    bool footstepPlayed = false;
+                    if (_yPeak - transform.position.y > 1.0f)
+                    {
+                        Game.Clips.PlayFootstep(footstep, AudioSource);
+                        _yPeak = transform.position.y;
+                        footstepPlayed = true;
+                    }
+                    else
+                    {
+                        if (_pmd.IsRunning)
+                        {
+                            _distanceTravelled += Vector3.Distance(_priorPosition, transform.position);
+                            _priorPosition = transform.position;
+                            if (_distanceTravelled >= 2.0f)
+                            {
+                                _distanceTravelled = 0;
+                                if (RayCaster.GetSurface(transform, out standingOn))
+                                {
+                                    Game.Clips.PlayFootstep(footstep, AudioSource);
+                                    footstepPlayed = true;
+                                }
+                            }
+                        }
+                    }
+                    if (footstepPlayed)
+                    {
+                        if(footstep == Footstep.Water)
+                        {
+                            ComponentRegister.Spawner.SpawnVFX(ControlCodes.VFX_Splash, transform.position);
+                        }
+                    }
+                }
+            }
+        }
     }
     private void AssignIndicatorLayer()
     {
@@ -99,6 +153,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
             {
                 _positionChange = false;
             }
+            
         }
         if (_rotationChange)
         {
@@ -114,6 +169,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         PeriodicAction.PerformActions(Time.deltaTime, _actionList);
         AvatarAnimation.SetElapsed(Time.deltaTime);
         AvatarAnimation.Animate(_pmd, false);
+        
     }
     public void ForceIdleAnimation()
     {
@@ -301,6 +357,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         SetAlive(alive);
         AssignIndicatorColor();
         AssignIndicatorLayer();
+        _priorPosition = transform.position;
     }
     public PMDByte PMD
     {

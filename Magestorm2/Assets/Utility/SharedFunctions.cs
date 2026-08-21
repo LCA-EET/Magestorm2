@@ -240,6 +240,7 @@ public static class SharedFunctions
     {
         return DirectionalCast(origin, layerMask, distance, Vector3.forward, out hitInfo);
     }
+    
      public static bool WasPCHit(Collider other)
     {
         return other.GetComponent<PC>() != null && Game.PCAvatar.IsAlive;

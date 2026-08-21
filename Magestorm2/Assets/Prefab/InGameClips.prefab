@@ -44,11 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e11f1c60c3d4fb4892114ae4b299399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InGameClips
+  FootstepAudioDistance: 10
   SFXBias: {fileID: 8300000, guid: 921df314173d8f8449356a3576587fe0, type: 3}
   SFXDestroyedShrine: {fileID: 8300000, guid: 659a95b0d2b29e8408c666b3eaa7eb0a, type: 3}
   SFXWaterSplash:
   - {fileID: 8300000, guid: 1328afec2f11be7428b70f2a70c725be, type: 3}
   - {fileID: 8300000, guid: fff1d835f69bf004484fe9ee27c7cc14, type: 3}
+  SFXFootstep_Stone: {fileID: 8300000, guid: 886a3f1de50fb1a48a0b1ba88b238539, type: 3}
+  SFXFootstep_Wood: {fileID: 8300000, guid: 886a3f1de50fb1a48a0b1ba88b238539, type: 3}
+  SFXFootstep_Grass: {fileID: 8300000, guid: 886a3f1de50fb1a48a0b1ba88b238539, type: 3}
+  SFXFootstep_Dirt: {fileID: 8300000, guid: 886a3f1de50fb1a48a0b1ba88b238539, type: 3}
   SFXWoosh_HeavyFast: {fileID: 8300000, guid: 3deca9672c7484500957efcb75d000f5, type: 3}
   SFXWoosh_HeavyMedium: {fileID: 8300000, guid: 5e3a05f28e6504b82a82523aa957b4d2, type: 3}
   SFXWoosh_HeavySlow: {fileID: 8300000, guid: 472f30ae362af4ad688578ba5f13a113, type: 3}

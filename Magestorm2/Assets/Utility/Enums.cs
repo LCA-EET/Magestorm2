@@ -1,5 +1,13 @@
 using UnityEngine;
 
+public enum Footstep
+{
+    Stone,
+    Wood,
+    Grass,
+    Dirt,
+    Water
+}
 public enum Woosh
 {
     None,
