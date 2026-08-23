@@ -13,10 +13,10 @@ public class MatchTimer : MonoBehaviour
     private void Awake()
     {
         ComponentRegister.MatchTimer = this;
-        _timeString = Language.GetBaseString(3); //
     }
     void Start()
     {
+        _timeString = Language.GetBaseString(3); //
         _timeText = GetComponentInChildren<TMP_Text>();
         Teams.SetTextColor(_timeText);
         RefreshTime();

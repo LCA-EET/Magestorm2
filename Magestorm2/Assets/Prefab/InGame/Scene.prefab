@@ -87,10 +87,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db1a57c36b104054593832c346904581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scene
-  SceneEntryPoints:
-  - {fileID: 5048192830939967664}
-  - {fileID: 1294274962572451537}
-  - {fileID: 2672611723484890762}
+  SceneEntryGO: {fileID: 430963410137877939}
 --- !u!1 &2470485880863216902
 GameObject:
   m_ObjectHideFlags: 0

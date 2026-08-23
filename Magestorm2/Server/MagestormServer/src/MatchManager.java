@@ -32,6 +32,11 @@ public class MatchManager{
     public static void SendMatchListToClient(RemoteClient rc){
         GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
     }
+    public static void RemoveCharactersForAccount(int accountID){
+        for(Match match : _activeMatches.values()){
+            match.RemoveCharacterByAccount(accountID);
+        }
+    }
 
     public static RemoteClient Subscribe(int accountID, boolean subscribe, int charID){
         Main.LogMessage("MatchManager.Subscribe: " + charID +", " + subscribe);

@@ -24,6 +24,9 @@ public class PC : MonoBehaviour
     private PeriodicAction _joinRerequest;
     
     private float _coolDownRemaining = 0.0f;
+    private float _maxLeyElapsed = 0.0f;
+    private float _maxLeyDuration = 20.0f;
+    private float _arcLeyUpdate = 1.0f;
     public bool InValhalla = false;
     public HashSet<int> _inTriggers;
     public HashSet<int> _priorInTriggers;
@@ -60,7 +63,43 @@ public class PC : MonoBehaviour
                     new PeriodicAction(1.0f, ComputeLey, _actionList);
                 }
             }
+            if(_class == ControlCodes.PlayerClass_Arcanist)
+            {
+                new PeriodicAction(_arcLeyUpdate, ArcLey, _actionList);
+            }
         }
+    }
+    public bool InManaPool
+    {
+        get; set;
+    }
+    private void ArcLey()
+    {
+        if (InManaPool)
+        {
+            float newLey = _ley.AdjustValue(0.05f);
+            if(newLey >= 1.0f)
+            {
+                _maxLeyElapsed = 0.0f;
+            }
+        }
+        else
+        {
+            if(_ley.Value >= 1.0f)
+            {
+                _maxLeyElapsed += _arcLeyUpdate;
+                if(_maxLeyElapsed >= _maxLeyDuration)
+                {
+                    _ley.AdjustValue(-0.05f);
+                    _maxLeyElapsed = 0;
+                }
+            }
+            else
+            {
+                _ley.AdjustValue(-0.05f);
+            }
+        }
+        Debug.Log("Arc New Ley: " + _ley.Value + ". IMP: " + InManaPool);
     }
     public bool HitScanCheck(SpellData spellReference, ref Vector3 pointHit)
     {
@@ -246,7 +285,7 @@ public class PC : MonoBehaviour
     private void ComputeLey()
     {
         //Debug.Log("COMPUTING LEY, INFLUENCER COUNT: " + _activeInfluencers.Count);
-        float newLey = ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Cleric ? 0.35f : 0.0f;
+        float newLey = ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Cleric ? 0.35f : 0.1f;
         
         foreach(LeyInfluencer influence in _activeInfluencers.Values)
         {
@@ -260,9 +299,9 @@ public class PC : MonoBehaviour
         {
             newLey = 1.0f;
         }
-        else if(newLey < 0.0f)
+        else if(newLey < 0.1f)
         {
-            newLey = 0.0f;
+            newLey = 0.1f;
         }
         if(newLey != _ley.Value)
         {
@@ -292,11 +331,15 @@ public class PC : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        ITrigger toProcess = null;
-        if (ObtainTrigger(other, ref toProcess))
+        if (Game.PCAvatar.IsAlive)
         {
-            toProcess.EnterAction();
+            ITrigger toProcess = null;
+            if (ObtainTrigger(other, ref toProcess))
+            {
+                toProcess.EnterAction();
+            }
         }
+        
     }
     public void OnTriggerStay(Collider other)
     {

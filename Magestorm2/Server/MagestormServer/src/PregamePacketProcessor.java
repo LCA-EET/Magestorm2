@@ -282,6 +282,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 _remote.SetNameAndID(username, accountID);
                 RemoteClientManager.ClientLoggedIn(_remote);
                 toSend = Packets.LoginSucceededPacket(accountID);
+                MatchManager.RemoveCharactersForAccount(accountID);
             }
         }
         else{

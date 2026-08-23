@@ -70,12 +70,11 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
                 if (RayCaster.GetSurface(transform, out standingOn))
                 {
                     Footstep footstep = standingOn == null ? Footstep.Stone : standingOn.FootstepType;
-                    bool footstepPlayed = false;
+                    bool playFootstep = false;
                     if (_yPeak - transform.position.y > 1.0f)
                     {
-                        Game.Clips.PlayFootstep(footstep, AudioSource);
                         _yPeak = transform.position.y;
-                        footstepPlayed = true;
+                        playFootstep = true;
                     }
                     else
                     {
@@ -88,17 +87,20 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
                                 _distanceTravelled = 0;
                                 if (RayCaster.GetSurface(transform, out standingOn))
                                 {
-                                    Game.Clips.PlayFootstep(footstep, AudioSource);
-                                    footstepPlayed = true;
+                                    playFootstep = true;
                                 }
                             }
                         }
                     }
-                    if (footstepPlayed)
+                    if (playFootstep)
                     {
                         if(footstep == Footstep.Water)
                         {
                             ComponentRegister.Spawner.SpawnVFX(ControlCodes.VFX_Splash, transform.position);
+                        }
+                        else
+                        {
+                            Game.Clips.PlayFootstep(footstep, AudioSource);
                         }
                     }
                 }

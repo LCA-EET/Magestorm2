@@ -98,7 +98,13 @@ public class Match extends TimedObject{
     public boolean IsOptionEnabled(int optionCode){
         return _matchOptions.IsOptionSet(optionCode);
     }
-
+    public void RemoveCharacterByAccount(int accountID){
+        for(MatchCharacter mc : _matchCharacters.values()){
+            if(mc.PC().GetAccountID() == accountID){
+                mc.SetDurationRemaining(0);
+            }
+        }
+    }
     @Override
     public boolean ReduceDuration(long msReduction) {
         boolean expired = super.ReduceDuration(msReduction);

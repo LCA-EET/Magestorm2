@@ -31,9 +31,10 @@ public class HMLUpdater
     
     public void UpdateValue(float newValue)
     {
+        ///Debug.Log("UpdateValue: " + newValue);
         if(newValue < 0)
         {
-            _newValue = 0;
+            newValue = 0;
         }
         else if(newValue > _maxValue)
         {
@@ -41,7 +42,7 @@ public class HMLUpdater
         }
         _priorValue = _currentValue;
         _newValue = newValue;
-        _updateNeeded = newValue != _currentValue;
+        _updateNeeded = _newValue != _currentValue;
         if (_updateNeeded)
         {
             _elapsed = 0.0f;
@@ -64,5 +65,12 @@ public class HMLUpdater
         {
             return _currentValue < _maxValue;
         }
+    }
+
+    public float AdjustValue(float adjustment)
+    {
+        float toReturn = _newValue + adjustment;
+        UpdateValue(toReturn);
+        return toReturn;
     }
 }

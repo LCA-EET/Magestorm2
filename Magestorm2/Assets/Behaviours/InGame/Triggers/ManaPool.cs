@@ -55,7 +55,7 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
     }
     private void BiasPool()
     {
-        if ((MatchParams.MatchTeamID != (byte)BiasedToward) || (BiasAmount < 100))
+        if (PoolPower > 0 && ((MatchParams.MatchTeamID != (byte)BiasedToward) || (BiasAmount < 100)))
         {
             Game.SendInGameBytes(InGame_Packets.BiasPoolPacket(PoolID));
             ComponentRegister.PC.UseStamina(ComponentRegister.PC.CurrentStamina);
@@ -124,11 +124,18 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
     }
     public override void EnterAction()
     {
-        if(PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
+        base.EnterAction();
+        _playerInPool = true;
+        if (PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
         {
-            base.EnterAction();
-            _playerInPool = true;
-            ComponentRegister.BiasDisplay.Refresh(this);
+            if(PoolPower > 0)
+            {
+                ComponentRegister.BiasDisplay.Refresh(this);
+            }
+        }
+        else
+        {
+            ComponentRegister.PC.InManaPool = true;
         }
     }
     public override void ExitAction()
@@ -136,6 +143,7 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
         base.ExitAction();
         _playerInPool = false;
         ComponentRegister.BiasDisplay.Toggle(false);
+        ComponentRegister.PC.InManaPool = false;
     }
 
     public int CompareTo(ManaPool other)

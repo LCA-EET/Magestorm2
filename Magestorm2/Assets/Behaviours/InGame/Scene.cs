@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 public class Scene : MonoBehaviour
 {
-    public Transform[] SceneEntryPoints;
+    private Transform[] _sceneEntryPoints;
+    public GameObject SceneEntryGO;
     private void Awake()
     {
-        ComponentRegister.Scene = this;   
+        ComponentRegister.Scene = this;
+        _sceneEntryPoints = SceneEntryGO.GetComponentsInChildren<Transform>();
     }
+
     public void AssignEntryPoint(PC pc)
     {
-        if(SceneEntryPoints.Length > 0)
+        if(_sceneEntryPoints.Length > 0)
         {
-            Transform toUse = SceneEntryPoints[SharedFunctions.RandomInt(0, SceneEntryPoints.Length)];
+            Transform toUse = _sceneEntryPoints[SharedFunctions.RandomInt(0, _sceneEntryPoints.Length)];
             if(toUse != null)
             {
                 pc.UpdatePosition(toUse.position);
