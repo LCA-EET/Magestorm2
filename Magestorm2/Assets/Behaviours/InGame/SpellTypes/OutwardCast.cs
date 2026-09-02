@@ -5,7 +5,7 @@ public class OutwardCast : SpawnedSpell
     public bool InvertImpactDirection;
     public float ImpactScaling = 1.0f;
     public bool RecursiveImpactScaling = false;
-    public byte ShieldVFX;
+    protected byte _shieldVFX;
     
     protected int _impactMask;
     protected bool _impact, _directHit;
@@ -96,14 +96,15 @@ public class OutwardCast : SpawnedSpell
     protected virtual void OnRemoteHit()
     {
         byte shieldID = SharedFunctions.IsShieldedFromElement(_spellReference.Element0, _hitPlayer);
-        if (shieldID > 0 && ShieldVFX != ControlCodes.VFX_None)
+        if (shieldID > 0 && _shieldVFX != ControlCodes.VFX_None)
         {
-            ComponentRegister.Spawner.SpawnVFX(ShieldVFX, _hitPlayer.transform);
+            ComponentRegister.Spawner.SpawnVFX(_shieldVFX, _hitPlayer.transform);
         }
     }
     public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
     {
         base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
         _impactMask = LayerManager.ProjectileImpactMask;
+        _shieldVFX = spellReference.GetElementalVFXCode();
     }
 }

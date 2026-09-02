@@ -86,6 +86,21 @@ public class SpellData
         }
     }
     
+    public byte GetElementalVFXCode()
+    {
+        switch (_element0)
+        {
+            case ControlCodes.Element_Fire:
+                return ControlCodes.VFX_FireShield;
+            case ControlCodes.Element_Ice:
+                return ControlCodes.VFX_IceShield;
+            case ControlCodes.Element_Earth:
+                return ControlCodes.VFX_EarthShield;
+            case ControlCodes.Element_Electric:
+                return ControlCodes.VFX_ElectricShield;
+        }
+        return ControlCodes.VFX_None;
+    }
     public byte Element0
     {
         get { return _element0; }

@@ -384,3 +384,9 @@ You've destroyed the {0} shrine!
 Match in Progress
 {0} was victorious!
 The match ended in a draw.
+Ice Bolt
+Fires a bolt of ice toward a target.
+Ice Ball
+Fires a ball of ice that explodes on impact.
+Stone Wall
+Places a wall of stone in front of the caster.

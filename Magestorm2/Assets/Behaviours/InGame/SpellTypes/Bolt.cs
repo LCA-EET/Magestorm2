@@ -5,14 +5,11 @@ public class Bolt : Projectile
     private float _distanceTravelled;
     private byte _maxRange;
     private Vector3 _priorPosition;
-    public ParticleSystem ParticleSystem;
+    private ParticleSystem[] _particleSystems;
     private ParticleSystem.EmissionModule _emitter;
     private void Awake()
     {
-        if (ParticleSystem != null)
-        {
-            _emitter = ParticleSystem.emission;
-        }
+        _particleSystems = GetComponentsInChildren<ParticleSystem>();
     }
 
     protected override void FixedUpdate()
@@ -31,12 +28,11 @@ public class Bolt : Projectile
         else
         {
             // Stop emitting new particles. The gameObject is destroyed in SpawnedSpell.Update()
-            if(ParticleSystem != null)
+
+            foreach (ParticleSystem particle in _particleSystems)
             {
-                if (_emitter.enabled)
-                {
-                    _emitter.enabled = false;
-                }
+                ParticleSystem.EmissionModule emitter = particle.emission;
+                emitter.enabled = false;
             }
         }
     }
