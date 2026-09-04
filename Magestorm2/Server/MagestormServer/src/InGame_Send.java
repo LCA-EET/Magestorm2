@@ -52,5 +52,6 @@ public class InGame_Send {
     public static final byte SigilRequestResponse = 50;
     public static final byte ApplyForce = 51;
     public static final byte AllPlayerData = 52;
+    public static final byte MaxCast = 53;
 
 }

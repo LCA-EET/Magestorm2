@@ -42,6 +42,7 @@ public class SceneInitializer : MonoBehaviour
         Array.Sort(mp);
         for (byte b = 0; b < mp.Length; b++)
         {
+            Debug.Log("Registering pool " + b);
             mp[b].RegisterPool(b);
         }
     }

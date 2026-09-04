@@ -9,17 +9,7 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
     public LeyInfluencer LeyInfluencer;
     public BiasIndicator Indicator;
     private bool _playerInPool = false;
-    protected override void Awake()
-    {
-        if (!MatchParams.IncludePools)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            base.Awake();
-        }
-    }
+
     public byte PoolID
     {
         get
@@ -30,13 +20,14 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
     public void Start()
     {
         InitTrigger(TriggerType.ManaPool);
-        if (ComponentRegister.PC.CharacterClass != ControlCodes.PlayerClass_Arcanist)
+        if (MatchParams.IncludePools && ComponentRegister.PC.CharacterClass != ControlCodes.PlayerClass_Arcanist)
         {
             new PeriodicAction(5.0f, BiasPool, _actionList);
         }
         Vector3 wpScale = gameObject.transform.localScale * 0.1f;
         WaterPlane.transform.localScale = wpScale;
         WaterPlane.gameObject.SetActive(true);
+        Debug.Log("Water Plane Active for pool " + PoolID);
 
     }
     public void RegisterPool(byte poolID)
@@ -44,13 +35,13 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
         _poolID = poolID;
         PoolManager.RegisterPool(this);
         Debug.Log("Registered Pool " + _poolID);
-        if (ComponentRegister.PC.CharacterClass == ControlCodes.PlayerClass_Magician)
+        if (!MatchParams.IncludePools || ComponentRegister.PC.CharacterClass != ControlCodes.PlayerClass_Magician)
         {
-            LeyInfluencer.AssignOwner(this, PoolPower, PoolID);
+            Destroy(LeyInfluencer.gameObject);
         }
         else
         {
-            Destroy(LeyInfluencer.gameObject);
+            LeyInfluencer.AssignOwner(this, PoolPower, PoolID);
         }
     }
     private void BiasPool()
@@ -128,7 +119,7 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
         _playerInPool = true;
         if (PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
         {
-            if(PoolPower > 0)
+            if(PoolPower > 0 && MatchParams.IncludePools)
             {
                 ComponentRegister.BiasDisplay.Refresh(this);
             }
@@ -142,7 +133,10 @@ public class ManaPool : BiasableTrigger, IComparable<ManaPool>
     {
         base.ExitAction();
         _playerInPool = false;
-        ComponentRegister.BiasDisplay.Toggle(false);
+        if (MatchParams.IncludePools)
+        {
+            ComponentRegister.BiasDisplay.Toggle(false);
+        }
         ComponentRegister.PC.InManaPool = false;
     }
 

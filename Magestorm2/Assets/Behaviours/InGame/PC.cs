@@ -42,12 +42,12 @@ public class PC : MonoBehaviour
         }
         else
         {
+            ComponentRegister.PC = this;
             _distanceSorter = new DistanceSorter(transform, false);
             _effects = new Dictionary<byte, AppliedEffect>();
             _inTriggers = new HashSet<int>();
             _priorInTriggers = new HashSet<int>();
             _activeInfluencers = new Dictionary<byte, LeyInfluencer>();
-            ComponentRegister.PC = this;
             PlayerMovement.SetPC(this);
             _staminaRegen = MatchParams.MaxStamina / 1.67f;
             _hml = new Dictionary<PlayerIndicator, HMLUpdater>();
@@ -55,18 +55,6 @@ public class PC : MonoBehaviour
             _actionList = new List<PeriodicAction>();
             new PeriodicAction(Game.TickInterval, UpdateIndicators, _actionList);
             new PeriodicAction(1.0f, CountdownVectors, _actionList);
-            if (MatchParams.MatchTeam != Team.Neutral)
-            {
-                if (_class == ControlCodes.PlayerClass_Cleric || _class == ControlCodes.PlayerClass_Magician)
-                {
-                    Debug.Log("Ley computation enabled.");
-                    new PeriodicAction(1.0f, ComputeLey, _actionList);
-                }
-            }
-            if(_class == ControlCodes.PlayerClass_Arcanist)
-            {
-                new PeriodicAction(_arcLeyUpdate, ArcLey, _actionList);
-            }
         }
     }
     public bool InManaPool
@@ -122,9 +110,20 @@ public class PC : MonoBehaviour
         _ley = new HMLUpdater(0.1f, 1.0f, PlayerIndicator.Ley, _hml);
         _stamina = new HMLUpdater(0.1f, MatchParams.MaxStamina, PlayerIndicator.Stamina, _hml);
         _camera = Camera.main;
-        if(_class == ControlCodes.PlayerClass_Mentalist)
+        if(_class == ControlCodes.PlayerClass_Arcanist)
         {
-            _ley.UpdateValue(0.6f);
+            new PeriodicAction(_arcLeyUpdate, ArcLey, _actionList);
+        }
+        else
+        {
+            if (MatchParams.MatchType == ControlCodes.MatchTypes_FreeForAll || _class == ControlCodes.PlayerClass_Mentalist) 
+            {
+                _ley.UpdateValue(0.6f);
+            }
+            else
+            {
+                new PeriodicAction(1.0f, ComputeLey, _actionList);
+            }
         }
         if (!MatchParams.JoinedMatch)
         {

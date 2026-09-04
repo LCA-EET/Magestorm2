@@ -259,6 +259,8 @@ public class SpellData
         } 
         return toReturn;
     }
+
+
 }
 public static class SpellAttributes
 {

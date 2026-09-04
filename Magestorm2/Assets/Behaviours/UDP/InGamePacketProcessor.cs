@@ -151,12 +151,19 @@ public class InGamePacketProcessor : UDPProcessor
                         HandleForceApplication();
                         break;
                     case InGame_Receive.AllPlayerData:
-                        Debug.Log("AllPlayerData Handle");
                         HandleAllPlayerData();
+                        break;
+                    case InGame_Receive.MaxCast:
+                        HandleMaxCastPacket();
                         break;
                 }
             }
         }
+    }
+    private void HandleMaxCastPacket()
+    {
+        byte spellType = _decrypted[1];
+        ComponentRegister.Notifier.DisplayNotification(Language.BuildString(395, Language.GetBaseString(SharedFunctions.SpellTypeStrRef(spellType))));
     }
     private void HandleAllPlayerData()
     {

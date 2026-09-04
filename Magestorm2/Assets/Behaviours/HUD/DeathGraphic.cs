@@ -20,14 +20,17 @@ public class DeathGraphic : MonoBehaviour
     }
     private void DeathCheck()
     {
-        bool pcIsAlive = Game.PCAvatar.IsAlive;
-        if (!pcIsAlive && !_deathGraphicShown)
+        if(Game.PCAvatar != null)
         {
-            ShowDeath(true);
-        }
-        else if(pcIsAlive && _deathGraphicShown)
-        {
-            ShowDeath(false);
+            bool pcIsAlive = Game.PCAvatar.IsAlive;
+            if (!pcIsAlive && !_deathGraphicShown)
+            {
+                ShowDeath(true);
+            }
+            else if (pcIsAlive && _deathGraphicShown)
+            {
+                ShowDeath(false);
+            }
         }
     }
     private void ShowDeath(bool show)

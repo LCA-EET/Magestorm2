@@ -63,7 +63,6 @@ public class MatchCharacter extends TimedObject{
         _currentHP = joinAlive?_maxHP:0;
         _currentMana = joinAlive?_maxMana:0;
         _owningMatch = match;
-        _ley = _pc.GetCharacterClass().GetClassID() == CharacterClass.Mentalist? 0.6f : 0.0f;
         _hpRegenAmount = (1 + (_pc.GetMaxHP() / 25));
         _spRegenAmount = (1 + (_pc.GetMaxMana() / 25));
         _teamID = team.GetTeamID();
@@ -83,7 +82,22 @@ public class MatchCharacter extends TimedObject{
         _splashHits = new HashSet<>();
         _activeEffects = new TimedObjectCollection<>(1000);
         System.arraycopy(_INLCTA, 0, _playerData, 0, _INLCTA.length);
+        DetermineLey();
         InitializeScoreBytes(nameLevelClass);
+    }
+    private void DetermineLey(){
+        byte classID = _pc.GetCharacterClass().GetClassID();
+        if(classID == CharacterClass.Mentalist){
+            _ley = 0.6f;
+        }
+        else{
+            if(_owningMatch.GetMatchType() == MatchType.FreeForAll && classID != CharacterClass.Arcanist){
+                _ley = 0.6f;
+            }
+            else{
+                _ley = 0.0f;
+            }
+        }
     }
     public void QuitGame(){
         SetDurationRemaining(0);

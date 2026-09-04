@@ -89,6 +89,7 @@ public class Match extends TimedObject{
         InitTeams();
         _objectStatus = new ConcurrentHashMap<>();
     }
+
     public byte GetASTeam(){
         return _antiStack.GetTeamToJoin();
     }
@@ -419,6 +420,7 @@ public class Match extends TimedObject{
                 }
                 else{
                     castID = -1;
+                    SendToPlayer(Packets.MaxCastPacket(spellReference.SpellType()), caster);
                 }
                 break;
             case ControlCodes.SpellTypes_Projectile:
@@ -473,6 +475,7 @@ public class Match extends TimedObject{
                 }
                 else{
                     castID = -1;
+                    SendToPlayer(Packets.MaxCastPacket(spellReference.SpellType()), caster);
                 }
                 break;
         }

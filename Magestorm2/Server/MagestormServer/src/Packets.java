@@ -457,6 +457,13 @@ public class Packets {
         return Cryptographer.Encrypt(toEncrypt);
     }
 
+    public static byte[] MaxCastPacket(byte castType){
+        byte[] toEncrypt = new byte[2];
+        toEncrypt[0] = InGame_Send.MaxCast;
+        toEncrypt[1] = castType;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
     /////////////////////// SHARED //////////////////////
 
     public static byte[] ExtractBytes(byte[] decrypted, int index, int length){

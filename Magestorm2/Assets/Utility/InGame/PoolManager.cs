@@ -28,13 +28,10 @@ public static class PoolManager
     public static void RegisterPool(ManaPool toRegister)
     {
         _pools.Add(toRegister.PoolID, toRegister);
-        if(_initialPoolData != null)
+        if(_initialPoolData != null && _initialPoolData.ContainsKey(toRegister.PoolID))
         {
-            if (_initialPoolData.ContainsKey(toRegister.PoolID))
-            {
-                InitialPoolData poolData = _initialPoolData[toRegister.PoolID];
-                toRegister.SetBiasAmount(poolData.BiasAmount, poolData.BiasedToward);
-            }
+            InitialPoolData poolData = _initialPoolData[toRegister.PoolID];
+            toRegister.SetBiasAmount(poolData.BiasAmount, poolData.BiasedToward);
         }
         else
         {

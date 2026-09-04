@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public static class SharedFunctions
 {
     private static Dictionary<byte, byte> _elementShieldEffects;
+    private static Dictionary<byte, int> _spellTypeToStringReference;
     private static System.Random _random = new System.Random();
     private static object[] _params;
 
@@ -30,6 +31,11 @@ public static class SharedFunctions
     }
     public static void Initialize()
     {
+        _spellTypeToStringReference = new Dictionary<byte, int>();
+        _spellTypeToStringReference.Add(ControlCodes.SpellTypes_Sigil, 393);
+        _spellTypeToStringReference.Add(ControlCodes.SpellTypes_NonSolidWall, 394);
+        _spellTypeToStringReference.Add(ControlCodes.SpellTypes_SolidWall, 394);
+
         _elementShieldEffects = new Dictionary<byte, byte>();
         _elementShieldEffects.Add(ControlCodes.Element_Earth, ControlCodes.EffectCode_EarthShield);
         _elementShieldEffects.Add(ControlCodes.Element_Fire, ControlCodes.EffectCode_FireShield);
@@ -417,5 +423,10 @@ public static class SharedFunctions
     public static int RandomInt(int min, int max)
     {
         return _random.Next(min, max);
+    }
+
+    public static int SpellTypeStrRef(byte spellType)
+    {
+        return _spellTypeToStringReference[spellType];
     }
 }

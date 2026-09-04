@@ -11,20 +11,34 @@ public class TeamDomain : MonoBehaviour
             torch.AssignTeam(Team);
             
         }
-        if (MatchParams.IncludeTeams)
+        Shrine[] shrines = GetComponentsInChildren<Shrine>();
+        Flag[] flags = GetComponentsInChildren<Flag>();
+        if (MatchParams.IncludeShrines)
         {
-            Shrine[] shrines = GetComponentsInChildren<Shrine>();
             foreach (Shrine shrine in shrines)
             {
                 shrine.AssignToTeam(Team);
             }
-            if (MatchParams.IncludeFlags)
+        }
+        else
+        {
+            foreach (Shrine shrine in shrines)
             {
-                Flag[] flags = GetComponentsInChildren<Flag>();
-                foreach (Flag flag in flags)
-                {
-                    flag.AssignToTeam(Team);
-                }
+                shrine.gameObject.SetActive(false);
+            }
+        }
+        if (MatchParams.IncludeFlags)
+        {
+            foreach (Flag flag in flags)
+            {
+                flag.AssignToTeam(Team);
+            }
+        }
+        else
+        {
+            foreach (Flag flag in flags)
+            {
+                flag.gameObject.SetActive(false);
             }
         }
     }

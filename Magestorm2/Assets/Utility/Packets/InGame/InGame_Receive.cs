@@ -59,5 +59,6 @@ public static class InGame_Receive
                         SigilExpired = 49,
                         SigilRequestResponse = 50,
                         ApplyForce = 51,
-                        AllPlayerData = 52;
+                        AllPlayerData = 52,
+                        MaxCast = 53;
 }
