@@ -70,7 +70,7 @@ public class UIMatchScore : ValidatableForm
         }
         while(pseIndex < PlayerScoreEntries.Length)
         {
-            Debug.Log("Disabling pse " + pseIndex);
+            //Debug.Log("Disabling pse " + pseIndex);
             PlayerScoreEntries[pseIndex].gameObject.SetActive(false);
             pseIndex++;
         }

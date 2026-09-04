@@ -345,9 +345,13 @@ public class Match extends TimedObject{
                 dataLength += playerDataBytes.length;
                 playerData.add(playerDataBytes);
             }
+            else{
+                Main.LogDebug("SendAllPlayerData: Skipped data for requester " + requesterID);
+            }
         }
         if(dataLength > 0){
             SendToPlayer(Packets.AllPlayersInMatch(playerData, dataLength), requesterID);
+            Main.LogDebug("SendAllPlayerData: Sending data to requester " + requesterID);
         }
     }
     public void SendPlayerData(byte requesterID, byte idInMatch){

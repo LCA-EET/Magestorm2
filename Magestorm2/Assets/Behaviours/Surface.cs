@@ -7,7 +7,7 @@ public class Surface : MonoBehaviour
     public Footstep FootstepType;
     void Start()
     {
-        Debug.Log("SurfaceTest");
+        //Debug.Log("SurfaceTest");
     }
 
     // Update is called once per frame

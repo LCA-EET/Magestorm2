@@ -25,6 +25,7 @@ public static class Match
 
     public static void Reinitialize()
     {
+        Debug.Log("Match.Reinitialize");
         _matchPlayers.Clear();
         _storedVectors.Clear();
         _deadAvatarsOnPCTeam.Clear();
@@ -49,6 +50,10 @@ public static class Match
         return false;
     }
     
+    public static bool AvatarInMatch(byte playerID)
+    {
+        return _matchPlayers.ContainsKey(playerID);
+    }
     public static void CountdownVectors()
     {
         if(_storedVectors.Count > 0)
@@ -109,7 +114,7 @@ public static class Match
     }
     public static void RegisterActivateableObject(ActivateableObject obj)
     {
-        Debug.Log("AO " + obj.ObjectKey + " registered.");
+        //Debug.Log("AO " + obj.ObjectKey + " registered.");
         _objects.Add(obj.ObjectKey, obj);
     }
     public static bool GetAvatar(byte id, ref Avatar avatar)
@@ -191,6 +196,7 @@ public static class Match
     public static Avatar CreateAvatar(byte[] decrypted, ref int index)
     {
         byte playerID = decrypted[index];
+        Debug.Log("Creating avatar for player ID " + playerID);
         index++;
         byte teamID = decrypted[index];
         index++;
@@ -228,6 +234,11 @@ public static class Match
     public static void ProcessPlayerJoinedPacket(byte[] decrypted)
     {
         int index = 1;
+        Debug.Log("PlayerJoinedPacket");
+        if (decrypted[index] == MatchParams.IDinMatch && MatchParams.JoinedMatch)
+        {
+            return; 
+        }
         Avatar added = CreateAvatar(decrypted, ref index);
         if (added != null)
         {

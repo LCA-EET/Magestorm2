@@ -331,7 +331,7 @@ public class PC : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (Game.PCAvatar.IsAlive)
+        if (Game.PCAvatar != null && Game.PCAvatar.IsAlive)
         {
             ITrigger toProcess = null;
             if (ObtainTrigger(other, ref toProcess))

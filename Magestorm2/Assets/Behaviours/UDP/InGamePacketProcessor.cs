@@ -160,13 +160,17 @@ public class InGamePacketProcessor : UDPProcessor
     }
     private void HandleAllPlayerData()
     {
+        Debug.Log("HAPD Packet Received.");
         int index = 2;
         byte numberInDataset = _decrypted[1];
         byte numProcessed = 0;
         while (numProcessed < numberInDataset)
         {
+            byte dataLength = _decrypted[index];
+            index++;
+
             Avatar toAdd = Match.CreateAvatar(_decrypted, ref index);
-            if(toAdd != null)
+            if(toAdd != null && !Match.AvatarInMatch(toAdd.PlayerID))
             {
                 Match.AddAvatar(toAdd);
                 toAdd.ForceIdleAnimation();

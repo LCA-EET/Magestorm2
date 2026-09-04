@@ -30,7 +30,7 @@ public class AvailableSpell : MonoBehaviour
         if (SpellManager.GetSpell(spellID, ref _associatedSpell))
         {
             Icon.sprite = SpellIcons.GetIcon(spellID);
-            Debug.Log("ICON: " + Icon.sprite.ToString() + " " + Icon.name);
+            //Debug.Log("ICON: " + Icon.sprite.ToString() + " " + Icon.name);
             _manaRequired = _associatedSpell.SpellCost;
             _staminaRequired = _associatedSpell.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel);
         }

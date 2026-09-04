@@ -121,7 +121,7 @@ public class MatchManager{
     }
     public static void AddQuickMatch(){
         byte matchID = NextMatchID();
-        AddMatch(matchID, new FreeForAll(matchID, 0, (byte)1, (byte)3, (byte)0));
+        AddMatch(matchID, new FreeForAll(matchID, 0, (byte)2, (byte)3, (byte)0));
     }
     private static void AddMatch(byte matchID, Match newlyCreated){
         _activeMatches.put(matchID, newlyCreated);

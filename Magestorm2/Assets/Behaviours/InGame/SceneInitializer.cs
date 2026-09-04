@@ -33,10 +33,8 @@ public class SceneInitializer : MonoBehaviour
         PoolManager.InitializePools();
         AssignPools();
         AssignActivatables();
-        Debug.Log("Sending Match Joined Packet");
         Game.ChatMode = false;
         Game.MenuMode = false;
-        Game.SendJoinMatchPacket();
     }
     private void AssignPools()
     {
