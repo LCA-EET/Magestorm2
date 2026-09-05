@@ -152,6 +152,7 @@ public static class Match
     }
     public static void RemoveWall(short castID)
     {
+        Debug.Log("Removing Expired Wall: " + castID);
         if (_walls.ContainsKey(castID))
         {
             Wall toRemove = _walls[castID];

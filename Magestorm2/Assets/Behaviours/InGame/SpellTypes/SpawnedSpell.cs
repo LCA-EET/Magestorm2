@@ -29,6 +29,7 @@ public class SpawnedSpell : MonoBehaviour
         }
         else
         {
+            Debug.Log("SpawnedSpell.Initialize Destroy GameObject");
             Destroy(gameObject);
         }
     }
@@ -38,6 +39,7 @@ public class SpawnedSpell : MonoBehaviour
         _spellReference = spellReference;
         _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
         transform.parent = parent;
+        //Debug.Log("INC parent transform: " + parent.ToString());
         _castingTeam = castingTeam;
         _castID = castID;
         if (_spellReference.ForceDuration > 0)

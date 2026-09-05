@@ -29,53 +29,55 @@ public class SpellSpawner : MonoBehaviour
     }
     public void InitializeWithoutCaster(byte spellType, short castID, byte[] payload, bool flowDown)
     {
+        Debug.Log("InitializeWithoutCaster: " + SpellKey);
         _flowDown = flowDown;
         _castID = castID;
         _payload = payload;
-        switch (spellType)
+
+        if(SpellManager.GetSpell(SpellKey, ref _spellReference))
         {
-            case ControlCodes.SpellTypes_PBAoE:
-                AssociateToCaster(1.0f);
-                break;
-            case ControlCodes.SpellTypes_Self:
-                AssociateToCaster(0.0f);
-                break;
-            case ControlCodes.SpellTypes_Projectile:
-                InitializeProjectile();
-                break;
-            case ControlCodes.SpellTypes_Summon:
-                InitializeSummon();
-                break;
-            case ControlCodes.SpellTypes_Bolt:
-                InitializeBolt();
-                break;
-            case ControlCodes.SpellTypes_NonSolidWall:
-            case ControlCodes.SpellTypes_SolidWall:
-                InitializeWall();
-                break;
-            case ControlCodes.SpellTypes_HarmfulSigil:
-            case ControlCodes.SpellTypes_Sigil:
-                InitializeSigil();
-                break;
+            switch (spellType)
+            {
+                case ControlCodes.SpellTypes_PBAoE:
+                    AssociateToCaster(1.0f);
+                    break;
+                case ControlCodes.SpellTypes_Self:
+                    AssociateToCaster(0.0f);
+                    break;
+                case ControlCodes.SpellTypes_Projectile:
+                    InitializeProjectile();
+                    break;
+                case ControlCodes.SpellTypes_Summon:
+                    InitializeSummon();
+                    break;
+                case ControlCodes.SpellTypes_Bolt:
+                    InitializeBolt();
+                    break;
+                case ControlCodes.SpellTypes_NonSolidWall:
+                case ControlCodes.SpellTypes_SolidWall:
+                    InitializeWall();
+                    break;
+                case ControlCodes.SpellTypes_HarmfulSigil:
+                case ControlCodes.SpellTypes_Sigil:
+                    InitializeSigil();
+                    break;
+            }
         }
-    }
-    public void Initialize(Avatar caster, byte spellType, short castID, byte[] payload)
-    {
-        if (!SpellManager.GetSpell(SpellKey, ref _spellReference))
+        else
         {
             Destroy(gameObject);
             return;
         }
-        else
+    }
+    public void Initialize(Avatar caster, byte spellType, short castID, byte[] payload)
+    {
+        _caster = caster;
+        _casterID = _caster.PlayerID;
+        _castingTeam = caster.PlayerTeam;
+        InitializeWithoutCaster(spellType, castID, payload, false);
+        if (_casterID == MatchParams.IDinMatch)
         {
-            _caster = caster;
-            _casterID = _caster.PlayerID;
-            _castingTeam = caster.PlayerTeam;
-            InitializeWithoutCaster(spellType, castID, payload, false);
-            if (_casterID == MatchParams.IDinMatch)
-            {
-                UseStamina();
-            }
+            UseStamina();
         }
     }
     private void InitializeHitScan()
@@ -95,6 +97,7 @@ public class SpellSpawner : MonoBehaviour
         Vector3 eulers = ByteUtils.BytesToVector3(_payload, 12);
         transform.eulerAngles = eulers;
         transform.position = position;
+        Debug.Log("Wall Position: " + position.ToString());
     }
     private void InitializeBolt()
     {

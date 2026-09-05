@@ -62,10 +62,6 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 057523c35ac98894fa1692c16a6b2827, type: 2}
-    - target: {fileID: 3883915109983376087, guid: e163d8629d85c9a4e98f719a943d5cf8, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4337002397643383906, guid: e163d8629d85c9a4e98f719a943d5cf8, type: 3}
       propertyPath: m_Name
       value: SolidWall
@@ -197,18 +193,6 @@ MonoBehaviour:
     materialIndex: 0
     triangles: 000000000100000002000000000000000200000003000000
     normals:
-    - {x: 0, y: 0, z: 1}
-    - {x: 0, y: 0, z: 1}
-    averageNormal: {x: 0, y: 0, z: 1}
-    initialized: 1
-  - uvScale: {x: 1, y: 1}
-    uvOffset: {x: 0, y: 0}
-    rotation: 0
-    flipUVx: 0
-    flipUVy: 0
-    materialIndex: 0
-    triangles: 040000000500000006000000040000000600000007000000
-    normals:
     - {x: 0, y: 1, z: 0}
     - {x: 0, y: 1, z: 0}
     averageNormal: {x: 0, y: 1, z: 0}
@@ -219,11 +203,23 @@ MonoBehaviour:
     flipUVx: 0
     flipUVy: 0
     materialIndex: 0
+    triangles: 040000000500000006000000040000000600000007000000
+    normals:
+    - {x: 0, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    averageNormal: {x: 0, y: -1, z: 0}
+    initialized: 1
+  - uvScale: {x: 1, y: 1}
+    uvOffset: {x: 0, y: 0}
+    rotation: 0
+    flipUVx: 0
+    flipUVy: 0
+    materialIndex: 0
     triangles: 08000000090000000a000000080000000a0000000b000000
     normals:
-    - {x: 0, y: 0, z: -1}
-    - {x: 0, y: 0, z: -1}
-    averageNormal: {x: 0, y: 0, z: -1}
+    - {x: 0, y: 0, z: 1}
+    - {x: 0, y: 0, z: 1}
+    averageNormal: {x: 0, y: 0, z: 1}
     initialized: 1
   - uvScale: {x: 1, y: 1}
     uvOffset: {x: 0, y: 0}
@@ -233,9 +229,9 @@ MonoBehaviour:
     materialIndex: 0
     triangles: 0c0000000d0000000e0000000c0000000e0000000f000000
     normals:
-    - {x: 0, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    averageNormal: {x: 0, y: -1, z: 0}
+    - {x: 0, y: 0, z: -1}
+    - {x: 0, y: 0, z: -1}
+    averageNormal: {x: 0, y: 0, z: -1}
     initialized: 1
   - uvScale: {x: 1, y: 1}
     uvOffset: {x: 0, y: 0}

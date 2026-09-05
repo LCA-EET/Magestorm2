@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 public static class SpellManager
 {
     private static bool _init;
@@ -42,6 +43,7 @@ public static class SpellManager
             toReturn = true;
             spellReference = _spells[key];
         }
+        Debug.Log("GetSpell Key: " + key + ", Result: " + toReturn);
         return toReturn;
     }
     public static Dictionary<byte,SpellData> GetAvailableSpells(byte characterLevel, Dictionary<byte, byte> disciplineTable)
