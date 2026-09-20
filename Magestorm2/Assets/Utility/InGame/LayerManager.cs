@@ -16,6 +16,7 @@ public static class LayerManager
     private const string Layer_TeamIndicator_Order = "TeamOrder";
     private const string Layer_Woosh = "Woosh";
     private const string Layer_Biasable = "Biasable";
+    private const string Layer_MMHidden = "MMHiddenSurface";
 
     private static int _biasableLayer;
     private static int _wooshLayer;
@@ -53,11 +54,11 @@ public static class LayerManager
             _remotePlayerLayerMask = LayerMask.GetMask(Layer_RemotePlayer);
             _surfaceLayerMask = LayerMask.GetMask(Layer_Surface);
             _interactableMask = LayerMask.GetMask(Layer_Interactable);
-            _floorMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid, Layer_Interactable });
-            _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_PlayerWallSolid, Layer_PlayerWallNonSolid });
-            _mindImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable});
-            _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid , Layer_PlayerWallNonSolid });
-            _resistableObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default });
+            _floorMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid, Layer_Interactable, Layer_MMHidden });
+            _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_PlayerWallSolid, Layer_PlayerWallNonSolid, Layer_MMHidden });
+            _mindImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_MMHidden });
+            _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid , Layer_PlayerWallNonSolid, Layer_MMHidden });
+            _resistableObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_MMHidden });
             _init = true;
         }
     }

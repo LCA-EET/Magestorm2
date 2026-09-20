@@ -322,16 +322,20 @@ public class Match extends TimedObject{
     }
     public byte[] PlayersInMatch(byte opCode){
         ArrayList<byte[]> teamBytes = new ArrayList<>();
-        int length = 2;
+        int length = 3;
         for(byte teamID : MatchTeam.TeamCodes){
             byte[] teamPlayers = _matchTeams.get(teamID).GetPlayerBytes();
             teamBytes.add(teamPlayers);
             length+=teamPlayers.length;
         }
-        byte[] toReturn = ByteUtils.ArrayListToByteArray(teamBytes, length, 2);
+        byte[] toReturn = ByteUtils.ArrayListToByteArray(teamBytes, length, 3);
         toReturn[0] = opCode;
         toReturn[1] = _objectIDAsByte;
+        toReturn[2] = GetTeamsAliveByte();
         return toReturn;
+    }
+    protected byte GetTeamsAliveByte(){
+        return 7;
     }
     public void SendAllPlayerData(byte requesterID){
         ArrayList<byte[]> playerData = new ArrayList<>();

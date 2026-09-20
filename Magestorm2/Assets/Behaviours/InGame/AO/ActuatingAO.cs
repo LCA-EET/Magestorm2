@@ -15,20 +15,23 @@ public class ActuatingAO : ActivateableObject
 
     protected virtual void Start()
     {
+        _a = _default;
+        _b = _end;
         _actuating = false;
         _actuationElapsed = 0;
         _actuationTime = Vector3.Distance(_a, _b) / ActuationSpeed;
     }
+
     protected override void ApplyStateChange(bool force)
     {
+        _a = _currentState == 0 ? _end : _default;
+        _b = _currentState == 0 ? _default : _end;
         base.ApplyStateChange(force);
-        if(_actuationElapsed > 0.05f) // for further investigation. It is unclear how _actuationElapsed is being updated when _actuating is false.
+        if(_actuationElapsed> 0.05f)
         {
             OnInterrupt();
-            // the actuation was interrupted.
         }
         _actuating = true;
-        //
     }
     protected virtual void OnInterrupt()
     {

@@ -29,7 +29,23 @@ public class UIJoinMatch : ValidatableForm
         ChaosPlayerList.FillTeam((RemotePlayerData[])matchParams[1]);
         BalancePlayerList.FillTeam((RemotePlayerData[])matchParams[2]);
         OrderPlayerList.FillTeam((RemotePlayerData[])matchParams[3]);
-
+        byte teamsAliveByte = (byte)matchParams[4];
+        if(teamsAliveByte != 7)
+        {
+            BitArray ba = new BitArray(new byte[] { teamsAliveByte });
+            if (!ba[0])
+            {
+                ChaosPlayerList.gameObject.SetActive(false);
+            }
+            if (!ba[1])
+            {
+                BalancePlayerList.gameObject.SetActive(false);
+            }
+            if (!ba[2])
+            {
+                OrderPlayerList.gameObject.SetActive(false);
+            }
+        }
         MatchIDText.text = Language.BuildString(98,_match.MatchID.ToString());  //
         MatchLevelText.text = Language.BuildString(100,_match.SceneName);       //
         MatchCreatorText.text = Language.BuildString(99, _match.CreatorName);   //

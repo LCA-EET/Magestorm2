@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private float _rotationLimit = 10f;
     private float _csElapsed = 0.0f;
     private float _csInterval = 0.33f;
-    private float _yRotateCheck, _priorY;
+    private float _yRotateCheck, _priorYrot, _priorYpos;
     private float _controllerHeight, _controllerCrouchHeight;
     private int _prPacketID = 0;
     private Vector3 _controllerCenter, _controllerCrouchCenter, _cameraLocalPosition, _cameraCrouchedPosition;
@@ -88,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
             _yRotateCheck = transform.eulerAngles.y;
             
             bool positionExceedance = MinimumReportingExceedance(transform.position, ref _priorPosition, _positionLimit);
-            bool rotationExceedance = MinimumReportingExceedance(_yRotateCheck, ref _priorY, _rotationLimit);
+            bool rotationExceedance = MinimumReportingExceedance(_yRotateCheck, ref _priorYrot, _rotationLimit);
             if (positionExceedance && rotationExceedance)
             {
                 byte[] prData = new byte[16];
@@ -102,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (rotationExceedance)
             {
-                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, BitConverter.GetBytes(_priorY), pmdByte, ref _prPacketID));
+                Game.SendInGameBytes(InGame_Packets.PlayerMovedPacket(1, BitConverter.GetBytes(_priorYrot), pmdByte, ref _prPacketID));
             }
             else if (_pmdCheck != pmdByte)
             {
@@ -167,14 +167,25 @@ public class PlayerMovement : MonoBehaviour
     {
         _pc = pc;
     }
+    private void HitCeilingCheck()
+    {
+        if(_priorYpos == transform.position.y && _midJump)
+        {
+            _forceDirection.y = 0;
+            _verticalSpeed = 0;
+        }
+        _priorYpos = transform.position.y;
+    }
     private bool UprightMovement()
     {
         float forwardAcceleration = _forwardAcceleration;
         float lateralAcceleration = _lateralAcceleration;
         float maxForwardSpeed = _maxForwardSpeed;
         float maxLateralSpeed = _maxLateralSpeed;
-        
-        if (Game.InputSet(InputControl.Run, Game.GameMode) && _pc.CurrentStamina > 0)
+        HitCeilingCheck();
+        if (Game.InputSet(InputControl.Run, Game.GameMode) &&
+            !Game.InputSet(InputControl.Backward, Game.GameMode) && 
+            _pc.CurrentStamina > 0)
         {
             _pmd.SetRunning(true);
             forwardAcceleration *= 3;

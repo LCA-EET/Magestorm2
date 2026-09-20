@@ -10,17 +10,12 @@ public class TranslatingAO : ActuatingAO
         _default = ActuatingObject.transform.position;
         _priorPosition = _default;
         _end = EndPosition.transform.position;
-        _a = _default;
-        _b = _end;
         base.Start();
     }
     protected override void Update()
     {
         base.Update();
-        if (_resetCountDown && (_resetCountdownPA != null))
-        {
-            _resetCountdownPA.ProcessAction(Time.deltaTime);
-        }
+        
         if (_actuating)
         {
             Vector3 calculatedLerp = SharedFunctions.CalculateVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b);
@@ -53,8 +48,6 @@ public class TranslatingAO : ActuatingAO
         }
         else
         {
-            _a = _currentState == 0 ? _end : _default;
-            _b = _currentState == 0 ? _default : _end;
             base.ApplyStateChange(force);
         }
     }

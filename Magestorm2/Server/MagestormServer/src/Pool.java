@@ -21,8 +21,14 @@ public class Pool {
                 _team = biaser.GetTeamID();
             }
             else{
-                _bias = 0;
-                _team = MatchTeam.Neutral;
+                if(_team != MatchTeam.Neutral){
+                    _bias = 0;
+                    _team = MatchTeam.Neutral;
+                }
+                else{
+                    _bias = difference;
+                    _team = biaser.GetTeamID();
+                }
             }
         }
         if(_bias > 100){

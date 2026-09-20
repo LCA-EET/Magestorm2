@@ -44,17 +44,17 @@ public class ByteUtils {
     }
 
     public static byte[] IntToByteArray(int value) {
-        return _intBuffer.putInt(0, value).array();
+        return _intBuffer.putInt(0, value).array().clone();
     }
 
     public static byte[] FloatToByteArray(float value){
-        return  _floatBuffer.putFloat(0, value).array();
+        return  _floatBuffer.putFloat(0, value).array().clone();
     }
 
-    public static byte[] ShortToByteArray(short value){return _shortBuffer.putShort(0, value).array();}
+    public static byte[] ShortToByteArray(short value){return _shortBuffer.putShort(0, value).array().clone();}
 
     public static byte[] LongToByteArray(long value){
-        return _longBuffer.putLong(0, value).array();
+        return _longBuffer.putLong(0, value).array().clone();
     }
 
     public static byte[] ArrayListToByteArray(ArrayList<byte[]> arrayList, int totalLength, int startIndex){

@@ -40,6 +40,10 @@ public class ActivateableObject : MonoBehaviour, IComparable<ActivateableObject>
         {
             _reactivationCountdownPA.ProcessAction(Time.deltaTime);
         }
+        if (_resetCountDown && (_resetCountdownPA != null))
+        {
+            _resetCountdownPA.ProcessAction(Time.deltaTime);
+        }
     }
 
     public void RegisterObject(byte objectKey)

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering;
 public class Wall : SpawnedSpell
 {
     public bool ScaleWall;
@@ -21,12 +20,7 @@ public class Wall : SpawnedSpell
         if (ScaleWall)
         {
             _yInitialScale = _scaling.y;
-            //transform.localScale = Vector3.zero;
         }
-    }
-    private void IncreaseWallScale()
-    {
-
     }
     public void DestroyWall()
     {
@@ -42,7 +36,6 @@ public class Wall : SpawnedSpell
             {
                 _scaleElapsed = 1.0f;
             }
-            //transform.localPosition = new Vector3(_position.x, _position.y - ((_scaling.y / 2) * (1.0f - _scaleElapsed)), _position.z);
             transform.localPosition = new Vector3(_position.x, DetermineYPosition(), _position.z);
             _scaling.y = _yInitialScale * _scaleElapsed;
             transform.localScale = _scaling;

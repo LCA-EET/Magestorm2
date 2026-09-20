@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Shrine : BiasableTrigger
 {
-    
+    public ShrineVFX ChaosVFX, BalanceVFX, OrderVFX;
+    private ShrineVFX _usedVFX;
     public LeyInfluencer LeyInfluencer;
     public BiasIndicator Indicator;
     public byte ShrinePower = 100;
@@ -45,6 +44,19 @@ public class Shrine : BiasableTrigger
         }
         new PeriodicAction(5.0f, BiasShrine, _actionList);
         Indicator.ChangeBias(Team);
+        switch (team)
+        {
+            case Team.Balance:
+                _usedVFX = BalanceVFX;
+                break;
+            case Team.Chaos:
+                _usedVFX = ChaosVFX;
+                break;
+            case Team.Order:
+                _usedVFX = OrderVFX;
+                break;
+        }
+        UpdateEmissionRate(BiasAmount / 100.0f);
     }
     public void Start()
     {
@@ -72,7 +84,17 @@ public class Shrine : BiasableTrigger
             ShrineManager.CheckVictoryCondition();
         }
         ComponentRegister.ShrinePanel.SetFill(Team, BiasAmount);
-        TorchManager.AdjustTeamTorchIntensity(Team, BiasAmount / 100.0f);
+        float healthPct = BiasAmount / 100.0f;
+        TorchManager.AdjustTeamTorchIntensity(Team, healthPct);
+        UpdateEmissionRate(healthPct);
+    }
+    private void UpdateEmissionRate(float ratePercent)
+    {
+        if(_usedVFX != null)
+        {
+            _usedVFX.UpdateRate(ratePercent);
+            _usedVFX.gameObject.SetActive(ratePercent > 0);
+        }
     }
     public void AdjustHealth(byte newHealth, byte adjusterID)
     {

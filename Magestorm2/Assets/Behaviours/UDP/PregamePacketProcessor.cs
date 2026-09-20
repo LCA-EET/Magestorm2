@@ -189,7 +189,7 @@ public class PregamePacketProcessor : UDPProcessor
     {
         
         byte matchID = _decrypted[1];
-        int index = 2;
+        int index = 3;
         RemotePlayerData[] neutralPlayers = ProcessMatchPlayers(ref index);
         RemotePlayerData[] chaosPlayers = ProcessMatchPlayers(ref index);
         RemotePlayerData[] balancePlayers = ProcessMatchPlayers(ref index);
@@ -197,7 +197,7 @@ public class PregamePacketProcessor : UDPProcessor
         ListedMatch match = null;
         if(ActiveMatches.GetMatch(matchID, ref match))
         {
-            SharedFunctions.Params = new object[] { match, chaosPlayers, balancePlayers, orderPlayers };
+            SharedFunctions.Params = new object[] { match, chaosPlayers, balancePlayers, orderPlayers, _decrypted[2] };
             ComponentRegister.UIPrefabManager.InstantiateJoinMatch();
         }      
     }

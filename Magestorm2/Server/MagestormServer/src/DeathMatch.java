@@ -98,8 +98,15 @@ public class DeathMatch extends Match{
             _durationRemaining = 0;
         }
     }
-
-
+    @Override
+    protected byte GetTeamsAliveByte(){
+        byte toReturn = (byte)ByteUtils.BitsToInt(new boolean[]{
+                IsTeamAlive(MatchTeam.Chaos),
+                IsTeamAlive(MatchTeam.Balance),
+                IsTeamAlive(MatchTeam.Order)});
+        Main.LogDebug("Teams Alive Byte = " + toReturn);
+        return toReturn;
+    }
     @Override
     protected void MatchEndedNotification(ArrayList<RemoteClient> remainingClients){
         SendToCollection(Packets.MatchEndedPacket(_matchWinner), remainingClients);

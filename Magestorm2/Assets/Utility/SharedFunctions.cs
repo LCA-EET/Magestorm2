@@ -317,8 +317,10 @@ public static class SharedFunctions
     }
     public static Vector3 CalculateVector3Lerp(ref float elapsed, float lerpPeriod, Vector3 starting, Vector3 ending)
     {
+        Debug.Log("Elapsed: " + elapsed);
         elapsed += Time.deltaTime;
         float percentComplete = elapsed / lerpPeriod;
+        Debug.Log("Lerp % Complete: " + percentComplete);
         if (percentComplete >= 1.0f)
         {
             percentComplete = 1.0f;
