@@ -11,6 +11,8 @@ public class ShrineVFX : MonoBehaviour
     private void Awake()
     {
         Initialize();
+        GameSettings.ApplyLightShadowSetting(A);
+        GameSettings.ApplyLightShadowSetting(B);
     }
 
     private void Initialize()

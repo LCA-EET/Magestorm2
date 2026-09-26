@@ -46,4 +46,12 @@ public class RemoteClientManager {
         return toRemove;
     }
 
+    public static void PrintConnectedClients(){
+        StringBuilder sb = new StringBuilder();
+        for(RemoteClient rc : _pregameClients.values()){
+            sb.append(rc.toString());
+        }
+        System.out.println(sb);
+    }
+
 }

@@ -13,6 +13,7 @@ public class Portal : Trigger
             GameObject selectedExit = Exits[exitID];
             ComponentRegister.PC.UpdatePosition(selectedExit.transform.position);
             ComponentRegister.PC.transform.eulerAngles = selectedExit.transform.eulerAngles;
+            Game.PCAvatar.PlayAudioClip(Game.Clips.SFXTeleport);
         }
     }
 

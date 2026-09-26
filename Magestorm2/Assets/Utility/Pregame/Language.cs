@@ -27,6 +27,7 @@ public static class Language
             _languageUpdaters = new List<LanguageUpdater>();
             IngestLanguageFiles();
             _builder = new StringBuilder();
+            
             SelectedLanguage = PlayerPrefs.GetInt(GameSettings.Language, (byte)Languages.English);
             _init = true;
         }

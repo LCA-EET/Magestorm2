@@ -50,13 +50,46 @@ MonoBehaviour:
   SFXWaterSplash:
   - {fileID: 8300000, guid: 1328afec2f11be7428b70f2a70c725be, type: 3}
   - {fileID: 8300000, guid: fff1d835f69bf004484fe9ee27c7cc14, type: 3}
-  SFXFootstep_Stone: {fileID: 8300000, guid: 886a3f1de50fb1a48a0b1ba88b238539, type: 3}
-  SFXFootstep_Wood: {fileID: 8300000, guid: 886a3f1de50fb1a48a0b1ba88b238539, type: 3}
-  SFXFootstep_Grass: {fileID: 8300000, guid: 886a3f1de50fb1a48a0b1ba88b238539, type: 3}
-  SFXFootstep_Dirt: {fileID: 8300000, guid: 886a3f1de50fb1a48a0b1ba88b238539, type: 3}
+  SFXFootstep_Stone:
+  - {fileID: 8300000, guid: 15409980396805a448190d994d2be2c7, type: 3}
+  - {fileID: 8300000, guid: 7264c0a562cdea242b82f5c3a5528dea, type: 3}
+  - {fileID: 8300000, guid: 9f101c8774bfe294793fec671bd6badd, type: 3}
+  - {fileID: 8300000, guid: 362cc06b1d3d977438f7fede75c14b2c, type: 3}
+  - {fileID: 8300000, guid: 4f26c0a5985a4754aacb5912a18c97d2, type: 3}
+  - {fileID: 8300000, guid: 31d4ff58695d5fe46945933576f3882b, type: 3}
+  - {fileID: 8300000, guid: 962a4aba1c67e0347b714cd74d69b744, type: 3}
+  SFXFootstep_Wood:
+  - {fileID: 8300000, guid: 15409980396805a448190d994d2be2c7, type: 3}
+  - {fileID: 8300000, guid: 7264c0a562cdea242b82f5c3a5528dea, type: 3}
+  - {fileID: 8300000, guid: 9f101c8774bfe294793fec671bd6badd, type: 3}
+  - {fileID: 8300000, guid: 362cc06b1d3d977438f7fede75c14b2c, type: 3}
+  - {fileID: 8300000, guid: 4f26c0a5985a4754aacb5912a18c97d2, type: 3}
+  - {fileID: 8300000, guid: 31d4ff58695d5fe46945933576f3882b, type: 3}
+  - {fileID: 8300000, guid: 962a4aba1c67e0347b714cd74d69b744, type: 3}
+  SFXFootstep_Grass:
+  - {fileID: 8300000, guid: 15409980396805a448190d994d2be2c7, type: 3}
+  - {fileID: 8300000, guid: 7264c0a562cdea242b82f5c3a5528dea, type: 3}
+  - {fileID: 8300000, guid: 9f101c8774bfe294793fec671bd6badd, type: 3}
+  - {fileID: 8300000, guid: 362cc06b1d3d977438f7fede75c14b2c, type: 3}
+  - {fileID: 8300000, guid: 4f26c0a5985a4754aacb5912a18c97d2, type: 3}
+  - {fileID: 8300000, guid: 31d4ff58695d5fe46945933576f3882b, type: 3}
+  - {fileID: 8300000, guid: 962a4aba1c67e0347b714cd74d69b744, type: 3}
+  SFXFootstep_Dirt:
+  - {fileID: 8300000, guid: 15409980396805a448190d994d2be2c7, type: 3}
+  - {fileID: 8300000, guid: 7264c0a562cdea242b82f5c3a5528dea, type: 3}
+  - {fileID: 8300000, guid: 9f101c8774bfe294793fec671bd6badd, type: 3}
+  - {fileID: 8300000, guid: 362cc06b1d3d977438f7fede75c14b2c, type: 3}
+  - {fileID: 8300000, guid: 4f26c0a5985a4754aacb5912a18c97d2, type: 3}
+  - {fileID: 8300000, guid: 31d4ff58695d5fe46945933576f3882b, type: 3}
+  - {fileID: 8300000, guid: 962a4aba1c67e0347b714cd74d69b744, type: 3}
   SFXWoosh_HeavyFast: {fileID: 8300000, guid: 3deca9672c7484500957efcb75d000f5, type: 3}
   SFXWoosh_HeavyMedium: {fileID: 8300000, guid: 5e3a05f28e6504b82a82523aa957b4d2, type: 3}
   SFXWoosh_HeavySlow: {fileID: 8300000, guid: 472f30ae362af4ad688578ba5f13a113, type: 3}
   SFXWoosh_NormalFast: {fileID: 8300000, guid: 2598657f7deb74cb2a6b901c300996e2, type: 3}
   SFXWoosh_NormalMedium: {fileID: 8300000, guid: 5777bd69665764cfcb1873a61f617a18, type: 3}
   SFXWoosh_NormalSlow: {fileID: 8300000, guid: 2181e93230d2240b5b3b6406da0cace8, type: 3}
+  SFXTeleport: {fileID: 8300000, guid: 0e5107a3cc8725b45bab2cc85b334712, type: 3}
+  SFXOpenDoor: {fileID: 8300000, guid: 22ff568e57cb8654a95daec190cd40eb, type: 3}
+  SFXPortcullis: {fileID: 8300000, guid: 03b6fa362634ba64ab97881f4671f5c2, type: 3}
+  SFXCloseDoor: {fileID: 8300000, guid: 5c2fe128928947e4db9c1eca698c6843, type: 3}
+  SFXMagicElevator: {fileID: 8300000, guid: 2a3aa1bfe2616554a9992cb52c947f9c, type: 3}

@@ -37,8 +37,11 @@ public class MatchCharacter extends TimedObject{
     private float _endingXP, _priorXP;
     private final TimedObjectCollection<Byte, AppliedEffect> _activeEffects;
     private boolean _quitGame;
+    private byte _carriedPotion;
+
     public MatchCharacter(PlayerCharacter pc, byte idInMatch, Match match, long hpRegenTick, MatchTeam team, boolean newToMatch){
         _objectID = idInMatch;
+        _carriedPotion = ControlCodes.Potion_None;
         SetDurationRemaining(ServerParams.IngameInactivityDisconnect);
         _team = team;
         _wallCount = 0;
@@ -118,6 +121,40 @@ public class MatchCharacter extends TimedObject{
     public void DecrementSigilCount() { _sigilCount--; }
     public boolean CanCastAdditionalSigil() {return _sigilCount < _maxSigils; }
     //endregion
+
+    //region Potions
+    public boolean IsCarryingPotion(){
+        return _carriedPotion != ControlCodes.Potion_None;
+    }
+    public byte GetCarriedPotion(){
+        return _carriedPotion;
+    }
+    public void PickedUpPotion(byte potion){
+        if(_carriedPotion != ControlCodes.Potion_None){
+            UsePotion();
+        }
+        _carriedPotion = potion;
+    }
+    public void UsePotion(){
+        switch (_carriedPotion){
+            case ControlCodes.Potion_Health:
+                _currentHP = _maxHP;
+                break;
+            case ControlCodes.Potion_Mana:
+                _currentMana = _maxMana;
+                break;
+            case ControlCodes.Potion_GoldenApple:
+                _currentHP = _maxHP;
+                _currentMana = _maxMana;
+                break;
+        }
+        _carriedPotion = ControlCodes.Potion_None;
+    }
+    public void DropPotion(){
+        _owningMatch.SendToAll(Packets.PotionDroppedPacket(_objectID.byteValue(), _carriedPotion));
+        _carriedPotion = ControlCodes.Potion_None;
+    }
+    //
 
     //region Walls
     public void IncrementWallCount()
@@ -205,6 +242,9 @@ public class MatchCharacter extends TimedObject{
         if(_currentHP == 0){
             _owningMatch.PlayerKilled(this, attacker);
             RemoveAllEffects();
+            if(IsCarryingPotion()){
+                DropPotion();
+            }
         }
     }
     public void DrainMana(float damageAmount){
@@ -401,7 +441,7 @@ public class MatchCharacter extends TimedObject{
     }
     @Override
     public String toString(){
-        return "MCID: " + _objectID + ", TeamID: " + _teamID + ", RC: " + _remote.toString();
+        return _pc.toString() + "MCID: " + _objectID + ", TeamID: " + _teamID + ", RC: " + _remote.toString();
     }
 
 }

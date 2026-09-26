@@ -223,6 +223,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TranslatingAO
   NumStates: 2
+  StateClips: 0200000002000000
+  DelayClips: 0000
   ActivationAudio: {fileID: 2492921356366160281}
   ReactivationInterval: 0
   SelfResetInterval: 0
@@ -357,6 +359,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TranslatingAO
   NumStates: 2
+  StateClips: 0200000002000000
+  DelayClips: 0000
   ActivationAudio: {fileID: 2984238589877242042}
   ReactivationInterval: 0
   SelfResetInterval: 0
@@ -2518,6 +2522,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TranslatingAO
   NumStates: 2
+  StateClips: 
+  DelayClips: 
   ActivationAudio: {fileID: 6970085378219383297}
   ReactivationInterval: 0
   SelfResetInterval: 5

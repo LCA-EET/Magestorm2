@@ -85,6 +85,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pillar_B
       objectReference: {fileID: 0}
+    - target: {fileID: 4926167782490790920, guid: d2670d0ea7d6e7f4cb7e6be1a5541d46, type: 3}
+      propertyPath: m_AdditionalLightsShadowResolutionTier
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

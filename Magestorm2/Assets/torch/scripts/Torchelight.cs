@@ -8,12 +8,13 @@ public class Torchelight : MonoBehaviour {
 	private float _priorIntensity;
 	private Light _lightComponent;
 	private float[] _rates = { 20f, 15f, 7f, 12f };
-	void Start () {
-		_lightComponent = TorchLight.GetComponent<Light>();
-		_lightComponent.intensity = IntensityLight;
-		_priorIntensity = IntensityLight;
+    private void Awake()
+    {
+        _lightComponent = TorchLight.GetComponent<Light>();
+        _lightComponent.intensity = IntensityLight;
+        _priorIntensity = IntensityLight;
+        GameSettings.ApplyLightShadowSetting(_lightComponent);
     }
-
 	public void SetComponentEmissions(ParticleSystem system, int index)
 	{
         SetEmissionRate(system, _rates[index]);

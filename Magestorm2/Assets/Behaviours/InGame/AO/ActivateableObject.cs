@@ -5,6 +5,8 @@ public class ActivateableObject : MonoBehaviour, IComparable<ActivateableObject>
 {
     protected byte _objectKey;
     public byte NumStates = 2;
+    public ClipID[] StateClips;
+    public bool[] DelayClips;
     public AudioSource ActivationAudio;
     public byte ReactivationInterval; // The minimum amount of time that must elapse, in seconds, before the AO can be reactivated.
     public byte SelfResetInterval = 0; // The time that must elapse before the AO resets to its default state, after completing the transition to a non-default state.
@@ -73,15 +75,36 @@ public class ActivateableObject : MonoBehaviour, IComparable<ActivateableObject>
         {
             _readyToActivate = false;
         }
-        if (ActivationAudio.clip != null)
-        {
-            ActivationAudio.Play();
-        }
     }
     public void StatusChanged(byte newStatus, bool force)
     {
+        if (!force)
+        {
+            if (ValidClipIndex(_currentState))
+            {
+                if (!DelayClips[_currentState])
+                {
+                    Game.Clips.PlayClip(StateClips[_currentState], ActivationAudio);
+                }
+            }
+        }
         _currentState = newStatus;
         ApplyStateChange(force);
+    }
+    public void OnStateChangeEnd(byte priorState)
+    {
+        ActivationAudio.Stop();
+        if (ValidClipIndex(priorState))
+        {
+            if (DelayClips[priorState])
+            {
+                Game.Clips.PlayClip(StateClips[priorState], ActivationAudio);
+            }
+        }
+    }
+    protected bool ValidClipIndex(byte toCheck)
+    {
+        return toCheck < DelayClips.Length && toCheck < StateClips.Length;
     }
     private void ResetToDefault()
     {

@@ -7,17 +7,22 @@ public class InGameClips : MonoBehaviour
     public AudioClip SFXBias;
     public AudioClip SFXDestroyedShrine;
     public AudioClip[] SFXWaterSplash;
-    public AudioClip SFXFootstep_Stone;
-    public AudioClip SFXFootstep_Wood;
-    public AudioClip SFXFootstep_Grass;
-    public AudioClip SFXFootstep_Dirt;
+    public AudioClip[] SFXFootstep_Stone;
+    public AudioClip[] SFXFootstep_Wood;
+    public AudioClip[] SFXFootstep_Grass;
+    public AudioClip[] SFXFootstep_Dirt;
     public AudioClip SFXWoosh_HeavyFast;
     public AudioClip SFXWoosh_HeavyMedium;
     public AudioClip SFXWoosh_HeavySlow;
     public AudioClip SFXWoosh_NormalFast;
     public AudioClip SFXWoosh_NormalMedium;
     public AudioClip SFXWoosh_NormalSlow;
-
+    public AudioClip SFXTeleport;
+    public AudioClip SFXOpenDoor;
+    public AudioClip SFXPortcullis;
+    public AudioClip SFXCloseDoor;
+    public AudioClip SFXMagicElevator;
+    
     public void Awake()
     {
         Game.Clips = this;
@@ -38,6 +43,30 @@ public class InGameClips : MonoBehaviour
     {
         source.PlayOneShot(SFXBias);
     }
+    public void PlayClip(ClipID clipID, AudioSource source)
+    {
+        AudioClip toPlay = null;
+        switch (clipID)
+        {
+            case ClipID.DoorOpen:
+                toPlay = SFXOpenDoor;
+                break;
+            case ClipID.DoorClose:
+                toPlay = SFXCloseDoor;
+                break;
+            case ClipID.Portcullis:
+                toPlay = SFXPortcullis;
+                break;
+            case ClipID.MagicElevator:
+                toPlay = SFXMagicElevator;
+                break;
+                
+        }
+        if(toPlay != null)
+        {
+            PlayClip(toPlay, source, source.maxDistance);
+        }
+    }
     public void PlayClip(AudioClip toPlay, AudioSource source, float maxDistance)
     {
         source.maxDistance = maxDistance;
@@ -45,7 +74,7 @@ public class InGameClips : MonoBehaviour
     }
     public void PlayFootstep(Footstep step, AudioSource source)
     {
-        AudioClip toPlay = null;
+        AudioClip[] toPlay = null;
         switch (step)
         {
             case Footstep.Stone:
@@ -61,10 +90,10 @@ public class InGameClips : MonoBehaviour
                 toPlay = SFXFootstep_Grass;
                 break;
             case Footstep.Water:
-                toPlay = SFXWaterSplash[1];
+                toPlay = SFXWaterSplash;
                 break;
         }
-        PlayClip(toPlay, source, FootstepAudioDistance);
+        PlayClip(toPlay[SharedFunctions.RandomInt(0, toPlay.Length - 1)], source, FootstepAudioDistance);
     }
     public void PlayWoosh(Woosh woosh, AudioSource source)
     {
@@ -95,4 +124,11 @@ public class InGameClips : MonoBehaviour
             source.PlayOneShot(toPlay);
         }
     }
+}
+public enum ClipID
+{
+    DoorClose,
+    DoorOpen,
+    Portcullis,
+    MagicElevator
 }

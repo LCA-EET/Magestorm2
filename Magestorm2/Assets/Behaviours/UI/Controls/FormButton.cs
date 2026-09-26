@@ -26,7 +26,11 @@ public enum ButtonType : byte
     Misc2 = 19,
     Misc3 = 20,
     Misc4 = 21,
-    Misc5 = 22
+    Misc5 = 22,
+    Misc6 = 23,
+    Misc7 = 24,
+    Misc8 = 25,
+    Misc9 = 26
 }
 public class FormButton : MonoBehaviour
 {

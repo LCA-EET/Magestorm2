@@ -189,4 +189,8 @@ public class PlayerCharacter {
     public byte GetStatistic(byte statCode){
         return _statistics[statCode];
     }
+    @Override
+    public String toString(){
+        return "PCID: " + _characterID + ", Name: " + _characterName + ", ";
+    }
 }

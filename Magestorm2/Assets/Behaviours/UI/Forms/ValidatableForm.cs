@@ -12,6 +12,7 @@ public class ValidatableForm : InstantiatableForm
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //FormButtons = GetComponentsInChildren<FormButton>();
         AssociateFormToButtons();
     }
 

@@ -48,6 +48,9 @@ public class UIIngameMenu : ValidatableForm
                 Debug.Log("Sending leaderboard request.");
                 Game.SendInGameBytes(InGame_Packets.LeaderboardPacket());
                 break;
+            case ButtonType.Misc6:
+                ComponentRegister.UIPrefabManager.InstantiateUIGraphics();
+                break;
         }
     }
 }

@@ -53,5 +53,8 @@ public class InGame_Send {
     public static final byte ApplyForce = 51;
     public static final byte AllPlayerData = 52;
     public static final byte MaxCast = 53;
+    public static final byte SpawnPotion = 54;
+    public static final byte PotionTaken = 55;
+    public static final byte PotionDropped = 56;
 
 }

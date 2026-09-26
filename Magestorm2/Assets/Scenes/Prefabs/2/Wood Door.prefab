@@ -126,6 +126,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RotatingAO
   NumStates: 2
+  StateClips: 0100000000000000
+  DelayClips: 0001
   ActivationAudio: {fileID: 555287165714002533}
   ReactivationInterval: 0
   SelfResetInterval: 5

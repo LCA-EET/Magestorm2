@@ -160,12 +160,14 @@ public class Packets {
         byte[] characterBytes = Database.GetCharactersOfAccount(accountID); // this includes the name length as the first byte
         //Main.LogMessage("Character bytes retrieved: " + characterBytes.length);
         byte[] toSend;
+        byte discordLength = (byte)ServerParams.DiscordBytes.length;
+
         if(characterBytes.length > 0){
-            toSend = new byte[1 + 4 + 8 + 1 + 1 + characterBytes.length];
-            System.arraycopy(characterBytes, 0, toSend, 15, characterBytes.length);
+            toSend = new byte[1 + 4 + 8 + 1 + 1 + 1 + discordLength + characterBytes.length];
+            System.arraycopy(characterBytes, 0, toSend, 15 + 1 + discordLength, characterBytes.length);
         }
         else{
-            toSend = new byte[1 + 4 + 8 + 1 + 1];
+            toSend = new byte[1 + 4 + 8 + 1 + 1 + 1 + discordLength];
         }
         toSend[0] = Pregame_Send.LogInSucceeded;
         byte[] accountBytes = ByteUtils.IntToByteArray(accountID);
@@ -174,6 +176,32 @@ public class Packets {
         System.arraycopy(timeBytes, 0, toSend, 5, 8);
         toSend[13] = ServerParams.TickInterval;
         toSend[14] = ServerParams.PollingFactor;
+        toSend[15] = discordLength;
+        System.arraycopy(ServerParams.DiscordBytes, 0, toSend, 16, discordLength);
+        return Cryptographer.Encrypt(toSend);
+    }
+
+    public static byte[] PotionSpawnPacket(byte potion, byte location){
+        byte[] toSend = new byte[3];
+        toSend[0] = InGame_Send.SpawnPotion;
+        toSend[1] = potion;
+        toSend[2] = location;
+        return Cryptographer.Encrypt(toSend);
+    }
+
+    public static byte[] PotionTakenPacket(byte takenBy, byte potion){
+        byte[] toSend = new byte[3];
+        toSend[0] = InGame_Send.PotionTaken;
+        toSend[1] = takenBy;
+        toSend[2] = potion;
+        return Cryptographer.Encrypt(toSend);
+    }
+
+    public static byte[] PotionDroppedPacket(byte droppedBy, byte dropped){
+        byte[] toSend = new byte[3];
+        toSend[0] = InGame_Send.PotionDropped;
+        toSend[1] = droppedBy;
+        toSend[2] = dropped;
         return Cryptographer.Encrypt(toSend);
     }
 

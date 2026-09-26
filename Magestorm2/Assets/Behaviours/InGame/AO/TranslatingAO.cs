@@ -33,6 +33,7 @@ public class TranslatingAO : ActuatingAO
             if (_actuationElapsed == 0) // this is 0 when it is reset by the CalculateVector3Lerp function above. It is reset when elapsed >= actuationTime.
             {
                 _actuating = false;
+                OnStateChangeEnd((byte)((_currentState + 1) % 2));
                 if (ActuatingObject.transform.position == _end)
                 {
                     _resetCountDown = true;

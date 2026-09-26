@@ -37,5 +37,7 @@
                         ReportResistableHit = 36,
                         ReportHitByWall = 37,
                         TriggeredSigil = 38,
-                        AllPlayerData = 39;
+                        AllPlayerData = 39,
+                        UsePotion = 40,
+                        PotionTaken = 41;
 }

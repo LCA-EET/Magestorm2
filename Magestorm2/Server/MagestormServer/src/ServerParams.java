@@ -19,7 +19,7 @@ public class ServerParams {
     public static boolean SymmetricEncryption = false;
     public static short ListeningPort;
     public static byte QMEnabled = 0;
-
+    public static byte[] DiscordBytes;
     public static void LoadParams(String paramFilePath){
         ExecutionDirectory = System.getProperty("user.dir");
         System.out.println("Loading parameters from " + paramFilePath);
@@ -47,6 +47,7 @@ public class ServerParams {
             MaxMatches = Byte.parseByte(paramScanner.nextLine());
             ExpMultiplier = Float.parseFloat(paramScanner.nextLine());
             QMEnabled = Byte.parseByte(paramScanner.nextLine());
+            DiscordBytes = ByteUtils.UTF8toBytes(paramScanner.nextLine());
             System.out.println("Log file: " + LogFilePath);
             System.out.println("Error file: " + ErrorFilePath);
             System.out.println("Debug file: " + DebugFilePath);

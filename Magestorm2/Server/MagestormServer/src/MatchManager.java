@@ -38,6 +38,32 @@ public class MatchManager{
         }
     }
 
+    public static void EndMatch(byte matchID){
+        if (_activeMatches.containsKey(matchID)) {
+            _activeMatches.get(matchID).SetDurationRemaining(0);
+        }
+    }
+    public static void ExtendMatch(byte matchID, byte numMinutes)
+    {
+        if(_activeMatches.containsKey(matchID)){
+            _activeMatches.get(matchID).ExtendMatch(numMinutes);
+        }
+    }
+
+
+    public static void ListMatchCharacters(){
+        for(Match m : _activeMatches.values()){
+            m.ListPlayersInMatch();
+        }
+    }
+
+    public static void PrintMatchList(){
+        StringBuilder sb = new StringBuilder();
+        for(Match m : _activeMatches.values()){
+            sb.append(m.ToString());
+        }
+        System.out.println(sb);
+    }
     public static RemoteClient Subscribe(int accountID, boolean subscribe, int charID){
         Main.LogMessage("MatchManager.Subscribe: " + charID +", " + subscribe);
         RemoteClient rc = RemoteClientManager.GetClient(accountID);

@@ -95,6 +95,7 @@ public static class Game
             ProfanityChecker.Init();
             SpellIcons.Init();
             SharedFunctions.Initialize();
+            GameSettings.InitializeGraphicsSettings();
             Match.Init();
             _init = true;
         }

@@ -144,6 +144,7 @@ MonoBehaviour:
   PrefabSpellInfo: {fileID: 6796240946523118231, guid: 2e1c7d14dca38334aa05dc40f0b35080, type: 3}
   PrefabAvailableSpells: {fileID: 6796240946523118231, guid: 220bbbfd130c785489a01c2ee17279d3, type: 3}
   PrefabUISpellSlots: {fileID: 6796240946523118231, guid: 29488e4e5e86dad4984d9949a846df1a, type: 3}
+  PrefabUIGraphics: {fileID: 9190357501265961709, guid: 6fa88e849969a53489b132da89d31c35, type: 3}
 --- !u!82 &7185910421088315080
 AudioSource:
   m_ObjectHideFlags: 0

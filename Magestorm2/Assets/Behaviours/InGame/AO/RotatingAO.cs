@@ -25,8 +25,8 @@ public class RotatingAO : ActuatingAO
                 if (ActuatingObject.transform.localEulerAngles == _end)
                 {
                     _resetCountDown = true;
-                    //Debug.Log("RCD is TRUE.");
                 }
+                OnStateChangeEnd((byte)((_currentState + 1) % 2));//);
             }
         }
     }

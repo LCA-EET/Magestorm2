@@ -1,15 +1,23 @@
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Random;
 
 public class SharedFunctions {
 
 
     private static Random _random;
+    private static SimpleDateFormat _sdf;
     public static void Initialize(){
+        _sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        _sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         _random = new Random();
+    }
+    public static byte GetRandomByte(int min, int max){
+        return (byte)_random.nextInt(min, max + 1);
     }
     public static float GetRandomFloat(){
         return _random.nextFloat();
@@ -26,6 +34,12 @@ public class SharedFunctions {
         }
         return toReturn;
     }
+    public static String DateLongToString(long millis)
+    {
+        Date date = new Date(millis); // constructor takes millis
+        return _sdf.format(date);
+    }
+
     public static void FillEffects(long number, Collection<Byte> collection){
         boolean[] converted = ByteUtils.LongToBoolArray(number);
         for(byte b = 0; b < converted.length; b++){

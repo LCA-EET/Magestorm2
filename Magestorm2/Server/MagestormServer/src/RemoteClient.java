@@ -45,6 +45,6 @@ public class RemoteClient extends TimedObject{
 
     @Override
     public String toString(){
-        return "ID: " + _objectID + ", " + _address.toString() + ":" + _remotePort + " " + _username;
+        return "Client ID: " + _objectID + ", " + _address.toString() + ":" + _remotePort + " " + _username;
     }
 }

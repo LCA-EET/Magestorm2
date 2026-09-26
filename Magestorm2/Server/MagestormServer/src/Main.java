@@ -37,22 +37,52 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in)) {
             while(Main.Running){
                 System.out.print(">: ");
-                String command = scanner.nextLine();
-                switch(command){
-                    case "lc":
-                        ProcessListRCCommand();
-                        break;
-                    case "exit":
-                    case "ts":
-                    case "terminateserver":
-                        GameServer.TerminateServer();
-                        break;
-                    case "lt":
-                        ThreadMonitor.PrintActiveThreads();
-                        break;
+                String[] params = scanner.nextLine().split(" ");
+                String command = params[0];
+                try {
+                    switch (command) {
+                        case "lc":
+                            ProcessListRCCommand();
+                            break;
+                        case "exit":
+                        case "ts":
+                        case "terminateserver":
+                            GameServer.TerminateServer();
+                            break;
+                        case "lt":
+                            ThreadMonitor.PrintActiveThreads();
+                            break;
+                        case "lm":
+                            MatchManager.PrintMatchList();
+                            break;
+                        case "extendmatch":
+                            ProcessMatchExtension(params);
+                            break;
+                        case "endmatch":
+                            ProcessEndMatch(params);
+                            break;
+                        case "connectedclients":
+                            RemoteClientManager.PrintConnectedClients();
+                            break;
+                        case "listmc":
+                            MatchManager.ListMatchCharacters();
+                            break;
+                    }
+                }
+                catch(Exception ex){
+                    System.out.println("Error: " + ex.getMessage());
                 }
             }
         }
+    }
+    private static void ProcessMatchExtension(String[] params){
+        byte matchID = Byte.parseByte(params[1]);
+        byte minutes = Byte.parseByte(params[2]);
+        MatchManager.ExtendMatch(matchID, minutes);
+    }
+    private static void ProcessEndMatch(String[] params){
+        byte matchID = Byte.parseByte(params[1]);
+        MatchManager.EndMatch(matchID);
     }
 
     private static void ProcessListRCCommand(){

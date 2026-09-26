@@ -7,6 +7,10 @@ public class Spawner : MonoBehaviour
     public GameObject AvatarPrefab;
     public GameObject DeadbodyPrefab;
     public GameObject Marker;
+    public GameObject Prefab_HealthPotion;
+    public GameObject Prefab_ManaPotion;
+    public GameObject Prefab_GoldenApple;
+    public GameObject[] PotionSpawns;
     private Dictionary<byte, SpellSpawner> _spellPrefabs;
     private Dictionary<short, SpawnedSpell> _spellRegistry;
     private Dictionary<byte, VFX> _vfxTable;
@@ -83,7 +87,28 @@ public class Spawner : MonoBehaviour
             Debug.Log("No VFX for code " + vfxCode);
         }
     }
-   
+    public void SpawnPotion(byte potionID, Vector3 position)
+    {
+        GameObject toSpawn = null;
+        switch (potionID)
+        {
+            case ControlCodes.Potion_Health:
+                toSpawn = Prefab_HealthPotion;
+                break;
+            case ControlCodes.Potion_Mana:
+                toSpawn = Prefab_ManaPotion;
+                break;
+            case ControlCodes.Potion_GoldenApple:
+                toSpawn = Prefab_GoldenApple;
+                break;
+        }
+        if (toSpawn != null)
+        {
+            Instantiate(toSpawn);
+            toSpawn.transform.parent = transform.parent;
+            toSpawn.transform.position = position;
+        }
+    }
     private void ExpirationCheck()
     {
         float currentTime = Time.realtimeSinceStartup;

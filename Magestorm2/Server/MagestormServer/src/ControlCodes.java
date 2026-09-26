@@ -117,4 +117,11 @@ public class ControlCodes {
         public static final byte Statistic_Charisma  = 4;
         public static final byte Statistic_Wisdom  = 5;
     //
+
+    //region Potions
+        public static final byte Potion_None = 0;
+        public static final byte Potion_Health = 1;
+        public static final byte Potion_Mana = 2;
+        public static final byte Potion_GoldenApple = 3;
+    //
 }

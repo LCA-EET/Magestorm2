@@ -8,7 +8,7 @@ public class Match extends TimedObject{
     protected final byte _objectIDAsByte;
     protected final int _creatorID;
     protected final byte _sceneID;
-    protected final long _expirationTime;
+    protected long _expirationTime;
     protected final long _regenTick;
     protected final byte[] _creatorName;
     protected final byte[] _matchBytes;
@@ -34,10 +34,13 @@ public class Match extends TimedObject{
     protected short _nextEffectID = 0;
     protected boolean _scoreUpdated = false;
     private long _expCheckElapsed = 0;
+    private long _potionCheckElapsed = 0;
     private final long _expReportInterval = 30000;
     protected boolean _quickMatch;
     protected AntiStack _antiStack;
-
+    protected boolean _potionTaken, _potionCreated;
+    protected byte _potionLocation, _potionType;
+    protected byte[] _potionBytes;
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchType, byte matchOptions){
         _objectID = matchID;
         _objectIDAsByte = (byte)_objectID;
@@ -88,6 +91,15 @@ public class Match extends TimedObject{
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
         _objectStatus = new ConcurrentHashMap<>();
+    }
+    public String ToString(){
+        return "Match ID: " + _objectIDAsByte + ", Scene: " + _sceneID +
+                ", Expiration: " + SharedFunctions.DateLongToString(_expirationTime);
+    }
+    public void ExtendMatch(byte numMinutes){
+        long extension = numMinutes * 60000;
+        _expirationTime += extension;
+        _durationRemaining += extension;
     }
 
     public byte GetASTeam(){
@@ -414,6 +426,14 @@ public class Match extends TimedObject{
         }
 
     }
+
+    public void ListPlayersInMatch(){
+        StringBuilder sb = new StringBuilder("Players in Match " + _objectIDAsByte + "\n");
+        for(MatchCharacter mc : _matchCharacters.values()){
+            sb.append(mc.toString());
+        }
+        System.out.println(sb);
+    }
     public short SpellCast(MatchCharacter caster, Spell spellReference, byte[] decrypted){
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
@@ -531,6 +551,26 @@ public class Match extends TimedObject{
         CountDownTimedObjects(msElapsed);
         PlayerTick(msElapsed);
         ExpTick(msElapsed);
+        PotionCheck(msElapsed);
+    }
+    private void PotionCheck(long msElapsed){
+        _potionCheckElapsed += msElapsed;
+        if(_potionCheckElapsed >= 120000){
+            _potionCheckElapsed = 0;
+            _potionType = SharedFunctions.GetRandomByte(1, ControlCodes.Potion_GoldenApple);
+            _potionLocation = SharedFunctions.GetRandomByte(1, 10);
+            _potionBytes = Packets.PotionSpawnPacket(_potionType, _potionLocation);
+            _potionCreated = true;
+            SendToAll(_potionBytes);
+        }
+    }
+
+    public void PotionTaken(MatchCharacter takenBy){
+        takenBy.PickedUpPotion(_potionType);
+        _potionTaken = true;
+        _potionLocation = 0;
+        SendToAll(Packets.PotionTakenPacket(takenBy.GetIDinMatch(), _potionType));
+        _potionType = ControlCodes.Potion_None;
     }
     private void ExpTick(long msElapsed){
         _expCheckElapsed += msElapsed;

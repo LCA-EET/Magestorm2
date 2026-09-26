@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIKeyMapper : ValidatableForm
@@ -8,8 +9,11 @@ public class UIKeyMapper : ValidatableForm
     private int _indexToChange;
     private InputControl _controlToChange;
     private bool _listening;
+    private int _page;
+    public GameObject[] Pages;
     void Start()
     {
+        _page = 0;
         Game.ControlMode = true;
         _controlTable = InputControls.ControlTableCopy();
         AssociateFormToButtons();
@@ -51,7 +55,40 @@ public class UIKeyMapper : ValidatableForm
                 SaveKeys();
                 CloseForm();
                 break;
+            case ButtonType.Misc3:
+                Debug.Log("M3");
+                DecrementPage();
+                break;
+            case ButtonType.Misc4:
+                IncrementPage();
+                break;
         }
+    }
+    private void ShowPage()
+    {
+        foreach(GameObject page in Pages)
+        {
+            page.SetActive(false);
+        }
+        Pages[_page].SetActive(true);
+    }
+    private void DecrementPage()
+    {
+        _page--;
+        if(_page < 0)
+        {
+            _page = Pages.Length - 1;
+        }
+        ShowPage();
+    }
+    private void IncrementPage()
+    {
+        _page++;
+        if(_page >= Pages.Length)
+        {
+            _page = 0;
+        }
+        ShowPage();
     }
     private void SaveKeys()
     {

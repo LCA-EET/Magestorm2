@@ -81,6 +81,11 @@
     public const byte PlayerStats_Charisma = 4; // affects SP + cleric effects
     public const byte PlayerStats_Wisdom = 5; // affects magician effects
 
+    public const byte Potion_None = 0;
+    public const byte Potion_Health = 1;
+    public const byte Potion_Mana = 2;
+    public const byte Potion_GoldenApple = 3;
+
     public const byte VFX_None = 0;
     public const byte VFX_Banish = 1;
     public const byte VFX_Bleed = 2;
@@ -99,4 +104,8 @@
     public const byte VFX_Wrack = 15;
     public const byte VFX_Splash = 16;
 
+    public const byte Shadows_Off = 1;
+    public const byte Shadows_Low = 2;
+    public const byte Shadows_Medium = 3;
+    public const byte Shadows_High = 4;
 }

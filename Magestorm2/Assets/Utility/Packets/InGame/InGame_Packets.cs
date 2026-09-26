@@ -20,6 +20,14 @@ public static class InGame_Packets
     {
         return new byte[] {InGame_Send.AllPlayerData, MatchParams.IDinMatch};
     }
+    public static byte[] TakePotionPacket(byte potionType)
+    {
+        byte[] unencrypted = new byte[3];
+        unencrypted[0] = InGame_Send.PotionTaken;
+        unencrypted[1] = MatchParams.IDinMatch;
+        unencrypted[2] = potionType;
+        return unencrypted;
+    }
     public static byte[] UpdateLeyPacket(float newLey)
     {
         byte[] unencrypted = new byte[6];

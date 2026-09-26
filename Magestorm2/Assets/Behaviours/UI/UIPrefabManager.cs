@@ -23,6 +23,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabSpellInfo;
     public GameObject PrefabAvailableSpells;
     public GameObject PrefabUISpellSlots;
+    public GameObject PrefabUIGraphics;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -82,6 +83,11 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateLoginForm()
     {
         AddToStack(Instantiate(PrefabLoginScreen));
+    }
+
+    public void InstantiateUIGraphics()
+    {
+        AddToStack(Instantiate(PrefabUIGraphics));
     }
     public void InstantiateJoinMatch()
     {

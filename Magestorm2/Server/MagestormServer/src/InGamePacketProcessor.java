@@ -86,6 +86,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.AllPlayerData:
                     HandleAllPlayerDataRequest();
                     return true;
+                case InGame_Receive.PotionTaken:
+                    HandlePotionTaken();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -93,6 +96,14 @@ public class InGamePacketProcessor extends UDPProcessor{
             return HandleJoinMatchPacket(_remote);
         }
         return false;
+    }
+    private void HandlePotionTaken(){
+        MatchCharacter takenBy = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        if(takenBy != null){
+            if(takenBy.IsAlive()){
+                _owningMatch.PotionTaken(takenBy);
+            }
+        }
     }
     private void HandleAllPlayerDataRequest(){
         _owningMatch.SendAllPlayerData(_decrypted[1]);
