@@ -26,6 +26,10 @@ public class Minimap : MonoBehaviour
                 AddToCullingMask(LayerManager.TeamLayerMask_Order);
                 break;
         }
+        if(GameSettings.GetSettingValue(SettingKey.MinimapLighting) == ControlCodes.MinimapLighting_Off)
+        {
+            RemoveFromCullingMask(LayerManager.LightSourceMask);
+        }
     }
 
     // Update is called once per frame

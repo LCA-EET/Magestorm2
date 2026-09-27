@@ -82,5 +82,11 @@ public enum FormResult : byte
     No = 2
 }
 
-
+public enum SettingKey : byte
+{
+    Shadows = 1,
+    ShadowType = 2,
+    MinimapLighting = 3,
+    LitProjectiles = 4
+}
 

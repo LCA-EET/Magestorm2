@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2330521313543221475}
   - component: {fileID: 1701765635129821037}
   - component: {fileID: 565329860705952413}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: etincelles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4799,7 +4799,7 @@ GameObject:
   - component: {fileID: 2695576918696037368}
   - component: {fileID: 862769603313307906}
   - component: {fileID: 5117500134306648191}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: fumee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9585,7 +9585,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5746162844606867995}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: TeamTorch_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9619,7 +9619,7 @@ GameObject:
   - component: {fileID: 9023606975725346468}
   - component: {fileID: 451531131496398029}
   - component: {fileID: 6920420466185001930}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: base_flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14461,7 +14461,7 @@ GameObject:
   - component: {fileID: 6735320402853668294}
   - component: {fileID: 4636881456187573952}
   - component: {fileID: 6020390730917253428}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19267,7 +19267,7 @@ GameObject:
   - component: {fileID: 4370957663087378948}
   - component: {fileID: 1297205139219619286}
   - component: {fileID: 5705535517784002751}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: fumee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24055,7 +24055,7 @@ GameObject:
   - component: {fileID: 5210194030279415928}
   - component: {fileID: 7190018416616302069}
   - component: {fileID: 6814499914582068429}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: fumee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28843,7 +28843,7 @@ GameObject:
   - component: {fileID: 7885859069208222511}
   - component: {fileID: 8886321140113185169}
   - component: {fileID: 2192383479710900999}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: etincelles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33631,7 +33631,7 @@ GameObject:
   - component: {fileID: 7738817115125751216}
   - component: {fileID: 139066292498268100}
   - component: {fileID: 1714325264368974468}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: base_flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38473,7 +38473,7 @@ GameObject:
   - component: {fileID: 1380808375861027564}
   - component: {fileID: 7140354417893488681}
   - component: {fileID: 7017225186290040140}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43279,7 +43279,7 @@ GameObject:
   - component: {fileID: 7895602562074097608}
   - component: {fileID: 8318847049250858045}
   - component: {fileID: 2458628380863301358}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48085,7 +48085,7 @@ GameObject:
   - component: {fileID: 5779907167570687646}
   - component: {fileID: 7116416129859544338}
   - component: {fileID: 5923831862333590529}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Torch_light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48212,7 +48212,7 @@ GameObject:
   - component: {fileID: 1011953713617043564}
   - component: {fileID: 4022148596163240764}
   - component: {fileID: 7284731909135771602}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: base_flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53054,7 +53054,7 @@ GameObject:
   - component: {fileID: 1003187887333688007}
   - component: {fileID: 2371964937175917872}
   - component: {fileID: 6325791101585072599}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: base_flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57894,7 +57894,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5388318614834274714}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Neutral
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57929,7 +57929,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 429330182268448577}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Balance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57964,7 +57964,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9106608798575278207}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Order
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58001,7 +58001,7 @@ GameObject:
   - component: {fileID: 599688548307827393}
   - component: {fileID: 1562284515963763604}
   - component: {fileID: 5110352146743780019}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62807,7 +62807,7 @@ GameObject:
   - component: {fileID: 7970810563442496536}
   - component: {fileID: 6562395860659658583}
   - component: {fileID: 1046630596088774473}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: fumee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67595,7 +67595,7 @@ GameObject:
   - component: {fileID: 1106480856211594173}
   - component: {fileID: 3677390954987436885}
   - component: {fileID: 7298323101948623544}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: etincelles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72383,7 +72383,7 @@ GameObject:
   - component: {fileID: 4216395453740993907}
   - component: {fileID: 8883985088071230745}
   - component: {fileID: 6179249454214734419}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: etincelles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77169,7 +77169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7410006651292415005}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Chaos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77206,6 +77206,10 @@ PrefabInstance:
     - target: {fileID: 561048265046567462, guid: a8ad31da5d47353469f82df604821ab0, type: 3}
       propertyPath: m_Name
       value: Torch_A
+      objectReference: {fileID: 0}
+    - target: {fileID: 561048265046567462, guid: a8ad31da5d47353469f82df604821ab0, type: 3}
+      propertyPath: m_Layer
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 901545384655155356, guid: a8ad31da5d47353469f82df604821ab0, type: 3}
       propertyPath: m_LocalPosition.x

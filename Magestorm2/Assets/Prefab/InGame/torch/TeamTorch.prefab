@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6675320930097985067}
   - component: {fileID: 9054494229926415434}
   - component: {fileID: 4899237571784554983}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: base_flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4853,7 +4853,7 @@ GameObject:
   - component: {fileID: 2672324440645672602}
   - component: {fileID: 7461732981545594353}
   - component: {fileID: 5211579532029315878}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: fumee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9641,7 +9641,7 @@ GameObject:
   - component: {fileID: 8456750693695975772}
   - component: {fileID: 2888688981380781840}
   - component: {fileID: 5714133527998461199}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14447,7 +14447,7 @@ GameObject:
   - component: {fileID: 8637269256901537126}
   - component: {fileID: 6004954652807821251}
   - component: {fileID: 8521650810377404528}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: base_flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19287,7 +19287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5358031303217137562}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Neutral
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19324,7 +19324,7 @@ GameObject:
   - component: {fileID: 2016309623197833110}
   - component: {fileID: 917001149416536552}
   - component: {fileID: 1789591747783461021}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: base_flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24166,7 +24166,7 @@ GameObject:
   - component: {fileID: 7017478162738517602}
   - component: {fileID: 4396698249888837786}
   - component: {fileID: 6713851227564112}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: etincelles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28954,7 +28954,7 @@ GameObject:
   - component: {fileID: 3996459620336088357}
   - component: {fileID: 7482327568971777813}
   - component: {fileID: 7811797531204517570}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: fumee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33742,7 +33742,7 @@ GameObject:
   - component: {fileID: 4527509144249785433}
   - component: {fileID: 3366531989867591907}
   - component: {fileID: 921816834946221011}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38548,7 +38548,7 @@ GameObject:
   - component: {fileID: 7545238121055494643}
   - component: {fileID: 2259723690890820019}
   - component: {fileID: 3956976027705024428}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: etincelles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43334,7 +43334,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 728653396739699078}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Balance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43371,7 +43371,7 @@ GameObject:
   - component: {fileID: 6822189291163989542}
   - component: {fileID: 8302012915219156655}
   - component: {fileID: 1767222461752739527}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: etincelles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48159,7 +48159,7 @@ GameObject:
   - component: {fileID: 3737003879290524665}
   - component: {fileID: 1995187188112697765}
   - component: {fileID: 6979641769313103180}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: fumee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52947,7 +52947,7 @@ GameObject:
   - component: {fileID: 6081194663545948888}
   - component: {fileID: 2277382383383519381}
   - component: {fileID: 6532776415495416462}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57751,7 +57751,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5241663876346380903}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Chaos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57788,7 +57788,7 @@ GameObject:
   - component: {fileID: 3656563328616940701}
   - component: {fileID: 514351155269071565}
   - component: {fileID: 5485923344782001410}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62594,7 +62594,7 @@ GameObject:
   - component: {fileID: 277221410043591028}
   - component: {fileID: 287654754308750895}
   - component: {fileID: 6629709335027465006}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Torch_light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62721,7 +62721,7 @@ GameObject:
   - component: {fileID: 155132848817015842}
   - component: {fileID: 2977070268042326089}
   - component: {fileID: 986861326552682029}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: TeamTorch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62786,7 +62786,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5894212804285474705}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: Order
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62823,7 +62823,7 @@ GameObject:
   - component: {fileID: 3296270551594994953}
   - component: {fileID: 5661813458087932860}
   - component: {fileID: 7609143255993470342}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: base_flam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67666,7 +67666,7 @@ GameObject:
   - component: {fileID: 3264114752296701321}
   - component: {fileID: 486929202511935990}
   - component: {fileID: 7838231805447228376}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: torche
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67782,7 +67782,7 @@ GameObject:
   - component: {fileID: 4660471061984418897}
   - component: {fileID: 3537227985040894522}
   - component: {fileID: 3126732908799983914}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: fumee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72570,7 +72570,7 @@ GameObject:
   - component: {fileID: 7310339304565391253}
   - component: {fileID: 6176672941877926734}
   - component: {fileID: 5456896812792781512}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: etincelles
   m_TagString: Untagged
   m_Icon: {fileID: 0}

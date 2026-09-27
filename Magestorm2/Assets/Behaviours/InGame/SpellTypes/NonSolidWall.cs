@@ -3,8 +3,9 @@ public class NonSolidWall : Wall, ITrigger
 {
     protected int _triggerID;
     protected bool _entered, _exited;
-    public virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _triggerID = TriggerManager.RegisterTrigger(this);
     }
     

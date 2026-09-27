@@ -148,6 +148,9 @@ public class UICharacterSelectForm : ValidatableForm
                     Game.MessageBox(Language.GetBaseString(36));
                 }
                 break;
+            case ButtonType.Misc3:
+                ComponentRegister.UIPrefabManager.InstantiateUIGraphics();
+                break;
         }
     }
     public override void SetResult(FormResult result)

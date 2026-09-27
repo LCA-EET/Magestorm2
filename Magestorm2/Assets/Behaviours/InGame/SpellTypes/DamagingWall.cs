@@ -2,7 +2,7 @@
 public class DamagingWall : NonSolidWall
 {
     protected PeriodicAction _damageTick;
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _damageTick = new PeriodicAction(1.0f, DamageTick, null);

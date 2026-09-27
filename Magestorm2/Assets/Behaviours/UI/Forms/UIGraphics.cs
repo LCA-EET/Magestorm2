@@ -2,26 +2,26 @@
 
 public class UIGraphics : ValidatableForm
 {
-    public MultiOption Shadows;
-    private int _initialShadowSetting;
+    private MultiOption[] _options;
+    private void Awake()
+    {
+        _options = GetComponentsInChildren<MultiOption>();
+    }
     private void Start()
     {
-        _initialShadowSetting = PlayerPrefs.GetInt(GameSettings.Shadows);
-        Shadows.SetOption(_initialShadowSetting);
+        foreach(MultiOption option in _options)
+        {
+            option.SetOption(GameSettings.GetSettingValue(option.SettingKey));
+        }
         AssociateFormToButtons();
     }
     protected override void PassedValidation()
     {
-        if(_initialShadowSetting != Shadows.SelectedOption)
+        foreach (MultiOption option in _options)
         {
-            PlayerPrefs.SetInt(GameSettings.Shadows, Shadows.SelectedOption);
-            GameSettings.ResetLSR();
-            if (ComponentRegister.Scene != null)
-            {
-                GameSettings.ApplyLightShadowSetting();
-            }
-            PlayerPrefs.Save();
+            GameSettings.SetSettingValue(option.SettingKey, option.SelectedOption);
         }
+        PlayerPrefs.Save();
         CloseForm();
     }
 }

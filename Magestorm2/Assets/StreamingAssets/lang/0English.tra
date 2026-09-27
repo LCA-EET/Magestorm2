@@ -398,5 +398,10 @@ Off
 Low Detail
 Medium Detail
 High Detail
-Graphics
-Render Lights in Minimap
+Settings
+Render Shadows in Minimap
+Lit Projectiles
+On
+Soft
+Hard
+Shadow Type

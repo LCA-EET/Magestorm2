@@ -17,11 +17,13 @@ public static class LayerManager
     private const string Layer_Woosh = "Woosh";
     private const string Layer_Biasable = "Biasable";
     private const string Layer_MMHidden = "MMHiddenSurface";
+    private const string Layer_LightSource = "LightSource";
 
+    private static int _lightSourceLayer;
     private static int _biasableLayer;
     private static int _wooshLayer;
     private static int _teamChaosLayer, _teamBalanceLayer, _teamOrderLayer;
-    private static int _teamChaosLayerMask, _teamBalanceLayerMask, _teamOrderLayerMask;
+    private static int _teamChaosLayerMask, _teamBalanceLayerMask, _teamOrderLayerMask, _lightSourceMask;
     private static int _playerLayer, _playerLayerMask;
     private static int _remotePlayerLayer, _remotePlayerLayerMask;
     private static int _deadPlayerLayer, _deadPlayerLayerMask;
@@ -37,6 +39,7 @@ public static class LayerManager
     {
         if (!_init)
         {
+            _lightSourceLayer = LayerMask.NameToLayer(Layer_LightSource);
             _biasableLayer = LayerMask.NameToLayer(Layer_Biasable);
             _wooshLayer = LayerMask.NameToLayer(Layer_Woosh);
             _teamChaosLayer = LayerMask.NameToLayer(Layer_TeamIndicator_Chaos);
@@ -54,6 +57,7 @@ public static class LayerManager
             _remotePlayerLayerMask = LayerMask.GetMask(Layer_RemotePlayer);
             _surfaceLayerMask = LayerMask.GetMask(Layer_Surface);
             _interactableMask = LayerMask.GetMask(Layer_Interactable);
+            _lightSourceMask = LayerMask.GetMask(Layer_LightSource);
             _floorMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid, Layer_Interactable, Layer_MMHidden });
             _projectileImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_PlayerWallSolid, Layer_PlayerWallNonSolid, Layer_MMHidden });
             _mindImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_MMHidden });
@@ -115,6 +119,10 @@ public static class LayerManager
     public static int ResistableObstructionMask
     {
         get { return _resistableObstructionMask;}
+    }
+    public static int LightSourceMask
+    {
+        get {  return _lightSourceMask;}
     }
     public static int MindImpactMask
     {

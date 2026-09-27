@@ -3935,6 +3935,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 150
       objectReference: {fileID: 0}
+    - target: {fileID: 5926817129514121952, guid: 15fae1e26fb858d459cb8f4b74a68b6b, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 1089
+      objectReference: {fileID: 0}
     - target: {fileID: 6083443719139428019, guid: 15fae1e26fb858d459cb8f4b74a68b6b, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

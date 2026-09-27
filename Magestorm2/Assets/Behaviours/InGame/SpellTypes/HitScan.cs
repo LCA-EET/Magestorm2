@@ -13,8 +13,9 @@ public class HitScan : OutwardCast
         _end = ByteUtils.BytesToVector3(payload, 0);
         transform.position = _end;
     }
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _action = AnimationTimer > 0 ? new PeriodicAction(AnimationTimer, DestroyAnimator, null) : null;
     }
     private void DestroyAnimator()

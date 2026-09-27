@@ -104,8 +104,17 @@
     public const byte VFX_Wrack = 15;
     public const byte VFX_Splash = 16;
 
-    public const byte Shadows_Off = 1;
-    public const byte Shadows_Low = 2;
-    public const byte Shadows_Medium = 3;
-    public const byte Shadows_High = 4;
+    public const byte Shadows_Low = 1;
+    public const byte Shadows_Medium = 2;
+    public const byte Shadows_High = 3;
+
+    public const byte ShadowType_Off = 1;
+    public const byte ShadowType_Soft = 2;
+    public const byte ShadowType_Hard = 3;
+
+    public const byte MinimapLighting_Off = 1;
+    public const byte MinimapLighting_On = 2;
+
+    public const byte LitProjectiles_Off = 1;
+    public const byte LitProjectiles_On = 2;
 }

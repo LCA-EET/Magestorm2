@@ -13,6 +13,17 @@ public class SpawnedSpell : MonoBehaviour
     protected Team _castingTeam;
     protected bool _destroyOnNextUpdate;
     protected byte[] _payload;
+    protected virtual void Awake()
+    {
+        if (GameSettings.GetSettingValue(SettingKey.LitProjectiles) == ControlCodes.LitProjectiles_Off)
+        {
+            Light[] components = GetComponentsInChildren<Light>();
+            foreach (Light light in components)
+            {
+                light.intensity = 0;
+            }
+        }
+    }
     public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
     {
         if(Match.GetAvatar(casterID, ref _casterReference))

@@ -2,6 +2,7 @@
 using UnityEngine;
 public class MultiOption : ValidatableForm
 {
+    public SettingKey SettingKey;
     public int[] OptionStrings;
     public int CaptionStringReference;
     public TMP_Text CaptionTextObject, OptionTextObject;
@@ -11,14 +12,14 @@ public class MultiOption : ValidatableForm
         AssociateFormToButtons();
         CaptionTextObject.text = Language.GetBaseString(CaptionStringReference);
     }
-    public void SetOption(int optionIndex)
+    public void SetOption(byte optionIndex)
     {
         _selectedOption = optionIndex - 1;
         RefreshText();
     }
-    public int SelectedOption
+    public byte SelectedOption
     {
-        get { return _selectedOption + 1; }
+        get { return (byte)(_selectedOption + 1); }
     }
     public override void ButtonPressed(ButtonType buttonType)
     {

@@ -7,8 +7,9 @@ public class Bolt : Projectile
     private Vector3 _priorPosition;
     private ParticleSystem[] _particleSystems;
     private ParticleSystem.EmissionModule _emitter;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _particleSystems = GetComponentsInChildren<ParticleSystem>();
     }
 
