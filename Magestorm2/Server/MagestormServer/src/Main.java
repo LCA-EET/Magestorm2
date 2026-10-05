@@ -23,7 +23,7 @@ public class Main {
 
         Cryptographer.GenerateKeyAndIV();
         if(Database.TestDBConnection()){
-            Database.UpdateServerInfo();
+            //Database.UpdateServerInfo();
             GameServer.init();
             AsyncDBUpdater = new AsyncDBUpdater();
             ProcessCommands();

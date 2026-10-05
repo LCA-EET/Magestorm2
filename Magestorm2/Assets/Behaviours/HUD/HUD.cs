@@ -3,8 +3,7 @@ using UnityEngine;
 public class HUD : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public GameObject componentContainer;
-
+    public GameObject componentContainer, pwPanel;
     private bool _hudActive;
     void Start()
     {
@@ -12,6 +11,10 @@ public class HUD : MonoBehaviour
         _hudActive = true;
     }
 
+    public void HidePleaseWait()
+    {
+        pwPanel.SetActive(false);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -21,6 +24,5 @@ public class HUD : MonoBehaviour
             componentContainer.SetActive(_hudActive);
         }
     }
-
     
 }

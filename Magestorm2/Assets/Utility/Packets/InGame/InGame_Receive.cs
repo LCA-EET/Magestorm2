@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 public static class InGame_Receive
 {
@@ -60,5 +56,9 @@ public static class InGame_Receive
                         SigilRequestResponse = 50,
                         ApplyForce = 51,
                         AllPlayerData = 52,
-                        MaxCast = 53;
+                        MaxCast = 53,
+                        SpawnPotion = 54,
+                        PotionTaken = 55,
+                        PotionDropped = 56,
+                        UsedPotion = 57;
 }

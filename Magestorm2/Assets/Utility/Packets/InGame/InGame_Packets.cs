@@ -244,4 +244,12 @@ public static class InGame_Packets
         BitConverter.GetBytes(castID).CopyTo(unencrypted, 2);
         return unencrypted;
     }
+
+    public static byte[] UsePotionPacket()
+    {
+        byte[] unencrypted = new byte[2];
+        unencrypted[0] = InGame_Send.UsePotion;
+        unencrypted[1] = MatchParams.IDinMatch;
+        return unencrypted;
+    }
 }

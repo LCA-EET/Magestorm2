@@ -41,7 +41,7 @@ public class UIMatchList : ValidatableForm
                 JoinMatch();
                 break;
             case ButtonType.Misc0: // Discord
-                System.Diagnostics.Process.Start("https://discord.com/invite/hwGf39gW9g");
+                System.Diagnostics.Process.Start(Game.DiscordURL);
                 break;
         }
     }

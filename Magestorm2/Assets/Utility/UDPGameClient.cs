@@ -76,6 +76,7 @@ public class UDPGameClient
     public void Send(byte[] toSend)
     {
         _client.Send(toSend, toSend.Length, _remote);
+        Debug.Log(_remote.Address + ":" + _remote.Port);
     }
     public bool HasPacketsPending
     {

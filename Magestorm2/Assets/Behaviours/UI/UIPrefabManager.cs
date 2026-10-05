@@ -24,6 +24,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabAvailableSpells;
     public GameObject PrefabUISpellSlots;
     public GameObject PrefabUIGraphics;
+    public GameObject PrefabDHKEPacketProcessor;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -122,6 +123,10 @@ public class UIPrefabManager : MonoBehaviour
     public void InstantiateCreateAccountForm(GameObject instantiator)
     {
         AddToStack(Instantiate(PrefabCreateAccount));
+    }
+    public void InstantiateDHKEPacketProcessor()
+    {
+        DHKEPacketProcessor packetProcessor = Instantiate(PrefabDHKEPacketProcessor).GetComponent<DHKEPacketProcessor>();
     }
     public void InstantiatePregamePacketProcessor()
     {

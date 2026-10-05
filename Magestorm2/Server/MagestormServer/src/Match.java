@@ -38,11 +38,12 @@ public class Match extends TimedObject{
     private final long _expReportInterval = 30000;
     protected boolean _quickMatch;
     protected AntiStack _antiStack;
-    protected boolean _potionTaken, _potionCreated;
+    protected boolean _potionTaken;
     protected byte _potionLocation, _potionType;
     protected byte[] _potionBytes;
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchType, byte matchOptions){
         _objectID = matchID;
+        _potionTaken = true;
         _objectIDAsByte = (byte)_objectID;
         _playersJoined = new HashSet<>();
         _matchOptions = new MatchOptions(matchOptions);
@@ -298,7 +299,7 @@ public class Match extends TimedObject{
         else{
             MatchCharacter mc = GetMatchCharacter(playerID);
             mc.SetLey(newLey);
-            SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.LeyUpdate, newLey), mc);
+            SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.LeyUpdate, (byte)Math.floor(newLey * 100.0f)), mc);
         }
     }
     private void RemoveAllPlayers(){
@@ -369,6 +370,9 @@ public class Match extends TimedObject{
         if(dataLength > 0){
             SendToPlayer(Packets.AllPlayersInMatch(playerData, dataLength), requesterID);
             Main.LogDebug("SendAllPlayerData: Sending data to requester " + requesterID);
+        }
+        if(!_potionTaken){
+            SendToPlayer(_potionBytes, requesterID);
         }
     }
     public void SendPlayerData(byte requesterID, byte idInMatch){
@@ -554,20 +558,25 @@ public class Match extends TimedObject{
         PotionCheck(msElapsed);
     }
     private void PotionCheck(long msElapsed){
-        _potionCheckElapsed += msElapsed;
-        if(_potionCheckElapsed >= 120000){
-            _potionCheckElapsed = 0;
-            _potionType = SharedFunctions.GetRandomByte(1, ControlCodes.Potion_GoldenApple);
-            _potionLocation = SharedFunctions.GetRandomByte(1, 10);
-            _potionBytes = Packets.PotionSpawnPacket(_potionType, _potionLocation);
-            _potionCreated = true;
-            SendToAll(_potionBytes);
+        if(_potionTaken){
+            _potionCheckElapsed += msElapsed;
+            if(_potionCheckElapsed >= 120000){
+                _potionCheckElapsed = 0;
+                _potionType = SharedFunctions.GetRandomByte(1, ControlCodes.Potion_Rejuvenation);
+                _potionLocation = SharedFunctions.GetRandomByte(1, 10);
+                _potionBytes = Packets.PotionSpawnPacket(_potionType, _potionLocation);
+                _potionTaken = false;
+                Main.LogMessage("Sending potion spawn packet. Type: " + _potionType + ", Location: " + _potionLocation);
+                SendToAll(_potionBytes);
+            }
         }
+
     }
 
     public void PotionTaken(MatchCharacter takenBy){
         takenBy.PickedUpPotion(_potionType);
         _potionTaken = true;
+        _potionCheckElapsed = 0;
         _potionLocation = 0;
         SendToAll(Packets.PotionTakenPacket(takenBy.GetIDinMatch(), _potionType));
         _potionType = ControlCodes.Potion_None;
@@ -609,13 +618,13 @@ public class Match extends TimedObject{
             }
             if(hpChanged || manaChanged){
                 if(hpChanged && manaChanged){
-                    SendToPlayer(Packets.HPandManaUpdatePacket(mc.GetCurrentHP(), mc.GetCurrentMana()), mc);
+                    SendToPlayer(Packets.HPandManaUpdatePacket(mc.GetCurrentHPPct(), mc.GetCurrentManaPct()), mc);
                 }
                 else if (hpChanged) {
-                    SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.HPUpdate, mc.GetCurrentHP()), mc);
+                    SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.HPUpdate, mc.GetCurrentHPPct()), mc);
                 }
                 else{
-                    SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.ManaUpdate, mc.GetCurrentMana()), mc);
+                    SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.ManaUpdate, mc.GetCurrentManaPct()), mc);
                 }
             }
         }
@@ -744,6 +753,9 @@ public class Match extends TimedObject{
             case "b":
                 SendTeamMessage(params, " ", 1, senderID, MatchTeam.Balance);
                 return true;
+            case "spawnpotion":
+                _potionCheckElapsed = 120000;
+                return true;
         }
         return false;
     }
@@ -778,7 +790,8 @@ public class Match extends TimedObject{
                         }
                         caster.AddMana(manaRecovered);
                         SendPlayerToValhalla(devoured);
-                        SendToPlayer(Packets.HPandManaUpdatePacket(devoured.GetCurrentHP(), devoured.GetCurrentMana()), devoured);
+                        SendToPlayer(Packets.HPandManaUpdatePacket(devoured.GetCurrentHPPct(),
+                                devoured.GetCurrentManaPct()), devoured);
                         caster.AdjustExperience(manaRecovered * 2);
                     }
                 }

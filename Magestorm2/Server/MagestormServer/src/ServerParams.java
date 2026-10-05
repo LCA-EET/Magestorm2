@@ -16,8 +16,10 @@ public class ServerParams {
     public static byte MaxMatches = 20;
     public static float ExpMultiplier = 1.0f;
     public static byte PollingFactor = 5;
-    public static boolean SymmetricEncryption = false;
-    public static short ListeningPort;
+    public static byte Encryption = 0;
+    public static short DHKEListeningPort;
+    public static short DHKEKeyLength;
+    public static short PregameListeningPort;
     public static byte QMEnabled = 0;
     public static byte[] DiscordBytes;
     public static void LoadParams(String paramFilePath){
@@ -29,7 +31,9 @@ public class ServerParams {
         try {
             paramScanner = new Scanner(paramFile);
             Main.Debug = Boolean.parseBoolean(paramScanner.nextLine());
-            ListeningPort = Short.parseShort(paramScanner.nextLine());
+            DHKEListeningPort = Short.parseShort(paramScanner.nextLine());
+            DHKEKeyLength = Short.parseShort(paramScanner.nextLine());
+            PregameListeningPort = Short.parseShort(paramScanner.nextLine());
             Database.Init(paramScanner.nextLine(), paramScanner.nextLine(),
                     paramScanner.nextLine(), paramScanner.nextLine());
             EmailCredsPath = paramScanner.nextLine();
@@ -41,7 +45,7 @@ public class ServerParams {
             IngameInactivityWarning = Long.parseLong(paramScanner.nextLine());
             IngameInactivityDisconnect = Long.parseLong(paramScanner.nextLine());
             PregameInactivity = Long.parseLong(paramScanner.nextLine());
-            SymmetricEncryption = Boolean.parseBoolean(paramScanner.nextLine());
+            Encryption = Byte.parseByte(paramScanner.nextLine());
             TickInterval = Byte.parseByte(paramScanner.nextLine());
             PollingFactor = Byte.parseByte(paramScanner.nextLine());
             MaxMatches = Byte.parseByte(paramScanner.nextLine());

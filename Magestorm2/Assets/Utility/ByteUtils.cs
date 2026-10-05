@@ -5,7 +5,13 @@ using System.Collections.Generic;
 using UnityEngine;
 public static class ByteUtils
 {
-
+    public static System.Numerics.BigInteger BytesToBigInteger(byte[] bytes, int index, int length)
+    {
+        byte[] toProcess = new byte[length];
+        System.Array.Copy(bytes, index, toProcess, 0, length);
+        return new System.Numerics.BigInteger(toProcess, false, true);
+    }
+  
     public static byte BitArrayToByte(BitArray toConvert)
     {
         byte[] temp = new byte[1];

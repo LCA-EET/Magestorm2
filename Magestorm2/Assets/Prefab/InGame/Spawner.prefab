@@ -47,3 +47,8 @@ MonoBehaviour:
   AvatarPrefab: {fileID: 3074665814257248548, guid: 0f50b8a1238dade47a7639999da34ce8, type: 3}
   DeadbodyPrefab: {fileID: 3332532710418437741, guid: 37bd0bad612c7c4409b7ecfa9dd421e9, type: 3}
   Marker: {fileID: 9007687685891254394, guid: 519cc479ca98a304998dff52698cf8fc, type: 3}
+  Prefab_HealthPotion: {fileID: 3458823560573922497, guid: faeeaaa1760b71347aece21fe4d48ff2, type: 3}
+  Prefab_ManaPotion: {fileID: 1497359064443355761, guid: 72d9b076e3f67ff4d9830de952abc373, type: 3}
+  Prefab_GoldenApple: {fileID: 2111285795561744559, guid: e71c9efd56e2e9240b64e9729cee6478, type: 3}
+  PotionSpawns: []
+  SpawnedPotion: {fileID: 0}

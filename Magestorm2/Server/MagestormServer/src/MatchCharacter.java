@@ -135,7 +135,8 @@ public class MatchCharacter extends TimedObject{
         }
         _carriedPotion = potion;
     }
-    public void UsePotion(){
+    public byte UsePotion(){
+        byte potionUsed = _carriedPotion;
         switch (_carriedPotion){
             case ControlCodes.Potion_Health:
                 _currentHP = _maxHP;
@@ -143,12 +144,13 @@ public class MatchCharacter extends TimedObject{
             case ControlCodes.Potion_Mana:
                 _currentMana = _maxMana;
                 break;
-            case ControlCodes.Potion_GoldenApple:
-                _currentHP = _maxHP;
-                _currentMana = _maxMana;
+            case ControlCodes.Potion_Rejuvenation:
+                _currentHP = Math.min(_maxHP * 0.5f, _maxHP);
+                _currentMana = Math.min(_maxMana * 0.5f, _maxMana);
                 break;
         }
         _carriedPotion = ControlCodes.Potion_None;
+        return potionUsed;
     }
     public void DropPotion(){
         _owningMatch.SendToAll(Packets.PotionDroppedPacket(_objectID.byteValue(), _carriedPotion));
@@ -412,6 +414,12 @@ public class MatchCharacter extends TimedObject{
     }
     public float GetCurrentMana(){
         return _currentMana;
+    }
+    public byte GetCurrentHPPct(){
+        return (byte)Math.floor(_currentHP * 100.0f / _maxHP);
+    }
+    public byte GetCurrentManaPct(){
+        return (byte)Math.floor(_currentMana * 100.0f / _maxMana);
     }
     public byte GetLevel(){
         return _INLCTA[_idxLevel];

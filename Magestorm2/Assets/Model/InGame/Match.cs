@@ -260,6 +260,7 @@ public static class Match
                 {
                     ComponentRegister.Scene.AssignEntryPoint(ComponentRegister.PC);
                 }
+                ComponentRegister.HUD.HidePleaseWait();
                 MatchParams.JoinedMatch = true;
                 Debug.Log("MaxHP: " + MatchParams.MaxHP);
                 Debug.Log("MaxMana: " + MatchParams.MaxMana);

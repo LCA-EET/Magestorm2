@@ -4,9 +4,9 @@ public class Potion : Trigger
     public byte PotionType;
     public Rigidbody RigidBody;
     private float _elapsed, _period;
-
     protected override void Awake()
     {
+        ComponentRegister.Spawner.SpawnedPotion = this;
         _period = 2 * Mathf.PI;
     }
     public override void EnterAction()
@@ -20,10 +20,11 @@ public class Potion : Trigger
     private void Update()
     {
         _elapsed += Time.deltaTime;
-        transform.Translate(0, (Mathf.Sin(_elapsed) * 0.25f) - transform.position.y, 0);
+        transform.Translate(0, (Mathf.Sin(_elapsed) * 0.25f * Time.deltaTime), 0);
         if(_elapsed > _period)
         {
             _elapsed =  0;
         }
+        transform.Rotate(0, 90 * Time.deltaTime, 0);
     }
 }

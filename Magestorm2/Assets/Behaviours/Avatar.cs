@@ -30,7 +30,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     private Renderer[] _renderers;
     private Dictionary<byte, AppliedEffect> _appliedEffects;
     private CharacterModel _model;
-    
+
     private TMP_Text _nameText;
     private List<PeriodicAction> _actionList;
     private PeriodicAction _lookAtCamera, _effectsTick, _stepSound;
@@ -55,7 +55,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _effectsTick = new PeriodicAction(_effectTick, EffectTick, _actionList);
         _stepSound = new PeriodicAction(0.1f, StepSoundCheck, _actionList);
     }
-
+    public void PlayGrunt()
+    {
+        Game.Clips.PlayClip(Game.Clips.GetGrunt(_isMale), AudioSource, 10);
+    }
     private void StepSoundCheck()
     {
         if(transform.position.y > _yPeak)
@@ -266,6 +269,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         {
             _deadBody.DestroySelf();
         }
+    }
+    public void PlayDeathScream()
+    {
+        Game.Clips.PlayClip(Game.Clips.GetDeathScream(_isMale), AudioSource, 25);
     }
     public void AddEffect(AppliedEffect effect)
     {

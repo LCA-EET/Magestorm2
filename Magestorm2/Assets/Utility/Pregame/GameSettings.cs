@@ -64,13 +64,16 @@ public static class GameSettings
     }
     public static void ApplyLightShadowSetting(Light light)
     {
-        if(SettingsTable[SettingKey.ShadowType].Value == ControlCodes.ShadowType_Off)
+        if (SettingsTable != null)
         {
-            DisableShadows(light);
-        }
-        else
-        {
-            UpdateShadowResolution(light);
+            if (SettingsTable[SettingKey.ShadowType].Value == ControlCodes.ShadowType_Off)
+            {
+                DisableShadows(light);
+            }
+            else
+            {
+                UpdateShadowResolution(light);
+            }
         }
     }
     private static void UpdateShadowResolution(Light light)

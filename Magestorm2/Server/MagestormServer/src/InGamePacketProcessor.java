@@ -89,6 +89,9 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.PotionTaken:
                     HandlePotionTaken();
                     return true;
+                case InGame_Receive.UsePotion:
+                    HandleUsePotion();
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
@@ -96,6 +99,16 @@ public class InGamePacketProcessor extends UDPProcessor{
             return HandleJoinMatchPacket(_remote);
         }
         return false;
+    }
+    private void HandleUsePotion(){
+        MatchCharacter potionUser = _owningMatch.GetMatchCharacter(_decrypted[1]);
+        if(potionUser.IsAlive()){
+            if(potionUser.IsCarryingPotion()){
+                potionUser.UsePotion();
+                _owningMatch.SendToPlayer(Packets.UsedPotionPacket(
+                        potionUser.GetCurrentHPPct(), potionUser.GetCurrentManaPct()), potionUser);
+            }
+        }
     }
     private void HandlePotionTaken(){
         MatchCharacter takenBy = _owningMatch.GetMatchCharacter(_decrypted[1]);
@@ -318,6 +331,7 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void SendPlayerDataForJoinee(MatchCharacter joinee){
         _owningMatch.SendToAll(Packets.PlayerDataPacket(joinee.GetPlayerData(), joinee.IsNewToMatch()));
+
     }
     private int CheckAccountAndCharacter(){
         RemoteClient remote = LoggedInClient();

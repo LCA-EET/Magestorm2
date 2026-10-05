@@ -1,8 +1,9 @@
 using System;
 using System.IO;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
-
+using Unity.VisualScripting;
 public static class Cryptography
 {
     //Mono doesn't include support for AesGcm; using normal AES instead
@@ -12,6 +13,7 @@ public static class Cryptography
     private static byte[] _paddedIV;
     private static AesCryptoServiceProvider _aesEncryptor, _aesDecryptor;
     private static SHA256 _sha256;
+    public static BigInteger ChecksumShort = new BigInteger(short.MaxValue);
     public static void Init(byte[] key)
     {
         _key = key;
@@ -23,6 +25,65 @@ public static class Cryptography
         InitAES(ref _aesEncryptor);
         InitAES(ref _aesDecryptor);
     }
+    public static short ModChecksum(BigInteger dividend)
+    {
+        BigInteger calculatedRemainder;
+        BigInteger.DivRem(dividend, ChecksumShort, out calculatedRemainder);
+        return (short)calculatedRemainder;
+    }
+    public static byte[] MD5Digest(byte[] toHash)
+    {
+        using (MD5 md5 = MD5.Create())
+        {
+            byte[] hashBytes = md5.ComputeHash(toHash);
+            return hashBytes;
+        }
+    }
+    public static BigInteger RandomBigInteger(BigInteger min, BigInteger max)
+    {
+        BigInteger range = max - min + 1; // inclusive range
+        int byteCount = (int)Math.Ceiling(BigInteger.Log(range, 256));
+
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            byte[] bytes = new byte[byteCount];
+
+            while (true)
+            {
+                rng.GetBytes(bytes);
+
+                // BigInteger in .NET expects little-endian, so reverse for big-endian
+                Array.Reverse(bytes);
+
+                // Ensure positive number by appending a zero byte if needed
+                byte[] littleEndian = new byte[bytes.Length + 1];
+                Array.Copy(bytes, 0, littleEndian, 0, bytes.Length);
+
+                BigInteger value = new BigInteger(littleEndian);
+
+                if (value < range)
+                    return min + value;
+            }
+        }
+    }
+    public static BigInteger First16Bytes(BigInteger value)
+    {
+        byte[] bytes = value.ToByteArray();
+        Array.Reverse(bytes); 
+        byte[] first16 = new byte[16];
+        System.Array.Copy(bytes, 0, first16, 0, 16);
+        return new BigInteger(first16, false, true);
+    }
+    public static byte[] ToBigEndianBytes(BigInteger value)
+    {
+        if (value < 0)
+            throw new ArgumentOutOfRangeException(nameof(value), "Only non-negative values supported.");
+
+        byte[] littleEndian = value.ToByteArray(isUnsigned: false, isBigEndian: false);
+        Array.Reverse(littleEndian);
+        return littleEndian;
+    }
+
     private static void InitAES(ref AesCryptoServiceProvider provider)
     {
         provider = new AesCryptoServiceProvider();
@@ -33,7 +94,7 @@ public static class Cryptography
     {
         if (Game.SymmetricEncryption)
         {
-            _iv++; // not ideal from a security perspective, but it's a lot less expensive than generating a new random nonce for each packet
+            _iv++; 
             byte[] ivBytes = PadBytes(8, _iv);
 
             byte[] encryptedPayload = new byte[payload.Length];

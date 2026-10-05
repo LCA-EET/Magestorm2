@@ -27,6 +27,8 @@ public class PC : MonoBehaviour
     private float _maxLeyElapsed = 0.0f;
     private float _maxLeyDuration = 20.0f;
     private float _arcLeyUpdate = 1.0f;
+    private byte _heldPotion;
+    private byte _joinAttempts;
     public bool InValhalla = false;
     public HashSet<int> _inTriggers;
     public HashSet<int> _priorInTriggers;
@@ -57,10 +59,17 @@ public class PC : MonoBehaviour
             new PeriodicAction(1.0f, CountdownVectors, _actionList);
         }
     }
+    public void PickedUpPotion(byte potionID)
+    {
+        _heldPotion = potionID;
+        Game.ConsumableDisplay.DisplayConsumable(potionID);
+        Game.PCAvatar.PlayAudioClip(Game.Clips.SFXPickUpItem);
+    }
     public bool InManaPool
     {
         get; set;
     }
+
     private void ArcLey()
     {
         if (InManaPool)
@@ -110,6 +119,7 @@ public class PC : MonoBehaviour
         _ley = new HMLUpdater(0.1f, 1.0f, PlayerIndicator.Ley, _hml);
         _stamina = new HMLUpdater(0.1f, MatchParams.MaxStamina, PlayerIndicator.Stamina, _hml);
         _camera = Camera.main;
+        _camera.transform.localEulerAngles = Vector3.zero;
         if(_class == ControlCodes.PlayerClass_Arcanist)
         {
             new PeriodicAction(_arcLeyUpdate, ArcLey, _actionList);
@@ -127,7 +137,20 @@ public class PC : MonoBehaviour
         }
         if (!MatchParams.JoinedMatch)
         {
-            _joinRerequest = new PeriodicAction(0.25f, Game.SendJoinMatchPacket, null);
+            _joinRerequest = new PeriodicAction(0.25f, AttemptJoin, null);
+        }
+    }
+    private void AttemptJoin()
+    {
+        if(_joinAttempts < 12)
+        {
+            Game.SendJoinMatchPacket();
+            _joinAttempts++;
+        }
+        else
+        {
+            Game.SendInGameBytes(InGame_Packets.LeaveMatchPacket());
+            Match.LeaveMatch();
         }
     }
     public void ApplyEffect(AppliedEffect effect)
@@ -182,6 +205,13 @@ public class PC : MonoBehaviour
         }
         else
         {
+            if (InputControls.UsePotion )
+            {
+                if(_heldPotion != 0)
+                {
+                    Game.SendInGameBytes(InGame_Packets.UsePotionPacket());
+                }
+            }
             if (InputControls.Action)
             {
                 if (Game.PCAvatar.IsAlive)
@@ -358,24 +388,36 @@ public class PC : MonoBehaviour
         trigger = other.GetComponent<ITrigger>();
         return trigger != null;
     }
+    private void HPAdjustment(byte pct)
+    {
+        float oldpct = _hp.PercentOfMax();
+        _hp.AdjustPct(pct);
+        float newpct = _hp.PercentOfMax();
+        if (oldpct - newpct > 0.25 && newpct > 0)
+        {
+            Game.PCAvatar.PlayGrunt();
+        }
+    }
     public void HPandManaUpdate(byte[] decrypted)
     {
-        _hp.UpdateValue(BitConverter.ToSingle(decrypted, 1));
-        _mana.UpdateValue(BitConverter.ToSingle(decrypted, 5));
+        HPAdjustment(decrypted[1]);
+        _mana.AdjustPct(decrypted[2]);
+        //_hp.UpdateValue(BitConverter.ToSingle(decrypted, 1));
+        //_mana.UpdateValue(BitConverter.ToSingle(decrypted, 5));
     }
     public void HPorManaorLeyUpdate(byte[] decrypted)
     {
-        float value = BitConverter.ToSingle(decrypted, 1);
+        byte pct = decrypted[1];
         switch (decrypted[0])
         {
             case InGame_Receive.HPUpdate:
-                _hp.UpdateValue(value);
+                HPAdjustment(pct);
                 break;
             case InGame_Receive.ManaUpdate:
-                _mana.UpdateValue(value);
+                _mana.AdjustPct(pct);
                 break;
             case InGame_Receive.LeyUpdate:
-                _ley.UpdateValue(value);
+                _ley.AdjustPct(pct);
                 break;
         }
     }
@@ -431,6 +473,14 @@ public class PC : MonoBehaviour
         {
             return _stamina.Value;
         }
+    }
+    public void UpdateHPPct(byte pct)
+    {
+        _hp.AdjustPct(pct);
+    }
+    public void UpdateManaPct(byte pct)
+    {
+        _mana.AdjustPct(pct);
     }
     public void UpdateHP(float value)
     {

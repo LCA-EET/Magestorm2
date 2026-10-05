@@ -30,12 +30,14 @@ public class SpawnedSpell : MonoBehaviour
         {
             _casterID = casterID;
             InitializeNoCaster(castingTeam, castID, parent, spellReference, payload);
-            if (casterID == MatchParams.IDinMatch && CastClip != null)
+            if(CastClip != null)
             {
-                if (CastClip != null)
-                {
-                    Game.Clips.PlayClip(CastClip, Game.PCAvatar.AudioSource, 5f);
-                }
+                Game.Clips.PlayClip(CastClip, _casterReference.AudioSource, 7.5f);
+            }
+            else
+            {
+                AudioClip toPlay = Game.Clips.GetDisciplineCast(spellReference.Discipline);
+                Game.Clips.PlayClip(toPlay, _casterReference.AudioSource, 7.5f);
             }
         }
         else

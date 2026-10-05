@@ -126,6 +126,18 @@ PrefabInstance:
       propertyPath: PotionType
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2849161272746873431, guid: faeeaaa1760b71347aece21fe4d48ff2, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4507164
+      objectReference: {fileID: 0}
+    - target: {fileID: 2849161272746873431, guid: faeeaaa1760b71347aece21fe4d48ff2, type: 3}
+      propertyPath: m_Color.g
+      value: 0.03933786
+      objectReference: {fileID: 0}
+    - target: {fileID: 2849161272746873431, guid: faeeaaa1760b71347aece21fe4d48ff2, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6415094
+      objectReference: {fileID: 0}
     - target: {fileID: 3458823560573922497, guid: faeeaaa1760b71347aece21fe4d48ff2, type: 3}
       propertyPath: m_Name
       value: PurplePotion Variant

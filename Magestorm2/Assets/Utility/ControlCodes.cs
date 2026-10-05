@@ -84,7 +84,7 @@
     public const byte Potion_None = 0;
     public const byte Potion_Health = 1;
     public const byte Potion_Mana = 2;
-    public const byte Potion_GoldenApple = 3;
+    public const byte Potion_Rejuvenation = 3;
 
     public const byte VFX_None = 0;
     public const byte VFX_Banish = 1;

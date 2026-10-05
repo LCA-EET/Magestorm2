@@ -83,6 +83,7 @@ public static class Pregame_Packets
 
         return unencryptedPayload;
     }
+    
     public static byte[] LogInPacket()
     {
         byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(PlayerAccount.Username);

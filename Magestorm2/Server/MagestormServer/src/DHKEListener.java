@@ -1,0 +1,63 @@
+import java.math.BigInteger;
+import java.net.DatagramPacket;
+
+public class DHKEListener extends UDPProcessor{
+
+    private final BigInteger _kPr, _p;
+    private final byte[] _dhkeBytes;
+    private final byte[] _publicKeyBytes;
+
+    public DHKEListener(int listeningPort, byte[] dhke) {
+        super(listeningPort);
+        _dhkeBytes = dhke;
+        _kPr = Cryptographer.GetDHKEPrivateKey();
+        _p = Cryptographer.GetDHKEPrime();
+        _publicKeyBytes = DHKEPackets.PublicKeyBytes();
+        Main.LogMessage("DHKE listening on port " + listeningPort + ". DHKE packet length: " + _dhkeBytes.length);
+    }
+
+    protected boolean ProcessPacket(DatagramPacket received){
+        byte[] payload = received.getData();
+        _opCode = payload[0];
+        _remote = new RemoteClient(received);
+        switch(_opCode){
+            case DHKE_Receive.DPRequest:
+                Main.LogMessage("Send domain parameters to " + _remote.IPAddress());
+                EnqueueForSend(_dhkeBytes, _remote);
+                return true;
+            case DHKE_Receive.ClientPublicKey:
+                ProcessClientPublicKey(payload);
+                return true;
+        }
+        return false;
+    }
+
+    private void ProcessClientPublicKey(byte[] payload){
+        short keylength = ByteUtils.ExtractShort(payload, 1);
+        byte[] kpubBytes = new byte[keylength];
+        System.arraycopy(payload, 3, kpubBytes, 0, keylength);
+        BigInteger kpub = new BigInteger(kpubBytes);
+        Main.LogDebug("Client kpub: " + kpub);
+        if(Cryptographer.VerifyChecksum(kpub, Cryptographer.ModChecksum, ByteUtils.ExtractShort(payload, 3 + keylength))){
+            Main.LogDebug("Checksum match for client kpub.");
+            BigInteger sharedSecret = kpub.modPow(_kPr, _p);
+            Main.LogDebug("Shared Secret: " + sharedSecret);
+            Main.LogDebug("sharedSecret Hex:" + sharedSecret.toString(16));
+            BigInteger first16 = Cryptographer.First16Bytes(sharedSecret);
+            Main.LogDebug("First16:" + first16 + ", " + first16.bitLength());
+            Main.LogDebug("First16 Hex:" + first16.toString(16));
+            BigInteger aesKeyBI = Cryptographer.AESKeyBI();
+            Main.LogDebug("aesKeyBI: " + aesKeyBI + ", " + aesKeyBI.bitLength());
+
+            byte[] aesXOR = aesKeyBI.xor(first16).toByteArray();
+            BigInteger aesXORBI = new BigInteger(aesXOR);
+            Main.LogDebug("aesXORBI: " + aesXORBI + ", " + aesXORBI.bitLength());
+
+            EnqueueForSend(DHKEPackets.KeyReplyPacket(_publicKeyBytes, aesXORBI), _remote);
+        }
+        else{
+            Main.LogDebug("Checksum failed for client kpub.");
+        }
+
+    }
+}

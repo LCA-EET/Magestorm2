@@ -1,3 +1,6 @@
+using System;
+using System.Net;
+using System.Numerics;
 using UnityEngine;
 
 public class UILoginForm : ValidatableForm
@@ -5,11 +8,14 @@ public class UILoginForm : ValidatableForm
     private void Awake()
     {
         Game.LoggedIn = false;
-        Game.FetchServerInfo();
+        //Game.FetchServerInfo();
         CharacterClassManager.Init();
         DisciplineManager.Init();
         SpellManager.Init();
         ComponentRegister.UILoginForm = this;
+        ((TextField)EntriesToValidate[0]).SetValue("test2", false);
+        ((TextField)EntriesToValidate[1]).SetValue("test2", false);
+        ((TextField)EntriesToValidate[2]).SetValue(PlayerPrefs.GetString("server", "fosiemods.net:6000"), false);
     }
    
 
@@ -20,7 +26,7 @@ public class UILoginForm : ValidatableForm
         AssociateFormToButtons();
         if(Game.GameServerPort > 0)
         {
-            ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
+            ComponentRegister.UIPrefabManager.InstantiateDHKEPacketProcessor();
             if (MatchParams.ReturningFromMatch)
             {
                 Cursor.lockState = CursorLockMode.None;
@@ -46,6 +52,7 @@ public class UILoginForm : ValidatableForm
     void Update()
     {
         #if UNITY_EDITOR
+        /*
         if (Game.ForceLogin)
         {
             Game.ForceLogin = false;
@@ -53,12 +60,52 @@ public class UILoginForm : ValidatableForm
             Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket());
 
         }
+        */
 #endif
     }
     protected override void PassedValidation()
     {
         //Debug.Log("Passed validation.");
-        Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket()); 
+        //Cryptography.EncryptAndSend(Pregame_Packets.LogInPacket()); 
+        string fieldText = ((TextField)EntriesToValidate[2]).GetValue().ToString();
+        string[] split = fieldText.Split(":");
+        if(split.Length == 2)
+        {
+            try
+            {
+                IPHostEntry server = Dns.GetHostEntry(split[0]);
+                Debug.Log(server.AddressList[0].ToString());
+                int remoteport;
+                if (int.TryParse(split[1], out remoteport))
+                {
+                    Game.GameServerPort = remoteport;
+                    Game.GameServerAddress = server.AddressList[0];
+                    PlayerPrefs.SetString("server", fieldText);
+                    if(ComponentRegister.DHKEPacketProcessor == null)
+                    {
+                        ComponentRegister.UIPrefabManager.InstantiateDHKEPacketProcessor();
+                    }
+                    else
+                    {
+                        ComponentRegister.DHKEPacketProcessor.Init(remoteport);
+                    }
+                }
+                else
+                {
+                    ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(413));
+                }
+            }
+            catch(Exception ex)
+            {
+                ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(412));
+            }
+        }
+        else
+        {
+            ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(412));
+        }
+        
+        //Game.UDP.Send(Pregame_Packets.DPRequestPacket());
     }
     public override void ButtonPressed(ButtonType buttonType)
     {
@@ -69,6 +116,7 @@ public class UILoginForm : ValidatableForm
                 {
                     PlayerAccount.StoreCredentials(((TextField)EntriesToValidate[0]).GetValue().ToString(),
                         Cryptography.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString()));
+                    
                     PassedValidation();
                 }
                 else

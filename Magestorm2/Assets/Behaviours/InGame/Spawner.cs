@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour
     public GameObject Prefab_ManaPotion;
     public GameObject Prefab_GoldenApple;
     public GameObject[] PotionSpawns;
+    public Potion SpawnedPotion;
     private Dictionary<byte, SpellSpawner> _spellPrefabs;
     private Dictionary<short, SpawnedSpell> _spellRegistry;
     private Dictionary<byte, VFX> _vfxTable;
@@ -87,8 +88,10 @@ public class Spawner : MonoBehaviour
             Debug.Log("No VFX for code " + vfxCode);
         }
     }
-    public void SpawnPotion(byte potionID, Vector3 position)
+    public void SpawnPotion(byte potionID, byte locationID)
     {
+        Vector3 position = PotionSpawns[locationID % PotionSpawns.Length].transform.position;
+        Debug.Log("Potion position: " + position + ", locationID: " + locationID);
         GameObject toSpawn = null;
         switch (potionID)
         {
@@ -98,15 +101,22 @@ public class Spawner : MonoBehaviour
             case ControlCodes.Potion_Mana:
                 toSpawn = Prefab_ManaPotion;
                 break;
-            case ControlCodes.Potion_GoldenApple:
+            case ControlCodes.Potion_Rejuvenation:
                 toSpawn = Prefab_GoldenApple;
                 break;
         }
         if (toSpawn != null)
         {
-            Instantiate(toSpawn);
-            toSpawn.transform.parent = transform.parent;
-            toSpawn.transform.position = position;
+            GameObject spawned = Instantiate(toSpawn);
+            spawned.transform.parent = transform.parent;
+            spawned.transform.position = position;
+        }
+    }
+    public void DestroySpawnedPotion()
+    {
+        if(SpawnedPotion != null)
+        {
+            Destroy(SpawnedPotion.gameObject);
         }
     }
     private void ExpirationCheck()

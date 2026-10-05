@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class PregamePacketProcessor extends UDPProcessor
 {
     private int _accountID;
-
+    private byte[] _dhkeDomainBytes;
     public PregamePacketProcessor(int port){
         super(port);
     }
@@ -106,6 +106,9 @@ public class PregamePacketProcessor extends UDPProcessor
                 break;
         }
         return true;
+    }
+    public void SetDHKEDomainBytes(byte[] dhke){
+        _dhkeDomainBytes = dhke;
     }
     private void HandleMatchScoreRequest(){
         SendMatchScore(_decrypted[5], _remote);

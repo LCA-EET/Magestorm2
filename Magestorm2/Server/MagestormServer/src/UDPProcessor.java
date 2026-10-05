@@ -68,6 +68,7 @@ public class UDPProcessor extends RegisteredThread{
         _outgoingPackets.add(new OutgoingPacket(encrypted, rc));
     }
 
+
     protected boolean ProcessPacket(DatagramPacket received){
         Main.LogError("Unimplemented packet handler.");
         return true;

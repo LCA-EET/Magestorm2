@@ -118,6 +118,7 @@ public class Database {
             Main.LogError("Database.BanAccount(): " + e.getMessage());
         }
     }
+    /*
     public static boolean UpdateServerInfo(){
         String portNumber = "6000";
 
@@ -139,6 +140,8 @@ public class Database {
         }
         return false;
     }
+    */
+
     public static boolean TestDBConnection(){
         Main.LogMessage("Testing DB Connection.");
         try(Connection conn = DBConnection()) {

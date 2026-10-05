@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InGameClips
   FootstepAudioDistance: 10
-  SFXBias: {fileID: 8300000, guid: 921df314173d8f8449356a3576587fe0, type: 3}
+  SFXBias: {fileID: 8300000, guid: 5e9476e92dac84c4c9799825d18fa754, type: 3}
   SFXDestroyedShrine: {fileID: 8300000, guid: 659a95b0d2b29e8408c666b3eaa7eb0a, type: 3}
   SFXWaterSplash:
   - {fileID: 8300000, guid: 1328afec2f11be7428b70f2a70c725be, type: 3}
@@ -82,6 +82,46 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4f26c0a5985a4754aacb5912a18c97d2, type: 3}
   - {fileID: 8300000, guid: 31d4ff58695d5fe46945933576f3882b, type: 3}
   - {fileID: 8300000, guid: 962a4aba1c67e0347b714cd74d69b744, type: 3}
+  SFXDeathMale:
+  - {fileID: 8300000, guid: 27998dca3c2cde344910c7171c0ed5a0, type: 3}
+  - {fileID: 8300000, guid: 6613d97c4dee6e54391de13d2c432a16, type: 3}
+  - {fileID: 8300000, guid: cbd6f3374514d8c4eafd14c59632c5f9, type: 3}
+  - {fileID: 8300000, guid: 6daef347439bfb04d87976f49d7e5e15, type: 3}
+  SFXDeathFemale:
+  - {fileID: 8300000, guid: 7742b431fd202024a80f13df80205b1b, type: 3}
+  - {fileID: 8300000, guid: f9cd4236365cc5b4e9971bee9a9f0933, type: 3}
+  - {fileID: 8300000, guid: f0fd8d72863283545ae0087907e7b81e, type: 3}
+  - {fileID: 8300000, guid: 5e1b3470b3b2b984ba7aae10861cce43, type: 3}
+  SFXGruntMale:
+  - {fileID: 8300000, guid: 28d5342f935ae7e49b8508a9baf03016, type: 3}
+  - {fileID: 8300000, guid: 396723967c07f1f49a460a8741cc7139, type: 3}
+  - {fileID: 8300000, guid: d30efc437d240a34e89e8801cca49fe0, type: 3}
+  - {fileID: 8300000, guid: 8160b69576c1d48448eb185d198ce827, type: 3}
+  SFXGruntFemale:
+  - {fileID: 8300000, guid: 12afed291ab302542b09b7bc223d1edb, type: 3}
+  - {fileID: 8300000, guid: 2c9506cb05676694086ae2fd50d55d81, type: 3}
+  - {fileID: 8300000, guid: f901b421bd98a25499e64240e9dcb85d, type: 3}
+  - {fileID: 8300000, guid: cc47d0824f311334ab47c333377d6af1, type: 3}
+  SFXCastFire:
+  - {fileID: 8300000, guid: 3540fdcdd4adbf940a4737120c8c320d, type: 3}
+  - {fileID: 8300000, guid: d2788656837e7db42bba0fac32877624, type: 3}
+  - {fileID: 8300000, guid: 2589ae6307022c148be7fcd09afd3efe, type: 3}
+  - {fileID: 8300000, guid: f0ceaaa7bb6ec474ab37775fa2e947af, type: 3}
+  SFXCastIce:
+  - {fileID: 8300000, guid: f728c851546bd294d9de063636fbd4d6, type: 3}
+  - {fileID: 8300000, guid: 332e40d46068d8343bde04f7c0dbe5cd, type: 3}
+  - {fileID: 8300000, guid: 2d9b694458e9b474988632a393562e61, type: 3}
+  - {fileID: 8300000, guid: 32a2c707b57d50b439b74eab6d4025ea, type: 3}
+  SFXCastEarth:
+  - {fileID: 8300000, guid: 098fb4763f0a03f4994f9ae44d739fb5, type: 3}
+  - {fileID: 8300000, guid: d0b733cee3f7d3243879d051f8988cee, type: 3}
+  - {fileID: 8300000, guid: 6d7e1522b94cfa249b222658fab3d885, type: 3}
+  - {fileID: 8300000, guid: 1a0192ab541e75f4abda3cdd90e5f47b, type: 3}
+  SFXCastBrilliance:
+  - {fileID: 8300000, guid: 8123d5213e9e4474b96ddf9fc0b57b47, type: 3}
+  - {fileID: 8300000, guid: 80b9dfb450d4583429ded54f7e776501, type: 3}
+  - {fileID: 8300000, guid: 6053617a0ef501744b31b364a29e4cc9, type: 3}
+  - {fileID: 8300000, guid: df568daafa1a9a2479815e1bfb97aba6, type: 3}
   SFXWoosh_HeavyFast: {fileID: 8300000, guid: 3deca9672c7484500957efcb75d000f5, type: 3}
   SFXWoosh_HeavyMedium: {fileID: 8300000, guid: 5e3a05f28e6504b82a82523aa957b4d2, type: 3}
   SFXWoosh_HeavySlow: {fileID: 8300000, guid: 472f30ae362af4ad688578ba5f13a113, type: 3}
@@ -93,3 +133,5 @@ MonoBehaviour:
   SFXPortcullis: {fileID: 8300000, guid: 03b6fa362634ba64ab97881f4671f5c2, type: 3}
   SFXCloseDoor: {fileID: 8300000, guid: 5c2fe128928947e4db9c1eca698c6843, type: 3}
   SFXMagicElevator: {fileID: 8300000, guid: 2a3aa1bfe2616554a9992cb52c947f9c, type: 3}
+  SFXPickUpItem: {fileID: 8300000, guid: a39ec2f6fddfd26499c38dd396ed251e, type: 3}
+  SFXDrinkPotion: {fileID: 8300000, guid: 9e8569de60a46c94b96865b6b842d440, type: 3}

@@ -28,6 +28,7 @@ public enum InputControl : byte
     MiniMapZoomOut=23,
     MiniMapZoomDefault=24,
     InGameMenu = 25,
+    UsePotion = 26,
 
     Slot1 = 100,
     Slot2 = 101,
@@ -150,6 +151,7 @@ public static class InputControls
         defaults.Add(InputControl.MouseMode, KeyCode.P);
         defaults.Add(InputControl.Crouch, KeyCode.LeftControl);
         defaults.Add(InputControl.SetSecondary, KeyCode.LeftAlt);
+        defaults.Add(InputControl.UsePotion, KeyCode.U);
         return defaults;
     }
     
@@ -177,6 +179,13 @@ public static class InputControls
         get
         {
             return (Input.GetKeyDown(_controls[InputControl.MouseMode])) && Game.GameMode;
+        }
+    }
+    public static bool UsePotion
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.UsePotion])) && Game.GameMode;
         }
     }
     public static bool Action

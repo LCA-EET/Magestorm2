@@ -122,6 +122,12 @@ public class ControlCodes {
         public static final byte Potion_None = 0;
         public static final byte Potion_Health = 1;
         public static final byte Potion_Mana = 2;
-        public static final byte Potion_GoldenApple = 3;
+        public static final byte Potion_Rejuvenation = 3;
+    //
+
+    //region Cryptography
+        public static final byte Encryption_None = 0;
+        public static final byte Encryption_RSA_AES = 1;
+        public static final byte Encryption_DHKE_AES = 2;
     //
 }

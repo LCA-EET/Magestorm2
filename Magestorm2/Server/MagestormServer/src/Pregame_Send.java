@@ -26,5 +26,6 @@ public class Pregame_Send {
     public static final byte UpdateSkillsAndSlots = 25;
     public static final byte ExpLevelUpdate = 26;
     public static final byte MatchScore = 27;
+    public static final byte DomainParameters = 28;
 
 }

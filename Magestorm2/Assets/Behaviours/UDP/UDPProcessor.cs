@@ -8,7 +8,7 @@ public class UDPProcessor : MonoBehaviour
     protected byte[] _decrypted;
     protected byte _opCode;
 
-    public void Init(int remotePort)
+    public virtual void Init(int remotePort)
     {
         Debug.Log("Initializing UDP client, remote port: " + remotePort);
         Game.UDP = new UDPGameClient(new IPEndPoint(Game.GameServerAddress, remotePort));

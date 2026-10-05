@@ -1,15 +1,18 @@
+import javax.sound.sampled.Control;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GameServer extends Thread {
-    public static final boolean SymmetricEncryption = false;
+    public static boolean SymmetricEncryption;
     public static int MaxUDPPayload = 508;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
     private static ConcurrentHashMap<Byte, byte[]> _objectData;
     private static PregamePacketProcessor _pgProcessor;
+    private static DHKEListener _dhkeProcessor;
     private static byte[] _levelData;
     public static int VictoryCountdown = 30000;
 
@@ -34,7 +37,20 @@ public class GameServer extends Thread {
         }
         RemoteClientManager.init();
         MatchManager.init(ServerParams.MaxMatches);
-        _pgProcessor = new PregamePacketProcessor(ServerParams.ListeningPort);
+        _dhkeProcessor = new DHKEListener(ServerParams.DHKEListeningPort, Cryptographer.RegenerateDomainParameters(ServerParams.DHKEKeyLength));
+        _pgProcessor = new PregamePacketProcessor(ServerParams.PregameListeningPort);
+        switch(ServerParams.Encryption){
+            case ControlCodes.Encryption_DHKE_AES:
+                SymmetricEncryption = true;
+                Main.LogMessage("DHKE + AES");
+                break;
+            case ControlCodes.Encryption_RSA_AES:
+                SymmetricEncryption = true;
+                Main.LogMessage("RSA + AES");
+                break;
+            default:
+                SymmetricEncryption = false;
+        }
         _levelData = Database.GetLevelsList((byte)1);
         _usedMatchPorts = new ConcurrentSkipListSet<>();
         if(ServerParams.QMEnabled == 1){
@@ -60,7 +76,7 @@ public class GameServer extends Thread {
 
     public static int GetNextMatchPort()
     {
-        int nextAvailablePort = ServerParams.ListeningPort + 1;
+        int nextAvailablePort = ServerParams.PregameListeningPort + 1;
         while(_usedMatchPorts.contains(nextAvailablePort)){
             nextAvailablePort++;
         }

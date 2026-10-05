@@ -48,6 +48,10 @@ public class HMLUpdater
             _elapsed = 0.0f;
         }
     }
+    public float PercentOfMax()
+    {
+        return Value / _maxValue;
+    }
     public float Value
     {
         get
@@ -70,6 +74,13 @@ public class HMLUpdater
     public float AdjustValue(float adjustment)
     {
         float toReturn = _newValue + adjustment;
+        UpdateValue(toReturn);
+        return toReturn;
+    }
+
+    public float AdjustPct(byte percentOfMax)
+    {
+        float toReturn = (percentOfMax / 100.0f) * _maxValue;
         UpdateValue(toReturn);
         return toReturn;
     }

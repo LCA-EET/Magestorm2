@@ -4,7 +4,8 @@ using System.Net;
 public static class Game
 {
     public const bool SymmetricEncryption = false;
-    public static float TickInterval; 
+    public static float TickInterval;
+    public static string DiscordURL;
     public static float MovementPolling;
     public static bool Running;
     private static long _serverTime;
@@ -20,6 +21,7 @@ public static class Game
     public static InGameClips Clips;
     public static int GameServerPort;
     public static IPAddress GameServerAddress;
+    public static ConsumableDisplay ConsumableDisplay;
     public static bool LoggedIn = false;
     //public static PMDByte PlayerPMDByte;
     public static bool GameMode

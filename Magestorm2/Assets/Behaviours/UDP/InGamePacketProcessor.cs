@@ -156,9 +156,42 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.MaxCast:
                         HandleMaxCastPacket();
                         break;
+                    case InGame_Receive.PotionTaken:
+                        HandlePotionTaken();                
+                        break;
+                    case InGame_Receive.SpawnPotion:
+                        HandlePotionSpawn();
+                        break;
+                    case InGame_Receive.UsedPotion:
+                        HandlePotionUse();
+                        break;
                 }
             }
         }
+    }
+    private void HandlePotionUse()
+    {
+        byte newHealthPct = _decrypted[1];
+        byte newManaPct = _decrypted[2];
+        ComponentRegister.PC.UpdateHPPct(newHealthPct);
+        ComponentRegister.PC.UpdateManaPct(newManaPct);
+        Game.PCAvatar.PlayAudioClip(Game.Clips.SFXDrinkPotion);
+        Game.ConsumableDisplay.HideImage();
+    }
+    private void HandlePotionSpawn()
+    {
+        Debug.Log("Potion Spawn");
+        ComponentRegister.Spawner.SpawnPotion(_decrypted[1], _decrypted[2]);
+    }
+    private void HandlePotionTaken()
+    {
+        byte takenBy = _decrypted[1];
+        byte potionID = _decrypted[2];
+        if(takenBy == MatchParams.IDinMatch)
+        {
+            ComponentRegister.PC.PickedUpPotion(potionID);
+        }
+        ComponentRegister.Spawner.DestroySpawnedPotion();
     }
     private void HandleMaxCastPacket()
     {
@@ -522,6 +555,7 @@ public class InGamePacketProcessor : UDPProcessor
                 ComponentRegister.PlayerMovement.DeathResetCameraAndController();
                 Avatar playerKiller = null;
                 ComponentRegister.PC.UpdateHP(0.0f);
+                Game.ConsumableDisplay.HideImage();
                 if (Match.GetAvatar(killerID, ref playerKiller))
                 {
                     new MessageData(Language.BuildString(186, playerKiller.Name), Language.GetBaseString(304)); //
@@ -543,6 +577,7 @@ public class InGamePacketProcessor : UDPProcessor
                     }
                 }
             }
+            killedPlayer.PlayDeathScream();
             killedPlayer.CreateDeadBody();
             killedPlayer.SetAlive(false);
         }

@@ -357,18 +357,21 @@ public class Packets {
         return Cryptographer.Encrypt(new byte[]{InGame_Send.RemovedFromMatch, reasonCode});
     }
 
-    public static byte[] HPandManaUpdatePacket(float health, float mana){
-        byte[] toEncrypt = new byte[9];
+    public static byte[] HPandManaUpdatePacket(byte healthPct, byte manaPct){
+        byte[] toEncrypt = new byte[3];
         toEncrypt[0] = InGame_Send.HPandManaUpdate;
-        System.arraycopy(ByteUtils.FloatToByteArray(health),0,toEncrypt,1,4);
-        System.arraycopy(ByteUtils.FloatToByteArray(mana),0,toEncrypt,5,4);
+        toEncrypt[1] = healthPct;
+        toEncrypt[2] = manaPct;
+
+        //System.arraycopy(ByteUtils.FloatToByteArray(health),0,toEncrypt,1,4);
+        //System.arraycopy(ByteUtils.FloatToByteArray(mana),0,toEncrypt,5,4);
         return Cryptographer.Encrypt(toEncrypt);
     }
 
-    public static byte[] HPorManaorLeyUpdatePacket(byte packetID, float value){
-        byte[] toEncrypt = new byte[5];
+    public static byte[] HPorManaorLeyUpdatePacket(byte packetID, byte pct){
+        byte[] toEncrypt = new byte[2];
         toEncrypt[0] = packetID;
-        System.arraycopy(ByteUtils.FloatToByteArray(value),0,toEncrypt,1,4);
+        toEncrypt[1] = pct;
         return Cryptographer.Encrypt(toEncrypt);
     }
 
@@ -489,6 +492,14 @@ public class Packets {
         byte[] toEncrypt = new byte[2];
         toEncrypt[0] = InGame_Send.MaxCast;
         toEncrypt[1] = castType;
+        return Cryptographer.Encrypt(toEncrypt);
+    }
+
+    public static byte[] UsedPotionPacket(byte newHealthPct, byte newManaPct){
+        byte[] toEncrypt = new byte[3];
+        toEncrypt[0] = InGame_Send.UsedPotion;
+        toEncrypt[1] = newHealthPct;
+        toEncrypt[2] = newManaPct;
         return Cryptographer.Encrypt(toEncrypt);
     }
 

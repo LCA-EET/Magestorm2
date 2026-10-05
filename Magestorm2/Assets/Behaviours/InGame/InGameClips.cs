@@ -11,6 +11,8 @@ public class InGameClips : MonoBehaviour
     public AudioClip[] SFXFootstep_Wood;
     public AudioClip[] SFXFootstep_Grass;
     public AudioClip[] SFXFootstep_Dirt;
+    public AudioClip[] SFXDeathMale, SFXDeathFemale, SFXGruntMale, SFXGruntFemale;
+    public AudioClip[] SFXCastFire, SFXCastIce, SFXCastEarth, SFXCastBrilliance;
     public AudioClip SFXWoosh_HeavyFast;
     public AudioClip SFXWoosh_HeavyMedium;
     public AudioClip SFXWoosh_HeavySlow;
@@ -22,10 +24,44 @@ public class InGameClips : MonoBehaviour
     public AudioClip SFXPortcullis;
     public AudioClip SFXCloseDoor;
     public AudioClip SFXMagicElevator;
-    
+    public AudioClip SFXPickUpItem;
+    public AudioClip SFXDrinkPotion;
     public void Awake()
     {
         Game.Clips = this;
+    }
+    public AudioClip GetDisciplineCast(byte disciplineCode)
+    {
+        AudioClip[] clips = null;
+        switch (disciplineCode)
+        {
+            case ControlCodes.SpellDiscipline_Healing:
+
+                break;
+            case ControlCodes.SpellDiscipline_Brilliance:
+                clips = SFXCastBrilliance;
+                break;
+            case ControlCodes.SpellDiscipline_EarthLaw:
+                clips = SFXCastEarth;
+                break;
+            case ControlCodes.SpellDiscipline_IceLaw:
+                clips = SFXCastIce;
+                break;
+            default:
+                clips = SFXCastFire;
+                break;
+        }
+        return clips[Random.Range(0, clips.Length)];
+    }
+    public AudioClip GetDeathScream(bool male)
+    {
+        AudioClip[] clips = male ? SFXDeathMale : SFXDeathFemale;
+        return clips[Random.Range(0, clips.Length)];
+    }
+    public AudioClip GetGrunt(bool male)
+    {
+        AudioClip[] clips = male ? SFXGruntMale : SFXGruntFemale;
+        return clips[Random.Range(0, clips.Length)];
     }
     private AudioClip GetRandomSplash()
     {

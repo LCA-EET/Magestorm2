@@ -18,11 +18,11 @@ public class UIKeyMapper : ValidatableForm
         _controlTable = InputControls.ControlTableCopy();
         AssociateFormToButtons();
         _keySelectors = GetComponentsInChildren<KeySelector>();
-        for(int i =0; i< _keySelectors.Length; i++)
+        for (int i = 0; i < _keySelectors.Length; i++)
         {
             _keySelectors[i].SetOwningForm(this, i);
         }
-        
+        ShowPage();
     }
     public KeyCode GetKeyCode(InputControl control)
     {
@@ -56,7 +56,6 @@ public class UIKeyMapper : ValidatableForm
                 CloseForm();
                 break;
             case ButtonType.Misc3:
-                Debug.Log("M3");
                 DecrementPage();
                 break;
             case ButtonType.Misc4:
@@ -105,6 +104,10 @@ public class UIKeyMapper : ValidatableForm
         if(ComponentRegister.AvailableSpellsPanel != null)
         {
             ComponentRegister.AvailableSpellsPanel.RefeshPanel();
+        }
+        if(Game.ConsumableDisplay != null)
+        {
+            Game.ConsumableDisplay.RefreshKey();
         }
     }
     private void ApplyDefaults()

@@ -354,8 +354,9 @@ public class PregamePacketProcessor : UDPProcessor
         Debug.Log("Tick Interval: " + Game.TickInterval);
         Debug.Log("Polling Factor: " + pollingFactor);
         Debug.Log("Movement Polling Interval: " + Game.MovementPolling);
-       
-        byte characterBytesStart = 15;
+        byte discordLength = _decrypted[15];
+        Game.DiscordURL = ByteUtils.BytesToUTF8(_decrypted, 16, discordLength);
+        byte characterBytesStart = (byte)(15 + 1 + discordLength);
         if (_decrypted.Length > characterBytesStart)
         {
             byte numCharacters = _decrypted[characterBytesStart];
