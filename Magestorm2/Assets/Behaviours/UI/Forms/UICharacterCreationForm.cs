@@ -20,10 +20,6 @@ public class UICharacterCreationForm : ValidatableForm
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void NameCheckPassed()
     {
         /*

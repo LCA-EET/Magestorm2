@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using Unity.VisualScripting;
@@ -13,24 +14,32 @@ public class PregamePacketProcessor : UDPProcessor
     private void Awake()
     {
         ComponentRegister.PregamePacketProcessor = this;
+        if(ComponentRegister.DHKEPacketProcessor != null)
+        {
+            Destroy(ComponentRegister.DHKEPacketProcessor.gameObject);
+        }
         _heartbeat = new PeriodicAction(30.0f, Heartbeat, null);
-        Init(Game.GameServerPort);
+        Debug.Log("PregamePacketProcessor PregameKey: " + new BigInteger(Game.PregameKey, false, true).ToString("X"));
+        Init(Game.GameServerPort + 1, ControlCodes.CipherCode_AES, Game.PregameKey);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        SendBytes(Pregame_Packets.LogInPacket());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Game.UDP.HasPacketsPending)
+        if (_udp.HasPacketsPending)
         {
-            List<byte[]> toProcess = Game.UDP.PacketsReceived();
-            foreach (byte[] decryptedPayload in toProcess)
+            List<byte[]> toProcess = _udp.PacketsReceived();
+            foreach (byte[] encryptedPayload in toProcess)
             {
+                byte[] decryptedPayload = _cryptographer.Decrypt(encryptedPayload);
                 PreProcess(decryptedPayload);
+                Debug.Log("Pregame Packet Received - OpCode: " + decryptedPayload[0]);
+                ByteUtils.PrintByteArray(decryptedPayload);
                 switch (_opCode)
                 {
                     case Pregame_Receive.CreationFailed:
@@ -126,7 +135,7 @@ public class PregamePacketProcessor : UDPProcessor
     private void HandleMatchScoreRequest()
     {
         Debug.Log("Match score request response received.");
-        ComponentRegister.UIPrefabManager.InstantiateMatchScores(_decrypted, true);
+        ComponentRegister.UIPrefabManager.InstantiateMatchScores(_decrypted);
     }
     private void HandleExperienceUpdate()
     {
@@ -159,11 +168,17 @@ public class PregamePacketProcessor : UDPProcessor
     }
     private void HandleMatchEntryPacket()
     {
-        MatchParams.Init(_decrypted);
-        Game.UDP.StopListening();
-        ComponentRegister.UIPrefabManager.ClearStack();
-        Debug.Log("SceneID: " + MatchParams.SceneID);
-        SceneManager.LoadScene(MatchParams.SceneID.ToString());
+        if (MatchParams.Init(_decrypted))
+        {
+            _udp.StopListening();
+            ComponentRegister.UIPrefabManager.ClearStack();
+            Debug.Log("SceneID: " + MatchParams.SceneID);
+            SceneManager.LoadScene(MatchParams.SceneID.ToString());
+        }
+        else
+        {
+            Game.MessageBoxReference(414);
+        }
     }
     private void HandleMatchIsFullPacket()
     {

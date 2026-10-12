@@ -16,7 +16,7 @@ public class AntiCheat {
         }
         if(isCheating){
             Database.BanAccount(accountID);
-            GameServer.EnqueueForSend(Packets.BannedForCheatingPacket(), rc);
+            GameServer.PGP.EnqueueForSend(Packets.BannedForCheatingPacket(), rc);
             Main.LogMessage("Account banned for stat hacking: " + accountID);
         }
         return isCheating;

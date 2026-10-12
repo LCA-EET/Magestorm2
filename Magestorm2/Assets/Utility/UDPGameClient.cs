@@ -56,7 +56,7 @@ public class UDPGameClient
                 wasReceived = false;
                 byte[] received = _client.Receive(ref _remote);
                 wasReceived = true; 
-                _received.Enqueue(Cryptography.DecryptReceived(received));
+                _received.Enqueue(received);
             }
             catch(Exception ex) {
                 if (wasReceived)

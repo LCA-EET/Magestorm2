@@ -9,20 +9,16 @@ public static class SpellManager
         if (!_init)
         {
             _spells = new Dictionary<byte, SpellData>();
-            string contents;
-            if (SharedFunctions.GetPHPString("spells", out contents))
+            string contents = Game.LoadDatFile("spells");
+            string[] fieldSplit = contents.Split("[FIELD]");
+            string[] fields = fieldSplit[0].Split("\n");
+            string[] spelldata = fieldSplit[1].Split("[SPELL]");
+            for (int i = 0; i < spelldata.Length - 1; i++)
             {
-                string[] fieldSplit = contents.Split("[FIELD]");
-                string[] fields = fieldSplit[0].Split("<br>");
-                string[] spelldata = fieldSplit[1].Split("[SPELL]");
-                for (int i = 0; i < spelldata.Length-1; i++)
-                {
-                    SpellData toAdd = new SpellData(fields, spelldata[i]);
-                    _spells.Add(toAdd.SpellID, toAdd);
-                    byte discipline = toAdd.Discipline;
-                    DisciplineManager.GetDiscipline(discipline).AddSpellToDiscipline(toAdd);
-                }
-                
+                SpellData toAdd = new SpellData(fields, spelldata[i]);
+                _spells.Add(toAdd.SpellID, toAdd);
+                byte discipline = toAdd.Discipline;
+                DisciplineManager.GetDiscipline(discipline).AddSpellToDiscipline(toAdd);
             }
         }
     }

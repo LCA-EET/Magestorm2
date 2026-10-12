@@ -75,6 +75,15 @@ public static class ByteUtils
         BitArray bitArray = new BitArray(bytes);
         return bitArray;
     }
+    public static void PrintByteArray(byte[] toPrint)
+    {
+        string append = "PrintByteArray: ";
+        foreach(byte b in toPrint)
+        {
+            append += b.ToString("X");
+        }
+        Debug.Log(append);
+    }
     public static BitArray ByteToBoolArray(byte toConvert)
     {
         return new BitArray(new byte[] { toConvert });

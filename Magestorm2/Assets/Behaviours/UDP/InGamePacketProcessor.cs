@@ -12,19 +12,20 @@ public class InGamePacketProcessor : UDPProcessor
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Init(MatchParams.RemotePort);
+        Init(MatchParams.RemotePort, ControlCodes.CipherCode_AES, MatchParams.MatchKey);
         ComponentRegister.UIPrefabManager.ClearStack();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Game.UDP.HasPacketsPending)
+        if (_udp.HasPacketsPending)
         {
             //Debug.Log("IGPP received, opcode " + _opCode);
-            List<byte[]> toProcess = Game.UDP.PacketsReceived();
-            foreach (byte[] decryptedPayload in toProcess)
+            List<byte[]> toProcess = _udp.PacketsReceived();
+            foreach (byte[] encrypted in toProcess)
             {
+                byte[] decryptedPayload = _cryptographer.Decrypt(encrypted);
                 PreProcess(decryptedPayload);
                 switch (_opCode)
                 {
@@ -295,7 +296,7 @@ public class InGamePacketProcessor : UDPProcessor
     private void HandleMatchScores()
     {
         Debug.Log("Match Score Packet Received");
-        ComponentRegister.UIPrefabManager.InstantiateMatchScores(_decrypted, false);
+        ComponentRegister.UIPrefabManager.InstantiateMatchScores(_decrypted);
     }
     private void HandleExperienceUpdate()
     {
@@ -651,6 +652,11 @@ public class InGamePacketProcessor : UDPProcessor
     private void ProcessObjectChangePacket()
     {
         Match.ChangeObjectState(_decrypted[1], _decrypted[2], false);
+    }
+
+    public void StopListening()
+    {
+        _udp.StopListening();
     }
 }
 

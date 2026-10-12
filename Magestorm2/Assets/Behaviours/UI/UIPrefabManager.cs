@@ -62,10 +62,10 @@ public class UIPrefabManager : MonoBehaviour
         instantiated.GetComponent<UIPCEditor>().InitForm(character);
         AddToStack(instantiated);
     }
-    public void InstantiateMatchScores(byte[] data, bool resetMatchID)
+    public void InstantiateMatchScores(byte[] data)
     {
         GameObject go = Instantiate(PrefabUIMatchScores);
-        go.GetComponent<UIMatchScore>().PopulateForm(data, resetMatchID);
+        go.GetComponent<UIMatchScore>().PopulateForm(data, MatchParams.ReturningFromMatch);
         AddToStack(go);
     }
     public void InstantiateInGameMenu()

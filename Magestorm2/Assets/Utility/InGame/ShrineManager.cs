@@ -5,14 +5,16 @@ public static class ShrineManager
     private static Dictionary<byte, Shrine> _shrines;
     private static Dictionary<Team, byte> _shrineData;
     private static Team _winning;
-    public static void Init(byte[] decrypted, int index)
+    public static void Init(byte[] decrypted, ref int index)
     {
         _shrines = new Dictionary<byte, Shrine>();
         _shrineData = new Dictionary<Team, byte>();
         _shrineData.Add(Team.Chaos, decrypted[index]);
-        _shrineData.Add(Team.Balance, decrypted[index+1]);
-        _shrineData.Add(Team.Order, decrypted[index+2]);
-        
+        index++;
+        _shrineData.Add(Team.Balance, decrypted[index]);
+        index++;
+        _shrineData.Add(Team.Order, decrypted[index]);
+        index++;
     }
 
     public static void CheckVictoryCondition()

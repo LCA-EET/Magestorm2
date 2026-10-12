@@ -20,8 +20,6 @@ public class Main {
         new RegisteredThread(_serverLog).start();
         Main.LogMessage("Pregame Inactivity Timeout: " + ServerParams.PregameInactivity);
         Main.LogMessage("Ingame Inactivity Timeout: " + ServerParams.IngameInactivityDisconnect);
-
-        Cryptographer.GenerateKeyAndIV();
         if(Database.TestDBConnection()){
             //Database.UpdateServerInfo();
             GameServer.init();

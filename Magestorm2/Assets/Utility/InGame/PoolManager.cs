@@ -7,7 +7,7 @@ public static class PoolManager
     private static Dictionary<byte, InitialPoolData> _initialPoolData;
     private static Level _level;
     private static byte[] _poolData;
-    public static void Init(byte[] decrypted, int index)
+    public static void Init(byte[] decrypted, ref int index)
     {
         int numPools = decrypted[index];
         index++;

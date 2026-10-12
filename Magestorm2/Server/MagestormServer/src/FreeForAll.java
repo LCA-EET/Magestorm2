@@ -16,7 +16,8 @@ public class FreeForAll extends Match{
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID) {
         Main.LogMessage("Joining FFA " + _objectIDAsByte + ", scene: " + _sceneID);
         MatchCharacter mc = super.JoinMatch(rc, teamID);
-        GameServer.EnqueueForSend(Packets.FFAEntryPacket(_sceneID, mc, _matchPort, _matchType, _objectIDAsByte, _expirationTime), rc);
+        GameServer.PGP.EnqueueForSendWithChecksum(Packets.FFAEntryPacket(_sceneID, mc, _matchPort, _processor.GetSymmetricKey(), _matchType,
+                _objectIDAsByte, _expirationTime), rc);
         return mc;
     }
 }

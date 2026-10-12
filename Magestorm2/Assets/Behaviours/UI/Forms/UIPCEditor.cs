@@ -12,8 +12,9 @@ public class UIPCEditor : ValidatableForm, IToggleGroupOwner
 
     private byte _characterLevel;
     private PlayerCharacter _character;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         ComponentRegister.UIPCEditor = this;
         AssociateFormToButtons();
         ClassToggleGroup.SetOwningForm(this);

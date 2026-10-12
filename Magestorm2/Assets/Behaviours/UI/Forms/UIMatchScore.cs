@@ -77,6 +77,7 @@ public class UIMatchScore : ValidatableForm
         if (resetMatchID)
         {
             MatchParams.MatchID = 0;
+            MatchParams.ReturningFromMatch = false;
         }
     }
     private short DetermineScore(byte kills, byte deaths, byte raises)

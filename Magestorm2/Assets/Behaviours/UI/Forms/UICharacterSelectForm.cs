@@ -7,8 +7,9 @@ public class UICharacterSelectForm : ValidatableForm
     public UICharacterCard[] CharacterCards;
     public RenderTexture[] RenderTextures;
     private bool _qmJoin;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Game.LoggedIn = true;
         for (int i = 0; i < CharacterCards.Length; i++)
         {
@@ -60,9 +61,8 @@ public class UICharacterSelectForm : ValidatableForm
     {
         AssociateFormToButtons();
         InputControls.Init();
-        if(MatchParams.IDinMatch != 0)
+        if(MatchParams.ReturningFromMatch)
         {
-            Debug.Log("MPID: " + MatchParams.IDinMatch);
             Game.SendPregameBytes(Pregame_Packets.MatchScoreRequestPacket());
         }
     }

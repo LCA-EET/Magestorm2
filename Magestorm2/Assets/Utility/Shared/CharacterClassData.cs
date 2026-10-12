@@ -1,16 +1,18 @@
-﻿public class CharacterClassData
+﻿using UnityEngine;
+
+public class CharacterClassData
 {
     private byte _id, _hpMultiplier, _manaStatCode, _deadSight;
     private short _nameRef;
     private string _abbrev;
     public CharacterClassData(string[] fields, string contents)
     {
-        string[] split = contents.Split("<br>");
+        string[] split = contents.Split("\n");
         string fieldID, fieldValue;
-        for (int i = 0; i < fields.Length; i++)
+        for (int i = 0; i < fields.Length-1; i++)
         {
-            fieldID = fields[i];
-            fieldValue = split[i + 1];
+            fieldID = fields[i].Trim();
+            fieldValue = split[i + 1].Trim();
             switch (fieldID)
             {
                 case CharacterClassAttributes.ID:

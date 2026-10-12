@@ -261,6 +261,7 @@ public class Match extends TimedObject{
                 byte pmd = decrypted[6];
                 toUpdate.UpdateLastMovementPacketID(packetID, pmd);
                 byte controlCode = decrypted[7];
+                //Main.LogDebug("UpdatePlayerLocation Decrypted Packet Length: " + decrypted.length + ", Control Code: " + controlCode);
                 switch(controlCode){
                     case 0: // position only
                         toUpdate.UpdatePosition(decrypted);
@@ -273,9 +274,9 @@ public class Match extends TimedObject{
                         toUpdate.UpdateDirection(decrypted, 20);
                         break;
                 }
-                byte[] toEncrypt = new byte[controlCode==2 ? 32 : 20];
-                System.arraycopy(decrypted, 0, toEncrypt, 0, toEncrypt.length);
-                SendToAll(Cryptographer.Encrypt(toEncrypt));
+                //byte[] toEncrypt = new byte[controlCode==2 ? 32 : 20];
+                //System.arraycopy(decrypted, 0, toEncrypt, 0, toEncrypt.length);
+                SendToAll(decrypted);
             }
         }
     }
@@ -510,21 +511,21 @@ public class Match extends TimedObject{
         return castID;
     }
 
-    public void SendToAll(byte[] encrypted){
-        _processor.EnqueueForSend(encrypted, _verifiedClients.values());
+    public void SendToAll(byte[] toEncrypt){
+        _processor.EnqueueForSend(toEncrypt, _verifiedClients.values());
     }
-    public void SendToPlayer(byte[] encrypted, MatchCharacter recipient){
-        _processor.EnqueueForSend(encrypted, recipient.GetRemoteClient());
+    public void SendToPlayer(byte[] toEncrypt, MatchCharacter recipient){
+        _processor.EnqueueForSend(toEncrypt, recipient.GetRemoteClient());
     }
 
-    public void SendToPlayer(byte[] encrypted, byte playerID){
-        SendToPlayer(encrypted, _matchCharacters.get(playerID));
+    public void SendToPlayer(byte[] toEncrypt, byte playerID){
+        SendToPlayer(toEncrypt, _matchCharacters.get(playerID));
     }
-    public void SendToClient(byte[] encrypted, RemoteClient remote){
-        _processor.EnqueueForSend(encrypted, remote);
+    public void SendToClient(byte[] toEncrypt, RemoteClient remote){
+        _processor.EnqueueForSend(toEncrypt, remote);
     }
-    protected void SendToCollection(byte[] encrypted, Collection<RemoteClient> recipients){
-        _processor.EnqueueForSend(encrypted, recipients);
+    protected void SendToCollection(byte[] toEncrypt, Collection<RemoteClient> recipients){
+        _processor.EnqueueForSend(toEncrypt, recipients);
     }
     public void HandleWallAndSigilRequest(byte mcID){
         if(_matchCharacters.containsKey(mcID)){

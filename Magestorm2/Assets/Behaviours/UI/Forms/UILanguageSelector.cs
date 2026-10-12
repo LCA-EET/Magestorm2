@@ -8,11 +8,6 @@ public class UILanguageSelector : ValidatableForm
         AssociateFormToButtons();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public override void ButtonPressed(ButtonType buttonType)
     {
         Debug.Log(buttonType.ToString());

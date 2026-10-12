@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
@@ -14,8 +15,10 @@ public class UDPProcessor extends RegisteredThread{
     protected byte[] _decrypted;
     protected final int _listeningPort;
     protected byte _opCode;
+    protected Cryptographer _cryptographer;
 
-    public UDPProcessor(int listeningPort){
+    public UDPProcessor(int listeningPort, byte encryptionType){
+        _cryptographer = new Cryptographer(encryptionType);
         _listeningPort = listeningPort;
         _udpClient = new UDPClient(listeningPort, this);
         _outgoingPackets = new LinkedBlockingQueue<>();
@@ -29,6 +32,12 @@ public class UDPProcessor extends RegisteredThread{
         _sender = new RegisteredThread(new PacketSender(_udpClient, this));
         _sender.start();
     }
+    public byte[] GetSymmetricKey(){
+        return _cryptographer.GetCipher().GetSecretSymmetricKeyBytes();
+    }
+    public BigInteger GetSymmetricKeyBI(){
+        return _cryptographer.GetCipher().GetSecretSymmetricKeyBI();
+    }
     public void TerminateProcessor(){
         Main.LogMessage("Terminating UDPProcessor for port: " + _listeningPort);
         _terminated = true;
@@ -37,7 +46,7 @@ public class UDPProcessor extends RegisteredThread{
         _sender.interrupt();
     }
     protected void PreProcess(DatagramPacket received){
-        _decrypted = Cryptographer.Decrypt(received.getData());
+        _decrypted = _cryptographer.Decrypt(received.getData());
         _opCode = _decrypted[0];
         _received = received;
     }
@@ -49,25 +58,16 @@ public class UDPProcessor extends RegisteredThread{
     public BlockingQueue<OutgoingPacket> OutgoingQueue(){
         return _outgoingPackets;
     }
-    public ArrayList<OutgoingPacket> OutgoingPackets(){
-        ArrayList<OutgoingPacket> toReturn = new ArrayList<>();
-        while(!_outgoingPackets.isEmpty()){
-            toReturn.add(_outgoingPackets.remove());
-        }
-        return toReturn;
+    public void EnqueueForSendWithChecksum(byte[] toEncrypt, RemoteClient rc){
+        byte[] toEncryptWithChecksum = _cryptographer.ApplyChecksum(toEncrypt);
+        EnqueueForSend(toEncryptWithChecksum, rc);
     }
-
-    public boolean HasOutgoingPackets(){
-        return !_outgoingPackets.isEmpty();
+    public void EnqueueForSend(byte[] toEncrypt, Iterable<RemoteClient> recipients){
+        _outgoingPackets.add(new OutgoingPacket(_cryptographer.Encrypt(toEncrypt), recipients));
     }
-
-    public void EnqueueForSend(byte[] encrypted, Iterable<RemoteClient> recipients){
-        _outgoingPackets.add(new OutgoingPacket(encrypted, recipients));
+    public void EnqueueForSend(byte[] toEncrypt, RemoteClient rc){
+        _outgoingPackets.add(new OutgoingPacket(_cryptographer.Encrypt(toEncrypt), rc));
     }
-    public void EnqueueForSend(byte[] encrypted, RemoteClient rc){
-        _outgoingPackets.add(new OutgoingPacket(encrypted, rc));
-    }
-
 
     protected boolean ProcessPacket(DatagramPacket received){
         Main.LogError("Unimplemented packet handler.");

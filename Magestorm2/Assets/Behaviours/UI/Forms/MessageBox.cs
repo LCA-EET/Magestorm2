@@ -6,8 +6,9 @@ public class MessageBox : ValidatableForm
 {
     private TMP_Text _textBox;
     private Action _function;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _textBox = GetComponentInChildren<TMP_Text>();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created

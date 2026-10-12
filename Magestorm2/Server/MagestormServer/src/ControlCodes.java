@@ -2,6 +2,12 @@ public class ControlCodes {
 
     public static final byte CastPayloadStartIndex = 5;
 
+    //region CipherCode
+        public static final byte CipherCode_None = 0;
+        public static final byte CipherCode_AES = 1;
+        public static final byte CipherCode_XOR = 2;
+    //endregion
+
     //region EffectTarget
         public static final byte EffectTarget_SpellTarget = 0;
         public static final byte EffectTarget_Caster = 1;

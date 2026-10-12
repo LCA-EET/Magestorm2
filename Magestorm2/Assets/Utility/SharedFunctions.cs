@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+
 public static class SharedFunctions
 {
     private static Dictionary<byte, byte> _elementShieldEffects;
@@ -29,6 +30,21 @@ public static class SharedFunctions
         }
         return toReturn;
     }
+
+    public static int CompareVectorsY(Vector3 a, Vector3 b)
+    {
+        int toReturn = a.y.CompareTo(b.y);
+        if (toReturn == 0)
+        {
+            toReturn = a.x.CompareTo(b.x);
+            if (toReturn == 0)
+            {
+                toReturn = a.z.CompareTo(b.z);
+            }
+        }
+        return toReturn;
+    }
+
     public static void Initialize()
     {
         _spellTypeToStringReference = new Dictionary<byte, int>();
@@ -62,6 +78,7 @@ public static class SharedFunctions
         }
         return false;
     }
+    
     public static bool AdvanceCast(Transform origin, float distanceToAdvance, int hitMask, out RaycastHit hitInfo)
     {
         if (Physics.Raycast(origin.position, origin.forward, out hitInfo, distanceToAdvance, hitMask))

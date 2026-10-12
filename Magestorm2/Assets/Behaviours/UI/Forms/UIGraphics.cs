@@ -3,8 +3,9 @@
 public class UIGraphics : ValidatableForm
 {
     private MultiOption[] _options;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _options = GetComponentsInChildren<MultiOption>();
     }
     private void Start()

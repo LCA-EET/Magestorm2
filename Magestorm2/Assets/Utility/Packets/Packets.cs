@@ -1,13 +1,10 @@
-using UnityEngine;
 using System;
-using System.Text;
-using Unity.VisualScripting.Antlr3.Runtime;
 
 public static class Packets
 {
-    public static byte DeterminePayloadLength(byte[] received)
+    public static short DeterminePayloadLength(byte[] received)
     {
-        return received[16];
+        return BitConverter.ToInt16(received, 16);
     }
 
     public static byte[] IVBytes(byte[] received)
@@ -17,7 +14,7 @@ public static class Packets
 
     public static byte[] EncryptedPayload(byte[] received)
     {
-        return new ArraySegment<byte>(received, 17, DeterminePayloadLength(received)).ToArray();
+        return new ArraySegment<byte>(received, 18, DeterminePayloadLength(received)).ToArray();
     }
 
 }

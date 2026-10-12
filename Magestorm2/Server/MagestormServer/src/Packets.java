@@ -23,52 +23,52 @@ public class Packets {
 
 
 
-    public static byte[] AcknowledgeSubscriptionPacket(){return Cryptographer.Encrypt(AcknowledgeSubscription_Bytes);}
+    public static byte[] AcknowledgeSubscriptionPacket(){return AcknowledgeSubscription_Bytes;}
     public static byte[] MessagePacket(byte[] decrypted, int messageLength){
         byte[] toEncrypt = ExtractBytes(decrypted, 0, messageLength);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
-    public static byte[] BannedForCheatingPacket() {return Cryptographer.Encrypt(BannedForCheating_Bytes);}
-    public static byte[] BannedForBehaviorPacket() {return Cryptographer.Encrypt(BannedForBehavior_Bytes);}
+    public static byte[] BannedForCheatingPacket() {return BannedForCheating_Bytes;}
+    public static byte[] BannedForBehaviorPacket() {return BannedForBehavior_Bytes;}
 
-    public static byte[] MatchStillHasPlayersPacket() {return Cryptographer.Encrypt(MatchStillHasPlayers_Bytes);}
-    public static byte[] PGInactivityDisconnectPacket() { return Cryptographer.Encrypt(PGInactivityDisconnect_Bytes);}
+    public static byte[] MatchStillHasPlayersPacket() {return MatchStillHasPlayers_Bytes;}
+    public static byte[] PGInactivityDisconnectPacket() { return PGInactivityDisconnect_Bytes;}
 
     public static byte[] LoginFailedPacket(){
-        return Cryptographer.Encrypt(LoginFailedPacket_Bytes);
+        return LoginFailedPacket_Bytes;
     }
 
     public static byte[] AccountExistsPacket(){
-        return Cryptographer.Encrypt(AccountExistsPacket_Bytes);
+        return AccountExistsPacket_Bytes;
     }
 
     public static byte[] AccountCreatedPacket(){
-        return Cryptographer.Encrypt(AccountCreated_Bytes);
+        return AccountCreated_Bytes;
     }
 
     public static byte[] CreationFailedPacket(){
-        return Cryptographer.Encrypt(CreationFailed_Bytes);
+        return CreationFailed_Bytes;
     }
 
     public static byte[] AlreadyLoggedInPacket(){
-        return Cryptographer.Encrypt(AlreadyLoggedInPacket_Bytes);
+        return AlreadyLoggedInPacket_Bytes;
     }
 
-    public static byte[] ProhibitedLanguagePacket(byte opCode){ return Cryptographer.Encrypt(new byte[]{opCode});}
+    public static byte[] ProhibitedLanguagePacket(byte opCode){ return new byte[]{opCode};}
 
-    public static byte[] CharacterExistsPacket(){ return Cryptographer.Encrypt(CharacterExistsPacket_Bytes);}
+    public static byte[] CharacterExistsPacket(){ return CharacterExistsPacket_Bytes;}
 
-    public static byte[] MatchAlreadyCreatedPacket() {return Cryptographer.Encrypt(MatchAlreadyCreated_Bytes);}
+    public static byte[] MatchAlreadyCreatedPacket() {return MatchAlreadyCreated_Bytes;}
 
-    public static byte[] MatchLimitReachedPacket() {return Cryptographer.Encrypt(MatchLimitReached_Bytes);}
+    public static byte[] MatchLimitReachedPacket() {return MatchLimitReached_Bytes;}
 
-    public static byte[] LevelListPacket(){return Cryptographer.Encrypt(GameServer.LevelList());}
+    public static byte[] LevelListPacket(){return GameServer.LevelList();}
 
     public static byte[] MatchIsFullPacket(){
-        return Cryptographer.Encrypt(MatchIsFull_Bytes);
+        return MatchIsFull_Bytes;
     }
     private static int FillInitialMatchEntryBytes(MatchCharacter mc, byte[] toFill, byte matchType, byte sceneID,
-                                                  byte teamID, byte matchID, int port, long expiration){
+                                                  byte teamID, byte matchID, int port, byte[] secretKey, long expiration){
         toFill[0] = Pregame_Send.MatchEntryPacket;
         toFill[1] = matchType;
         toFill[2] = sceneID;
@@ -76,33 +76,34 @@ public class Packets {
         toFill[4] = teamID;
         toFill[5] = matchID;
         System.arraycopy(ByteUtils.IntToByteArray(port), 0, toFill, 6, 4);
-        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxHP()), 0, toFill, 10, 4);
-        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxMana()), 0, toFill, 14, 4);
-        toFill[18] = mc.PC().GetMaxStamina();
-        System.arraycopy(ByteUtils.LongToByteArray(expiration), 0, toFill, 19, 8);
-        return 27; // the next index;
+        System.arraycopy(secretKey, 0, toFill, 10, secretKey.length);
+        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxHP()), 0, toFill, 26, 4);
+        System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxMana()), 0, toFill, 30, 4);
+        toFill[34] = mc.PC().GetMaxStamina();
+        System.arraycopy(ByteUtils.LongToByteArray(expiration), 0, toFill, 35, 8);
+        return 43; // the next index;
     }
-    public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, MatchCharacter mc, int port, byte matchID,
+    public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, MatchCharacter mc, int port, byte[] secretKey, byte matchID,
                                                byte matchType, long expiration){
         DeathMatch dm = (DeathMatch)MatchManager.GetMatch(matchID);
         byte[] poolData = dm.GetPoolManager().GetPoolBiasData();
         byte[] shrineData = dm.ReportAllShrineHealth();
-        byte[] toEncrypt = new byte[27 + shrineData.length + poolData.length];
-        int nextIndex = FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, teamID, matchID, port, expiration);
+        byte[] toEncrypt = new byte[43 + shrineData.length + poolData.length];
+        int nextIndex = FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, teamID, matchID, port, secretKey, expiration);
         System.arraycopy(shrineData, 0, toEncrypt, nextIndex, shrineData.length);
         nextIndex += shrineData.length;
         System.arraycopy(poolData, 0, toEncrypt, nextIndex, poolData.length);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
-    public static byte[] CTFEntryPacket(byte sceneID, MatchCharacter mc, byte teamID, int port, byte matchID,
+    public static byte[] CTFEntryPacket(byte sceneID, MatchCharacter mc, byte teamID, int port, byte[] secretKey, byte matchID,
                                         byte matchType, long expiration){
         CaptureTheFlag ctf = (CaptureTheFlag) MatchManager.GetMatch(matchID);
         byte[] flagBytes = ctf.FlagsStatus();
         byte[] scores = ctf.GetScores();
         byte[] poolBytes = ctf.GetPoolManager().GetPoolBiasData();
-        byte[] toEncrypt = new byte[27 + scores.length + 1 + flagBytes.length + poolBytes.length];
-        int nextIndex = FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, teamID, matchID, port, expiration);
+        byte[] toEncrypt = new byte[43 + scores.length + 1 + flagBytes.length + poolBytes.length];
+        int nextIndex = FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, teamID, matchID, port, secretKey, expiration);
         System.arraycopy(scores, 0, toEncrypt, nextIndex, 3);
         nextIndex += 3;
         toEncrypt[nextIndex] = (byte)flagBytes.length;
@@ -110,20 +111,20 @@ public class Packets {
         System.arraycopy(flagBytes, 0, toEncrypt, nextIndex, flagBytes.length);
         nextIndex += flagBytes.length;
         System.arraycopy(poolBytes, 0, toEncrypt, nextIndex, poolBytes.length);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
-    public static byte[] FFAEntryPacket(byte sceneID, MatchCharacter mc, int port, byte matchType, byte matchID, long expiration){
-        byte[] toEncrypt = new byte[27];
-        FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, MatchTeam.Neutral, matchID, port, expiration);
-        return Cryptographer.Encrypt(toEncrypt);
+    public static byte[] FFAEntryPacket(byte sceneID, MatchCharacter mc, int port, byte[] secretKey, byte matchType, byte matchID, long expiration){
+        byte[] toEncrypt = new byte[43];
+        FillInitialMatchEntryBytes(mc, toEncrypt, matchType, sceneID, MatchTeam.Neutral, matchID, port, secretKey, expiration);
+        return toEncrypt;
     }
 
     public static byte[] NameCheckResults(byte isUsed){
-        return Cryptographer.Encrypt(new byte[]{Pregame_Send.NameCheckResult, isUsed});
+        return new byte[]{Pregame_Send.NameCheckResult, isUsed};
     }
     public static byte[] MatchDetailsPacket(Match match){
-        return Cryptographer.Encrypt(match.PlayersInMatch(Pregame_Send.MatchDetails));
+        return match.PlayersInMatch(Pregame_Send.MatchDetails);
     }
 
     public static byte[] CharacterDeletedPacket(int characterID) {
@@ -131,7 +132,7 @@ public class Packets {
         toEncrypt[0] = Pregame_Send.CharacterDeleted;
         byte[] idBytes = ByteUtils.IntToByteArray(characterID);
         System.arraycopy(idBytes,0, toEncrypt, 1, 4);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] MatchDataPacket(Collection<Match> matches){
@@ -153,7 +154,7 @@ public class Packets {
             System.arraycopy(matchBytes, 0, toSend, index, length);
             index += length;
         }
-        return Cryptographer.Encrypt(toSend);
+        return toSend;
     }
 
     public static byte[] LoginSucceededPacket(int accountID){
@@ -178,7 +179,7 @@ public class Packets {
         toSend[14] = ServerParams.PollingFactor;
         toSend[15] = discordLength;
         System.arraycopy(ServerParams.DiscordBytes, 0, toSend, 16, discordLength);
-        return Cryptographer.Encrypt(toSend);
+        return toSend;
     }
 
     public static byte[] PotionSpawnPacket(byte potion, byte location){
@@ -186,7 +187,7 @@ public class Packets {
         toSend[0] = InGame_Send.SpawnPotion;
         toSend[1] = potion;
         toSend[2] = location;
-        return Cryptographer.Encrypt(toSend);
+        return toSend;
     }
 
     public static byte[] PotionTakenPacket(byte takenBy, byte potion){
@@ -194,7 +195,7 @@ public class Packets {
         toSend[0] = InGame_Send.PotionTaken;
         toSend[1] = takenBy;
         toSend[2] = potion;
-        return Cryptographer.Encrypt(toSend);
+        return toSend;
     }
 
     public static byte[] PotionDroppedPacket(byte droppedBy, byte dropped){
@@ -202,7 +203,7 @@ public class Packets {
         toSend[0] = InGame_Send.PotionDropped;
         toSend[1] = droppedBy;
         toSend[2] = dropped;
-        return Cryptographer.Encrypt(toSend);
+        return toSend;
     }
 
     public static byte[] CharacterCreatedPacket(int characterID){
@@ -211,11 +212,11 @@ public class Packets {
         byte[] toEncrypt = new byte[1 + characterBytes.length];
         toEncrypt[0] = Pregame_Send.CharacterCreated;
         System.arraycopy(characterBytes, 0, toEncrypt, 1, characterBytes.length);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] RemovedFromServerPacket(byte reasonCode){
-        return Cryptographer.Encrypt(new byte[]{Pregame_Send.RemovedFromServer, reasonCode});
+        return new byte[]{Pregame_Send.RemovedFromServer, reasonCode};
     }
     public static byte[] ExpLevelUpdatePacket(PlayerCharacter pc){
         byte[] toEncrypt = new byte[10];
@@ -227,11 +228,11 @@ public class Packets {
         int experience = pc.GetExperience();
         byte[] expBytes = ByteUtils.IntToByteArray(experience);
         System.arraycopy(expBytes, 0, toEncrypt, 6, expBytes.length);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
     public static byte[] SpawnVFXonPlayerPacket( byte vfxCode, byte targetID){
         byte[] toEncrypt = new byte[]{InGame_Send.SpawnVFXonPlayer, vfxCode, targetID };
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     /////////////////////// IN-GAME PACKETS ////////////////////////
@@ -243,23 +244,23 @@ public class Packets {
         byte[] toEncrypt = new byte[2];
         toEncrypt[0] = InGame_Send.MatchEnded;
         toEncrypt[1] = winner;
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
-    public static byte[] InactivityWarningPacket(){ return Cryptographer.Encrypt(InactivityWarning_Bytes);}
-    public static byte[] PoolBiasFailurePacket(){ return Cryptographer.Encrypt(PoolBiasFailure_Bytes);}
+    public static byte[] InactivityWarningPacket(){ return InactivityWarning_Bytes;}
+    public static byte[] PoolBiasFailurePacket(){ return PoolBiasFailure_Bytes;}
 
-    public static byte[] IGInactivityDisconnectPacket() { return Cryptographer.Encrypt(IGInactivityDisconnect_Bytes);}
+    public static byte[] IGInactivityDisconnectPacket() { return IGInactivityDisconnect_Bytes;}
 
     public static byte[] SendToValhallaPacket(){
         byte[] toEncrypt = new byte[]{InGame_Send.SendToValhalla};
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
     public static byte[] HitNotificationPacket(byte hitPlayerID, byte hitterID){
         byte[] toEncrypt = new byte[3];
         toEncrypt[0] = InGame_Send.HitNotification;
         toEncrypt[1] = hitPlayerID;
         toEncrypt[2] = hitterID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
     public static byte[] CastPacket(byte[] decrypted, short castID){
         byte payloadLength = decrypted[4];
@@ -268,7 +269,7 @@ public class Packets {
         System.arraycopy(decrypted, 0, toEncrypt, 0, idxCastID);
         byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
         System.arraycopy(castIDBytes, 0, toEncrypt, idxCastID, 2);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
     public static byte[] TimedObjectDataPacket(byte opCode, ArrayList<byte[]> payload, int payloadSize){
         byte[] toEncrypt = new byte[1 + 1 + payloadSize];
@@ -279,7 +280,7 @@ public class Packets {
             System.arraycopy(payloadBytes,0, toEncrypt,index, payloadBytes.length);
             index += payloadBytes.length;
         }
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
     public static byte[] EffectsCancellationPacket(byte subjectID,  byte[] cancelled){
         byte cancelSize = (byte)cancelled.length;
@@ -288,17 +289,15 @@ public class Packets {
         toEncrypt[1] = subjectID;
         toEncrypt[2] = cancelSize;
         System.arraycopy(cancelled, 0, toEncrypt, 3, cancelSize);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] ApplyEffectPacket(byte playerAppliedTo, byte applierID, byte effectCode, byte duration, byte degree){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.ApplyEffect, playerAppliedTo, applierID, effectCode, duration, degree});
+        return new byte[]{InGame_Send.ApplyEffect, playerAppliedTo, applierID, effectCode, duration, degree};
     }
-    public static byte[] PostureChangePacket(byte[] decrypted){
-        return Cryptographer.Encrypt(decrypted);
-    }
+
     public static byte[] PlayerTapped(byte playerID){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerTapped, playerID});
+        return new byte[]{InGame_Send.PlayerTapped, playerID};
     }
     public static byte[] PlayerRevivedPacket(byte revivedID, byte reviverID, float hp){
         byte[] toEncrypt = new byte[7];
@@ -306,7 +305,7 @@ public class Packets {
         toEncrypt[1] = revivedID;
         toEncrypt[2] = reviverID;
         System.arraycopy(ByteUtils.FloatToByteArray(hp), 0, toEncrypt, 3, 4);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] TimedObjectExpirationPacket(byte opCode, short objectID){
@@ -314,7 +313,7 @@ public class Packets {
         toEncrypt[0] = opCode;
         toEncrypt[1] = 1;
         System.arraycopy(ByteUtils.ShortToByteArray((objectID)), 0, toEncrypt, 2, 2);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     @SuppressWarnings("unchecked")
@@ -330,7 +329,7 @@ public class Packets {
             System.arraycopy(objectIDBytes, 0, toEncrypt, index, 2);
             index += 2;
         }
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
     public static byte[] ObjectStatusBytes(ArrayList<Byte> status){
         byte[] toEncrypt = new byte[1 + status.size()];
@@ -338,7 +337,7 @@ public class Packets {
         for(int i = 0; i < status.size(); i++){
             toEncrypt[i+1] = status.get(i);
         }
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] TeamChatPacket(byte[] messageBytes, byte sender, byte teamID){
@@ -350,11 +349,11 @@ public class Packets {
         toEncrypt[2] = teamID;
         System.arraycopy(messageLengthBytes, 0, toEncrypt, 3, 4);
         System.arraycopy(messageBytes, 0, toEncrypt, 7, messageLength);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] RemovedFromMatchPacket(byte reasonCode){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.RemovedFromMatch, reasonCode});
+        return new byte[]{InGame_Send.RemovedFromMatch, reasonCode};
     }
 
     public static byte[] HPandManaUpdatePacket(byte healthPct, byte manaPct){
@@ -365,14 +364,14 @@ public class Packets {
 
         //System.arraycopy(ByteUtils.FloatToByteArray(health),0,toEncrypt,1,4);
         //System.arraycopy(ByteUtils.FloatToByteArray(mana),0,toEncrypt,5,4);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] HPorManaorLeyUpdatePacket(byte packetID, byte pct){
         byte[] toEncrypt = new byte[2];
         toEncrypt[0] = packetID;
         toEncrypt[1] = pct;
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] PlayerDamagedPacket(byte playerID, byte damageSourceID, float newHP){
@@ -381,11 +380,11 @@ public class Packets {
     }
 
     public static byte[] PlayerKilledPacket(byte playerKilled, byte killerID){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerKilled, playerKilled, killerID});
+        return new byte[]{InGame_Send.PlayerKilled, playerKilled, killerID};
     }
 
     public static byte[] FlagTakenPacket(byte flagID, byte playerID){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.FlagTaken, flagID, playerID});
+        return new byte[]{InGame_Send.FlagTaken, flagID, playerID};
     }
 
     public static byte[] FlagDroppedPacket(byte playerID, byte[] flagBytes, byte killer){
@@ -394,36 +393,36 @@ public class Packets {
         toEncrypt[1] = playerID;
         toEncrypt[2] = killer;
         System.arraycopy(flagBytes, 0, toEncrypt, 3, flagBytes.length);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] FlagReturnedPacket(byte flagReturned){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.FlagReturned, flagReturned});
+        return new byte[]{InGame_Send.FlagReturned, flagReturned};
     }
 
     public static byte[] FlagCapturedPacket(byte capturingTeam, byte flagCaptured, byte capturedBy, byte scoreCapturer,
                                             byte scoreCaptured)
     {
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.FlagCaptured, capturingTeam, flagCaptured, capturedBy, scoreCapturer, scoreCaptured});
+        return new byte[]{InGame_Send.FlagCaptured, capturingTeam, flagCaptured, capturedBy, scoreCapturer, scoreCaptured};
     }
 
     public static byte[] AllShrineHealthPacket(byte chaos, byte balance, byte order){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.AllShrineHealth, chaos, balance, order});
+        return new byte[]{InGame_Send.AllShrineHealth, chaos, balance, order};
     }
 
     public static byte[] ShrineAdjustmentPacket(byte health, byte shrineID, byte adjusterID){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.ShrineAdjusted, shrineID, health, adjusterID});
+        return new byte[]{InGame_Send.ShrineAdjusted, shrineID, health, adjusterID};
     }
     public static byte[] ObjectStateChangePacket(byte objectID, byte state){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.ObjectStateChange, objectID, state});
+        return new byte[]{InGame_Send.ObjectStateChange, objectID, state};
     }
 
     public static byte[] ShrineFailurePacket(byte shrineID){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.ShrineFailure, shrineID});
+        return new byte[]{InGame_Send.ShrineFailure, shrineID};
     }
 
     public static byte[] PoolBiasPacket(byte poolID, byte bias, byte teamID, byte biaserID){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.PoolBiased, poolID, bias, teamID, biaserID});
+        return new byte[]{InGame_Send.PoolBiased, poolID, bias, teamID, biaserID};
     }
 
     public static byte[] PlayersLeftMatchPacket(ArrayList<MatchCharacter> departed){
@@ -435,11 +434,11 @@ public class Packets {
             toEncrypt[index] = mc.GetIDinMatch();
             index++;
         }
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] PlayerLeftMatchPacket(byte playerID){
-        return Cryptographer.Encrypt(new byte[]{InGame_Send.PlayerLeftMatch, 1, playerID});
+        return new byte[]{InGame_Send.PlayerLeftMatch, 1, playerID};
     }
 
     public static byte[] PlayerDataPacket(byte[] playerData, byte newToMatch){
@@ -447,7 +446,7 @@ public class Packets {
         toEncrypt[0] = InGame_Send.PlayerData;
         System.arraycopy(playerData, 0, toEncrypt, 1, playerData.length);
         toEncrypt[toEncrypt.length-1] = newToMatch;
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] ExperienceUpdatePacket(float experience){
@@ -455,7 +454,7 @@ public class Packets {
         toEncrypt[0] = InGame_Send.ExperienceUpdate;
         byte[] expBytes = ByteUtils.FloatToByteArray(experience);
         System.arraycopy(expBytes, 0, toEncrypt, 1, 4);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] SpellResistedPacket(byte targetID, byte casterID){
@@ -463,7 +462,7 @@ public class Packets {
         toEncrypt[0] = InGame_Send.SpellResisted;
         toEncrypt[1] = casterID;
         toEncrypt[2] = targetID;
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] ForceApplicationPacket(short castID, byte magnitude, byte duration){
@@ -473,7 +472,7 @@ public class Packets {
         toEncrypt[2] = duration;
         byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
         System.arraycopy(castIDBytes, 0, toEncrypt, 3, 2);
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] AllPlayersInMatch(ArrayList<byte[]> playerData, int dataLength){
@@ -485,14 +484,14 @@ public class Packets {
             System.arraycopy(data, 0, toEncrypt, index, data.length);
             index += data.length;
         }
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] MaxCastPacket(byte castType){
         byte[] toEncrypt = new byte[2];
         toEncrypt[0] = InGame_Send.MaxCast;
         toEncrypt[1] = castType;
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     public static byte[] UsedPotionPacket(byte newHealthPct, byte newManaPct){
@@ -500,7 +499,7 @@ public class Packets {
         toEncrypt[0] = InGame_Send.UsedPotion;
         toEncrypt[1] = newHealthPct;
         toEncrypt[2] = newManaPct;
-        return Cryptographer.Encrypt(toEncrypt);
+        return toEncrypt;
     }
 
     /////////////////////// SHARED //////////////////////
@@ -526,6 +525,6 @@ public class Packets {
     }
     public static byte[] MatchScoresPacket(byte opCode, byte[] scoreData){
         scoreData[0] = opCode;
-        return Cryptographer.Encrypt(scoreData);
+        return scoreData;
     }
 }

@@ -129,7 +129,7 @@ public static class Match
     }
     public static void LeaveMatch()
     {
-        Game.UDP.StopListening();
+        ComponentRegister.InGamePacketProcessor.StopListening();
         MatchParams.ReturningFromMatch = true;
         SceneManager.LoadScene("Pregame");
     }

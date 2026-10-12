@@ -118,8 +118,9 @@ public class UIKeyMapper : ValidatableForm
             keySelector.SetKeyText();
         }
     }
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         if (Game.GameMode)
         {
             if (InputControls.InGameMenu)

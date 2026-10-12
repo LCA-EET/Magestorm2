@@ -9,7 +9,7 @@ public static class FlagManager
     private static Dictionary<byte, FlagData> _flagData;
     private static Dictionary<Team, Flag> _flagTable;
     private static Dictionary<Team, byte> _scores;
-    public static void Init(byte[] decrypted, int index)
+    public static void Init(byte[] decrypted, ref int index)
     {
         Debug.Log("FlagManager Init.");
         _flagTable = new Dictionary<Team, Flag>();
@@ -19,9 +19,12 @@ public static class FlagManager
         {
             Debug.Log(i + ": " + decrypted[i]);
         }
-        _scores.Add(Team.Chaos, decrypted[index-4]);
-        _scores.Add(Team.Balance, decrypted[index - 3]);
-        _scores.Add(Team.Order, decrypted[index - 2]);
+        _scores.Add(Team.Chaos, decrypted[index]);
+        index++;
+        _scores.Add(Team.Balance, decrypted[index]);
+        index++;
+        _scores.Add(Team.Order, decrypted[index]);
+        index+=2;
         while (_flagData.Count < 3)
         {
             Debug.Log("Index: " + index);

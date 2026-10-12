@@ -15,11 +15,6 @@ public class UIMatchCreationForm : ValidatableForm
         PopulateLevelData();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void PopulateLevelData()
     {
         List<Level> levelList = LevelData.GetLevelList();

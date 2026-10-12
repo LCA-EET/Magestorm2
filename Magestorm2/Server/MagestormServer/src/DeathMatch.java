@@ -149,7 +149,9 @@ public class DeathMatch extends Match{
     @Override
     public MatchCharacter JoinMatch(RemoteClient rc, byte teamID) {
         MatchCharacter mc = super.JoinMatch(rc, teamID);
-        GameServer.EnqueueForSend(Packets.DeathMatchEntryPacket(_sceneID, teamID, mc, _matchPort, _objectIDAsByte, _matchType, _expirationTime), rc);
+
+        GameServer.PGP.EnqueueForSendWithChecksum(Packets.DeathMatchEntryPacket(_sceneID, teamID, mc, _matchPort, _processor.GetSymmetricKey(),
+                _objectIDAsByte, _matchType, _expirationTime), rc);
         return mc;
     }
 

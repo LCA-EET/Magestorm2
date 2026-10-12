@@ -30,7 +30,7 @@ public class MatchManager{
     }
 
     public static void SendMatchListToClient(RemoteClient rc){
-        GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
+        GameServer.PGP.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), rc);
     }
     public static void RemoveCharactersForAccount(int accountID){
         for(Match match : _activeMatches.values()){
@@ -72,7 +72,7 @@ public class MatchManager{
             if(subscribe){
                 rc.SubscribeToMatches();
                 GameServer.AddActiveCharacter(accountID, CharacterManager.GetCharacter(charID));
-                GameServer.EnqueueForSend(Packets.AcknowledgeSubscriptionPacket(), rc);
+                GameServer.PGP.EnqueueForSend(Packets.AcknowledgeSubscriptionPacket(), rc);
             }
             else{
                 rc.UnsubscribeFromMatches();
@@ -91,18 +91,18 @@ public class MatchManager{
                 subscribedClients.add(rc);
             }
         }
-        GameServer.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), subscribedClients);
+        GameServer.PGP.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), subscribedClients);
         UpdatesNeeded = false;
     }
     public static void RequestMatchCreation(int accountID, byte sceneID, byte duration, byte matchType, byte matchOptions){
         RemoteClient rc = RemoteClientManager.GetClient(accountID);
         if(rc != null){
             if(CheckOtherMatchesCreatedByAccount(accountID)){
-                GameServer.EnqueueForSend(Packets.MatchAlreadyCreatedPacket(), rc);
+                GameServer.PGP.EnqueueForSend(Packets.MatchAlreadyCreatedPacket(), rc);
             }
             else{
                 if(_activeMatches.size() >= _maxMatches){
-                    GameServer.EnqueueForSend(Packets.MatchLimitReachedPacket(), rc);
+                    GameServer.PGP.EnqueueForSend(Packets.MatchLimitReachedPacket(), rc);
                 }
                 else{
                     byte matchID = NextMatchID();
@@ -137,7 +137,7 @@ public class MatchManager{
                     toDelete = match;
                 }
                 else{
-                    GameServer.EnqueueForSend(Packets.MatchStillHasPlayersPacket(), rc);
+                    GameServer.PGP.EnqueueForSend(Packets.MatchStillHasPlayersPacket(), rc);
                 }
             }
         }

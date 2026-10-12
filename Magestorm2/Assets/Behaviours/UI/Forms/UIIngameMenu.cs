@@ -15,11 +15,6 @@ public class UIIngameMenu : ValidatableForm
         MatchType.text = Language.BuildString(112, SharedFunctions.MatchTypeString(MatchParams.MatchType)); //
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public override void ButtonPressed(ButtonType buttonType)
     {

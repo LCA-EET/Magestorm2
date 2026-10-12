@@ -17,12 +17,12 @@ public class DisciplineData
     public DisciplineData(string[] fields, string contents)
     {
         _spellsOfDiscipline = new List<SpellData>();
-        string[] split = contents.Split("<br>");
+        string[] split = contents.Split("\n");
         string fieldID, fieldValue;
-        for (int i = 0; i < fields.Length; i++)
+        for (int i = 0; i < fields.Length-1; i++)
         {
-            fieldID = fields[i];
-            fieldValue = split[i + 1];
+            fieldID = fields[i].Trim();
+            fieldValue = split[i + 1].Trim();
             switch (fieldID)
             {
                 case DisciplineAttributes.ID:

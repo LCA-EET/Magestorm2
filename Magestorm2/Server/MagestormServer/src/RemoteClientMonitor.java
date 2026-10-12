@@ -16,7 +16,7 @@ public class RemoteClientMonitor extends RegisteredThread{
                     List<RemoteClient> expiredClients = activeClients.GetExpiredObjects();
                     for(RemoteClient expiredClient : expiredClients){
                         Main.LogMessage("Client " + expiredClient.ObjectID() + " disconnected for inactivity.");
-                        GameServer.EnqueueForSend(Packets.PGInactivityDisconnectPacket(), expiredClient);
+                        GameServer.PGP.EnqueueForSend(Packets.PGInactivityDisconnectPacket(), expiredClient);
                     }
                 }
             } catch (Exception e) {

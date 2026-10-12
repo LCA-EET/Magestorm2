@@ -15,7 +15,7 @@ public class UIJoinMatch : ValidatableForm
     private Team _selectedTeam;
     private ListedMatch _match;
 
-    private void Awake()
+    protected override void Awake()
     {
         _selectedTeam = Team.Neutral;
         ComponentRegister.UIJoinMatch = this;
@@ -54,8 +54,9 @@ public class UIJoinMatch : ValidatableForm
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         if (Input.GetKeyUp(KeyCode.PageDown))
         {
             ChaosPlayerList.DecrementStartIndex();

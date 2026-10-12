@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class CharacterClassManager
 {
@@ -13,19 +14,17 @@ public class CharacterClassManager
             _classCodes = new List<byte>();
             _characterClasses = new Dictionary<byte, CharacterClassData>();
             _disciplinesOfClass = new Dictionary<byte, List<DisciplineData>>();
-            string contents;
-            if (SharedFunctions.GetPHPString("characterclasses", out contents))
-            {
-                string[] fieldSplit = contents.Split("[FIELD]");
-                string[] fields = fieldSplit[0].Split("<br>");
-                string[] spelldata = fieldSplit[1].Split("[CHARACTERCLASS]");
+            string contents = Game.LoadDatFile("characterclasses");
+            string[] fieldSplit = contents.Split("[FIELD]");
+            string[] fields = fieldSplit[0].Split("\n");
+            string[] spelldata = fieldSplit[1].Split("[CHARACTERCLASS]");
                 
-                for (int i = 0; i < spelldata.Length - 1; i++)
-                {
-                    CharacterClassData toAdd = new CharacterClassData(fields, spelldata[i]);
-                    _characterClasses.Add(toAdd.CharacterClassID, toAdd);
-                    _classCodes.Add(toAdd.CharacterClassID);
-                }
+            for (int i = 0; i < spelldata.Length - 1; i++)
+            {
+                CharacterClassData toAdd = new CharacterClassData(fields, spelldata[i]);
+                Debug.Log("Adding class " + toAdd.CharacterClassName);
+                _characterClasses.Add(toAdd.CharacterClassID, toAdd);
+                _classCodes.Add(toAdd.CharacterClassID);
             }
         }
     }

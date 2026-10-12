@@ -1,6 +1,9 @@
 using UnityEngine;
 using System;
 using System.Net;
+using System.IO;
+using System.Collections.Generic;
+using UnityEditorInternal;
 public static class Game
 {
     public const bool SymmetricEncryption = false;
@@ -23,7 +26,9 @@ public static class Game
     public static IPAddress GameServerAddress;
     public static ConsumableDisplay ConsumableDisplay;
     public static bool LoggedIn = false;
+    public static byte[] PregameKey;
     //public static PMDByte PlayerPMDByte;
+
     public static bool GameMode
     {
         get
@@ -109,6 +114,10 @@ public static class Game
         _serverTime = serverTime;
         Debug.Log("Server time: " + _serverTime);
     }
+    public static string LoadDatFile(string file)
+    {
+        return File.ReadAllText(Application.streamingAssetsPath + "\\dat\\" + file + ".dat");
+    }
     public static int FetchServerInfo()
     {
         try
@@ -121,7 +130,7 @@ public static class Game
                 string key64 = returnedArray[1];
                 byte[] key = Convert.FromBase64String(key64);
                 AssignGameServerAddress("fosiemods.net");
-                Cryptography.Init(key);
+                //Cryptography.Init(key);
                 Debug.Log("Game Server Port: " + GameServerPort);
                 return GameServerPort;
             }

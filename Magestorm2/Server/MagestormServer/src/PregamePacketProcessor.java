@@ -6,15 +6,15 @@ import java.util.ArrayList;
 public class PregamePacketProcessor extends UDPProcessor
 {
     private int _accountID;
-    private byte[] _dhkeDomainBytes;
     public PregamePacketProcessor(int port){
-        super(port);
+        super(port, ServerParams.Encryption);
+        GameServer.PGP = this;
     }
 
     @Override
     protected boolean ProcessPacket(DatagramPacket received) {
         PreProcess(received);
-        //Main.LogMessage(String.valueOf(_opCode));
+        Main.LogDebug("Packet opCode: " + String.valueOf(_opCode) + ", received from: " + received.getAddress() + ":" + received.getPort());
 
         switch (_opCode) {
             /*
@@ -107,9 +107,6 @@ public class PregamePacketProcessor extends UDPProcessor
         }
         return true;
     }
-    public void SetDHKEDomainBytes(byte[] dhke){
-        _dhkeDomainBytes = dhke;
-    }
     private void HandleMatchScoreRequest(){
         SendMatchScore(_decrypted[5], _remote);
     }
@@ -141,7 +138,7 @@ public class PregamePacketProcessor extends UDPProcessor
             toUpdate.UpdateSkills(skills);
             toUpdate.UpdateSlottedSpells(slots);
             _decrypted[0] = Pregame_Send.UpdateSkillsAndSlots;
-            EnqueueForSend(Cryptographer.Encrypt(_decrypted), _remote);
+            EnqueueForSend(_cryptographer.Encrypt(_decrypted), _remote);
         }
     }
     private void HandleJoinMatchPacket(byte matchID, byte teamID)
@@ -317,7 +314,7 @@ public class PregamePacketProcessor extends UDPProcessor
             }
             else{
                 Main.LogMessage("Account " + username + " does not already exist.");
-                long token = Cryptographer.RandomToken();
+                long token = _cryptographer.SecureRandom().nextLong();
                 boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
                 byte[] toSend = accountCreated? Packets.AccountCreatedPacket(): Packets.CreationFailedPacket();
                 EnqueueForSend(toSend, _remote);

@@ -5,8 +5,11 @@ public class InGamePacketProcessor extends UDPProcessor{
     private final Match _owningMatch;
 
     public InGamePacketProcessor(int port, Match owningMatch){
-        super(port);
+        super(port, ServerParams.Encryption);
         _owningMatch = owningMatch;
+
+        Main.LogDebug("Key for match " + owningMatch._objectIDAsByte + " (Hex): " +
+                _cryptographer.GetCipher().GetSecretSymmetricKeyBI().toString(16));
     }
     @Override
     protected boolean ProcessPacket(DatagramPacket received){
@@ -221,7 +224,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2), true);
     }
     private void HandlePostureChange(){
-        _owningMatch.SendToAll(Packets.PostureChangePacket(_decrypted));
+        _owningMatch.SendToAll(_decrypted);
     }
     private void HandleTap(){
         MatchCharacter tapped = _owningMatch.GetMatchCharacter(_decrypted[1]);

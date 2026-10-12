@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using UnityEngine;
 public static class MatchParams
 {
@@ -22,6 +23,8 @@ public static class MatchParams
     private static byte _maxStamina;
     public static bool JoinedMatch;
     public static byte WinningTeamID;
+    public static byte[] MatchKey;
+
     public static bool IncludeFlags{
         get { return _includeFlags;}
         set { _includeFlags = value; }
@@ -41,7 +44,7 @@ public static class MatchParams
         get { return _includeShrines; }
         set { _includeShrines = value; }
     }
-    public static void Init(byte[] decrypted)
+    public static bool Init(byte[] decrypted)
     {
         JoinedMatch = false;
         _decrypted = decrypted;
@@ -53,30 +56,36 @@ public static class MatchParams
         MatchTeamID = _decrypted[4];
         MatchID = _decrypted[5];
         RemotePort = BitConverter.ToInt32(_decrypted, 6);
-        _maxHP = BitConverter.ToSingle(_decrypted, 10);
-        _maxMana = BitConverter.ToSingle(_decrypted, 14);
-        _maxStamina = _decrypted[18];
-        MatchParams.ExpirationTime = BitConverter.ToInt64(_decrypted, 19);
+        MatchKey = new byte[16];
+        Array.Copy(decrypted, 10, MatchKey, 0, 16);
+        BigInteger matchKeyBI = new BigInteger(MatchKey, false, true);
+        Debug.Log("Match Key (Hex): " + matchKeyBI.ToString("X"));
+        _maxHP = BitConverter.ToSingle(_decrypted, 26);
+        _maxMana = BitConverter.ToSingle(_decrypted, 30);
+        _maxStamina = _decrypted[34];
+        MatchParams.ExpirationTime = BitConverter.ToInt64(_decrypted, 35);
         MatchTeam = (Team)MatchTeamID;
         byte type = MatchType;
+        int index = 43;
         switch (type)
         {
             case ControlCodes.MatchTypes_DeathMatch:
-                InitDM();
+                InitDM(ref index);
                 break;
             case ControlCodes.MatchTypes_FreeForAll:
                 InitFFA();
                 break;
             case ControlCodes.MatchTypes_CaptureTheFlag:
-                InitCTF();
+                InitCTF(ref index);
                 break;
         }
+        return Cryptographer.VerifyChecksum(decrypted, index);
     }
-    public static void InitDM()
+    public static void InitDM(ref int index)
     {
         UnityEngine.Debug.Log("InitDM");
-        ShrineManager.Init(_decrypted, 27);
-        PoolManager.Init(_decrypted, 30);
+        ShrineManager.Init(_decrypted, ref index);
+        PoolManager.Init(_decrypted, ref index);
         TorchManager.Init();
         TriggerManager.Init();
         IncludeShrines = true;
@@ -85,17 +94,15 @@ public static class MatchParams
         IncludeTeams = true;
     }
 
-    public static void InitCTF()
+    public static void InitCTF(ref int index)
     {
         UnityEngine.Debug.Log("InitCTF");
         IncludeShrines = false;
         IncludeFlags = true;
         IncludePools = true;
         IncludeTeams = true;
-        byte flagByteLength = _decrypted[30];
-        int index = 31;
-        FlagManager.Init(_decrypted, index);
-        PoolManager.Init(_decrypted, index + flagByteLength);
+        FlagManager.Init(_decrypted, ref index);
+        PoolManager.Init(_decrypted, ref index);
     }
 
     public static void InitFFA()

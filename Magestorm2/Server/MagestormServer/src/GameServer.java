@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GameServer extends Thread {
-    public static boolean SymmetricEncryption;
     public static int MaxUDPPayload = 508;
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
@@ -14,10 +13,13 @@ public class GameServer extends Thread {
     private static PregamePacketProcessor _pgProcessor;
     private static DHKEListener _dhkeProcessor;
     private static byte[] _levelData;
-    public static int VictoryCountdown = 30000;
 
+    public static byte[] PregameAESKey;
+    public static PregamePacketProcessor PGP;
+    public static int VictoryCountdown = 30000;
     public static void init(){
         ByteUtils.init();
+
         GameUtils.init();
         CharacterManager.init();
         _maxPlayerData = new ConcurrentHashMap<>();
@@ -37,20 +39,8 @@ public class GameServer extends Thread {
         }
         RemoteClientManager.init();
         MatchManager.init(ServerParams.MaxMatches);
-        _dhkeProcessor = new DHKEListener(ServerParams.DHKEListeningPort, Cryptographer.RegenerateDomainParameters(ServerParams.DHKEKeyLength));
+        _dhkeProcessor = new DHKEListener(ServerParams.DHKEListeningPort);
         _pgProcessor = new PregamePacketProcessor(ServerParams.PregameListeningPort);
-        switch(ServerParams.Encryption){
-            case ControlCodes.Encryption_DHKE_AES:
-                SymmetricEncryption = true;
-                Main.LogMessage("DHKE + AES");
-                break;
-            case ControlCodes.Encryption_RSA_AES:
-                SymmetricEncryption = true;
-                Main.LogMessage("RSA + AES");
-                break;
-            default:
-                SymmetricEncryption = false;
-        }
         _levelData = Database.GetLevelsList((byte)1);
         _usedMatchPorts = new ConcurrentSkipListSet<>();
         if(ServerParams.QMEnabled == 1){
@@ -73,7 +63,9 @@ public class GameServer extends Thread {
     public static byte[] GetActivatablesData(byte sceneID){
         return _objectData.get(sceneID);
     }
-
+    public static UDPProcessor PregameProcessor(){
+        return _pgProcessor;
+    }
     public static int GetNextMatchPort()
     {
         int nextAvailablePort = ServerParams.PregameListeningPort + 1;
@@ -85,13 +77,6 @@ public class GameServer extends Thread {
     }
     public static void RemoveUsedPort(int portNumber){
         _usedMatchPorts.remove(portNumber);
-    }
-
-    public static void EnqueueForSend(byte[] encrypted, RemoteClient recipient){
-        _pgProcessor.EnqueueForSend(encrypted, recipient);
-    }
-    public static void EnqueueForSend(byte[] encrypted, Iterable<RemoteClient> recipients){
-        _pgProcessor.EnqueueForSend(encrypted, recipients);
     }
 
     public static byte[] LevelList(){
