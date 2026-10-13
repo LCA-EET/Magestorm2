@@ -26,7 +26,7 @@ public static class ComponentRegister
     private static Transform _uiParent;
     private static PregamePacketProcessor _pregamePacketProcessor;
     private static InGamePacketProcessor _inGamePacketProcessor;
-    private static DHKEPacketProcessor _dhkePacketProcessor;
+    
     private static ModelBuilder _modelBuilder;
     private static MessageRecorder _messageRecorder;
     private static SceneInitializer _sceneInitializer;
@@ -45,21 +45,12 @@ public static class ComponentRegister
     private static InputController _inputController;
     private static Scene _scene;
 
+    public static FlagDisplay FlagDisplay;
+    public static DHKEPacketProcessor DHKEPacketProcessor;
     public static Scene Scene
     {
         get { return _scene; }
         set { _scene = value; }
-    }
-    public static DHKEPacketProcessor DHKEPacketProcessor
-    {
-        get
-        {
-            return _dhkePacketProcessor;
-        }
-        set
-        {
-            _dhkePacketProcessor = value;
-        }
     }
     public static InputController InputController
     {

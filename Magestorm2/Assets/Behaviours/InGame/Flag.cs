@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.UI;
 
 public class Flag : Trigger
 {
     private Team _team;
     private Vector3 _worldLocation;
-    public Material Balance;
-    public Material Order;
-    public Material Chaos;
-    public Renderer Renderer;
+    public GameObject ChaosFlag;
+    public GameObject BalanceFlag;
+    public GameObject OrderFlag;
+    private GameObject _assigned;
     public Team Team
     {
         get { return _team; }
@@ -22,24 +24,30 @@ public class Flag : Trigger
         }
         else
         {
+            HideAll();
             _team = team;
-            Material toUse = null;
             switch (Team)
             {
                 case Team.Chaos:
-                    toUse = Chaos;
+                    _assigned = ChaosFlag;      
                     break;
                 case Team.Balance:
-                    toUse = Balance;
+                    _assigned = BalanceFlag;
                     break;
                 case Team.Order:
-                    toUse = Order;
+                    _assigned = OrderFlag;
                     break;
             }
-            Renderer.material = toUse;
             _worldLocation = transform.position;
+            _assigned.SetActive(true);
             FlagManager.Register(this);
         }
+    }
+    private void HideAll()
+    {
+        ChaosFlag.SetActive(false);
+        BalanceFlag.SetActive(false);
+        OrderFlag.SetActive(false);
     }
     public void FlagTaken()
     {
@@ -63,6 +71,7 @@ public class Flag : Trigger
             FlagManager.FlagJustDropped = false;
         }
     }
+
     public override void EnterAction()
     {
         Debug.Log("Flag Enter Action");

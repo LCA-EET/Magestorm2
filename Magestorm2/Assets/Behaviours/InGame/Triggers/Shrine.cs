@@ -19,7 +19,7 @@ public class Shrine : BiasableTrigger
     {
         if (!MatchParams.IncludeShrines)
         {
-            Destroy(this);
+            Destroy(transform.parent.gameObject);
         }
         else
         {

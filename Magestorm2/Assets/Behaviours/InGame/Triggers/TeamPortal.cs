@@ -34,6 +34,10 @@ public class TeamPortal : Portal
         {
             _checkShrineHealth = new PeriodicAction(1.0f, CheckShrineHealth, null);
         }
+        else
+        {
+            _shrineIsAlive = true;
+        }
     }
     private void CheckShrineHealth()
     {

@@ -651,9 +651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db1a57c36b104054593832c346904581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scene
-  SceneEntryPoints:
-  - {fileID: 384545874}
-  - {fileID: 2041927677}
+  SceneEntryGO: {fileID: 0}
 --- !u!4 &1019785752 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1727405269882703439, guid: f3fd36e22c94b2d418819a0caa7389fb, type: 3}

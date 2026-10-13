@@ -80,4 +80,5 @@ public static class FlagManager
     {
         _flagTable[taken].FlagTaken();
     }
+
 }

@@ -29,6 +29,7 @@ public enum InputControl : byte
     MiniMapZoomDefault=24,
     InGameMenu = 25,
     UsePotion = 26,
+    DropFlag = 27,
 
     Slot1 = 100,
     Slot2 = 101,
@@ -152,6 +153,7 @@ public static class InputControls
         defaults.Add(InputControl.Crouch, KeyCode.LeftControl);
         defaults.Add(InputControl.SetSecondary, KeyCode.LeftAlt);
         defaults.Add(InputControl.UsePotion, KeyCode.U);
+        defaults.Add(InputControl.DropFlag, KeyCode.F);
         return defaults;
     }
     
@@ -186,6 +188,13 @@ public static class InputControls
         get
         {
             return (Input.GetKeyDown(_controls[InputControl.UsePotion])) && Game.GameMode;
+        }
+    }
+    public static bool DropFlag
+    {
+        get
+        {
+            return (Input.GetKeyDown(_controls[InputControl.DropFlag])) && Game.GameMode;
         }
     }
     public static bool Action
