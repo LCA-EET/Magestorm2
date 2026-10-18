@@ -36,10 +36,10 @@ public class FlagDisplay : MonoBehaviour
     }
     private void CheckFlag()
     {
-        if(FlagManager.FlagHeldByPlayer != _priorHold)
+        if(Game.PCAvatar.HeldFlag != _priorHold)
         {
-            _priorHold = FlagManager.FlagHeldByPlayer;
-            KeyString.gameObject.SetActive(FlagManager.FlagHeldByPlayer != Team.Neutral);
+            _priorHold = Game.PCAvatar.HeldFlag;
+            KeyString.gameObject.SetActive(Game.PCAvatar.HeldFlag != Team.Neutral);
             switch (_priorHold)
             {
                 case Team.Chaos:

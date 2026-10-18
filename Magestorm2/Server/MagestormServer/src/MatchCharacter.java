@@ -145,8 +145,8 @@ public class MatchCharacter extends TimedObject{
                 _currentMana = _maxMana;
                 break;
             case ControlCodes.Potion_Rejuvenation:
-                _currentHP = Math.min(_maxHP * 0.5f, _maxHP);
-                _currentMana = Math.min(_maxMana * 0.5f, _maxMana);
+                _currentHP = Math.min(_currentHP + (_maxHP * 0.5f), _maxHP);
+                _currentMana = Math.min(_currentMana + (_maxMana * 0.5f), _maxMana);
                 break;
         }
         _carriedPotion = ControlCodes.Potion_None;

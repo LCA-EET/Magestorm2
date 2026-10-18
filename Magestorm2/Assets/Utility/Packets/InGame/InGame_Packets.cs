@@ -3,7 +3,10 @@ using System.Text;
 using UnityEngine;
 public static class InGame_Packets
 {
-    
+    public static byte[] DropFlagPacket()
+    {
+        return new byte[] { InGame_Send.DropFlag, MatchParams.IDinMatch };
+    }
     public static byte[] InactivityResponsePacket() 
     {
         return new byte[] { InGame_Send.InactivityCheckResponse, MatchParams.IDinMatch };

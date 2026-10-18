@@ -25,6 +25,7 @@ public class UIPrefabManager : MonoBehaviour
     public GameObject PrefabUISpellSlots;
     public GameObject PrefabUIGraphics;
     public GameObject PrefabDHKEPacketProcessor;
+    public GameObject PrefabUIAccountActivation;
 
     private Queue<GameObject> _poppedObjects;
     private void Awake()
@@ -55,6 +56,12 @@ public class UIPrefabManager : MonoBehaviour
     public void ClearStack()
     {
         _uiStack.Clear();
+    }
+    public void InstantiateUIAccountActivationForm(int accountID, string email)
+    {
+        GameObject instantiated = Instantiate(PrefabUIAccountActivation);
+        instantiated.GetComponent<UIAccountActivationForm>().InitForm(accountID, email);
+        AddToStack(instantiated);
     }
     public void InstantiateCharacterEditor(PlayerCharacter character)
     {

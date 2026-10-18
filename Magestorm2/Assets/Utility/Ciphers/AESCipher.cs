@@ -26,9 +26,9 @@ public class AESCipher : SymmetricCipher
     {
         _iv++;
         BigInteger secretKey = new BigInteger(_secretSymmetricKey, false, true);
-        Debug.Log("SecretKey Encryption (Decimal): " + secretKey);
-        Debug.Log("SecretKey Encryption (Hex): " + secretKey.ToString("X"));
-        ByteUtils.PrintByteArray(_secretSymmetricKey);
+        //Debug.Log("SecretKey Encryption (Decimal): " + secretKey);
+        //Debug.Log("SecretKey Encryption (Hex): " + secretKey.ToString("X"));
+        //ByteUtils.PrintByteArray(_secretSymmetricKey);
         BitConverter.GetBytes(_iv).CopyTo(_ivBytes, 12);
         byte[] encryptedPayload = new byte[toEncrypt.Length];
         using (MemoryStream memoryStream = new MemoryStream())

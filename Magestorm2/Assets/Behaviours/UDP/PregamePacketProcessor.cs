@@ -25,7 +25,7 @@ public class PregamePacketProcessor : UDPProcessor
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        SendBytes(Pregame_Packets.LogInPacket());
+        //SendBytes(Pregame_Packets.LogInPacket());
     }
 
     // Update is called once per frame
@@ -39,7 +39,7 @@ public class PregamePacketProcessor : UDPProcessor
                 byte[] decryptedPayload = _cryptographer.Decrypt(encryptedPayload);
                 PreProcess(decryptedPayload);
                 Debug.Log("Pregame Packet Received - OpCode: " + decryptedPayload[0]);
-                ByteUtils.PrintByteArray(decryptedPayload);
+                //ByteUtils.PrintByteArray(decryptedPayload);
                 switch (_opCode)
                 {
                     case Pregame_Receive.CreationFailed:
@@ -124,6 +124,15 @@ public class PregamePacketProcessor : UDPProcessor
                     case Pregame_Receive.MatchScore:
                         HandleMatchScoreRequest();
                         break;
+                    case Pregame_Receive.OTPRequest:
+                        HandleOTPRequest();
+                        break;
+                    case Pregame_Receive.ActivationResult:
+                        HandleActivationResult();                
+                        break;
+                    case Pregame_Receive.AccountBan:
+                        Game.MessageBoxReference(426);
+                        break;
                 }
             }
         }
@@ -131,6 +140,18 @@ public class PregamePacketProcessor : UDPProcessor
         {
             _heartbeat.ProcessAction(Time.deltaTime);
         }
+    }
+    private void HandleActivationResult()
+    {
+        byte result = _decrypted[1];
+        Game.MessageBoxReference(result == 0 ? 424: 425);
+    }
+    private void HandleOTPRequest()
+    {
+        int accountID = BitConverter.ToInt32(_decrypted, 1);
+        byte emailLength = _decrypted[5];
+        string email = ByteUtils.BytesToUTF8(_decrypted, 6, emailLength);
+        ComponentRegister.UIPrefabManager.InstantiateUIAccountActivationForm(accountID, email);
     }
     private void HandleMatchScoreRequest()
     {

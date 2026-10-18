@@ -15,7 +15,10 @@ public class ValidatableForm : InstantiatableForm
         //FormButtons = GetComponentsInChildren<FormButton>();
         AssociateFormToButtons();
     }
-
+    protected string GetStringEntry(int index)
+    {
+        return ((TextField)EntriesToValidate[index]).GetValue().ToString();
+    }
     protected override void Update()
     {
         base.Update();

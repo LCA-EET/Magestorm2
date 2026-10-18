@@ -6,9 +6,12 @@ using UnityEngine;
 
 public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
 {
+    public Team HeldFlag = Team.Neutral;
+    private Team _priorFlagCheck = Team.Neutral;
     public AudioSource AudioSource;
     public GameObject CharacterName;
     public RayCaster RayCaster;
+    public CarriedFlag CarriedFlag;
     private int _lastPRPacketID = 0;
     private string _name;
     private byte _level, _class;
@@ -33,7 +36,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
 
     private TMP_Text _nameText;
     private List<PeriodicAction> _actionList;
-    private PeriodicAction _lookAtCamera, _effectsTick, _stepSound;
+    private PeriodicAction _lookAtCamera, _effectsTick, _stepSound, _checkForFlag;
     private Animator _animator;
     private PMDByte _pmd; // posture, movement, direction
     private DeadBody _deadBody;
@@ -54,6 +57,19 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _lookAtCamera = new PeriodicAction(0.2f, NameRotate, _actionList);
         _effectsTick = new PeriodicAction(_effectTick, EffectTick, _actionList);
         _stepSound = new PeriodicAction(0.1f, StepSoundCheck, _actionList);
+        if (MatchParams.IsCTF)
+        {
+            _checkForFlag = new PeriodicAction(1.0f, CheckForFlag , _actionList);
+        }
+    }
+    private void CheckForFlag()
+    {
+        Team flagToCheck = HeldFlag;
+        if(flagToCheck != _priorFlagCheck)
+        {
+            _priorFlagCheck = flagToCheck;
+            CarriedFlag.ShowFlag(flagToCheck);
+        }
     }
     public void PlayGrunt()
     {

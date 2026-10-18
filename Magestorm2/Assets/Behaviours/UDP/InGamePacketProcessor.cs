@@ -485,7 +485,7 @@ public class InGamePacketProcessor : UDPProcessor
         if (takerID == MatchParams.IDinMatch)
         {
             new MessageData(Language.BuildString(193, teamName), Language.GetBaseString(304)); //
-            FlagManager.FlagHeldByPlayer = flagTaken;
+            Game.PCAvatar.HeldFlag = flagTaken;
         }
         else
         {
@@ -493,6 +493,7 @@ public class InGamePacketProcessor : UDPProcessor
             if (Match.GetAvatar(takerID, ref flagTaker))
             {
                 new MessageData(Language.BuildString(192, teamName, flagTaker.Name), Language.GetBaseString(304)); //
+                flagTaker.HeldFlag = flagTaken;
             }
             else
             {
@@ -513,7 +514,7 @@ public class InGamePacketProcessor : UDPProcessor
         byte capturedBy = _decrypted[3];
         byte scoreCapturer = _decrypted[4];
         byte scoreCaptured = _decrypted[5];
-
+        Debug.Log("New Scores: " + scoreCaptured + ", " + scoreCapturer);
         FlagManager.SetScore(capturingTeam, scoreCapturer);
         FlagManager.SetScore(flagCaptured, scoreCaptured);
         ComponentRegister.CTFScorePanel.RefreshScores();
@@ -526,7 +527,8 @@ public class InGamePacketProcessor : UDPProcessor
         byte killerID = _decrypted[2];
         if (killedPlayerID == MatchParams.IDinMatch)
         {
-            FlagManager.FlagHeldByPlayer = Team.Neutral;
+            Game.PCAvatar.HeldFlag = Team.Neutral;
+            Debug.Log("Player dropped flag.");
             if(killedPlayerID == killerID)
             {
                 // voluntary drop
@@ -535,13 +537,51 @@ public class InGamePacketProcessor : UDPProcessor
         }
         if (killerID > 0 && killedPlayerID != killerID)
         {
-            ProcessKilledPlayer();
+            Avatar killedPlayer = null;
+            if(Match.GetAvatar(killedPlayerID, ref killedPlayer)){
+                killedPlayer.HeldFlag = Team.Neutral;
+                ProcessKilledPlayer(killedPlayer, killerID);
+            }
+            
         }
         
         Team flagTeam = (Team)_decrypted[3];
         Vector3 position = ByteUtils.BytesToVector3(_decrypted, 5);
         FlagManager.RepositionFlag(flagTeam, position);
         new MessageData(Language.BuildString(188, Teams.GetTeamName(flagTeam)), Language.GetBaseString(304)); //
+    }
+    private void ProcessKilledPlayer(Avatar killedPlayer, byte killerID)
+    {
+        if (killedPlayer.PlayerID == MatchParams.IDinMatch)
+        {
+            ComponentRegister.PlayerMovement.DeathResetCameraAndController();
+            Avatar playerKiller = null;
+            ComponentRegister.PC.UpdateHP(0.0f);
+            Game.ConsumableDisplay.HideImage();
+            if (Match.GetAvatar(killerID, ref playerKiller))
+            {
+                new MessageData(Language.BuildString(186, playerKiller.Name), Language.GetBaseString(304)); //
+            }
+        }
+        else
+        {
+            if (killerID == MatchParams.IDinMatch) // player killed someone
+            {
+                new MessageData(Language.BuildString(185, killedPlayer.Name), Language.GetBaseString(304)); //
+            }
+            else // someone else killed someone
+            {
+                Avatar killer = null;
+                if (Match.GetAvatar(killerID, ref killer))
+                {
+
+                    new MessageData(Language.BuildString(187, killedPlayer.Name, killer.Name), Language.GetBaseString(304)); //
+                }
+            }
+        }
+        killedPlayer.PlayDeathScream();
+        killedPlayer.CreateDeadBody();
+        killedPlayer.SetAlive(false);
     }
     private void ProcessKilledPlayer()
     {
@@ -551,36 +591,7 @@ public class InGamePacketProcessor : UDPProcessor
         
         if (Match.GetAvatar(killedPlayerID, ref killedPlayer))
         {
-            if(killedPlayerID == MatchParams.IDinMatch)
-            {
-                ComponentRegister.PlayerMovement.DeathResetCameraAndController();
-                Avatar playerKiller = null;
-                ComponentRegister.PC.UpdateHP(0.0f);
-                Game.ConsumableDisplay.HideImage();
-                if (Match.GetAvatar(killerID, ref playerKiller))
-                {
-                    new MessageData(Language.BuildString(186, playerKiller.Name), Language.GetBaseString(304)); //
-                }
-            }
-            else
-            {
-                if (killerID == MatchParams.IDinMatch) // player killed someone
-                {
-                    new MessageData(Language.BuildString(185, killedPlayer.Name), Language.GetBaseString(304)); //
-                }
-                else // someone else killed someone
-                {
-                    Avatar killer = null;
-                    if (Match.GetAvatar(killerID, ref killer))
-                    {
-
-                        new MessageData(Language.BuildString(187, killedPlayer.Name, killer.Name), Language.GetBaseString(304)); //
-                    }
-                }
-            }
-            killedPlayer.PlayDeathScream();
-            killedPlayer.CreateDeadBody();
-            killedPlayer.SetAlive(false);
+            ProcessKilledPlayer(killedPlayer, killerID);
         }
     }
     private void ProcessShrineFailure()

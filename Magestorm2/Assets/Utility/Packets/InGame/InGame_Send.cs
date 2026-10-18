@@ -39,5 +39,6 @@
                         TriggeredSigil = 38,
                         AllPlayerData = 39,
                         UsePotion = 40,
-                        PotionTaken = 41;
+                        PotionTaken = 41,
+                        DropFlag = 42;
 }

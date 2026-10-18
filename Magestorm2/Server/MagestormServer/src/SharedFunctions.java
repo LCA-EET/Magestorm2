@@ -16,6 +16,9 @@ public class SharedFunctions {
         _sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         _random = new Random();
     }
+    public static int GetRandomInt(int min, int max){
+        return _random.nextInt(min, max + 1);
+    }
     public static byte GetRandomByte(int min, int max){
         return (byte)_random.nextInt(min, max + 1);
     }

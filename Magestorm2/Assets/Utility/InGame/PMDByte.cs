@@ -32,7 +32,7 @@ public class PMDByte
         {
             _postureByte = Postures.Jump;
         }
-        Debug.Log("SetPMD " + IsMoving + " " + IsMovingForward + " " + IsMovingBackward);
+        //Debug.Log("SetPMD " + IsMoving + " " + IsMovingForward + " " + IsMovingBackward);
     }
     public void SetMoving(bool moving)
     {

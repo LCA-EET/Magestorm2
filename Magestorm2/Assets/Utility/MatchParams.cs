@@ -140,5 +140,29 @@ public static class MatchParams
             return _maxStamina;
         }
     }
+
+    public static bool IsCTF
+    {
+        get
+        {
+            return MatchType == ControlCodes.MatchTypes_CaptureTheFlag;
+        }
+    }
+
+    public static bool IsFFA
+    {
+        get
+        {
+            return MatchType == ControlCodes.MatchTypes_FreeForAll;
+        }
+    }
+
+    public static bool IsDM
+    {
+        get
+        {
+            return MatchType == ControlCodes.MatchTypes_DeathMatch;
+        }
+    }
 }
 

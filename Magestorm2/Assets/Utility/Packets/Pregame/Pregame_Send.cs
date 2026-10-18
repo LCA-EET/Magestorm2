@@ -22,7 +22,8 @@ public static class Pregame_Send
                         UpdateSkills = 17,
                         UpdateSkillsAndSlotting = 18,
                         Heartbeat = 19,
-                        RequestMatchScore = 21;
+                        RequestMatchScore = 21,
+                        OTPReply = 22;
                         
 }
         

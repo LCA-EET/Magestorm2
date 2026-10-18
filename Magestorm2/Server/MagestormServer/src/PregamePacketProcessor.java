@@ -93,6 +93,7 @@ public class PregamePacketProcessor extends UDPProcessor
                 AssignRC();
                 HandleMatchScoreRequest();
                 return true;
+
                /*
             RemoteClient doesn't exist
              */
@@ -104,8 +105,19 @@ public class PregamePacketProcessor extends UDPProcessor
                 _remote = new RemoteClient(received);
                 HandleCreateAccountPacket();
                 break;
+            case Pregame_Receive.OTPReply:
+                _remote = new RemoteClient(received);
+                HandleOTPReply();
+                return true;
         }
         return true;
+    }
+    private void HandleOTPReply(){
+        int accountID = ByteUtils.ExtractInt(_decrypted, 1);
+        int otp = ByteUtils.ExtractInt(_decrypted, 5);
+        boolean result = Database.ActivateAccount(accountID, otp);
+        Main.LogDebug("OTP Reply: " + accountID + ", " + otp + ", " + result);
+        EnqueueForSend(Packets.ActivationResultPacket(result?(byte)1:(byte)0), _remote);
     }
     private void HandleMatchScoreRequest(){
         SendMatchScore(_decrypted[5], _remote);
@@ -268,21 +280,35 @@ public class PregamePacketProcessor extends UDPProcessor
         Object[] validationResult = Database.ValidateCredentials(username, hashed);
         boolean validCreds = (boolean)validationResult[0];
         int accountID = (int)validationResult[1];
+        byte accountStatus = (byte)validationResult[2];
+        String email = validationResult[3].toString();
+        int otp = (int)validationResult[4];
         byte[] toSend;
         if(validCreds){
-            if(RemoteClientManager.IsLoggedIn(accountID)){
-                toSend = Packets.AlreadyLoggedInPacket();
-                RemoteClient alreadyExisting = RemoteClientManager.ClientLoggedOut(accountID);
-                if(alreadyExisting != null){
-                    EnqueueForSend(Packets.RemovedFromServerPacket(RemovalReason.AlreadyLoggedIn),
-                            alreadyExisting);
-                }
-            }
-            else {
-                _remote.SetNameAndID(username, accountID);
-                RemoteClientManager.ClientLoggedIn(_remote);
-                toSend = Packets.LoginSucceededPacket(accountID);
-                MatchManager.RemoveCharactersForAccount(accountID);
+            switch(accountStatus){
+                case ControlCodes.AccountStatus_Active:
+                    if(RemoteClientManager.IsLoggedIn(accountID)){
+                        toSend = Packets.AlreadyLoggedInPacket();
+                        RemoteClient alreadyExisting = RemoteClientManager.ClientLoggedOut(accountID);
+                        if(alreadyExisting != null){
+                            EnqueueForSend(Packets.RemovedFromServerPacket(RemovalReason.AlreadyLoggedIn),
+                                    alreadyExisting);
+                        }
+                    }
+                    else {
+                        _remote.SetNameAndID(username, accountID);
+                        RemoteClientManager.ClientLoggedIn(_remote);
+                        toSend = Packets.LoginSucceededPacket(accountID);
+                        MatchManager.RemoveCharactersForAccount(accountID);
+                    }
+                    break;
+                case ControlCodes.AccountStatus_NotActivated:
+                    SendOTPEmail(email, otp);
+                    toSend = Packets.OTPRequestPacket(accountID, email);
+                    break;
+                default:
+                    toSend = Packets.AccountBannedPacket();
+                    break;
             }
         }
         else{
@@ -302,6 +328,10 @@ public class PregamePacketProcessor extends UDPProcessor
         toReturn[2] = new String(emailBytes, StandardCharsets.UTF_8);
         return toReturn;
     }
+    private void SendOTPEmail(String email, int otp){
+        String activationMessage = "Hello<br><br>Enter the following OTP into the Magus client to activate your account: " + otp;
+        Main.Mailer.SendMail(email, "Magus Account Activation Code", activationMessage, "Magus Activation");
+    }
     private void HandleCreateAccountPacket(){
         String[] creds = CreateAccountDetails();
         String username = creds[0];
@@ -314,12 +344,16 @@ public class PregamePacketProcessor extends UDPProcessor
             }
             else{
                 Main.LogMessage("Account " + username + " does not already exist.");
-                long token = _cryptographer.SecureRandom().nextLong();
-                boolean accountCreated = Database.CreateAccount(username, creds[1], email, token);
-                byte[] toSend = accountCreated? Packets.AccountCreatedPacket(): Packets.CreationFailedPacket();
-                EnqueueForSend(toSend, _remote);
-                String activationMessage = "Hello<br><br>Click the following link to activate your Magus account:<br><a href='https://www.fosiemods.net/ms2.php?appid=ms2&func=activate&activationtoken=" + token + "'>Activation Link</a>";
-                Main.Mailer.SendMail(email, "Magus Account Activation Link", activationMessage, "Magus Activation");
+                int token = SharedFunctions.GetRandomInt(1000000, 9999999);
+                int accountID = (int)Database.CreateAccount(username, creds[1], email, token);
+                Main.LogMessage("Account " + accountID + " created.");
+                if(accountID > 0){
+                    SendOTPEmail(email, token);
+                    EnqueueForSend(Packets.OTPRequestPacket(accountID, email), _remote);
+                }
+                else{
+                    EnqueueForSend(Packets.CreationFailedPacket(), _remote);
+                }
             }
         }
         else{

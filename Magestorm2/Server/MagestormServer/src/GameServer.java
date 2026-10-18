@@ -18,8 +18,6 @@ public class GameServer extends Thread {
     public static PregamePacketProcessor PGP;
     public static int VictoryCountdown = 30000;
     public static void init(){
-        ByteUtils.init();
-
         GameUtils.init();
         CharacterManager.init();
         _maxPlayerData = new ConcurrentHashMap<>();

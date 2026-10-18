@@ -20,9 +20,12 @@ public class Packets {
     private static final byte[] BannedForBehavior_Bytes = new byte[]{Pregame_Send.BannedForBehavior};
     private static final byte[] MatchIsFull_Bytes = new byte[]{Pregame_Send.MatchIsFullPacket};
     private static final byte[] AcknowledgeSubscription_Bytes = new byte[]{Pregame_Send.AcknowledgeSubscription};
+    private static final byte[] AccountBanned = new byte[]{Pregame_Send.AccountBan};
 
 
-
+    public static byte[] AccountBannedPacket(){
+        return AccountBanned;
+    }
     public static byte[] AcknowledgeSubscriptionPacket(){return AcknowledgeSubscription_Bytes;}
     public static byte[] MessagePacket(byte[] decrypted, int messageLength){
         byte[] toEncrypt = ExtractBytes(decrypted, 0, messageLength);
@@ -230,9 +233,18 @@ public class Packets {
         System.arraycopy(expBytes, 0, toEncrypt, 6, expBytes.length);
         return toEncrypt;
     }
-    public static byte[] SpawnVFXonPlayerPacket( byte vfxCode, byte targetID){
-        byte[] toEncrypt = new byte[]{InGame_Send.SpawnVFXonPlayer, vfxCode, targetID };
+    public static byte[] OTPRequestPacket(int accountID, String email){
+        byte[] emailBytes = ByteUtils.UTF8toBytes(email);
+        byte[] toEncrypt = new byte[5 + 1 + emailBytes.length];
+        toEncrypt[0] = Pregame_Send.OTPRequest;
+        byte[] idBytes = ByteUtils.IntToByteArray(accountID);
+        System.arraycopy(idBytes, 0, toEncrypt, 1, 4);
+        toEncrypt[5] = (byte)emailBytes.length;
+        System.arraycopy(emailBytes, 0, toEncrypt, 6, emailBytes.length);
         return toEncrypt;
+    }
+    public static byte[] ActivationResultPacket(byte result){
+        return new byte[] {Pregame_Send.ActivationResult, result};
     }
 
     /////////////////////// IN-GAME PACKETS ////////////////////////
@@ -240,6 +252,11 @@ public class Packets {
     private static final byte[] PoolBiasFailure_Bytes = new byte[]{InGame_Send.PoolBiasFailure};
     private static final byte[] IGInactivityDisconnect_Bytes = new byte[]{InGame_Send.InactivityDisconnect};
 
+
+    public static byte[] SpawnVFXonPlayerPacket( byte vfxCode, byte targetID){
+        byte[] toEncrypt = new byte[]{InGame_Send.SpawnVFXonPlayer, vfxCode, targetID };
+        return toEncrypt;
+    }
     public static byte[] MatchEndedPacket(byte winner){
         byte[] toEncrypt = new byte[2];
         toEncrypt[0] = InGame_Send.MatchEnded;

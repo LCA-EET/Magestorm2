@@ -6,21 +6,6 @@ import java.util.BitSet;
 
 public class ByteUtils {
     private static final ByteOrder _order = ByteOrder.LITTLE_ENDIAN;
-    private static ByteBuffer _intBuffer;
-    private static ByteBuffer _longBuffer;
-    private static ByteBuffer _floatBuffer;
-    private static ByteBuffer _shortBuffer;
-
-    public static void init(){
-        _intBuffer = ByteBuffer.allocate(4);
-        _intBuffer.order(_order);
-        _longBuffer = ByteBuffer.allocate(8);
-        _longBuffer.order(_order);
-        _floatBuffer = ByteBuffer.allocate(4);
-        _floatBuffer.order(_order);
-        _shortBuffer = ByteBuffer.allocate(2);
-        _shortBuffer.order(_order);
-    }
 
     public static short ExtractShort(byte[] decrypted, int index){
         if((index + 2) <= decrypted.length){
@@ -44,17 +29,27 @@ public class ByteUtils {
     }
 
     public static byte[] IntToByteArray(int value) {
-        return _intBuffer.putInt(0, value).array().clone();
+        ByteBuffer intBuffer = ByteBuffer.allocate(4);
+        intBuffer.order(_order);
+        return intBuffer.putInt(0, value).array();
     }
 
     public static byte[] FloatToByteArray(float value){
-        return  _floatBuffer.putFloat(0, value).array().clone();
+        ByteBuffer floatBuffer = ByteBuffer.allocate(4);
+        floatBuffer.order(_order);
+        return  floatBuffer.putFloat(0, value).array();
     }
 
-    public static byte[] ShortToByteArray(short value){return _shortBuffer.putShort(0, value).array().clone();}
+    public static byte[] ShortToByteArray(short value){
+        ByteBuffer shortBuffer = ByteBuffer.allocate(2);
+        shortBuffer.order(_order);
+        return shortBuffer.putShort(0, value).array();
+    }
 
     public static byte[] LongToByteArray(long value){
-        return _longBuffer.putLong(0, value).array().clone();
+        ByteBuffer longBuffer = ByteBuffer.allocate(8);
+        longBuffer.order(_order);
+        return longBuffer.putLong(0, value).array();
     }
 
     public static byte[] ArrayListToByteArray(ArrayList<byte[]> arrayList, int totalLength, int startIndex){

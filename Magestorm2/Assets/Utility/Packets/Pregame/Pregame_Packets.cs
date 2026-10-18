@@ -3,6 +3,14 @@ using System.Text;
 using UnityEngine;
 public static class Pregame_Packets
 {
+    public static byte[] OTPReplyPacket(int accountID, int otp)
+    {
+        byte[] toReturn = new byte[9];
+        toReturn[0] = Pregame_Send.OTPReply;
+        BitConverter.GetBytes(accountID).CopyTo(toReturn, 1);
+        BitConverter.GetBytes(otp).CopyTo(toReturn, 5);
+        return toReturn;
+    }
     public static byte[] HeartbeatPacket()
     {
         byte[] unencrypted = new byte[5];

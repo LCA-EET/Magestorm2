@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UILoginForm : ValidatableForm
 {
     public Toggle RememberToggle;
+    public Action ToPerform;
     protected override void Awake()
     {
         base.Awake ();
@@ -36,7 +37,8 @@ public class UILoginForm : ValidatableForm
             if (MatchParams.ReturningFromMatch)
             {
                 Cursor.lockState = CursorLockMode.None;
-                PassedValidation();
+                ToPerform = LogIn;
+                ObtainKeyAndPerformAction();
             }
             else
             {
@@ -44,10 +46,8 @@ public class UILoginForm : ValidatableForm
             }
         }
     }
-    protected override void PassedValidation()
+    private bool IsValidServer(ref byte[] keyBytes)
     {
-        //Debug.Log("Passed validation.");
-        
         string fieldText = ((TextField)EntriesToValidate[2]).GetValue().ToString();
         string[] split = fieldText.Split(":");
         if(split.Length == 2)
@@ -55,56 +55,72 @@ public class UILoginForm : ValidatableForm
             try
             {
                 IPHostEntry server = Dns.GetHostEntry(split[0]);
-                //Debug.Log(server.AddressList[0].ToString());
                 int remoteport;
                 if (int.TryParse(split[1], out remoteport))
                 {
                     Game.GameServerPort = remoteport;
                     Game.GameServerAddress = server.AddressList[0];
                     PlayerPrefs.SetString("server", fieldText);
-                    if (RememberToggle.isOn)
-                    {
-                        PlayerPrefs.SetString("user", ((TextField)EntriesToValidate[0]).GetValue().ToString());
-                        PlayerPrefs.SetString("password", ((TextField)EntriesToValidate[1]).GetValue().ToString());
-                    }
-                    PlayerPrefs.SetInt("remember", RememberToggle.isOn ? 1 : 0);
-                    byte[] keyBytes;
-                    if(Cryptographer.GetStoredSecretKey(fieldText, out keyBytes))
-                    {
-                        Game.PregameKey = keyBytes;
-                        if (ComponentRegister.PregamePacketProcessor != null)
-                        {
-                            Destroy(ComponentRegister.PregamePacketProcessor.gameObject);
-                        }
-                        ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
-                    }
-                    else
-                    {
-                        if (ComponentRegister.DHKEPacketProcessor == null)
-                        {
-                            ComponentRegister.UIPrefabManager.InstantiateDHKEPacketProcessor();
-                        }
-                        ComponentRegister.DHKEPacketProcessor.Init(remoteport, ControlCodes.CipherCode_None, null);
-                        
-                    }
+                    Cryptographer.GetStoredSecretKey(fieldText, out keyBytes);
+                    return true;
                 }
                 else
                 {
-                    ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(413));
+                    Game.MessageBoxReference(413);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Game.MessageBox(ex.Message);
-               
-                ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(412));
+                Game.MessageBoxReference(412);
             }
         }
-        else
+        return false;
+    }
+    private void ObtainKeyDHKE()
+    {
+        if (ComponentRegister.DHKEPacketProcessor == null)
         {
-            ComponentRegister.UIPrefabManager.InstantiateMessageBox(Language.GetBaseString(412));
+            ComponentRegister.UIPrefabManager.InstantiateDHKEPacketProcessor();
+        }
+        ComponentRegister.DHKEPacketProcessor.Init(Game.GameServerPort, ControlCodes.CipherCode_None, null);
+    }
+  
+    private void ObtainKeyAndPerformAction()
+    {
+        byte[] storedSecret = null;
+        if (IsValidServer(ref storedSecret))
+        {
+            if (storedSecret == null)
+            {
+                ObtainKeyDHKE();
+            }
+            else
+            {
+                Game.PregameKey = storedSecret;
+                if (ComponentRegister.PregamePacketProcessor != null)
+                {
+                    Destroy(ComponentRegister.PregamePacketProcessor.gameObject);
+                }
+                ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
+                ToPerform();
+            }
         }
     }
+    private void LogIn()
+    {
+        if (RememberToggle.isOn)
+        {
+            PlayerPrefs.SetString("user", ((TextField)EntriesToValidate[0]).GetValue().ToString());
+            PlayerPrefs.SetString("password", ((TextField)EntriesToValidate[1]).GetValue().ToString());
+        }
+        PlayerPrefs.SetInt("remember", RememberToggle.isOn ? 1 : 0);
+        ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.LogInPacket());
+    }
+    private void CreateAccount()
+    {
+        ComponentRegister.UIPrefabManager.InstantiateCreateAccountForm(gameObject);
+    }
+   
     public override void ButtonPressed(ButtonType buttonType)
     {
         switch (buttonType)
@@ -114,16 +130,13 @@ public class UILoginForm : ValidatableForm
                 {
                     PlayerAccount.StoreCredentials(((TextField)EntriesToValidate[0]).GetValue().ToString(),
                         Cryptographer.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString()));
-                    
-                    PassedValidation();
-                }
-                else
-                {
-                    //Debug.Log("invalid entries");
+                    ToPerform = LogIn;
+                    ObtainKeyAndPerformAction();
                 }
                 break;
             case ButtonType.CreateAccount:
-                ComponentRegister.UIPrefabManager.InstantiateCreateAccountForm(gameObject);
+                ToPerform = CreateAccount;
+                ObtainKeyAndPerformAction();
                 break;
             case ButtonType.Cancel:
                 Game.Quit();

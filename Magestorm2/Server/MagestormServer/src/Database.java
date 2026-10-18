@@ -190,25 +190,43 @@ public class Database {
         }
         return toReturn;
     }
-    public static boolean CreateAccount(String username, String hash, String email, long token){
+    public static boolean ActivateAccount(int accountID, int otp){
+        String sql = "UPDATE accounts SET accountstatus = 1 WHERE (id=?) AND (activationtoken=?)";
+        try(Connection conn = DBConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.setInt(2, otp);
+            return ps.executeUpdate() > 0;
+        }
+        catch(Exception e){
+            Main.LogError("Character name check failure: " + e.getMessage());
+        }
+        return false;
+    }
+    public static long CreateAccount(String username, String hash, String email, int token){
         Main.LogMessage("Creating account: " + username + ", " + hash + ", " + email);
         String sql = "INSERT INTO accounts(accountname, hash, email, accountstatus, activationtoken) VALUES(?,?,?,?,?)";
 
         Main.LogMessage("Activation token: " + token);
         try(Connection conn = DBConnection()){
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, username );
             ps.setString(2, hash );
             ps.setString(3, email );
             ps.setByte(4, (byte)0);
-            ps.setLong(5, token);
-            ps.execute();
-            return true;
+            ps.setInt(5, token);
+            if(ps.executeUpdate() > 0){
+                try(ResultSet rs = ps.getGeneratedKeys()){
+                    if(rs.next()){
+                       return rs.getLong(1);
+                    }
+                }
+            }
         }
         catch(Exception e){
             Main.LogError("DB Account Creation Failure: " + e.getMessage());
         }
-        return false;
+        return -1;
     }
     public static boolean SeeIfCharacterExists(String charname){
          boolean characterExists = true;
@@ -483,12 +501,14 @@ public class Database {
         return toReturn;
     }
 
-
     public static Object[] ValidateCredentials(String username, String hash){
-        Object[] toReturn = new Object[2];
+        Object[] toReturn = new Object[5];
         boolean validated = false;
-        String sql = "SELECT id, hash FROM accounts WHERE accountname=?";
+        String sql = "SELECT id, hash, accountstatus, email, activationtoken FROM accounts WHERE accountname=?";
         int accountid = -1;
+        byte status = 0;
+        String email ="";
+        int otp = 0;
         try (Connection conn = DBConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
@@ -498,6 +518,9 @@ public class Database {
                 if(dbHash.equals(hash)){
                     validated = true;
                     accountid = rs.getInt("id");
+                    status = rs.getByte("accountstatus");
+                    email = rs.getString("email");
+                    otp = rs.getInt("activationtoken");
                 }
             }
         }
@@ -506,6 +529,9 @@ public class Database {
         }
         toReturn[0] = validated;
         toReturn[1] = accountid;
+        toReturn[2] = status;
+        toReturn[3] = email;
+        toReturn[4] = otp;
         return toReturn;
     }
     private static byte[] GetDelimitedBytes(ResultSet rs, String columnName){

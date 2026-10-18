@@ -26,5 +26,8 @@
                         AcknowledgeSubscription = 24,
                         UpdateSkillsAndSlots = 25,
                         ExpLevelUpdate = 26,
-                        MatchScore = 27;
+                        MatchScore = 27,
+                        OTPRequest = 28,
+                        ActivationResult = 29,
+                        AccountBan = 30;
 }

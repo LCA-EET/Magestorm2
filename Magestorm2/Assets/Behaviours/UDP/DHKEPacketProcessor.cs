@@ -80,6 +80,7 @@ public class DHKEPacketProcessor : UDPProcessor
             if (ComponentRegister.PregamePacketProcessor == null)
             {
                 ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
+                ComponentRegister.UILoginForm.ToPerform();
             }
         }
         else

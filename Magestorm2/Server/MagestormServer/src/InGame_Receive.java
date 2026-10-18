@@ -43,4 +43,5 @@ public class InGame_Receive {
     public static final byte AllPlayerData = 39;
     public static final byte UsePotion = 40;
     public static final byte PotionTaken = 41;
+    public static final byte DropFlag = 42;
 }

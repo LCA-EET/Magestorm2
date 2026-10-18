@@ -413,3 +413,14 @@ Invalid hostname or IP address.
 Invalid remote port.
 Checksum failure. Please try again.
 Drop Flag
+Confirm Password
+Confirm E-mail
+E-mail addresses do not match.
+Passwords do not match.
+Enter the seven digit code sent to \n{0}.
+Account Activation
+Submit
+Invalid code.
+Account activation failed.
+Account activation succeeded. You may now log in.
+Your account has been banned.

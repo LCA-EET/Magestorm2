@@ -29,6 +29,7 @@ public class PC : MonoBehaviour
     private float _arcLeyUpdate = 1.0f;
     private byte _heldPotion;
     private byte _joinAttempts;
+    private float _flagDropElapsed;
     public bool InValhalla = false;
     public HashSet<int> _inTriggers;
     public HashSet<int> _priorInTriggers;
@@ -57,7 +58,12 @@ public class PC : MonoBehaviour
             _actionList = new List<PeriodicAction>();
             new PeriodicAction(Game.TickInterval, UpdateIndicators, _actionList);
             new PeriodicAction(1.0f, CountdownVectors, _actionList);
+
         }
+    }
+    private void FlagCountdown()
+    {
+        
     }
     public void PickedUpPotion(byte potionID)
     {
@@ -126,7 +132,7 @@ public class PC : MonoBehaviour
         }
         else
         {
-            if (MatchParams.MatchType == ControlCodes.MatchTypes_FreeForAll || _class == ControlCodes.PlayerClass_Mentalist) 
+            if (MatchParams.IsFFA || _class == ControlCodes.PlayerClass_Mentalist) 
             {
                 _ley.UpdateValue(0.6f);
             }
@@ -205,6 +211,22 @@ public class PC : MonoBehaviour
         }
         else
         {
+            if (MatchParams.IsCTF)
+            {
+                if (Game.PCAvatar.HeldFlag != Team.Neutral && InputControls.DropFlag)
+                {
+                    Game.SendInGameBytes(InGame_Packets.DropFlagPacket());
+                }
+                if (FlagManager.FlagJustDropped)
+                {
+                    _flagDropElapsed += Time.deltaTime;
+                    if(_flagDropElapsed > 5.0f)
+                    {
+                        _flagDropElapsed = 0;
+                        FlagManager.FlagJustDropped = false;
+                    }
+                }
+            }
             if (InputControls.UsePotion )
             {
                 if(_heldPotion != 0)

@@ -2,6 +2,12 @@ public class ControlCodes {
 
     public static final byte CastPayloadStartIndex = 5;
 
+    //region AccountStatus
+        public static final byte AccountStatus_NotActivated = 0;
+        public static final byte AccountStatus_Active = 1;
+        public static final byte AccountStatus_Banned = 2;
+    //endregion
+
     //region CipherCode
         public static final byte CipherCode_None = 0;
         public static final byte CipherCode_AES = 1;

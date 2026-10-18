@@ -5,10 +5,10 @@ using UnityEngine.UI;
 public class Flag : Trigger
 {
     private Team _team;
-    private Vector3 _worldLocation;
     public GameObject ChaosFlag;
     public GameObject BalanceFlag;
     public GameObject OrderFlag;
+    public bool IsReturned = true;
     private GameObject _assigned;
     public Team Team
     {
@@ -38,7 +38,6 @@ public class Flag : Trigger
                     _assigned = OrderFlag;
                     break;
             }
-            _worldLocation = transform.position;
             _assigned.SetActive(true);
             FlagManager.Register(this);
         }
@@ -52,17 +51,14 @@ public class Flag : Trigger
     public void FlagTaken()
     {
         gameObject.SetActive(false);
+        IsReturned = false;
     }
     public void FlagReturned()
     {
         gameObject.SetActive(true);
-        transform.position = _worldLocation;
+        IsReturned = true;
     }
 
-    public bool IsSafe()
-    {
-        return transform.position == _worldLocation;
-    }
     public override void ExitAction()
     {
         Debug.Log("Flag Exit Action");
@@ -79,21 +75,28 @@ public class Flag : Trigger
         {
             if (!FlagManager.FlagJustDropped)
             {
-                if (!IsSafe() && (Team == MatchParams.MatchTeam))
+                if (IsReturned && (Team == MatchParams.MatchTeam))
                 {
-                    Game.SendInGameBytes(InGame_Packets.FlagReturnedPacket((byte)Team));
-                }
-                if (Team != MatchParams.MatchTeam)
-                {
-                    Game.SendInGameBytes(InGame_Packets.FlagTakenPacket((byte)Team));
-                }
-                if (IsSafe() && (Team == MatchParams.MatchTeam))
-                {
-                    if (FlagManager.FlagHeldByPlayer != Team.Neutral)
+                    if (Game.PCAvatar.HeldFlag != Team.Neutral)
                     {
-                        Game.SendInGameBytes(InGame_Packets.FlagCapturedPacket((byte)FlagManager.FlagHeldByPlayer));
+                        Debug.Log("Sending flag captured packet.");
+                        Game.SendInGameBytes(InGame_Packets.FlagCapturedPacket((byte)Game.PCAvatar.HeldFlag));
                     }
                 }
+                else if (!IsReturned && (Team == MatchParams.MatchTeam))
+                {
+                    Debug.Log("Sending flag returned packet.");
+                    Game.SendInGameBytes(InGame_Packets.FlagReturnedPacket((byte)Team));
+                }
+                else if (Team != MatchParams.MatchTeam && Game.PCAvatar.HeldFlag == Team.Neutral)
+                {
+                    Debug.Log("Sending flag taken packet.");
+                    Game.SendInGameBytes(InGame_Packets.FlagTakenPacket((byte)Team));
+                }
+            }
+            else
+            {
+                Debug.Log("FlagJustDropped is true.");
             }
         }
     }

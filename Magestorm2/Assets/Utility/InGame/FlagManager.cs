@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class FlagManager
 {
-    public static Team FlagHeldByPlayer = Team.Neutral;
     public static bool FlagJustDropped = false;
     private static Dictionary<byte, FlagData> _flagData;
     private static Dictionary<Team, Flag> _flagTable;
@@ -12,6 +11,7 @@ public static class FlagManager
     public static void Init(byte[] decrypted, ref int index)
     {
         Debug.Log("FlagManager Init.");
+        FlagJustDropped = false;
         _flagTable = new Dictionary<Team, Flag>();
         _flagData = new Dictionary<byte, FlagData>();
         _scores = new Dictionary<Team, byte>();
@@ -74,6 +74,10 @@ public static class FlagManager
     public static void ReturnFlag(Team toReturn)
     {
         _flagTable[toReturn].FlagReturned();
+        if(Game.PCAvatar.HeldFlag == toReturn)
+        {
+            Game.PCAvatar.HeldFlag = Team.Neutral;
+        }
     }
 
     public static void FlagTaken(Team taken)

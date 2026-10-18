@@ -1,10 +1,10 @@
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CaptureTheFlag extends Match{
     private final PoolManager _poolManager;
     private final ConcurrentHashMap<Byte, Flag> _flags;
-    private final ConcurrentHashMap<Byte, Byte> _score;
     private byte[] _flagBytes;
     private final byte[] _currentScores;
     private boolean _flagsChanged;
@@ -16,10 +16,8 @@ public class CaptureTheFlag extends Match{
         _currentScores = new byte[3];
         _poolManager = new PoolManager(this);
         _flags = new ConcurrentHashMap<>();
-        _score = new ConcurrentHashMap<>();
         for(byte teamID : MatchTeam.TeamCodes_NonNeutral){
             _flags.put(teamID, new Flag(teamID));
-            _score.put(teamID, (byte)0);
         }
         _processor = new CTFPacketProcessor(_matchPort, this);
     }
@@ -39,17 +37,22 @@ public class CaptureTheFlag extends Match{
                         GetPlayerScore(capturer).IncrementCapturesFor();
                         _matchTeams.get(capturingTeam).GetScore().IncrementCapturesFor();
                         _matchTeams.get(flagCaptured).GetScore().IncrementCapturesAgainst();
-                        RefreshScores();
                         captured.FlagReturned();
+                        RefreshScores();
                         _flagsChanged = true;
                         SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, capturedBy,
-                                _score.get(capturingTeam), _score.get(flagCaptured)));
+                                _matchTeams.get(capturingTeam).GetScore().GetCTFScore(),
+                                _matchTeams.get(flagCaptured).GetScore().GetCTFScore()));
                     }
                 }
             }
         }
     }
-
+    private void RefreshScores(){
+        _currentScores[0] = _matchTeams.get(MatchTeam.Chaos).GetScore().GetCTFScore();
+        _currentScores[1] = _matchTeams.get(MatchTeam.Balance).GetScore().GetCTFScore();
+        _currentScores[2] = _matchTeams.get(MatchTeam.Order).GetScore().GetCTFScore();
+    }
     public void FlagTaken(byte flagTaken, byte takenBy){
         Flag taken = _flags.get(flagTaken);
         if(!taken.IsHeld()){
@@ -58,11 +61,6 @@ public class CaptureTheFlag extends Match{
                 SendToAll(Packets.FlagTakenPacket(flagTaken, takenBy));
             }
         }
-    }
-    private void RefreshScores(){
-        _currentScores[0] = _matchTeams.get(MatchTeam.Chaos).GetScore().GetCTFScore();
-        _currentScores[1] = _matchTeams.get(MatchTeam.Balance).GetScore().GetCTFScore();
-        _currentScores[2] = _matchTeams.get(MatchTeam.Order).GetScore().GetCTFScore();
     }
     private void FlagDropped(Flag droppedFlag, MatchCharacter killedPlayer, byte killerID){
         Main.LogMessage("FlagDropped: " + killedPlayer.GetIDinMatch() + ", " + killerID);
@@ -113,9 +111,8 @@ public class CaptureTheFlag extends Match{
         return _currentScores;
     }
 
-    private boolean SeeIfFlagDropped(byte characterID, byte killerID){
+    public boolean SeeIfFlagDropped(byte characterID, byte killerID){
         MatchCharacter killed = GetMatchCharacter(characterID);
-        MatchCharacter killer = GetMatchCharacter(killerID);
         if(killed != null){
             return SeeIfFlagDropped(killed, killerID);
         }
