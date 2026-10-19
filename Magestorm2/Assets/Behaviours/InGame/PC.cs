@@ -418,6 +418,7 @@ public class PC : MonoBehaviour
         if (oldpct - newpct > 0.25 && newpct > 0)
         {
             Game.PCAvatar.PlayGrunt();
+            ComponentRegister.DamagePanel.Show(true);
         }
     }
     public void HPandManaUpdate(byte[] decrypted)

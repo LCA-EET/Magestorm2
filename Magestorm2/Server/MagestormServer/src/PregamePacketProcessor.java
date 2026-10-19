@@ -2,6 +2,7 @@ import java.net.DatagramPacket;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class PregamePacketProcessor extends UDPProcessor
 {
@@ -93,6 +94,10 @@ public class PregamePacketProcessor extends UDPProcessor
                 AssignRC();
                 HandleMatchScoreRequest();
                 return true;
+            case Pregame_Receive.RequestSpellData:
+                AssignRC();
+                HandleSpellDataRequest();
+                return true;
 
                /*
             RemoteClient doesn't exist
@@ -111,6 +116,12 @@ public class PregamePacketProcessor extends UDPProcessor
                 return true;
         }
         return true;
+    }
+    private void HandleSpellDataRequest(){
+        Collection<byte[]> packets = SpellManager.GetSpellDataPackets();
+        for(byte[] packet : packets){
+            EnqueueForSend(packet, _remote);
+        }
     }
     private void HandleOTPReply(){
         int accountID = ByteUtils.ExtractInt(_decrypted, 1);

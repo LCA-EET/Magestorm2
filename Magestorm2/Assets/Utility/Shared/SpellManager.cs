@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 public static class SpellManager
 {
@@ -6,6 +8,8 @@ public static class SpellManager
     private static Dictionary<byte, SpellData> _spells;
     public static void Init()
     {
+        _spells = new Dictionary<byte, SpellData>();
+        /*
         if (!_init)
         {
             _spells = new Dictionary<byte, SpellData>();
@@ -20,6 +24,37 @@ public static class SpellManager
                 byte discipline = toAdd.Discipline;
                 DisciplineManager.GetDiscipline(discipline).AddSpellToDiscipline(toAdd);
             }
+        }
+        */
+    }
+    public static void ProcessSpellData(byte[] decrypted)
+    {
+        int numToProcess = decrypted[3];
+        Debug.Log("Processing " + numToProcess + " spells.");
+        int index = 4;
+        List<byte[]> spellData = new List<byte[]>();
+        for(int i = 0; i < numToProcess; i++)
+        {
+            byte[] data = new byte[18];
+            Array.Copy(decrypted, index, data, 0, 18);
+            spellData.Add(data);
+            index += 18;
+        }
+        if(Cryptographer.VerifyChecksum(decrypted, index))
+        {
+            foreach (byte[] data in spellData) 
+            {
+                SpellData toAdd = new SpellData(data);
+                Debug.Log("Added spell " + toAdd.SpellID);
+                _spells.Add(toAdd.SpellID, toAdd);
+                byte discipline = toAdd.Discipline;
+                DisciplineManager.GetDiscipline(discipline).AddSpellToDiscipline(toAdd);
+            }
+            
+        }
+        else
+        {
+            Debug.Log("ProcessSpellData: Checksum failure.");
         }
     }
     public static int GetSpellNameReference(byte key)

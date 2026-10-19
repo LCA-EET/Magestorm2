@@ -1,94 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
+using System;
 public class SpellData
 {
-    private int _spellNameReference, _descReference;
-    private byte _spellID, _cost, _rolls, _minLevel, _skillNeeded, _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _element1, _staminaCost, _effectRadius, _range, _projectileSpeed, _shakePrevention, _forceDuration, _autoAim;
-    private byte _discipline;
-    private byte _spellType;
-    private short _cancelsEffects;
-    public SpellData(string[] fields, string contents)
-    {
-        string[] split = contents.Split("\n");
-        string fieldID, fieldValue;
-        for (int i = 0; i < fields.Length-1; i++)
-        {
-            fieldID = fields[i].Trim();
-            fieldValue = split[i + 1].Trim();
-            switch (fieldID)
-            {
-                case SpellAttributes.ELEMENT0:
-                    _element0 = byte.Parse(fieldValue); 
-                    break;
-                case SpellAttributes.ELEMENT1:
-                    _element1 = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.ID:
-                    _spellID = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.MIN_DAMAGE_PER_ROLL0:
-                    _minDamagePerRoll0 = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.MAX_DAMAGE_PER_ROLL0:
-                    _maxDamagePerRoll0 = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.MIN_HEAL_PER_ROLL:
-                    _minHealPerRoll = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.MAX_HEAL_PER_ROLL:
-                    _maxHealPerRoll = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.SPELL_NAME_REFERENCE:
-                    _spellNameReference = int.Parse(fieldValue);
-                    break;
-                case SpellAttributes.COST:
-                    _cost = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.ROLLS:
-                    _rolls = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.MINLEVEL:
-                    _minLevel = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.SKILLNEEDED:
-                    _skillNeeded = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.DISCIPLINE:
-                    _discipline = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.DESCRIPTION:
-                    _descReference = int.Parse(fieldValue);
-                    break;
-                case SpellAttributes.SPELLTYPE:
-                    _spellType = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.RADIUS:
-                    _effectRadius = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.RANGE:
-                    _range = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.PROJECTILESPEED:
-                    _projectileSpeed = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.SHAKEPREVENTION:
-                    _shakePrevention = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.FORCEDURATION:
-                    _forceDuration = byte.Parse(fieldValue);
-                    break;
-                case SpellAttributes.AUTOAIM:
-                    _autoAim = byte.Parse(fieldValue);
-                    break;
-            }
-        }
-    }
+    private byte[] _spellData;
+
+    private static byte Index_SpellID = 0;
+    private static byte Index_Cost = 1;
+    private static byte Index_MinLevel = 2;
+    private static byte Index_SkillNeeded = 3;
+    private static byte Index_MinDamagePerRoll0 = 4;
+    private static byte Index_Element0 = 5;
+    private static byte Index_EffectRadius = 6;
+    private static byte Index_Range = 7;
+    private static byte Index_ProjectileSpeed = 8;
+    private static byte Index_ShakePrevention = 9;
+    private static byte Index_ForceDuration = 10;
+    private static byte Index_AutoAim = 11;
+    private static byte Index_Discipline = 12;
+    private static byte Index_SpellType = 13;
+    private static byte Index_SpellNameReference = 14;
+    private static byte Index_DescReference = 16;
     
+    public SpellData(byte[] spellData)
+    {
+        _spellData = spellData;
+    }
     public byte GetElementalVFXCode()
     {
-        switch (_element0)
+        switch (Element0)
         {
             case ControlCodes.Element_Fire:
                 return ControlCodes.VFX_FireShield;
@@ -103,7 +42,7 @@ public class SpellData
     }
     public byte Element0
     {
-        get { return _element0; }
+        get { return _spellData[Index_Element0]; }
     }
     public float GetStaminaCost(byte characterLevel)
     {
@@ -120,63 +59,64 @@ public class SpellData
     }
     public byte ForceDuration
     {
-        get
-        {
-            return _forceDuration;
-        }
+        get { return _spellData[Index_ForceDuration]; }
     }
     public byte ShakePrevention
     {
-        get { return _shakePrevention; }
+        get { return _spellData[Index_ShakePrevention]; }
     }
     public byte ProjectileSpeed
     {
-        get { return _projectileSpeed; }
+        get { return _spellData[Index_ProjectileSpeed]; }
     }
     public byte Range
     {
-        get { return _range; }  
+        get { return _spellData[Index_Range]; }
     }
     public byte EffectRadius
     {
-        get { return _effectRadius; }
+        get { return _spellData[Index_EffectRadius]; }
     }
     public byte SpellType
     {
-        get { return _spellType; }
+        get { return _spellData[Index_SpellType]; }
     }
     public byte Discipline
     {
-        get { return _discipline; }
+        get { return _spellData[Index_Discipline]; }
     }
     public byte SpellCost
     {
-        get { return _cost; }
+        get { return _spellData[Index_Cost]; }
     }
     public byte MinLevel
     {
-        get { return _minLevel; }
+        get { return _spellData[Index_MinLevel]; }
     }
     public byte SkillNeeded
     {
-        get { return _skillNeeded; }
+        get { return _spellData[Index_SkillNeeded]; }
     }
     public byte SpellID
     {
-        get { return _spellID; }
+        get { return _spellData[Index_SpellID]; }
     }
-    public int SpellNameReference
+    public short SpellNameReference
     {
-        get { return _spellNameReference; }
+        get { return BitConverter.ToInt16(_spellData, Index_SpellNameReference); }
     }
-    public int DescriptionReference
+    public short DescriptionReference
     {
-        get { return _descReference; }
+        get { return BitConverter.ToInt16(_spellData, Index_DescReference); }
+    }
+    public byte AutoAim
+    {
+        get { return _spellData[Index_AutoAim]; }
     }
 
     public bool IsFriendly
     {
-        get { return _minDamagePerRoll0 == 0; }
+        get { return _spellData[Index_MinDamagePerRoll0] == 0; }
     }
     public void CastSpell()
     {
@@ -218,7 +158,7 @@ public class SpellData
                     if(SpellManager.GetSpell(SpellID, ref spellReference))
                     {
 
-                        byte target = (byte)(_autoAim == 1 ? SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 2.0f, TeamSelectionCode.Enemy, SpellType==ControlCodes.SpellTypes_Resistable?LayerManager.ResistableObstructionMask:LayerManager.AoEObstructionMask) : 0);
+                        byte target = (byte)(AutoAim == 1 ? SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 2.0f, TeamSelectionCode.Enemy, SpellType==ControlCodes.SpellTypes_Resistable?LayerManager.ResistableObstructionMask:LayerManager.AoEObstructionMask) : 0);
                         toSend = InGame_Packets.CastBoltPacket(SpellID, target);
                     }
                     break;

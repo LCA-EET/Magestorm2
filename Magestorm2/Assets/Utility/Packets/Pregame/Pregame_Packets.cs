@@ -3,6 +3,13 @@ using System.Text;
 using UnityEngine;
 public static class Pregame_Packets
 {
+    public static byte[] RequestSpellDataPacket()
+    {
+        byte[] unencrypted = new byte[5];
+        unencrypted[0] = Pregame_Send.RequestSpellData;
+        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        return unencrypted;
+    }
     public static byte[] OTPReplyPacket(int accountID, int otp)
     {
         byte[] toReturn = new byte[9];

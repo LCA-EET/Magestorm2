@@ -11,6 +11,7 @@ public class UICharacterSelectForm : ValidatableForm
     {
         base.Awake();
         Game.LoggedIn = true;
+        Game.SendPregameBytes(Pregame_Packets.RequestSpellDataPacket());
         for (int i = 0; i < CharacterCards.Length; i++)
         {
             CharacterCards[i].SetOwningForm(this, RenderTextures[i]);

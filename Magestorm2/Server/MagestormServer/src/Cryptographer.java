@@ -80,7 +80,7 @@ public class Cryptographer {
         return result;
     }
 
-    public byte[] ApplyChecksum(byte[] toProcess){
+    public static byte[] ApplyChecksum(byte[] toProcess){
         byte[] toReturn = new byte[toProcess.length + 2];
         System.arraycopy(toProcess, 0, toReturn, 0, toProcess.length);
         BigInteger sum = new BigInteger(toProcess);

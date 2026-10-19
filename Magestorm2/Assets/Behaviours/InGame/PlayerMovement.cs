@@ -213,6 +213,7 @@ public class PlayerMovement : MonoBehaviour
             Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
             _midJump = true;
             _pmd.SetLocalPosture(Postures.Jump);
+            _pc.UseStamina(20f);
         }
         UpdateGroundedStatus();
         return moving;

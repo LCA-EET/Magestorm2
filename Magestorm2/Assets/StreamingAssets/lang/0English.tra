@@ -388,7 +388,7 @@ Ice Bolt
 Fires a bolt of ice toward a target.
 Ice Ball
 Fires a ball of ice that explodes on impact.
-Stone Wall
+Wall of Stone
 Places a wall of stone in front of the caster.
 Sigils
 Walls
@@ -424,3 +424,5 @@ Invalid code.
 Account activation failed.
 Account activation succeeded. You may now log in.
 Your account has been banned.
+Wall of Ice
+Places a wall of ice in front of the caster.

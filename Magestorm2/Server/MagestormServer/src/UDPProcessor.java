@@ -59,7 +59,7 @@ public class UDPProcessor extends RegisteredThread{
         return _outgoingPackets;
     }
     public void EnqueueForSendWithChecksum(byte[] toEncrypt, RemoteClient rc){
-        byte[] toEncryptWithChecksum = _cryptographer.ApplyChecksum(toEncrypt);
+        byte[] toEncryptWithChecksum = Cryptographer.ApplyChecksum(toEncrypt);
         EnqueueForSend(toEncryptWithChecksum, rc);
     }
     public void EnqueueForSend(byte[] toEncrypt, Iterable<RemoteClient> recipients){

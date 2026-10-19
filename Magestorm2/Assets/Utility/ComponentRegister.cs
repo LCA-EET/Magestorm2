@@ -44,7 +44,7 @@ public static class ComponentRegister
     private static ResistanceNotice _resistanceNotice;
     private static InputController _inputController;
     private static Scene _scene;
-
+    public static DamagePanel DamagePanel;
     public static FlagDisplay FlagDisplay;
     public static DHKEPacketProcessor DHKEPacketProcessor;
     public static Scene Scene

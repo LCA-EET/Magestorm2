@@ -133,6 +133,9 @@ public class PregamePacketProcessor : UDPProcessor
                     case Pregame_Receive.AccountBan:
                         Game.MessageBoxReference(426);
                         break;
+                    case Pregame_Receive.SpellData:
+                        HandleSpellData();
+                        break;
                 }
             }
         }
@@ -140,6 +143,10 @@ public class PregamePacketProcessor : UDPProcessor
         {
             _heartbeat.ProcessAction(Time.deltaTime);
         }
+    }
+    private void HandleSpellData()
+    {
+        SpellManager.ProcessSpellData(_decrypted);
     }
     private void HandleActivationResult()
     {

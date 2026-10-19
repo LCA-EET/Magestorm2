@@ -4,11 +4,12 @@ public class Spell {
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
             _spellType, _disciplineCode, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
             _notificationCode, _radius, _effectCode, _duration, _levelsForRoll, _iceResist, _fireResist, _elecResist, _earthResist,
-            _manaResist, _minForcePerRoll, _maxForcePerRoll, _forceDuration;
+            _manaResist, _minForcePerRoll, _maxForcePerRoll, _forceDuration, _range, _speed, _shakePrevention, _autoAim;
     private final DisciplineData _associatedDiscipline;
     private final float _splashFactor0, _splashFactor1, _splashFactor2;
     private final float[] _resistances;
-    public Spell(int id, byte[] params){
+    private byte[] _clientSpellData;
+    public Spell(int id, byte[] params, short nameRef, short descRef){
         _spellID = id;
         _resistances = new float[10];
         _minDamagePerRoll0 = params[0];
@@ -32,6 +33,9 @@ public class Spell {
         _splashFactor1 = params[17] / 100.0f;
         _splashFactor2 = params[18] / 100.0f;
         _radius = params[19];
+        _range = params[20];
+        _speed = params[21];
+        _shakePrevention = params[22];
         _effectCode = params[23];
         _duration = params[24];
         _iceResist = params[25];
@@ -42,13 +46,38 @@ public class Spell {
         _minForcePerRoll = params[30];
         _maxForcePerRoll = params[31];
         _forceDuration = params[32];
+        _autoAim = params[34];
         _resistances[ControlCodes.Element_Fire] = _fireResist / 100.0f;
         _resistances[ControlCodes.Element_Earth] = _earthResist / 100.0f;
         _resistances[ControlCodes.Element_Ice] = _iceResist / 100.0f;
         _resistances[ControlCodes.Element_Electric] = _elecResist / 100.0f;
         _resistances[ControlCodes.Element_Mana] = _manaResist / 100.0f;
+        FillClientDataArray(nameRef, descRef);
     }
-
+    public byte[] GetClientSpellData(){
+        return _clientSpellData;
+    }
+    private void FillClientDataArray(short nameRef, short descReference){
+        _clientSpellData = new byte[18];
+        _clientSpellData[0] = (byte)_spellID;
+        _clientSpellData[1] = _spellCost;
+        _clientSpellData[2] = _minlevel;
+        _clientSpellData[3] = _skillRequired;
+        _clientSpellData[4] = _minDamagePerRoll0;
+        _clientSpellData[5] = _element0;
+        _clientSpellData[6] = _radius;
+        _clientSpellData[7] = _range;
+        _clientSpellData[8] = _speed;
+        _clientSpellData[9] = _shakePrevention;
+        _clientSpellData[10] = _forceDuration;
+        _clientSpellData[11] = _autoAim;
+        _clientSpellData[12] = _disciplineCode;
+        _clientSpellData[13] = _spellType;
+        byte[] nameRefBytes = ByteUtils.ShortToByteArray(nameRef);
+        byte[] descRefBytes = ByteUtils.ShortToByteArray(descReference);
+        System.arraycopy(nameRefBytes, 0, _clientSpellData, 14, 2);
+        System.arraycopy(descRefBytes, 0, _clientSpellData, 16, 2);
+    }
     public float[] GetResistances(){
         return _resistances;
     }

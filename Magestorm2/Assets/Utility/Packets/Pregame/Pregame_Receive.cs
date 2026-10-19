@@ -29,5 +29,6 @@
                         MatchScore = 27,
                         OTPRequest = 28,
                         ActivationResult = 29,
-                        AccountBan = 30;
+                        AccountBan = 30,
+                        SpellData = 31;
 }
