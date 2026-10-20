@@ -15,7 +15,7 @@ public class SpellSelectView : ScrollSelectView
 
     public void PopulateOptions(byte disciplineCode)
     {
-        List<SpellData> spellData = DisciplineManager.GetSpellsOfDiscipline(new byte[] { (byte)disciplineCode });
+        List<SpellData> spellData = Game.ActiveDisciplineManager.GetSpellsOfDiscipline(new byte[] { (byte)disciplineCode });
         Dictionary<byte, int> options = new Dictionary<byte, int>();
         foreach(SpellData sd in spellData)
         {
@@ -30,7 +30,7 @@ public class SpellSelectView : ScrollSelectView
     protected override void ProcessSelection()
     {
         SpellData reference = null;
-        if(SpellManager.GetSpell(_selectedOption, ref reference))
+        if(Game.ActiveSpellManager.GetSpell(_selectedOption, ref reference))
         {
             _owner.SelectionMade(new object[] { reference });
         }

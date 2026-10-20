@@ -21,7 +21,7 @@ public class SkillLine : ValidatableForm
         _skillID = skillID;
         _buttonsEnabled = true;
         gameObject.SetActive(true);
-        SkillText.text = DisciplineManager.GetDiscipline(skillID).DisciplineName;
+        SkillText.text = Game.ActiveDisciplineManager.GetDiscipline(skillID).DisciplineName;
         RefreshText();
     }
     public override void ButtonPressed(ButtonType buttonType)

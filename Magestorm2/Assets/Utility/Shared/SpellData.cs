@@ -155,7 +155,7 @@ public class SpellData
                 case ControlCodes.SpellTypes_Bolt:
                 case ControlCodes.SpellTypes_Resistable:
                     SpellData spellReference = null;
-                    if(SpellManager.GetSpell(SpellID, ref spellReference))
+                    if(Game.ActiveSpellManager.GetSpell(SpellID, ref spellReference))
                     {
 
                         byte target = (byte)(AutoAim == 1 ? SharedFunctions.GetPlayerInSphereCast(Camera.main.transform.position, spellReference.Range, 2.0f, TeamSelectionCode.Enemy, SpellType==ControlCodes.SpellTypes_Resistable?LayerManager.ResistableObstructionMask:LayerManager.AoEObstructionMask) : 0);

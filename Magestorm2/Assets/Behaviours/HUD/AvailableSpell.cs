@@ -27,7 +27,7 @@ public class AvailableSpell : MonoBehaviour
     
     public void SetAssociatedSpell(byte spellID)
     {
-        if (SpellManager.GetSpell(spellID, ref _associatedSpell))
+        if (Game.ActiveSpellManager.GetSpell(spellID, ref _associatedSpell))
         {
             Icon.sprite = SpellIcons.GetIcon(spellID);
             //Debug.Log("ICON: " + Icon.sprite.ToString() + " " + Icon.name);

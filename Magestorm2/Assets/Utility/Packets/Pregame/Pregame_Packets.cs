@@ -10,6 +10,13 @@ public static class Pregame_Packets
         PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
         return unencrypted;
     }
+    public static byte[] RequestDisciplineDataPacket()
+    {
+        byte[] unencrypted = new byte[5];
+        unencrypted[0] = Pregame_Send.RequestDisciplineData;
+        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        return unencrypted;
+    }
     public static byte[] OTPReplyPacket(int accountID, int otp)
     {
         byte[] toReturn = new byte[9];

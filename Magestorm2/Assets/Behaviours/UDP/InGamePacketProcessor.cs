@@ -242,7 +242,7 @@ public class InGamePacketProcessor : UDPProcessor
             index++;
             SpellData baseReference = null;
             Debug.Log("TOCRR SpellKey: " + spellID);
-            if (SpellManager.GetSpell(spellID, ref baseReference))
+            if (Game.ActiveSpellManager.GetSpell(spellID, ref baseReference))
             {
                 short castID = BitConverter.ToInt16(_decrypted, index);
                 index += 2;

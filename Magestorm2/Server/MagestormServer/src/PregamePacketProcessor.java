@@ -98,7 +98,10 @@ public class PregamePacketProcessor extends UDPProcessor
                 AssignRC();
                 HandleSpellDataRequest();
                 return true;
-
+            case Pregame_Receive.RequestDisciplineData:
+                AssignRC();
+                HandleDisciplineRequest();
+                return true;
                /*
             RemoteClient doesn't exist
              */
@@ -116,6 +119,9 @@ public class PregamePacketProcessor extends UDPProcessor
                 return true;
         }
         return true;
+    }
+    private void HandleDisciplineRequest(){
+        EnqueueForSend(DisciplineManager.GetDisciplinePacket(), _remote);
     }
     private void HandleSpellDataRequest(){
         Collection<byte[]> packets = SpellManager.GetSpellDataPackets();

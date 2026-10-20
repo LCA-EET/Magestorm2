@@ -33,7 +33,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
             byte spellID = slottedSpells[i];
             SpellData slottedSpell = null;
             int referenceID = _noSelectionRef;
-            if (SpellManager.GetSpell(spellID, ref slottedSpell))
+            if (Game.ActiveSpellManager.GetSpell(spellID, ref slottedSpell))
             {
                 referenceID = slottedSpell.SpellNameReference;
             }
@@ -79,7 +79,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
 
     public void CheckAvailability(byte characterLevel, Dictionary<byte, byte> disciplineLevels)
     {
-        Dictionary<byte, SpellData> availableSpells = SpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
+        Dictionary<byte, SpellData> availableSpells = Game.ActiveSpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
         for (byte i = 0; i < _slottedSpells.Length; i++)
         {
             if (!availableSpells.ContainsKey(_slottedSpells[i]))

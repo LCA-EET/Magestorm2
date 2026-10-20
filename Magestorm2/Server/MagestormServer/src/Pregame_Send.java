@@ -30,4 +30,5 @@ public class Pregame_Send {
     public static final byte ActivationResult = 29;
     public static final byte AccountBan = 30;
     public static final byte SpellData = 31;
+    public static final byte DisciplineData = 32;
 }

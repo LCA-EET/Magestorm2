@@ -286,7 +286,7 @@ public class PC : MonoBehaviour
         if (spellID > 0)
         {
             SpellData spellData = null;
-            if (SpellManager.GetSpell(spellID, ref spellData))
+            if (Game.ActiveSpellManager.GetSpell(spellID, ref spellData))
             {
                 _primarySpell = spellData;
                 ComponentRegister.SpellPanel.UpdatePrimaryReference(spellData.SpellNameReference);

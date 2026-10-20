@@ -30,5 +30,6 @@
                         OTPRequest = 28,
                         ActivationResult = 29,
                         AccountBan = 30,
-                        SpellData = 31;
+                        SpellData = 31,
+                        DisciplineData = 32;
 }

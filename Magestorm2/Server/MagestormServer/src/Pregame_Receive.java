@@ -22,4 +22,5 @@ public class Pregame_Receive {
     public static final byte RequestMatchScore = 21;
     public static final byte OTPReply = 22;
     public static final byte RequestSpellData = 23;
+    public static final byte RequestDisciplineData = 24;
 }

@@ -24,7 +24,11 @@ public static class Game
     public static InGameClips Clips;
     public static int GameServerPort;
     public static IPAddress GameServerAddress;
+    public static Dictionary<string, SpellManager> SpellManagerTable;
+    public static Dictionary<string, DisciplineManager> DisciplineManagerTable;
     public static ConsumableDisplay ConsumableDisplay;
+    public static SpellManager ActiveSpellManager;
+    public static DisciplineManager ActiveDisciplineManager;
     public static bool LoggedIn = false;
     public static byte[] PregameKey;
     //public static PMDByte PlayerPMDByte;
@@ -91,6 +95,8 @@ public static class Game
         if (!_init)
         {
             Language.Init();
+            SpellManagerTable = new Dictionary<string, SpellManager>();
+            DisciplineManagerTable = new Dictionary<string, DisciplineManager>();
             Application.runInBackground = true;
             IconLibrary.Init();
             Colors.Init();

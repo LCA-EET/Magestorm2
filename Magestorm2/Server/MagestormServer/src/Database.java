@@ -47,15 +47,17 @@ public class Database {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 byte disciplineID = rs.getByte(1);
+                short nameRef = rs.getShort(3);
                 int columnCount = rs.getMetaData().getColumnCount();
                 byte columnsToSkip = 3;
                 byte[] attrib = new byte[columnCount - columnsToSkip];
                 for(int i = columnsToSkip; i < columnCount; i++){
                     attrib[i - columnsToSkip] = rs.getByte(i + 1); // first column is one, not zero;
                 }
-                DisciplineData ddata = new DisciplineData(disciplineID, attrib);
+                DisciplineData ddata = new DisciplineData(disciplineID, attrib, nameRef);
                 DisciplineManager.AddDiscipline(disciplineID, ddata);
             }
+            DisciplineManager.GenerateClientDataPacket();
         }
         catch(Exception e){
             Main.LogError("Database.LoadDisciplineData(): " + e.getMessage());

@@ -13,8 +13,6 @@ public class UILoginForm : ValidatableForm
         base.Awake ();
         Game.LoggedIn = false;
         CharacterClassManager.Init();
-        DisciplineManager.Init();
-        SpellManager.Init();
         ComponentRegister.UILoginForm = this;
     }
    
@@ -48,7 +46,7 @@ public class UILoginForm : ValidatableForm
     }
     private bool IsValidServer(ref byte[] keyBytes)
     {
-        string fieldText = ((TextField)EntriesToValidate[2]).GetValue().ToString();
+        string fieldText = ((TextField)EntriesToValidate[2]).GetValue().ToString().ToLower();
         string[] split = fieldText.Split(":");
         if(split.Length == 2)
         {
@@ -61,6 +59,17 @@ public class UILoginForm : ValidatableForm
                     Game.GameServerPort = remoteport;
                     Game.GameServerAddress = server.AddressList[0];
                     PlayerPrefs.SetString("server", fieldText);
+                    if (Game.SpellManagerTable.ContainsKey(fieldText))
+                    {
+                        Game.ActiveSpellManager = Game.SpellManagerTable[fieldText];
+                        Game.ActiveDisciplineManager = Game.DisciplineManagerTable[fieldText];
+
+                    }
+                    else
+                    {
+                        Game.SpellManagerTable.Add(fieldText, new SpellManager());
+                        Game.DisciplineManagerTable.Add(fieldText, new DisciplineManager());
+                    }
                     Cryptographer.GetStoredSecretKey(fieldText, out keyBytes);
                     return true;
                 }

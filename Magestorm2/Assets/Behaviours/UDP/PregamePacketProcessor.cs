@@ -136,6 +136,9 @@ public class PregamePacketProcessor : UDPProcessor
                     case Pregame_Receive.SpellData:
                         HandleSpellData();
                         break;
+                    case Pregame_Receive.DisciplineData:
+                        HandleDisciplineData();
+                        break;
                 }
             }
         }
@@ -144,9 +147,23 @@ public class PregamePacketProcessor : UDPProcessor
             _heartbeat.ProcessAction(Time.deltaTime);
         }
     }
+    private void HandleDisciplineData()
+    {
+        if (Game.ActiveDisciplineManager.ProcessDisciplineData(_decrypted))
+        {
+            Game.SendPregameBytes(Pregame_Packets.RequestSpellDataPacket());
+        }
+        else
+        {
+            Game.MessageBoxReference(414);
+        }
+    }
     private void HandleSpellData()
     {
-        SpellManager.ProcessSpellData(_decrypted);
+        if (Game.ActiveSpellManager.ProcessSpellData(_decrypted))
+        {
+            ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
+        }
     }
     private void HandleActivationResult()
     {
@@ -462,6 +479,13 @@ public class PregamePacketProcessor : UDPProcessor
         {
             SendBytes(Pregame_Packets.RequestLevelsListPacket());
         }
-        ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
+        if (Game.ActiveSpellManager.SpellsLoaded)
+        {
+            ComponentRegister.UIPrefabManager.InstantiateCharacterSelector();
+        }
+        else
+        {
+            Game.SendPregameBytes(Pregame_Packets.RequestDisciplineDataPacket());
+        }
     }
 }

@@ -34,7 +34,7 @@ public class SpellSpawner : MonoBehaviour
         _castID = castID;
         _payload = payload;
 
-        if(SpellManager.GetSpell(SpellKey, ref _spellReference))
+        if(Game.ActiveSpellManager.GetSpell(SpellKey, ref _spellReference))
         {
             switch (spellType)
             {

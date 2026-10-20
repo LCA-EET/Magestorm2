@@ -10,10 +10,14 @@ public class DisciplineData
     private byte _id;
     private short _nameRef;
     private byte _availabilityMask;
-    private byte _statCode;
 
     private List<SpellData> _spellsOfDiscipline;
-
+    public DisciplineData(byte[] data)
+    {
+        _id = data[0];
+        _availabilityMask = data[1];
+        _nameRef = BitConverter.ToInt16(data, 2);
+    }
     public DisciplineData(string[] fields, string contents)
     {
         _spellsOfDiscipline = new List<SpellData>();
