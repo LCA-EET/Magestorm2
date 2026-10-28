@@ -166,9 +166,16 @@ public class InGamePacketProcessor : UDPProcessor
                     case InGame_Receive.UsedPotion:
                         HandlePotionUse();
                         break;
+                    case InGame_Receive.PingReply:
+                        HandlePingReply();
+                        break;
                 }
             }
         }
+    }
+    private void HandlePingReply()
+    {
+        ComponentRegister.PingDisplay.ShowPing();
     }
     private void HandlePotionUse()
     {

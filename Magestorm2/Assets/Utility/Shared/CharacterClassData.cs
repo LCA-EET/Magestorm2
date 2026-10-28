@@ -1,40 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class CharacterClassData
 {
     private byte _id, _hpMultiplier, _manaStatCode, _deadSight;
     private short _nameRef;
     private string _abbrev;
-    public CharacterClassData(string[] fields, string contents)
+    
+    public CharacterClassData(byte[] decrypted)
     {
-        string[] split = contents.Split("\n");
-        string fieldID, fieldValue;
-        for (int i = 0; i < fields.Length-1; i++)
-        {
-            fieldID = fields[i].Trim();
-            fieldValue = split[i + 1].Trim();
-            switch (fieldID)
-            {
-                case CharacterClassAttributes.ID:
-                    _id = byte.Parse(fieldValue);
-                    break;
-                case CharacterClassAttributes.NAMEREFERENCE:
-                    _nameRef = short.Parse(fieldValue);
-                    break;
-                case CharacterClassAttributes.HPMULTIPLIER:
-                    _hpMultiplier = byte.Parse(fieldValue);
-                    break;
-                case CharacterClassAttributes.ABBREVIATION:
-                    _abbrev = fieldValue;
-                    break;
-                case CharacterClassAttributes.MANASTATCODE:
-                    _manaStatCode = byte.Parse(fieldValue);
-                    break;
-                case CharacterClassAttributes.DEADSIGHT:
-                    _deadSight = byte.Parse(fieldValue);
-                    break;
-            }
-        }
+        _id = decrypted[0];
+        _hpMultiplier = decrypted[1];
+        _manaStatCode = decrypted[2];
+        _deadSight = decrypted[3];
+        _nameRef = BitConverter.ToInt16(decrypted, 4);
+        _abbrev = Language.GetBaseString(_nameRef).Substring(0, 2);
     }
     public bool CanSeeDeadPlayers
     {
@@ -54,7 +34,10 @@ public class CharacterClassData
     {
         get { return _id; }
     }
-
+    public int NameRef
+    {
+        get { return _nameRef; }
+    }
     public string CharacterClassName
     {
         get { return Language.GetBaseString(_nameRef); }
@@ -67,14 +50,4 @@ public class CharacterClassData
     {
         get { return _deadSight; }
     }
-}
-
-public static class CharacterClassAttributes
-{
-    public const string ID = "id";
-    public const string NAMEREFERENCE = "nameref";
-    public const string HPMULTIPLIER = "hpmultiplier";
-    public const string ABBREVIATION = "abbrev";
-    public const string MANASTATCODE = "manastat";
-    public const string DEADSIGHT = "deadsight";
 }

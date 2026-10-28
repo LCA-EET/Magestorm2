@@ -132,7 +132,7 @@ public class Match extends TimedObject{
                 byte[] dcPacket = Packets.IGInactivityDisconnectPacket();
                 for(MatchCharacter inactive : inactiveCharacters){
                     SendToClient(dcPacket, inactive.GetRemoteClient());
-                    LeaveMatch(inactive, false);
+                    LeaveMatchTimeOut(inactive, false);
                 }
                 SendToAll(Packets.PlayersLeftMatchPacket(inactiveCharacters));
             }
@@ -150,7 +150,7 @@ public class Match extends TimedObject{
         return _matchTeams.get(teamID);
     }
     
-    public void ChangeObjectState(byte objectID, byte status, byte changedBy, byte selfResetInSeconds){
+    public void ChangeObjectState(byte objectID, byte status, MatchCharacter verified, byte selfResetInSeconds){
         if(selfResetInSeconds > 0){
             SendToAll(Packets.ObjectStateChangePacket(objectID, status));
         }
@@ -165,12 +165,12 @@ public class Match extends TimedObject{
                 SendToAll(Packets.ObjectStateChangePacket(objectID, status));
             }
             else{ // this player is out-of-sync with the server.
-                SendToPlayer(Packets.ObjectStateChangePacket(objectID, status), changedBy);
+                SendToPlayer(Packets.ObjectStateChangePacket(objectID, status), verified);
             }
         }
     }
 
-    public void ProcessObjectStatusPacket(byte requesterID){
+    public void ProcessObjectStatusPacket(MatchCharacter verified){
         ArrayList<Byte> toReturn = new ArrayList<>();
         for(byte objectID : _objectStatus.keySet()){
             byte state = _objectStatus.get(objectID).GetStatus();
@@ -180,7 +180,7 @@ public class Match extends TimedObject{
             }
         }
         byte[] toSend = Packets.ObjectStatusBytes(toReturn);
-        SendToPlayer(toSend, requesterID);
+        SendToPlayer(toSend, verified);
     }
 
     private void InitTeams(){
@@ -252,55 +252,43 @@ public class Match extends TimedObject{
     public boolean IsAwaitingVerification(int accountID){
         return _unverifiedCharacters.containsKey(accountID);
     }
-    public void UpdatePlayerLocation(byte[] decrypted){
-        byte playerID = decrypted[1];
-        if(_matchCharacters.containsKey(playerID)){
-            MatchCharacter toUpdate = _matchCharacters.get(playerID);
-            int packetID = ByteUtils.ExtractInt(decrypted, 2);
-            if(packetID > toUpdate.GetLastPRPacketID()){
-                byte pmd = decrypted[6];
-                toUpdate.UpdateLastMovementPacketID(packetID, pmd);
-                byte controlCode = decrypted[7];
-                //Main.LogDebug("UpdatePlayerLocation Decrypted Packet Length: " + decrypted.length + ", Control Code: " + controlCode);
-                switch(controlCode){
-                    case 0: // position only
-                        toUpdate.UpdatePosition(decrypted);
-                        break;
-                    case 1: // direction only
-                        toUpdate.UpdateDirection(decrypted, 8);
-                        break;
-                    case 2: // position and direction
-                        toUpdate.UpdatePosition(decrypted);
-                        toUpdate.UpdateDirection(decrypted, 20);
-                        break;
-                }
-                //byte[] toEncrypt = new byte[controlCode==2 ? 32 : 20];
-                //System.arraycopy(decrypted, 0, toEncrypt, 0, toEncrypt.length);
-                SendToAll(decrypted);
+    public void UpdatePlayerLocation(MatchCharacter verified, byte[] decrypted){
+        int packetID = ByteUtils.ExtractInt(decrypted, 2);
+        if(packetID > verified.GetLastPRPacketID()){
+            byte pmd = decrypted[6];
+            verified.UpdateLastMovementPacketID(packetID, pmd);
+            byte controlCode = decrypted[7];
+            switch(controlCode){
+                case 0: // position only
+                    verified.UpdatePosition(decrypted);
+                    break;
+                case 1: // direction only
+                    verified.UpdateDirection(decrypted, 8);
+                    break;
+                case 2: // position and direction
+                    verified.UpdatePosition(decrypted);
+                    verified.UpdateDirection(decrypted, 20);
+                    break;
             }
+            SendToAll(decrypted);
         }
     }
     public boolean JoinAlive(byte teamID){
         return true;
     }
-    public void PlayerTapped(byte playerID){
-        MatchCharacter mc = GetMatchCharacter(playerID);
-        LogMessage("DM tap: " + playerID + "." );
-        if(!mc.IsAlive()){
-            mc.SetToMaxHP();
-            SendToAll(Packets.PlayerTapped(playerID));
+    public void PlayerTapped(MatchCharacter verified){
+        if(!verified.IsAlive()){
+            verified.MultiplyExperience(0.95f);
+            verified.SetToMaxHP();
+            SendToAll(Packets.PlayerTapped(verified.GetIDinMatch()));
         }
     }
-    public void UpdatePlayerLey(byte[] decrypted){
-        byte playerID = decrypted[1];
+    public void UpdatePlayerLey(MatchCharacter verified, byte[] decrypted){
         float newLey = ByteUtils.ExtractFloat(decrypted, 2);
-        if(newLey < 0.0f || newLey > 1.0f){
-            LogError("Invalid ley: " + newLey + " for player " + playerID);
-        }
-        else{
-            MatchCharacter mc = GetMatchCharacter(playerID);
-            mc.SetLey(newLey);
-            SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.LeyUpdate, (byte)Math.floor(newLey * 100.0f)), mc);
+        if(newLey >= 0.0f && newLey <= 1.0f){
+            verified.SetLey(newLey);
+            SendToPlayer(Packets.HPorManaorLeyUpdatePacket(InGame_Send.LeyUpdate,
+                    (byte)Math.floor(newLey * 100.0f)), verified);
         }
     }
     private void RemoveAllPlayers(){
@@ -315,7 +303,7 @@ public class Match extends TimedObject{
         }
         return toReturn;
     }
-    public void LeaveMatch(MatchCharacter departee, boolean send){
+    public void LeaveMatchTimeOut(MatchCharacter departee, boolean send){
         byte id = departee.GetIDinMatch();
         _verifiedClients.remove(id);
         _matchTeams.get(departee.GetTeamID()).RemovePlayer(id);
@@ -325,13 +313,12 @@ public class Match extends TimedObject{
             SendToAll(Packets.PlayerLeftMatchPacket(id));
         }
     }
-    public void LeaveMatch(byte id, boolean quitGame){
-        MatchCharacter departee = _matchCharacters.get(id);
+    public void LeaveMatch(MatchCharacter verified, boolean quitGame){
         if(quitGame){
-            departee.QuitGame();
+            verified.QuitGame();
         }
         else{
-            departee.SetDurationRemaining(0);
+            verified.SetDurationRemaining(0);
         }
     }
     public byte[] PlayersInMatch(byte opCode){
@@ -351,14 +338,15 @@ public class Match extends TimedObject{
     protected byte GetTeamsAliveByte(){
         return 7;
     }
-    public void SendAllPlayerData(byte requesterID){
+    public void SendAllPlayerData(MatchCharacter verified){
         ArrayList<byte[]> playerData = new ArrayList<>();
         int dataLength = 0;
+        byte requesterID = verified.GetIDinMatch();
         for(MatchCharacter mc : _matchCharacters.values()){
             if(mc.GetIDinMatch() != requesterID){
                 byte[] playerDataBytes = mc.GetPlayerData();
                 if((playerData.size() + playerDataBytes.length + 2) > GameServer.MaxUDPPayload){
-                    SendToPlayer(Packets.AllPlayersInMatch(playerData, dataLength), requesterID);
+                    SendToPlayer(Packets.AllPlayersInMatch(playerData, dataLength), verified);
                     dataLength = 0;
                 }
                 dataLength += playerDataBytes.length;
@@ -369,19 +357,17 @@ public class Match extends TimedObject{
             }
         }
         if(dataLength > 0){
-            SendToPlayer(Packets.AllPlayersInMatch(playerData, dataLength), requesterID);
+            SendToPlayer(Packets.AllPlayersInMatch(playerData, dataLength), verified);
             Main.LogDebug("SendAllPlayerData: Sending data to requester " + requesterID);
         }
         if(!_potionTaken){
-            SendToPlayer(_potionBytes, requesterID);
+            SendToPlayer(_potionBytes, verified);
         }
     }
-    public void SendPlayerData(byte requesterID, byte idInMatch){
-        if(_matchCharacters.containsKey(requesterID)){
-            MatchCharacter subject = _matchCharacters.get(idInMatch);
-            if(subject != null){
-                SendToPlayer(Packets.PlayerDataPacket(subject.GetPlayerData(), subject.IsNewToMatch()), requesterID);
-            }
+    public void SendPlayerData(MatchCharacter verified, byte idInMatch){
+        MatchCharacter subject = _matchCharacters.get(idInMatch);
+        if(subject != null){
+            SendToPlayer(Packets.PlayerDataPacket(subject.GetPlayerData(), subject.IsNewToMatch()), verified);
         }
     }
     public synchronized byte ObtainNextPlayerID(){
@@ -406,6 +392,7 @@ public class Match extends TimedObject{
     public boolean IsPlayerOnTeam(byte idInMatch, byte teamID){
         return _matchTeams.get(teamID).PlayerIDUsed(idInMatch);
     }
+
     public boolean IsPlayerVerified(byte playerID){
         MatchCharacter toCheck = _matchCharacters.get(playerID);
         if(toCheck != null){
@@ -510,7 +497,13 @@ public class Match extends TimedObject{
         }
         return castID;
     }
-
+    public MatchCharacter GetCharacterAndReset(byte playerID){
+        MatchCharacter toReturn = _matchCharacters.get(playerID);
+        if(toReturn != null){
+            toReturn.ResetDuration();
+        }
+        return toReturn;
+    }
     public void SendToAll(byte[] toEncrypt){
         _processor.EnqueueForSend(toEncrypt, _verifiedClients.values());
     }
@@ -527,12 +520,9 @@ public class Match extends TimedObject{
     protected void SendToCollection(byte[] toEncrypt, Collection<RemoteClient> recipients){
         _processor.EnqueueForSend(toEncrypt, recipients);
     }
-    public void HandleWallAndSigilRequest(byte mcID){
-        if(_matchCharacters.containsKey(mcID)){
-            MatchCharacter requester = _matchCharacters.get(mcID);
-            SendTOC(InGame_Send.WallRequestResponse, _walls, requester);
-            SendTOC(InGame_Send.SigilRequestResponse, _sigils, requester);
-        }
+    public void HandleWallAndSigilRequest(MatchCharacter verified){
+        SendTOC(InGame_Send.WallRequestResponse, _walls, verified);
+        SendTOC(InGame_Send.SigilRequestResponse, _sigils, verified);
     }
     public void SendTOC(byte opCode, TimedObjectCollection<? extends Number, ? extends TimedObject> collection,
                         MatchCharacter recipient){
@@ -673,16 +663,6 @@ public class Match extends TimedObject{
             Main.LogError("Match.PlayerHit: Spell " + castID + " is null.");
         }
     }
-    public void PlayerHit(byte hitPlayerID, short castID, boolean hitByWall){
-        MatchCharacter hitPlayer = GetMatchCharacter(hitPlayerID);
-        if(hitPlayer != null){
-            PlayerHit(hitPlayer, castID, hitByWall);
-        }
-        else{
-            Main.LogError("Match.PlayerHit: Player " + hitPlayerID + " is null.");
-        }
-    }
-
 
     public boolean IsCharacterAlive(byte idInMatch){
         if(idInMatch == 0){
@@ -717,27 +697,26 @@ public class Match extends TimedObject{
         }
     }
 
-    public boolean ParseCommand(String command, String[] params, byte senderID){
+    public boolean ParseCommand(String command, String[] params, MatchCharacter verified, byte senderID){
         Main.LogMessage("Command: " + command);
-        MatchCharacter sender = _matchCharacters.get(senderID);
         switch(command){
             case "endmatch":
                 _durationRemaining = 0;
                 return true;
             case "setexp":
-                sender.SetExperience(Integer.parseInt(params[1]));
+                verified.SetExperience(Integer.parseInt(params[1]));
                 return true;
             case "adjustexp":
-                sender.AdjustExperience(Float.parseFloat(params[1]));
+                verified.AdjustExperience(Float.parseFloat(params[1]));
                 return true;
             case "1hp":
-                sender.TakeDamage(sender.GetCurrentHP() - 1, sender);
+                verified.TakeDamage(verified.GetCurrentHP() - 1, verified);
                 return true;
             case "revive":
-                sender.Revive(senderID, 1);
+                verified.Revive(senderID, 1);
                 return true;
             case "killself":
-                sender.TakeDamage((short)30000, sender);
+                verified.TakeDamage((short)30000, verified);
                 return true;
             case "effect":
                 byte effectCode = Byte.parseByte(params[1]);

@@ -11,117 +11,69 @@ public class PregamePacketProcessor extends UDPProcessor
         super(port, ServerParams.Encryption);
         GameServer.PGP = this;
     }
-
-    @Override
-    protected boolean ProcessPacket(DatagramPacket received) {
-        PreProcess(received);
-        Main.LogDebug("Packet opCode: " + String.valueOf(_opCode) + ", received from: " + received.getAddress() + ":" + received.getPort());
-
-        switch (_opCode) {
-            /*
-            RemoteClient Exists
-             */
-
-            case Pregame_Receive.Heartbeat:
-                AssignRC();
-                return true;
-            case Pregame_Receive.CreateCharacter:
-                AssignRC();
-                HandleCreateCharacterPacket();
-                break;
-            case Pregame_Receive.LogOut:
-                AssignRC();
-                RemoteClientManager.ClientLoggedOut(_accountID);
-                break;
-            case Pregame_Receive.DeleteCharacter:
-                AssignRC();
-                HandleDeleteCharacterPacket();
-                break;
-            case Pregame_Receive.SubscribeToMatches:
-                AssignRC();
-                HandleMatchSubscribePacket(true);
-                break;
-            case Pregame_Receive.UnsubscribeFromMatches:
-                AssignRC();
-                HandleMatchSubscribePacket(false);
-                break;
-            case Pregame_Receive.CreateMatch:
-                AssignRC();
-                HandleMatchCreatedPacket();
-                break;
-            case Pregame_Receive.DeleteMatch:
-                AssignRC();
-                MatchManager.DeleteMatch(_accountID, _remote);
-                break;
-            case Pregame_Receive.RequestLevelsList:
-                AssignRC();
-                Main.LogMessage("Level Request Received from " + _remote.ObjectID());
-                EnqueueForSend(Packets.LevelListPacket(), _remote);
-                break;
-            case Pregame_Receive.RequestMatchDetails:
-                AssignRC();
-                HandleMatchDetailsPacket();
-                break;
-            case Pregame_Receive.NameCheck:
-                AssignRC();
-                HandleNameCheckPacket();
-                break;
-            case Pregame_Receive.UpdateAppearance:
-                AssignRC();
-                HandleAppearanceUpdatePacket();
-                break;
-            case Pregame_Receive.JoinMatch:
-                AssignRC();
-                HandleJoinMatchPacket(_decrypted[5], _decrypted[6]);
-                break;
-            case Pregame_Receive.RequestMatchList:
-                AssignRC();
-                MatchManager.SendMatchListToClient(_remote);
-                break;
-            case Pregame_Receive.UpdateSkills:
-                AssignRC();
-                HandleSkillUpdate();
-                break;
-            case Pregame_Receive.UpdateSkillsAndSlotting:
-                AssignRC();
-                HandleSlotAndSkillUpdate();
-                break;
-            case Pregame_Receive.RequestCharacterData:
-                AssignRC();
-                HandleCharacterDataRequest();
-                return true;
-            case Pregame_Receive.RequestMatchScore:
-                AssignRC();
-                HandleMatchScoreRequest();
-                return true;
-            case Pregame_Receive.RequestSpellData:
-                AssignRC();
-                HandleSpellDataRequest();
-                return true;
-            case Pregame_Receive.RequestDisciplineData:
-                AssignRC();
-                HandleDisciplineRequest();
-                return true;
-               /*
-            RemoteClient doesn't exist
-             */
-            case Pregame_Receive.LogIn:
-                _remote = new RemoteClient(received);
-                HandleLogInPacket();
-                break;
-            case Pregame_Receive.CreateAccount:
-                _remote = new RemoteClient(received);
-                HandleCreateAccountPacket();
-                break;
-            case Pregame_Receive.OTPReply:
-                _remote = new RemoteClient(received);
-                HandleOTPReply();
-                return true;
+    @Override protected boolean PreProcess(DatagramPacket received)
+    {
+        super.PreProcess(received);
+        _remote = LoggedInClient();
+        if(_remote != null){
+            _accountID =(int)_remote.ObjectID();
+        }
+        else{
+            _remote = new RemoteClient(received);
         }
         return true;
     }
-    private void HandleDisciplineRequest(){
-        EnqueueForSend(DisciplineManager.GetDisciplinePacket(), _remote);
+    @Override
+    protected boolean ProcessPacket(DatagramPacket received) {
+        PreProcess(received);
+        switch (_opCode) {
+            case Pregame_Receive.CreateCharacter ->
+                HandleCreateCharacterPacket();
+            case Pregame_Receive.LogOut ->
+                RemoteClientManager.ClientLoggedOut(_accountID);
+            case Pregame_Receive.DeleteCharacter ->
+                HandleDeleteCharacterPacket();
+            case Pregame_Receive.SubscribeToMatches ->
+                HandleMatchSubscribePacket(true);
+            case Pregame_Receive.UnsubscribeFromMatches ->
+                HandleMatchSubscribePacket(false);
+            case Pregame_Receive.CreateMatch ->
+                MatchManager.RequestMatchCreation(_accountID, _decrypted[5], _decrypted[6], _decrypted[7], _decrypted[8]);
+            case Pregame_Receive.DeleteMatch ->
+                MatchManager.DeleteMatch(_accountID, _remote);
+            case Pregame_Receive.RequestLevelsList ->
+                EnqueueForSend(Packets.LevelListPacket(), _remote);
+            case Pregame_Receive.RequestMatchDetails ->
+                HandleMatchDetailsPacket();
+            case Pregame_Receive.NameCheck ->
+                EnqueueForSend(Packets.NameCheckResults(
+                    Database.CheckIfNameIsUsed(ByteUtils.BytesToUTF8(_decrypted, 6, _decrypted[5]))), _remote);
+            case Pregame_Receive.UpdateAppearance ->
+                HandleAppearanceUpdatePacket();
+            case Pregame_Receive.JoinMatch ->
+                HandleJoinMatchPacket(_decrypted[5], _decrypted[6]);
+            case Pregame_Receive.RequestMatchList ->
+                MatchManager.SendMatchListToClient(_remote);
+            case Pregame_Receive.UpdateSkills ->
+                HandleSkillUpdate();
+            case Pregame_Receive.UpdateSkillsAndSlotting ->
+                HandleSlotAndSkillUpdate();
+            case Pregame_Receive.RequestMatchScore ->
+                SendMatchScore(_decrypted[5], _remote);
+            case Pregame_Receive.RequestSpellData ->
+                HandleSpellDataRequest();
+            case Pregame_Receive.RequestDisciplineData ->
+                EnqueueForSend(DisciplineManager.GetDisciplinePacket(), _remote);
+            case Pregame_Receive.RequestCharacterClassData ->
+                EnqueueForSend(CharacterClassManager.ClientDataPacket(), _remote);
+            case Pregame_Receive.LogIn ->
+                HandleLogInPacket();
+            case Pregame_Receive.CreateAccount ->
+                HandleCreateAccountPacket();
+            case Pregame_Receive.OTPReply ->
+                HandleOTPReply();
+        }
+        return true;
     }
     private void HandleSpellDataRequest(){
         Collection<byte[]> packets = SpellManager.GetSpellDataPackets();
@@ -133,20 +85,7 @@ public class PregamePacketProcessor extends UDPProcessor
         int accountID = ByteUtils.ExtractInt(_decrypted, 1);
         int otp = ByteUtils.ExtractInt(_decrypted, 5);
         boolean result = Database.ActivateAccount(accountID, otp);
-        Main.LogDebug("OTP Reply: " + accountID + ", " + otp + ", " + result);
         EnqueueForSend(Packets.ActivationResultPacket(result?(byte)1:(byte)0), _remote);
-    }
-    private void HandleMatchScoreRequest(){
-        SendMatchScore(_decrypted[5], _remote);
-    }
-    private void HandleQMJoin(){
-        HandleJoinMatchPacket(MatchManager.GetQMID(), (byte)0);
-    }
-    private void AssignRC(){
-        _remote = LoggedInClient();
-        if(_remote != null){
-            _accountID =(int)_remote.ObjectID();
-        }
     }
     private void HandleSkillUpdate(){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);
@@ -196,11 +135,6 @@ public class PregamePacketProcessor extends UDPProcessor
             toUpdate.UpdateAppearanceBytes(appearanceBytes);
         }
     }
-    public void HandleNameCheckPacket(){
-        byte nameLength = _decrypted[5];
-        String toCheck = ByteUtils.BytesToUTF8(_decrypted, 6, nameLength);
-        EnqueueForSend(Packets.NameCheckResults(Database.CheckIfNameIsUsed(toCheck)), _remote);
-    }
     public void HandleMatchDetailsPacket(){
         byte matchID = _decrypted[5];
         Match match = MatchManager.GetMatch(matchID);
@@ -214,27 +148,16 @@ public class PregamePacketProcessor extends UDPProcessor
             }
         }
     }
-    public void HandleMatchCreatedPacket(){
-        Main.LogMessage("Account " + _accountID + " is creating a match.");
-        byte sceneID = _decrypted[5];
-        byte duration = _decrypted[6];
-        byte matchType = _decrypted[7];
-        byte matchOptions = _decrypted[8];
-        MatchManager.RequestMatchCreation(_accountID, sceneID, duration, matchType, matchOptions);
-    }
-
     public void HandleMatchSubscribePacket(boolean subscribe){
-        int characterID = ByteUtils.ExtractInt(_decrypted, 5);
-        RemoteClient rc = MatchManager.Subscribe(_accountID, subscribe, characterID);
+        RemoteClient rc = MatchManager.Subscribe(_accountID, subscribe, ByteUtils.ExtractInt(_decrypted, 5));
         byte priorMatchID = _decrypted[9];
         if(_decrypted[10] == 1){ // qm
-            HandleQMJoin();
+            HandleJoinMatchPacket(MatchManager.GetQMID(), (byte)0);
         }
         else if (priorMatchID != 0){
             SendMatchScore(priorMatchID, rc);
         }
     }
-
     public String[] LogInDetails(){
         ArrayList<byte[]> toProcess = Packets.ExtractBytes(_decrypted, 3);
         byte[] userNameBytes = toProcess.get(0);
@@ -244,7 +167,6 @@ public class PregamePacketProcessor extends UDPProcessor
         toReturn[1] = Base64.getEncoder().encodeToString(pwHashBytes);
         return toReturn;
     }
-
     private void HandleDeleteCharacterPacket(){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);
         Main.LogMessage("Deactivating character: " + characterID);
@@ -376,8 +298,5 @@ public class PregamePacketProcessor extends UDPProcessor
         else{
             EnqueueForSend(Packets.ProhibitedLanguagePacket(Pregame_Send.ProhibitedLanguage), _remote);
         }
-
-    }
-    private void HandleCharacterDataRequest(){
     }
 }

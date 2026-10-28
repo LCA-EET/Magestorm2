@@ -39,16 +39,15 @@ public class DeathMatch extends Match{
     }
 
 
-    public void AdjustShrineHealth(byte adjusterID,byte shrineID){
+    public void AdjustShrineHealth(MatchCharacter verified,byte shrineID){
         if(_shrines.containsKey(shrineID)){
-            MatchCharacter adjuster = GetMatchCharacter(adjusterID);
-            if(adjuster.IsAlive()){
+            if(verified.IsAlive()){
                 short diceRoll = GameUtils.DiceRoll(100, 1);
-                if(Shrine.AdjustmentChance(adjuster.GetClassCode()) >= diceRoll){
-                    _shrines.get(shrineID).AdjustShrineHealth(adjuster);
+                if(Shrine.AdjustmentChance(verified.GetClassCode()) >= diceRoll){
+                    _shrines.get(shrineID).AdjustShrineHealth(verified);
                 }
                 else{
-                    SendToPlayer(Packets.ShrineFailurePacket(shrineID), adjuster);
+                    SendToPlayer(Packets.ShrineFailurePacket(shrineID), verified);
                 }
             }
         }
@@ -121,8 +120,8 @@ public class DeathMatch extends Match{
 
 
     @Override
-    public boolean ParseCommand(String command, String[] params, byte senderID) {
-        if(!super.ParseCommand(command, params, senderID)){
+    public boolean ParseCommand(String command, String[] params, MatchCharacter verified, byte senderID) {
+        if(!super.ParseCommand(command, params, verified, senderID)){
             switch(command){
                 case "killshrine":
                     _shrines.get(Byte.parseByte(params[1])).SetShrineHealth((byte)0, senderID);
@@ -156,16 +155,14 @@ public class DeathMatch extends Match{
     }
 
     @Override
-    public void PlayerTapped(byte playerID){
-        MatchCharacter mc = _matchCharacters.get(playerID);
-        byte teamID = mc.GetTeamID();
-        LogMessage("DM tap: " + playerID + "." );
+    public void PlayerTapped(MatchCharacter verified){
+        byte teamID = verified.GetTeamID();
         if(teamID == MatchTeam.Neutral){
-            super.PlayerTapped(playerID);
+            super.PlayerTapped(verified);
         }
         else{
             if(_shrines.get(teamID).IsAlive()){
-                super.PlayerTapped(playerID);
+                super.PlayerTapped(verified);
             }
         }
     }

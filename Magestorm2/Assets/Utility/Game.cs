@@ -3,7 +3,6 @@ using System;
 using System.Net;
 using System.IO;
 using System.Collections.Generic;
-using UnityEditorInternal;
 public static class Game
 {
     public const bool SymmetricEncryption = false;
@@ -26,9 +25,11 @@ public static class Game
     public static IPAddress GameServerAddress;
     public static Dictionary<string, SpellManager> SpellManagerTable;
     public static Dictionary<string, DisciplineManager> DisciplineManagerTable;
+    public static Dictionary<string, CharacterClassManager> ClassManagerTable;
     public static ConsumableDisplay ConsumableDisplay;
     public static SpellManager ActiveSpellManager;
     public static DisciplineManager ActiveDisciplineManager;
+    public static CharacterClassManager ActiveCharacterClassManager;
     public static bool LoggedIn = false;
     public static byte[] PregameKey;
     //public static PMDByte PlayerPMDByte;
@@ -48,11 +49,13 @@ public static class Game
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        #if !(UNITY_EDITOR)
+#if !(UNITY_EDITOR)
                     Running = false;
-                    UDP.StopListening();
+                    if(UDP != null){
+                        UDP.StopListening();
+                    }
                     Application.Quit();
-        #endif
+#endif
     }
     public static bool GameInputSet(InputControl toCheck)
     {
@@ -94,9 +97,11 @@ public static class Game
     {
         if (!_init)
         {
+            GameSettings.InitializeSettings();
             Language.Init();
             SpellManagerTable = new Dictionary<string, SpellManager>();
             DisciplineManagerTable = new Dictionary<string, DisciplineManager>();
+            ClassManagerTable = new Dictionary<string, CharacterClassManager>(); 
             Application.runInBackground = true;
             IconLibrary.Init();
             Colors.Init();
@@ -108,7 +113,7 @@ public static class Game
             ProfanityChecker.Init();
             SpellIcons.Init();
             SharedFunctions.Initialize();
-            GameSettings.InitializeGraphicsSettings();
+            
             Match.Init();
             _init = true;
         }

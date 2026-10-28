@@ -1,6 +1,6 @@
-Pulsa {0} para chatear.
-Pulsa {0} para enviar un mensaje o {1} para salir del chat.
-Tiempo restante: {0}:{1}
+Presiona {0} para chatear.
+Presiona {0} para enviar un mensaje o {1} para salir del modo de chat.
+Tiempo restante:
 Bajas: {0}
 Muertes: {0}
 Clérigo
@@ -16,35 +16,426 @@ de
 Introducir texto...
 Nombre de usuario
 Contraseña
-Correo electrónico
-Corrige las entradas indicadas y vuelve a intentarlo.
+Dirección de correo electrónico
+Corrige las entradas indicadas e inténtalo de nuevo.
 Iniciar sesión
 Crear cuenta
 ¡Bienvenido a Magus!
 Idioma
-Revisa tu correo electrónico para obtener el enlace de activación.
+Revisa tu correo electrónico para obtener un enlace de activación.
 Ya existe una cuenta con ese correo electrónico o nombre de usuario.
-Error al crearla. Inténtalo de nuevo más tarde.
-Error al iniciar sesión. Revisa tus credenciales y vuelve a intentarlo.
-Inicio de sesión temporal exitoso.
-Se prohíbe el uso de lenguaje grosero.
+La creación de la cuenta falló. Inténtalo de nuevo más tarde.
+Error al iniciar sesión. Verifica tus credenciales e inténtalo de nuevo.
+Inicio de sesión TEMP exitoso.
+Está prohibido el uso de lenguaje ofensivo.
 Ya hay un usuario conectado con esta cuenta.
-Has sido eliminado del servidor. 
+Has sido expulsado del servidor.
 Motivo:
 Ya existe un personaje con ese nombre.
 Nombre del personaje
-Seleccionar un personaje
+Seleccionar personaje
 Personaje seleccionado:
 Cerrar sesión
 Unirse
 Clase
-Seleccionar una clase de personaje.
+Selecciona una clase de personaje.
 Salir
-Seleccionar personaje
+Selección de personaje
 Crear
 Ver partidas
 Ya tienes una partida activa.
 Se alcanzó el límite de partidas del servidor.
 Eliminar
-Aún hay jugadores en la partida.
-Eliminar {0} — ¿Estás seguro?
+Todavía hay jugadores en la partida.
+¿Estás seguro de que deseas eliminar {0}?
+Selecciona una partida e inténtalo de nuevo.
+No puedes eliminar una partida que no creaste.
+ID
+Arena
+Creador
+Tiempo restante
+Nivel
+Máximo de jugadores
+Selección de nivel
+Selecciona un nivel.
+Fuerza
+Destreza
+Constitución
+Intelecto
+Carisma
+Sabiduría
+El mínimo es 10 y el máximo es 20.
+No quedan más puntos de atributo para asignar.
+Total: {0}
+Has sido expulsado por hacer trampas.
+Has sido expulsado por violar el Código de Conducta.
+Apariencia
+Hombre
+Mujer
+Piel clara
+Piel oscura
+Sexo
+Piel
+Cabeza
+Cabello
+Rostro
+Nivel {0}
+Selecciona un equipo.
+No hay jugadores.
+Cuenta
+Cancelar
+Guardar
+Aceptar
+Partidas
+Partidas activas
+Atrás
+No hay partidas activas. Presiona Crear para iniciar una partida.
+No
+Sí
+Elegir apariencia
+El nombre que has elegido ya está en uso.
+No se pudo completar la comprobación del nombre. Inténtalo más tarde.
+ID de partida: {0}
+Creador: {0}
+Nivel: {0}
+La partida a la que intentas entrar está llena.
+Duración
+Minutos
+Combate a muerte
+Todos contra todos
+Capturar la bandera
+Tipo de partida
+Volver
+Controles
+Salir de la partida
+Salir del juego
+Tipo: {0}
+Cancelar
+Predeterminado
+Aplicar
+Movimiento
+Avanzar
+Retroceder
+Desplazarse a la izquierda
+Desplazarse a la derecha
+Correr
+Saltar
+Ascender
+Descender
+Modo de chat
+Cancelar chat
+Enviar mensaje
+Desplazar hacia arriba
+Desplazar hacia abajo
+Ir al inicio
+Ir al final
+Pista anterior
+Siguiente pista
+Activar/desactivar música
+Restablecer zoom del mapa
+Acercar mapa
+Alejar mapa
+Chat
+Música
+Misceláneo
+Ataque principal
+Ataque secundario
+Activar / Tocar
+Tocar
+Acción
+Menú del juego
+Hechizos
+Ranura 1
+Ranura 2
+Ranura 3
+Ranura 4
+Ranura 5
+Ranura 6
+Ranura 7
+Ranura 8
+Ranura 9
+Ranura 10
+Has aumentado la afinidad hacia el Orden del manantial.
+Has disminuido la afinidad hacia el Orden del manantial.
+Has aumentado la afinidad hacia el Equilibrio del manantial.
+Has disminuido la afinidad hacia el Equilibrio del manantial.
+Has aumentado la afinidad hacia el Caos del manantial.
+Has disminuido la afinidad hacia el Caos del manantial.
+{0} ha aumentado la afinidad hacia el Orden de un manantial.
+{0} ha disminuido la afinidad hacia el Orden de un manantial.
+{0} ha aumentado la afinidad hacia el Equilibrio de un manantial.
+{0} ha disminuido la afinidad hacia el Equilibrio de un manantial.
+{0} ha aumentado la afinidad hacia el Caos de un manantial.
+{0} ha disminuido la afinidad hacia el Caos de un manantial.
+Tu intento de alterar la afinidad no tuvo éxito.
+Santuario
+Manantial de maná
+Poder:
+Afinidad:
+Has {0} el santuario de {1}.
+{0} ha {1} el santuario de {2}.
+restaurado
+dañado
+El santuario de {0} ha sido destruido.
+El santuario de {0} ha sido restaurado por completo.
+Salud:
+No lograste {0} el santuario de {1}.
+restaurar
+dañar
+Has matado a {0}.
+Has sido asesinado por {0}.
+{0} fue asesinado por {1}.
+¡La bandera de {0} ha sido soltada!
+¡La bandera de {0} fue capturada por {1}!
+La bandera de {0} ha sido devuelta.
+¡La bandera de {0} ha sido tomada!
+¡La bandera de {0} fue tomada por {1}!
+¡Has tomado la bandera de {0}!
+Controles
+Advertencia: Te has unido a un equipo con una gran desventaja de equilibrio. Formar equipos desbalanceados viola el Código de Conducta y puede ocasionar la cancelación de tu cuenta.
+Opciones de partida
+Opciones
+Regeneración rápida
+Sin muros sólidos
+Antidesbalanceo
+Sin resurrección
+Sin curar a otros
+No se seleccionó ninguna opción
+Estadísticas
+Has soltado la bandera de {0}.
+Para
+¡Estás muerto! Presiona {0} para reaparecer o espera a que un Clérigo te resucite.
+Has sido resucitado por {0}.
+Servidor
+Has sido resucitado.
+{0} ha sido resucitado.
+{0} ha sido resucitado por {1}.
+Has aprovechado el poder de {0} para resucitar.
+{0} aprovechó el poder de {1} para resucitar.
+En el Valhalla
+Chat de equipo configurado en {0}.
+Modo ratón
+Modo puntero del ratón activo; presiona {0} para desactivarlo.
+Agacharse
+Nombre del hechizo:
+Daño:
+Curación:
+Costo:
+Descripción:
+Disciplina:
+Habilidad requerida:
+Hechizos
+Disciplina
+Ley del Fuego
+Ley del Hielo
+Ley de la Tierra
+Brillantez
+Desplazamiento
+Psiónica
+Súplica
+Curación
+Castigo
+Ley del Maná
+Ley del Vacío
+Sigilos
+Cerrar
+Editar
+Golpe de llamas
+Básico: Lanza un proyectil que inflige de 2 a 4 puntos de daño de fuego. El proyectil tiene un 10% de probabilidad de quemar al objetivo.\nExperto: Dos proyectiles\nMaestro: Tres proyectiles.
+Dardo de hielo
+Básico: Lanza un proyectil que inflige de 2 a 4 puntos de daño de frío. El proyectil tiene un 10% de probabilidad de congelar al objetivo.\nExperto: Dos proyectiles\nMaestro: Tres proyectiles.
+Explosión rocosa
+Básico: Lanza un proyectil que inflige de 1 a 2 puntos de daño de tierra y de 1 a 2 puntos de daño físico. El proyectil tiene un 10% de probabilidad de inmovilizar al objetivo.\nExperto: Dos proyectiles\nMaestro: Tres proyectiles.
+Carga estática
+Básico: Lanza un proyectil que inflige de 2 a 4 puntos de daño eléctrico. El proyectil tiene un 10% de probabilidad de electrocutar al objetivo.\nExperto: Dos proyectiles\nMaestro: Tres proyectiles.
+Salto
+Básico: El lanzador salta muy alto por el aire.\nExperto y Maestro: Aumenta la altura del salto.
+Sonda mental
+Básico: Un asalto mental a corta distancia contra un objetivo que inflige de 2 a 4 puntos de daño mental. Las sondas exitosas revelan temporalmente la ubicación de los enemigos en el minimapa.
+Oración
+Básico: Reduce el daño recibido en un 20% durante un minuto.\nExperto y Maestro: Reduce el daño en un 20% adicional.
+Resurrección
+Básico: Devuelve la vida a un camarada caído.\nExperto: Resucita jugadores con un 25% de salud.\nMaestro: Resucita jugadores con un 50% de salud.
+Curar a otro
+Básico: Restaura de 2 a 8 puntos de salud a un camarada herido.\nExperto y Maestro: Restaura un 100% más de salud.
+Autocuración
+Básico: Restaura de 2 a 8 puntos de salud al lanzador.\nExperto y Maestro: Restaura un 100% más de salud.
+Herida
+Básico: Dispara un proyectil que inflige de 1 a 2 puntos de daño sagrado + 1 punto de daño físico.\nExperto: Dos proyectiles\nMaestro: Tres proyectiles.
+Golpe de maná
+Básico: Lanza un proyectil que inflige de 2 a 4 puntos de daño de energía.\nExperto: Dos proyectiles\nMaestro: Tres proyectiles.
+Ley del Vacío
+Básico: Lanza un proyectil que inflige 1 punto de daño físico. Además, drena 1 punto de maná del objetivo.\nExperto: Dos proyectiles\nMaestro: Tres proyectiles.
+Salto
+Básico: El jugador que pise este sigilo saltará muy alto.\nExperto y Maestro: Aumenta la altura del salto.
+Maldición
+Experto: Hace que el objetivo inflija un 20% menos de daño durante 15 segundos. Maestro: La penalización de daño aumenta un 50%.
+Hechizos disponibles
+Ranuras de hechizos
+{0}:{1}
+Sin selección
+Selecciona un nuevo hechizo para la ranura {0}
+Editando {0}, Nivel {1} {2}
+No aprendido
+Básico
+Experto
+Maestro
+Nigromancia
+Barreras
+Protección
+Restante: {0}
+Disciplinas de hechizos
+Nombre
+Editor de personaje
+Tienes puntos de atributo sin asignar.
+Tienes puntos de habilidad sin asignar.
+Debes ser al menos nivel 8 para alcanzar el rango de Experto.
+Debes ser al menos nivel 16 para alcanzar el rango de Maestro.
+Nivel {0}
+Hechizo: {0}
+Principal: {0}
+Secundario: {0}
+Establecer secundario
+{0} ha abandonado la partida.
+Has sido desconectado por inactividad.
+Advertencia: más inactividad provocará tu desconexión del servidor.
+Tú
+Jugador
+Servidor
+Ranura11
+Ranura12
+Mostrar/Ocultar HUD
+Has sido resucitado por {0}.
+{0} fue resucitado por {1}.
+Invocar a los caídos
+Invoca el espíritu de un camarada caído hacia el lanzador.
+¡Has sido desterrado al Valhalla por un clérigo enemigo!
+Desterrar espíritu
+Básico: Envía el espíritu de un enemigo caído al Valhalla.\nExperto: Desterrar restaura maná igual al nivel del espíritu desterrado.\nMaestro: Desterrar restaura maná equivalente al doble del nivel del espíritu desterrado.
+Bola de fuego
+Lanza un proyectil que explota al impactar e inflige de 2 a 4 puntos de daño por punto de habilidad a los objetivos cercanos.\nBásico: Inflige un 33% de daño de área.\nExperto: Inflige un 50% de daño de área.\nMaestro: Inflige un 67% de daño de área.
+Perno de fuego
+Dispara un perno de fuego que inflige de 1 a 4 puntos de daño por punto de habilidad.
+Tormenta de fuego
+Hace que el objetivo sea envuelto en una tempestad explosiva y ardiente.
+Curación de proximidad
+Cura al lanzador y a los aliados cercanos.
+Nova eléctrica
+El lanzador libera rápidamente una descarga eléctrica que inflige daño a los enemigos adyacentes.
+Castigar
+Dispara un arma conjurada mágicamente contra un enemigo.
+Perno de piedra
+Dispara un perno de piedra que inflige de 1 a 4 puntos de daño por punto de habilidad.
+Escudo de fuego
+Aumenta la resistencia del lanzador contra ataques de fuego.
+Escudo de hielo
+Aumenta la resistencia del lanzador contra ataques de hielo.
+Escudo eléctrico
+Aumenta la resistencia del lanzador contra ataques eléctricos.
+Escudo de tierra
+Aumenta la resistencia del lanzador contra ataques de tierra.
+Muro de aire
+Conjura un muro de aire frente al lanzador.
+Muro de maná
+Conjura un muro de maná frente al lanzador.
+Experiencia {0}
+Muro de madera
+Conjura un muro sólido de madera frente al lanzador.
+Clasificación de la partida
+Clasificación
+Ranuras de hechizos
+Has resistido un hechizo.
+{0} resistió tu hechizo.
+Desgarrar mente
+Desata un torrente de energía psiónica sobre el objetivo del lanzador.
+Ojo del mago
+Revela temporalmente la ubicación de todos los enemigos en el minimapa.
+Partida rápida
+Volar
+Permite al lanzador volar.
+Cancelar vuelo
+Cancela el hechizo de vuelo activo del lanzador.
+Los jugadores que entren en contacto con este sigilo saldrán impulsados hacia arriba.
+Expulsar
+Los enemigos que entren en contacto con este sigilo sufrirán daño.
+Explosión
+Lentitud
+Los enemigos que entren en contacto con este sigilo serán ralentizados.
+Telequinesis
+Este hechizo permite al lanzador manipular objetos, como palancas e interruptores, a distancia. Cuando se usa contra un enemigo, lo empuja hacia atrás.
+Rayo
+Dispara un rayo hacia un objetivo seleccionado por el lanzador.
+Proyectil de maná
+Dispara un proyectil concentrado de energía de maná hacia un objetivo seleccionado por el lanzador.
+Proyectil del vacío
+Dispara un proyectil anulador hacia un objetivo seleccionado por el lanzador.
+Esfera del vacío
+Dispara una esfera de energía nula hacia un objetivo seleccionado por el lanzador. Los enemigos dentro del área de efecto perderán maná.
+Púa del vacío
+Dispara un proyectil de energía nula hacia un objetivo seleccionado por el lanzador.
+Golpe de maná
+Dispara un proyectil de energía de maná hacia un objetivo seleccionado por el lanzador.
+Dirección del servidor
+destruido
+¡Has destruido el santuario de {0}!
+¡{0} ha destruido el santuario de {1}!
+¡{0} está a punto de conseguir la victoria!
+(Presiona Enter para continuar.)
+Partida en curso
+¡{0} ha resultado victorioso!
+La partida terminó en empate.
+Perno de hielo
+Dispara un perno de hielo hacia un objetivo.
+Esfera de hielo
+Dispara una esfera de hielo que explota al impactar.
+Muro de piedra
+Coloca un muro de piedra frente al lanzador.
+Sigilos
+Muros
+Has lanzado la cantidad máxima de {0}.
+Sombras
+Desactivado
+Bajo detalle
+Detalle medio
+Alto detalle
+Configuración
+Renderizar sombras en el minimapa
+Proyectiles iluminados
+Activado
+Suave
+Intenso
+Tipo de sombra
+Usar poción
+Uniéndose a la partida...
+Por favor espera
+Servidor de juego
+Nombre de host o dirección IP no válidos.
+Puerto remoto no válido.
+Error de suma de comprobación. Inténtalo de nuevo.
+Soltar bandera
+Confirmar contraseña
+Confirmar correo electrónico
+Las direcciones de correo electrónico no coinciden.
+Las contraseñas no coinciden.
+Introduce el código de siete dígitos enviado a\n{0}.
+Activación de cuenta
+Enviar
+Código no válido.
+La activación de la cuenta falló.
+La activación de la cuenta se completó correctamente. Ya puedes iniciar sesión.
+Tu cuenta ha sido suspendida.
+Muro de hielo
+Coloca un muro de hielo frente al lanzador.
+Cargando\nPor favor espera
+Modo de antialiasing
+Desactivado
+FXAA
+SMAA
+TAA
+Calidad de antialiasing
+Baja
+Media
+Alta
+English
+Español
+Русский

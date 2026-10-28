@@ -69,7 +69,8 @@ public class SharedFunctions {
         }
         return chance > SharedFunctions.GetRandomFloat();
     }
-    public static boolean HandleTeamMessage(byte[] decrypted, InGamePacketProcessor proc, Match owner, RemoteClient remote){
+    public static boolean HandleTeamMessage(byte[] decrypted, InGamePacketProcessor proc, Match owner,
+                                            RemoteClient remote, MatchCharacter verified){
         byte teamID = decrypted[2];
         int messageLength = ByteUtils.ExtractInt(decrypted, 3);
         String messageString = ByteUtils.BytesToUTF8(decrypted, 7, messageLength);
@@ -78,19 +79,16 @@ public class SharedFunctions {
                     remote);
         }
         else{
-            MatchCharacter sender = owner.GetMatchCharacter(decrypted[1]);
-            if(sender != null) {
-                Main.LogChat(sender, messageString, owner.ObjectID());
-                if (sender.GetTeamID() == teamID) {
-                    proc.EnqueueForSend(Packets.MessagePacket(decrypted, InGame_Send.TeamMessage),
-                            owner.GetMatchTeam(teamID).GetRemoteClients());
-                } else {
-                    ArrayList<RemoteClient> recipients = new ArrayList<RemoteClient>();
-                    recipients.add(remote);
-                    recipients.addAll(owner.GetMatchTeam(teamID).GetRemoteClients());
-                    proc.EnqueueForSend(Packets.MessagePacket(decrypted, InGame_Send.TeamMessage),
-                            recipients);
-                }
+            Main.LogChat(verified, messageString, owner.ObjectID());
+            if (verified.GetTeamID() == teamID) {
+                proc.EnqueueForSend(Packets.MessagePacket(decrypted, InGame_Send.TeamMessage),
+                        owner.GetMatchTeam(teamID).GetRemoteClients());
+            } else {
+                ArrayList<RemoteClient> recipients = new ArrayList<RemoteClient>();
+                recipients.add(remote);
+                recipients.addAll(owner.GetMatchTeam(teamID).GetRemoteClients());
+                proc.EnqueueForSend(Packets.MessagePacket(decrypted, InGame_Send.TeamMessage),
+                        recipients);
             }
         }
         return true;

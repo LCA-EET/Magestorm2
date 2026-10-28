@@ -60,5 +60,6 @@ public static class InGame_Receive
                         SpawnPotion = 54,
                         PotionTaken = 55,
                         PotionDropped = 56,
-                        UsedPotion = 57;
+                        UsedPotion = 57,
+                        PingReply = 58;
 }

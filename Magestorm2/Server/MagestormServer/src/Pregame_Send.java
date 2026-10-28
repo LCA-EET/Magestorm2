@@ -31,4 +31,5 @@ public class Pregame_Send {
     public static final byte AccountBan = 30;
     public static final byte SpellData = 31;
     public static final byte DisciplineData = 32;
+    public static final byte CharacterClassData = 33;
 }

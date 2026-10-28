@@ -31,5 +31,6 @@
                         ActivationResult = 29,
                         AccountBan = 30,
                         SpellData = 31,
-                        DisciplineData = 32;
+                        DisciplineData = 32,
+                        CharacterClassData = 33;
 }

@@ -21,8 +21,9 @@ public class UIGraphics : ValidatableForm
         foreach (MultiOption option in _options)
         {
             GameSettings.SetSettingValue(option.SettingKey, option.SelectedOption);
+            Debug.Log("Saving setting: " + option.SettingKey + ", " + option.SelectedOption);
         }
-        PlayerPrefs.Save();
+        GameSettings.WriteSettings();
         CloseForm();
     }
 }

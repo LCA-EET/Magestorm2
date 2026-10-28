@@ -12,21 +12,19 @@ public class PoolManager {
         _owningMatch = owningMatch;
         _matchPools= new ConcurrentHashMap<>();
     }
-    public void BiasPool(byte biaserID, byte poolID, RemoteClient rc) {
+    public void BiasPool(MatchCharacter verified, byte poolID, RemoteClient rc) {
         if(!_matchPools.containsKey(poolID)){
             _matchPools.put(poolID, new Pool(_owningMatch, poolID));
         }
-        MatchCharacter biaser = _owningMatch.GetMatchCharacter(biaserID);
-        if(biaser.IsAlive()){
+        if(verified.IsAlive()){
             short diceRoll = GameUtils.DiceRoll(100, 1);
-            byte biasChance = biaser.GetClass().GetPoolBiasChance();
+            byte biasChance = verified.GetClass().GetPoolBiasChance();
             if(biasChance >= diceRoll){
-                _matchPools.get(poolID).Bias(biaser);
+                _matchPools.get(poolID).Bias(verified);
                 _biasChange = true;
             }
             else{
-                Main.LogMessage("Pool bias failure. Pool ID: " + poolID + ", Biaser ID: " + biaserID + ", Chance: " + biasChance + ", Dice: " + diceRoll);
-                _owningMatch.SendToPlayer(Packets.PoolBiasFailurePacket(), biaser);
+                _owningMatch.SendToPlayer(Packets.PoolBiasFailurePacket(), verified);
             }
         }
     }

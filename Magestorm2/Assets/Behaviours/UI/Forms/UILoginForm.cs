@@ -12,7 +12,6 @@ public class UILoginForm : ValidatableForm
     {
         base.Awake ();
         Game.LoggedIn = false;
-        CharacterClassManager.Init();
         ComponentRegister.UILoginForm = this;
     }
    
@@ -35,7 +34,7 @@ public class UILoginForm : ValidatableForm
             if (MatchParams.ReturningFromMatch)
             {
                 Cursor.lockState = CursorLockMode.None;
-                ToPerform = LogIn;
+                ToPerform = RequestData;
                 ObtainKeyAndPerformAction();
             }
             else
@@ -59,16 +58,19 @@ public class UILoginForm : ValidatableForm
                     Game.GameServerPort = remoteport;
                     Game.GameServerAddress = server.AddressList[0];
                     PlayerPrefs.SetString("server", fieldText);
+                    Debug.Log("Saved server: " + fieldText);
                     if (Game.SpellManagerTable.ContainsKey(fieldText))
                     {
                         Game.ActiveSpellManager = Game.SpellManagerTable[fieldText];
                         Game.ActiveDisciplineManager = Game.DisciplineManagerTable[fieldText];
-
+                        Game.ActiveCharacterClassManager = Game.ClassManagerTable[fieldText];
                     }
                     else
                     {
                         Game.SpellManagerTable.Add(fieldText, new SpellManager());
                         Game.DisciplineManagerTable.Add(fieldText, new DisciplineManager());
+                        Game.ClassManagerTable.Add(fieldText, new CharacterClassManager());
+                        
                     }
                     Cryptographer.GetStoredSecretKey(fieldText, out keyBytes);
                     return true;
@@ -115,7 +117,7 @@ public class UILoginForm : ValidatableForm
             }
         }
     }
-    private void LogIn()
+    private void RequestData()
     {
         if (RememberToggle.isOn)
         {
@@ -123,7 +125,14 @@ public class UILoginForm : ValidatableForm
             PlayerPrefs.SetString("password", ((TextField)EntriesToValidate[1]).GetValue().ToString());
         }
         PlayerPrefs.SetInt("remember", RememberToggle.isOn ? 1 : 0);
-        ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.LogInPacket());
+        if (Game.ActiveSpellManager.SpellsLoaded)
+        {
+            Game.SendPregameBytes(Pregame_Packets.LogInPacket());
+        }
+        else
+        {
+            Game.SendPregameBytes(Pregame_Packets.RequestCharacterClassDataPacket());
+        }
     }
     private void CreateAccount()
     {
@@ -139,7 +148,7 @@ public class UILoginForm : ValidatableForm
                 {
                     PlayerAccount.StoreCredentials(((TextField)EntriesToValidate[0]).GetValue().ToString(),
                         Cryptographer.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString()));
-                    ToPerform = LogIn;
+                    ToPerform = RequestData;
                     ObtainKeyAndPerformAction();
                 }
                 break;

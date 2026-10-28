@@ -1,63 +1,83 @@
 import java.net.DatagramPacket;
-import java.util.Arrays;
 
 public class InGamePacketProcessor extends UDPProcessor{
     private final Match _owningMatch;
-
+    protected MatchCharacter _verified;
+    protected byte _senderID;
+    protected RegisteredThread _asyncThread;
+    protected AsyncIGPP _asyncProcessor;
     public InGamePacketProcessor(int port, Match owningMatch){
         super(port, ServerParams.Encryption);
+        _asyncProcessor = new AsyncIGPP(owningMatch, this);
         _owningMatch = owningMatch;
-
         Main.LogDebug("Key for match " + owningMatch._objectIDAsByte + " (Hex): " +
                 _cryptographer.GetCipher().GetSecretSymmetricKeyBI().toString(16));
+        _asyncThread = new RegisteredThread(_asyncProcessor);
+        _asyncThread.start();
+    }
+    @Override
+    public void TerminateProcessor(){
+        super.TerminateProcessor();
+        _asyncThread.interrupt();
+    }
+    @Override protected boolean PreProcess(DatagramPacket received)
+    {
+        super.PreProcess(received);
+        _senderID = _decrypted[1];
+        _verified = _owningMatch.GetCharacterAndReset(_senderID);
+        return _verified != null;
+    }
+    private void EnqueueForAsyncProcessing(){
+        _asyncProcessor.EnqueueRequest(new AsyncIGPPRequest(_decrypted, _opCode, _verified, _remote));
     }
     @Override
     protected boolean ProcessPacket(DatagramPacket received){
-        PreProcess(received);
-        if(IsVerified()){
-            _remote = _owningMatch.GetVerifiedClient(_decrypted[1]);
+        if(PreProcess(received)){
+            _remote = _owningMatch.GetVerifiedClient(_senderID);
             switch(_opCode){
+                case InGame_Receive.LeaderboardRequest:
+                case InGame_Receive.RequestWallsAndSigils:
+                case InGame_Receive.TeamMessage:
+                case InGame_Receive.DirectMessage:
+                case InGame_Receive.BroadcastMessage:
+                case InGame_Receive.AllPlayerData:
+                    EnqueueForAsyncProcessing();
+                    return true;
                 case InGame_Receive.ChangedObjectState:
                     HandleObjectStateChange();
                     return true;
-                case InGame_Receive.DirectMessage:
-                    HandleDirectMessage();
-                    return true;
-                case InGame_Receive.BroadcastMessage:
-                    HandleBroadcastMessage();
-                    return true;
                 case InGame_Receive.LeaveMatch:
-                    HandleLeaveMatch();
+                    _owningMatch.LeaveMatch(_verified, false);
                     return true;
                 case InGame_Receive.InactivityCheckResponse:
-                    InactivityCheckResponse();
+                    _owningMatch.GetMatchCharacter(_senderID).ResetDuration();
                     return true;
                 case InGame_Receive.QuitGame:
-                    HandleQuitGame();
+                    _owningMatch.LeaveMatch(_verified, true);
                     return true;
                 case InGame_Receive.ObjectStatus:
-                    HandleObjectStatusRequest();
+                    _owningMatch.ProcessObjectStatusPacket(_verified);
                     return true;
                 case InGame_Receive.PlayerMoved:
-                    HandlePlayerMoved();
+                    _owningMatch.UpdatePlayerLocation(_verified, _decrypted);
                     return true;
                 case InGame_Receive.FetchPlayer:
-                    HandleFetchPlayer();
+                    _owningMatch.SendPlayerData( _verified, _decrypted[2]);
                     return true;
                 case InGame_Receive.LeyUpdate:
-                    HandleLeyUpdate();
+                    _owningMatch.UpdatePlayerLey(_verified, _decrypted);
                     return true;
                 case InGame_Receive.Tap:
-                    HandleTap();
+                    _owningMatch.PlayerTapped(_verified);
                     return true;
                 case InGame_Receive.PostureChange:
-                    HandlePostureChange();
+                    _owningMatch.SendToAll(_decrypted);
                     return true;
                 case InGame_Receive.Cast:
                     HandleCast();
                     return true;
                 case InGame_Receive.ReportHit:
-                    HandleReportHitPacket();
+                    _owningMatch.PlayerHit(_verified, ByteUtils.ExtractShort(_decrypted, 2), false);
                     return true;
                 case InGame_Receive.ReportResistableHit:
                     HandleResistableHitPacket();
@@ -71,23 +91,14 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.WallHit:
                     HandleWallHit();
                     return true;
-                case InGame_Receive.RequestWallsAndSigils:
-                    _owningMatch.HandleWallAndSigilRequest(_decrypted[1]);
-                    return true;
-                case InGame_Receive.LeaderboardRequest:
-                    HandleLeaderboardRequest();
-                    return true;
                 case InGame_Receive.UpdateSlotting:
-                    HandleUpdateSlotting();
+                    Main.AsyncDBUpdater.AddToQueue(new AsyncDBUpdate(ControlCodes.AsyncDBUpdate_Slotting, _verified, _decrypted));
                     return true;
                 case InGame_Receive.TriggeredSigil:
                     HandleSigilTrigger();
                     return true;
                 case InGame_Receive.ReportHitByWall:
-                    HandleReportHitByWallPacket();
-                    return true;
-                case InGame_Receive.AllPlayerData:
-                    HandleAllPlayerDataRequest();
+                    _owningMatch.PlayerHit(_verified, ByteUtils.ExtractShort(_decrypted, 2), true);
                     return true;
                 case InGame_Receive.PotionTaken:
                     HandlePotionTaken();
@@ -95,100 +106,97 @@ public class InGamePacketProcessor extends UDPProcessor{
                 case InGame_Receive.UsePotion:
                     HandleUsePotion();
                     return true;
+                case InGame_Receive.BiasPool:
+                    HandlePoolBias();
+                    return true;
+                case InGame_Receive.FlagCaptured:
+                    HandleFlagCapture();
+                    return true;
+                case InGame_Receive.FlagReturned:
+                    HandleFlagReturn();
+                    return true;
+                case InGame_Receive.FlagTaken:
+                    HandleFlagTaken();
+                    return true;
+                case InGame_Receive.DropFlag:
+                    HandleFlagDrop();
+                    return true;
+                case InGame_Receive.FetchShrineHealth:
+                    HandleShrineHealthRequest();
+                    return true;
+                case InGame_Receive.AdjustShrineHealth:
+                    HandleShrineHealthAdjustment();
+                    return true;
+                case InGame_Receive.Ping:
+                    EnqueueForSend(Packets.PingReply(), _remote);
+                    return true;
             }
         }
         else if(_opCode == InGame_Receive.JoinedMatch){
-            _remote = new RemoteClient(received);
-            return HandleJoinMatchPacket(_remote);
+            return HandleJoinMatchPacket(new RemoteClient(received));
         }
         return false;
     }
+    protected void HandleShrineHealthRequest(){}
+    protected void HandleShrineHealthAdjustment(){}
+    protected void HandlePoolBias(){}
+    protected void HandleFlagCapture(){}
+    protected void HandleFlagReturn(){}
+    protected void HandleFlagTaken(){}
+    protected void HandleFlagDrop(){}
     private void HandleUsePotion(){
-        MatchCharacter potionUser = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        if(potionUser.IsAlive()){
-            if(potionUser.IsCarryingPotion()){
-                potionUser.UsePotion();
+        if(_verified.IsAlive()){
+            if(_verified.IsCarryingPotion()){
+                _verified.UsePotion();
                 _owningMatch.SendToPlayer(Packets.UsedPotionPacket(
-                        potionUser.GetCurrentHPPct(), potionUser.GetCurrentManaPct()), potionUser);
+                        _verified.GetCurrentHPPct(), _verified.GetCurrentManaPct()), _verified);
             }
         }
     }
     private void HandlePotionTaken(){
-        MatchCharacter takenBy = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        if(takenBy != null){
-            if(takenBy.IsAlive()){
-                _owningMatch.PotionTaken(takenBy);
-            }
+        if(_verified.IsAlive()){
+            _owningMatch.PotionTaken(_verified);
         }
     }
-    private void HandleAllPlayerDataRequest(){
-        _owningMatch.SendAllPlayerData(_decrypted[1]);
-    }
     private void HandleSigilTrigger() {
-        MatchCharacter triggeredBy = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        if (triggeredBy != null)
-        {
-            if(triggeredBy.IsAlive()){
-                short sigilID = ByteUtils.ExtractShort(_decrypted,2);
-                Sigil triggered = _owningMatch.GetSigil(sigilID);
-                if(triggered != null){
-                    triggered.SigilTriggered(triggeredBy);
-                }
+        if(_verified.IsAlive()){
+            Sigil triggered = _owningMatch.GetSigil(ByteUtils.ExtractShort(_decrypted,2));
+            if(triggered != null){
+                triggered.SigilTriggered(_verified);
             }
         }
     }
     private void HandleResistableHitPacket(){
-        MatchCharacter target = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        if(target != null){
-            if(target.IsAlive()){
-                short castID = ByteUtils.ExtractShort(_decrypted, 2);
-                ResistableSpell resistable = (ResistableSpell) _owningMatch.GetCastSpell(castID);
-                if(resistable != null){
-                    resistable.ProcessSpell(target);
-                }
+        if(_verified.IsAlive()){
+            ResistableSpell resistable =
+                    (ResistableSpell) _owningMatch.GetCastSpell(ByteUtils.ExtractShort(_decrypted, 2));
+            if(resistable != null){
+                resistable.ProcessSpell(_verified);
             }
         }
     }
-    private void HandleUpdateSlotting(){
-        MatchCharacter mc = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        if(mc != null){
-            Main.AsyncDBUpdater.AddToQueue(new AsyncDBUpdate(ControlCodes.AsyncDBUpdate_Slotting, mc, _decrypted));
-        }
-    }
-    private void HandleLeaderboardRequest(){
-        byte[] toEncrypt = MatchManager.GetScoreBytes((byte)_owningMatch.ObjectID());
-        _owningMatch.SendToPlayer(Packets.MatchScoresPacket(InGame_Send.MatchScores, toEncrypt == null ? new byte[2] : toEncrypt),
-                _owningMatch.GetMatchCharacter(_decrypted[1]));
-    }
+
     private void HandleWallHit(){
-        short castID = ByteUtils.ExtractShort(_decrypted, 2);
-        DamagingSpell projectile = (DamagingSpell)_owningMatch.GetCastSpell(castID);
+        DamagingSpell projectile = (DamagingSpell)_owningMatch.GetCastSpell(ByteUtils.ExtractShort(_decrypted, 2));
         if(projectile != null){
-            short wallID = ByteUtils.ExtractShort(_decrypted, 4);
-            Wall wall = _owningMatch.GetWall(wallID);
+            Wall wall = _owningMatch.GetWall(ByteUtils.ExtractShort(_decrypted, 4));
             if(wall != null){
                 wall.TakeDamage(projectile);
             }
         }
     }
     private void HandleSplashHit(){
-        MatchCharacter hit = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        if(hit != null){
-            short castID = ByteUtils.ExtractShort(_decrypted, 2);
-            hit.RegisterSplashHit(castID);
-            _owningMatch.PlayerHit(hit, castID, false);
-            hit.DeregisterSplashHit(castID);
-        }
+        short castID = ByteUtils.ExtractShort(_decrypted, 2);
+        _verified.RegisterSplashHit(castID);
+        _owningMatch.PlayerHit(_verified, castID, false);
+        _verified.DeregisterSplashHit(castID);
     }
     private void HandleCast(){
-        byte casterID = _decrypted[1];
-        byte spellID = _decrypted[3];
-        Main.LogDebug("Caster ID: " + casterID);
-        if(_owningMatch.IsCharacterAlive(casterID) ){
+        if(_verified.IsAlive()){
+            byte spellID = _decrypted[3];
             if(SpellManager.ContainsSpell(spellID)){
                 Spell spellReference = SpellManager.GetSpell(spellID);
-                MatchCharacter casterReference = _owningMatch.GetMatchCharacter(casterID);
-                short castID = casterReference.CastSpell(spellReference, _decrypted); // instantiation downstream
+                short castID = _verified.CastSpell(spellReference, _decrypted); // instantiation downstream
                 if(castID != -1){
                     byte[] toSend = Packets.CastPacket(_decrypted, castID);
                     switch(spellReference.GetNotificationCode()){
@@ -196,14 +204,14 @@ public class InGamePacketProcessor extends UDPProcessor{
                             _owningMatch.SendToAll(toSend);
                             break;
                         case ControlCodes.SpellNotification_TeamOnly:
-                            MatchTeam recipientTeam = _owningMatch.GetMatchTeam(casterReference.GetTeamID());
-                            _owningMatch.SendToCollection(toSend, recipientTeam.GetRemoteClients());
+                            _owningMatch.SendToCollection(toSend, _owningMatch.GetMatchTeam(_verified.GetTeamID())
+                                    .GetRemoteClients());
                             break;
                         case ControlCodes.SpellNotification_CasterOnly:
-                            _owningMatch.SendToPlayer(toSend, casterReference);
+                            _owningMatch.SendToPlayer(toSend, _verified);
                             break;
                         case ControlCodes.SpellNotification_Payload: // sends to the player(s) identified in the payload
-                            _owningMatch.SendToPlayer(toSend, casterReference);
+                            _owningMatch.SendToPlayer(toSend, _verified);
                             _owningMatch.SendToPlayer(toSend, _decrypted[ControlCodes.CastPayloadStartIndex]);
                             break;
                     }
@@ -214,98 +222,11 @@ public class InGamePacketProcessor extends UDPProcessor{
             }
         }
         else{
-            Main.LogError("IGPP.HandleCast: Invalid caster. CasterID: " + casterID);
-        }
-    }
-    private void HandleReportHitPacket(){
-        _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2), false);
-    }
-    private void HandleReportHitByWallPacket(){
-        _owningMatch.PlayerHit(_decrypted[1], ByteUtils.ExtractShort(_decrypted, 2), true);
-    }
-    private void HandlePostureChange(){
-        _owningMatch.SendToAll(_decrypted);
-    }
-    private void HandleTap(){
-        MatchCharacter tapped = _owningMatch.GetMatchCharacter(_decrypted[1]);
-        tapped.MultiplyExperience(0.95f);
-        _owningMatch.PlayerTapped(tapped.GetIDinMatch());
-
-    }
-    private void HandleLeyUpdate(){
-        _owningMatch.UpdatePlayerLey(_decrypted);
-    }
-    private void HandleFetchPlayer(){
-        _owningMatch.SendPlayerData( _decrypted[1], _decrypted[2]);
-    }
-    private void HandlePlayerMoved(){
-        _owningMatch.UpdatePlayerLocation(_decrypted);
-    }
-    private void HandleObjectStatusRequest(){
-        _owningMatch.ProcessObjectStatusPacket(_decrypted[1]);
-    }
-
-    private void InactivityCheckResponse(){
-        _owningMatch.GetMatchCharacter(_decrypted[1]).ResetDuration();
-        //Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
-    }
-    private void HandleQuitGame(){
-        _owningMatch.LeaveMatch(_decrypted[1], true);
-    }
-    private void HandleLeaveMatch(){
-        _owningMatch.LeaveMatch(_decrypted[1], false);
-    }
-
-    private void HandleBroadcastMessage(){
-        int messageLength = ByteUtils.ExtractInt(_decrypted,2);
-        String messageString = ByteUtils.BytesToUTF8(_decrypted, 6, messageLength);
-        if(ProfanityChecker.ContainsProhibitedLanguage(messageString)){
-            EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage),
-                    _remote);
-        }
-        else{
-            MatchCharacter sender = _owningMatch.GetMatchCharacter(_decrypted[1]);
-            if(sender != null){
-                Main.LogChat(sender, messageString, _owningMatch.ObjectID());
-                if(messageString.startsWith("/")){
-                    String[] split = messageString.split(" ");
-                    _owningMatch.ParseCommand(split[0].toLowerCase().substring(1), split, _decrypted[1]);
-                }
-                else{
-                    EnqueueForSend(Packets.MessagePacket(_decrypted, 6 + messageLength),
-                            _owningMatch.GetVerifiedClients());
-                }
-            }
-
-        }
-    }
-
-    private void HandleDirectMessage(){
-        byte recipientID = _decrypted[2];
-        if(IsVerified(recipientID)){
-            int messageLength = ByteUtils.ExtractInt(_decrypted, 3);
-            byte[] messageBytes = new byte[messageLength];
-            System.arraycopy(_decrypted, 7, messageBytes, 0, messageLength);
-            String messageString = ByteUtils.BytesToUTF8(messageBytes);
-            if(ProfanityChecker.ContainsProhibitedLanguage(messageString)){
-                EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage), _remote);
-            }
-            else{
-                MatchCharacter sender = _owningMatch.GetMatchCharacter(_decrypted[1]);
-                if(sender != null){
-                    Main.LogChat(sender, messageString, _owningMatch.ObjectID());
-                    RemoteClient messageRecipient = _owningMatch.GetMatchCharacter(recipientID).GetRemoteClient();
-                    Iterable<RemoteClient> recipients = Arrays.asList(_remote, messageRecipient);
-                    EnqueueForSend(Packets.MessagePacket(_decrypted, messageLength + 7), recipients);
-                }
-            }
+            Main.LogError("IGPP.HandleCast: Invalid caster. CasterID: " + _verified.GetIDinMatch());
         }
     }
     private void HandleObjectStateChange(){
-        byte objectID = _decrypted[2];
-        byte state = _decrypted[3];
-        byte selfReset = _decrypted[4];
-        _owningMatch.ChangeObjectState(objectID, state, _decrypted[1], selfReset);
+        _owningMatch.ChangeObjectState(_decrypted[2], _decrypted[3], _verified, _decrypted[4]);
     }
     protected boolean HandleJoinMatchPacket(RemoteClient remote){
         int accountID = CheckAccountAndCharacter();
@@ -319,7 +240,7 @@ public class InGamePacketProcessor extends UDPProcessor{
                 _owningMatch.MarkPlayerVerified(idInMatch, teamID, accountID, remote);
                 remote.SetNameAndID(pregameClient.GetUserName(), accountID);
                 SendPlayerDataForJoinee(_owningMatch.GetMatchCharacter(idInMatch));
-                _owningMatch.ProcessObjectStatusPacket(_decrypted[9]);
+                _owningMatch.ProcessObjectStatusPacket(_owningMatch.GetMatchCharacter(_decrypted[9]));
                 return true;
             }
             else if (_owningMatch.IsPlayerVerified(idInMatch)){
@@ -334,7 +255,6 @@ public class InGamePacketProcessor extends UDPProcessor{
     }
     private void SendPlayerDataForJoinee(MatchCharacter joinee){
         _owningMatch.SendToAll(Packets.PlayerDataPacket(joinee.GetPlayerData(), joinee.IsNewToMatch()));
-
     }
     private int CheckAccountAndCharacter(){
         RemoteClient remote = LoggedInClient();
@@ -347,11 +267,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
         return -1;
     }
-    protected boolean IsVerified(){
-        //Main.LogDebug("ResetDuration for " + _decrypted[1] + " due to receipt of " + _decrypted[0]);
-        return _owningMatch.IsPlayerVerified(_decrypted[1]);
-    }
-    private boolean IsVerified(byte playerID){
+    public boolean IsVerified(byte playerID){
         return _owningMatch.IsPlayerVerified(playerID);
     }
 }

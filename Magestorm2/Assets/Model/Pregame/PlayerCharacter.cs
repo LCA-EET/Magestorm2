@@ -23,7 +23,7 @@ public class PlayerCharacter
         _characterID = characterID;
         _characterName = characterName;
         _characterClass = characterClass;
-        _classData = CharacterClassManager.GetCharacterClassData(characterClass);
+        _classData = Game.ActiveCharacterClassManager.GetCharacterClassData(characterClass);
         _characterLevel = characterLevel;
         _characterNameBytes = Encoding.UTF8.GetBytes(characterName);
         _statBytes = statBytes;
@@ -94,6 +94,10 @@ public class PlayerCharacter
     {
         get { return _classData.CharacterClassName; }
     }
+    public int ClassnameReference
+    {
+        get { return _classData.NameRef; }
+    }
     public Dictionary<byte, byte> DisciplineTable
     {
         get { return _skills; }
@@ -105,7 +109,7 @@ public class PlayerCharacter
     }
     public float GetMaxHP()
     {
-        float multiplier = CharacterClassManager.GetCharacterClassData(_characterClass).HPMultiplier;
+        float multiplier = Game.ActiveCharacterClassManager.GetCharacterClassData(_characterClass).HPMultiplier;
         float toReturn = (CharacterLevel * (GetStat(ControlCodes.PlayerStats_Constitution) / 20.0f) * multiplier * 1.579f) + 10;
         return Mathf.Round(toReturn);
     }
@@ -130,7 +134,7 @@ public class PlayerCharacter
         }
         //Debug.Log("Skills base 2: " + binary +", length = " + binary.Length);
         _skills.Clear();
-        foreach(byte discipline in CharacterClassManager.GetDisciplineCodesOfClass(_characterClass))
+        foreach(byte discipline in Game.ActiveCharacterClassManager.GetDisciplineCodesOfClass(_characterClass))
         {
             int skillIndex = ((byte)discipline) * 2;
             bool lsb = skillArray[skillIndex];

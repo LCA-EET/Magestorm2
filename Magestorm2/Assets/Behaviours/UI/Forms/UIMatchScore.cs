@@ -59,7 +59,7 @@ public class UIMatchScore : ValidatableForm
             PlayerScoreEntry pse = PlayerScoreEntries[pseIndex];
             pse.PlayerName.text = playerName;
             pse.Level.text = level.ToString();
-            pse.Class.text = CharacterClassManager.GetCharacterClassData(classCode).Abbreviation;
+            pse.Class.text = Game.ActiveCharacterClassManager.GetCharacterClassData(classCode).Abbreviation;
             pse.Kills.text = kills.ToString();
             pse.Deaths.text = deaths.ToString();
             pse.Raises.text = raises.ToString();

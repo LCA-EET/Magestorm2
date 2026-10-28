@@ -1,5 +1,15 @@
 ﻿public static class ControlCodes
 {
+
+    public const byte AntiAliasing_Off = 1;
+    public const byte AntiAliasing_FXAA = 2;
+    public const byte AntiAliasing_SMAA = 3;
+    public const byte AntiAliasing_TAA = 4;
+
+    public const byte AAQuality_Low = 1;
+    public const byte AAQuality_Medium = 2;
+    public const byte AAQuality_High = 3;
+
     public const byte CastPayloadStartIndex = 5;
 
     public const byte CipherCode_None = 0;
@@ -121,4 +131,8 @@
 
     public const byte LitProjectiles_Off = 1;
     public const byte LitProjectiles_On = 2;
+
+    public const byte Language_English = 1;
+    public const byte Language_Spanish = 2;
+    public const byte Language_Russian = 3;
 }

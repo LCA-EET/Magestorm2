@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 348681026003637527, guid: c676e70073c03434c99bc71a5b15d986, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5699114384850873465, guid: c676e70073c03434c99bc71a5b15d986, type: 3}
       propertyPath: m_LocalPosition.x
       value: -27.77201
@@ -50,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9131630549333010077, guid: c676e70073c03434c99bc71a5b15d986, type: 3}
       propertyPath: m_Name
-      value: TeamFlag Variant
+      value: CarriedFlag
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

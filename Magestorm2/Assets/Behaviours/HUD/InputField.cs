@@ -64,6 +64,10 @@ public class InputField : MonoBehaviour
                         //Debug.Log("Command: " + command[0].ToString());
                         switch (command[0])
                         {
+                            case "ping":
+                                GameObject pingDisplay = ComponentRegister.PingDisplay.gameObject;
+                                pingDisplay.SetActive(!pingDisplay.activeSelf);
+                                break;
                             case "shake":
                                 ComponentRegister.MainCamera.Shake();
                                 send = false;

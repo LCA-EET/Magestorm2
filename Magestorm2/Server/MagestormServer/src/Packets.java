@@ -21,7 +21,7 @@ public class Packets {
     private static final byte[] MatchIsFull_Bytes = new byte[]{Pregame_Send.MatchIsFullPacket};
     private static final byte[] AcknowledgeSubscription_Bytes = new byte[]{Pregame_Send.AcknowledgeSubscription};
     private static final byte[] AccountBanned = new byte[]{Pregame_Send.AccountBan};
-
+    private static final byte[] PingReply = new byte[]{InGame_Send.PingReply};
 
     public static byte[] AccountBannedPacket(){
         return AccountBanned;
@@ -517,6 +517,10 @@ public class Packets {
         toEncrypt[1] = newHealthPct;
         toEncrypt[2] = newManaPct;
         return toEncrypt;
+    }
+
+    public static byte[] PingReply(){
+        return PingReply;
     }
 
     /////////////////////// SHARED //////////////////////

@@ -1,41 +1,27 @@
-import java.net.DatagramPacket;
-
 public class CTFPacketProcessor extends InGamePacketProcessor{
     CaptureTheFlag _owningCTF;
     public CTFPacketProcessor(int port, CaptureTheFlag owningMatch){
         super(port, owningMatch);
         _owningCTF = owningMatch;
     }
-
     @Override
-    protected boolean ProcessPacket(DatagramPacket received) {
-        if(!super.ProcessPacket(received)){
-            if(IsVerified()){
-                switch(_opCode){
-                    case InGame_Receive.BiasPool:
-                        _owningCTF.GetPoolManager().BiasPool(_decrypted[1], _decrypted[2], _remote);
-                        break;
-                    case InGame_Receive.TeamMessage:
-                        SharedFunctions.HandleTeamMessage(_decrypted, this, _owningCTF, _remote);
-                        break;
-                    case InGame_Receive.FlagCaptured:
-                        _owningCTF.FlagCaptured(_decrypted[1], _decrypted[2]);
-                        break;
-                    case InGame_Receive.FlagReturned:
-                        _owningCTF.FlagReturned(_decrypted[1], _decrypted[2]);
-                        break;
-                    case InGame_Receive.FlagTaken:
-                        _owningCTF.FlagTaken(_decrypted[2], _decrypted[1]);
-                        break;
-                    case InGame_Receive.DropFlag:
-                        _owningCTF.SeeIfFlagDropped(_decrypted[1], _decrypted[1]);
-                        break;
-                }
-            }
-        }
-        return false;
+    protected void HandlePoolBias(){
+        _owningCTF.GetPoolManager().BiasPool(_verified, _decrypted[2], _remote);
     }
-
-
-
+    @Override
+    protected void HandleFlagCapture(){
+        _owningCTF.FlagCaptured(_verified, _decrypted[2]);
+    }
+    @Override
+    protected void HandleFlagReturn(){
+        _owningCTF.FlagReturnedByPlayer(_verified, _decrypted[2]);
+    }
+    @Override
+    protected void HandleFlagTaken(){
+        _owningCTF.FlagTaken( _verified,_decrypted[2],_senderID);
+    }
+    @Override
+    protected void HandleFlagDrop(){
+        _owningCTF.SeeIfFlagDropped(_verified, _senderID);
+    }
 }

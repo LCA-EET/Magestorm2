@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public class DisciplineManager
 {
-    private static bool _init;
     private Dictionary<byte, DisciplineData> _disciplines;
     public DisciplineManager()
     {
@@ -30,6 +29,7 @@ public class DisciplineManager
             {
                 DisciplineData toAdd = new DisciplineData(data);
                 _disciplines.Add(toAdd.DisciplineID, toAdd);
+                Debug.Log("Added discipline " + toAdd.DisciplineID + ": " + toAdd.DisciplineName);
             }
             return true;
         }

@@ -21,6 +21,7 @@ public class LanguageUpdater : MonoBehaviour
     {
         
     }
+
     public virtual void UpdateLanguage()
     {
         for (int i = 0; i < TextFields.Length; i++)
@@ -28,4 +29,5 @@ public class LanguageUpdater : MonoBehaviour
             TextFields[i].text = Language.GetBaseString(StringReferences[i]);
         }
     }
+
 }

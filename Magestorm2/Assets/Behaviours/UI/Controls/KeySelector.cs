@@ -19,9 +19,6 @@ public class KeySelector : ValidatableForm
     public TMP_Text Descriptor;
     public TMP_Text Key;
 
-    private void Awake()
-    {
-    }
     public void SetKeyText()
     {
         _keyCode = _owner.GetKeyCode(InputKey);
@@ -42,6 +39,10 @@ public class KeySelector : ValidatableForm
             case ButtonType.Submit:
                 _keyCode = KeyCode.None;
                 Key.text = "[UNSET]";
+                if(_owner == null)
+                {
+                    Debug.Log("Owner is null!");
+                }
                 _owner.RemapControl(Descriptor.text, InputKey, _index);
                 break;
         }

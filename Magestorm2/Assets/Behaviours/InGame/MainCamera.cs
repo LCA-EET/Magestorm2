@@ -14,7 +14,7 @@ public class MainCamera : MonoBehaviour
     }
     public void Start()
     {
-        if(CharacterClassManager.GetCharacterClassData(PlayerAccount.SelectedCharacter.CharacterClass).CanSeeDeadPlayers)
+        if(Game.ActiveCharacterClassManager.GetCharacterClassData(PlayerAccount.SelectedCharacter.CharacterClass).CanSeeDeadPlayers)
         {
             Debug.Log("Changing culling masks");
             Camera.cullingMask |= LayerManager.DeadPlayerLayerMask;

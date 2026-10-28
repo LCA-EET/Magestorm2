@@ -15,6 +15,7 @@ public class MultiOption : ValidatableForm
     public void SetOption(byte optionIndex)
     {
         _selectedOption = optionIndex - 1;
+        Debug.Log("Multioption: Setting " + SettingKey + " to " + _selectedOption);
         RefreshText();
     }
     public byte SelectedOption
@@ -48,6 +49,8 @@ public class MultiOption : ValidatableForm
     }
     private void RefreshText()
     {
-        OptionTextObject.text = Language.GetBaseString(OptionStrings[_selectedOption]);
+        string newText = Language.GetBaseString(OptionStrings[_selectedOption]);
+        Debug.Log("Refeshing text to " + newText);
+        OptionTextObject.text = newText;
     }
 }

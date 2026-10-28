@@ -26,41 +26,42 @@ public class CaptureTheFlag extends Match{
         return _poolManager;
     }
 
-    public void FlagCaptured(byte capturedBy, byte flagCaptured){
-        byte capturingTeam = _matchCharacters.get(capturedBy).GetTeamID();
-        if(!_flags.get(capturingTeam).IsHeld()){
-            Flag captured = _flags.get(flagCaptured);
-            if(captured != null){
-                if(captured.IsHeld()){
-                    if(IsCharacterAlive(capturedBy)){
-                        MatchCharacter capturer = _matchCharacters.get(capturedBy);
-                        GetPlayerScore(capturer).IncrementCapturesFor();
+    public void FlagCaptured(MatchCharacter verified, byte flagCaptured){
+        if(verified.IsAlive()){
+            byte capturingTeam = verified.GetTeamID();
+            if(!_flags.get(capturingTeam).IsHeld()){
+                Flag captured = _flags.get(flagCaptured);
+                if(captured != null){
+                    if(captured.IsHeld()){
+                        GetPlayerScore(verified).IncrementCapturesFor();
                         _matchTeams.get(capturingTeam).GetScore().IncrementCapturesFor();
                         _matchTeams.get(flagCaptured).GetScore().IncrementCapturesAgainst();
                         captured.FlagReturned();
                         RefreshScores();
                         _flagsChanged = true;
-                        SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, capturedBy,
+                        SendToAll(Packets.FlagCapturedPacket(capturingTeam, flagCaptured, verified.GetIDinMatch(),
                                 _matchTeams.get(capturingTeam).GetScore().GetCTFScore(),
                                 _matchTeams.get(flagCaptured).GetScore().GetCTFScore()));
                     }
                 }
             }
         }
+
     }
     private void RefreshScores(){
         _currentScores[0] = _matchTeams.get(MatchTeam.Chaos).GetScore().GetCTFScore();
         _currentScores[1] = _matchTeams.get(MatchTeam.Balance).GetScore().GetCTFScore();
         _currentScores[2] = _matchTeams.get(MatchTeam.Order).GetScore().GetCTFScore();
     }
-    public void FlagTaken(byte flagTaken, byte takenBy){
-        Flag taken = _flags.get(flagTaken);
-        if(!taken.IsHeld()){
-            if(IsCharacterAlive(takenBy) && !IsHoldingFlag(takenBy)){
-                taken.FlagTaken(takenBy);
-                SendToAll(Packets.FlagTakenPacket(flagTaken, takenBy));
+    public void FlagTaken(MatchCharacter verified, byte flagTaken, byte takerID){
+        if(verified.IsAlive() && !IsHoldingFlag(takerID)){
+            Flag taken = _flags.get(flagTaken);
+            if(!taken.IsHeld()){
+                taken.FlagTaken(takerID);
+                SendToAll(Packets.FlagTakenPacket(flagTaken, takerID));
             }
         }
+
     }
     private void FlagDropped(Flag droppedFlag, MatchCharacter killedPlayer, byte killerID){
         Main.LogMessage("FlagDropped: " + killedPlayer.GetIDinMatch() + ", " + killerID);
@@ -70,15 +71,17 @@ public class CaptureTheFlag extends Match{
             SendToAll(Packets.FlagDroppedPacket(killedPlayer.GetIDinMatch(), droppedFlag.GetFlagBytes(), killerID));
         }
     }
-
-    public void FlagReturned(byte returner, byte flag){
+    public void FlagReturned(byte flag){
         Flag returned = _flags.get(flag);
         if(!returned.IsHeld()){
-            if(IsCharacterAlive(returner)){
-                returned.FlagReturned();
-                _flagsChanged = true;
-                SendToAll(Packets.FlagReturnedPacket(flag));
-            }
+            returned.FlagReturned();
+            _flagsChanged = true;
+            SendToAll(Packets.FlagReturnedPacket(flag));
+        }
+    }
+    public void FlagReturnedByPlayer(MatchCharacter verified, byte flag){
+        if(verified.IsAlive()){
+            FlagReturned(flag);
         }
     }
     public byte[] FlagsStatus(){
@@ -111,14 +114,7 @@ public class CaptureTheFlag extends Match{
         return _currentScores;
     }
 
-    public boolean SeeIfFlagDropped(byte characterID, byte killerID){
-        MatchCharacter killed = GetMatchCharacter(characterID);
-        if(killed != null){
-            return SeeIfFlagDropped(killed, killerID);
-        }
-        return false;
-    }
-    private boolean SeeIfFlagDropped(MatchCharacter character, byte killerID){
+    public boolean SeeIfFlagDropped(MatchCharacter character, byte killerID){
         for(Flag flag : _flags.values()){
             if(flag.GetHolderID() == character.GetIDinMatch()){
                 FlagDropped(flag, character, killerID);
@@ -141,17 +137,17 @@ public class CaptureTheFlag extends Match{
         for(Flag flag : _flags.values()){
             if(flag.IsDropped()){
                 if(flag.DropCountdown(msElapsed)){
-                    FlagReturned((byte)0, flag.GetTeamID());
+                    FlagReturned(flag.GetTeamID());
                 }
             }
         }
     }
     @Override
-    public boolean ParseCommand(String command, String[] params, byte senderID){
-        if(!super.ParseCommand(command, params, senderID)){
+    public boolean ParseCommand(String command, String[] params, MatchCharacter verified, byte senderID){
+        if(!super.ParseCommand(command, params, verified, senderID)){
             switch(command){
                 case "dropflag":
-                    SeeIfFlagDropped(senderID, senderID);
+                    SeeIfFlagDropped(verified, senderID);
                     return true;
             }
         }
@@ -173,10 +169,10 @@ public class CaptureTheFlag extends Match{
     }
 
     @Override
-    public void LeaveMatch(byte id, boolean quitGame){
-        Main.LogMessage("Player " + id + " is leaving CTF match.");
-        SeeIfFlagDropped(id, (byte)0);
-        super.LeaveMatch(id, quitGame);
+    public void LeaveMatch(MatchCharacter verified, boolean quitGame){
+        Main.LogMessage("Player " + verified.GetIDinMatch() + " is leaving CTF match.");
+        SeeIfFlagDropped(verified, (byte)0);
+        super.LeaveMatch(verified, quitGame);
     }
 
     @Override

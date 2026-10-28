@@ -44,6 +44,7 @@ public class SpellManager
                     _spells.Add(toAdd.SpellID, toAdd);
                 }
                 byte discipline = toAdd.Discipline;
+
                 Game.ActiveDisciplineManager.GetDiscipline(discipline).AddSpellToDiscipline(toAdd);
                 if(_spells.Count == totalSpells)
                 {

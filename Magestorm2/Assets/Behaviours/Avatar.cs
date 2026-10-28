@@ -353,7 +353,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
     {
         _name = name;
         _class = playerClass;
-        _classData = CharacterClassManager.GetCharacterClassData(playerClass);
+        _classData = Game.ActiveCharacterClassManager.GetCharacterClassData(playerClass);
         _level = level;
         _playerClassString = _classData.CharacterClassName;
         _team = team;

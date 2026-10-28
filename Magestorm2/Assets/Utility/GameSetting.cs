@@ -3,23 +3,29 @@ using UnityEngine;
 
 public class GameSetting
 {
-    private SettingKey _key;
+    private string _keyString;
     private byte _value;
     private Action _onChange;
     public GameSetting(SettingKey key, byte defaultValue, Action onChange)
     {
-        _key = key;
-        byte retrieved = (byte)PlayerPrefs.GetInt(key.ToString());
+        _keyString = key.ToString().ToLower() ;
+        byte retrieved = (byte)PlayerPrefs.GetInt(_keyString);
         _onChange = onChange;
-        if (PlayerPrefs.GetInt(key.ToString()) == 0)
+        if (retrieved == 0)
         {
-            PlayerPrefs.SetInt(key.ToString(), defaultValue);
+            PlayerPrefs.SetInt(_keyString, defaultValue);
+            Debug.Log("Setting default setting for " + _keyString + " = " + defaultValue);
             _value = defaultValue;
         }
         else
         {
             _value = retrieved;
+            Debug.Log("Retrieved setting for " + _keyString + " = " + _value);
         }
+    }
+    public void WriteSetting()
+    {
+        PlayerPrefs.SetInt(_keyString , _value);
     }
     public void SetValue(byte newValue)
     {

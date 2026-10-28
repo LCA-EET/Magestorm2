@@ -10,6 +10,7 @@ public class UILanguageSelector : ValidatableForm
 
     public override void ButtonPressed(ButtonType buttonType)
     {
+        /*
         Debug.Log(buttonType.ToString());
         switch (buttonType)
         {
@@ -25,5 +26,6 @@ public class UILanguageSelector : ValidatableForm
             case ButtonType.Chinese:
                 break;
         }
+        */
     }
 }

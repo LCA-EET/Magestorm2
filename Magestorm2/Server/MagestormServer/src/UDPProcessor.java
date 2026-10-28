@@ -1,6 +1,5 @@
 import java.math.BigInteger;
 import java.net.DatagramPacket;
-import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -45,10 +44,11 @@ public class UDPProcessor extends RegisteredThread{
         _processor.interrupt(); // interrupt the blocking take()
         _sender.interrupt();
     }
-    protected void PreProcess(DatagramPacket received){
+    protected boolean PreProcess(DatagramPacket received){
         _decrypted = _cryptographer.Decrypt(received.getData());
         _opCode = _decrypted[0];
         _received = received;
+        return true;
     }
 
     protected RemoteClient LoggedInClient(){

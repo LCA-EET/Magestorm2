@@ -1,5 +1,4 @@
-﻿using TMPro.EditorUtilities;
-using UnityEngine;
+﻿using UnityEngine;
 public class RotatingAO : ActuatingAO 
 {
     public GameObject EndRotation;

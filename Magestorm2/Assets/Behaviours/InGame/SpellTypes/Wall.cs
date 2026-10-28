@@ -20,6 +20,7 @@ public class Wall : SpawnedSpell
         if (ScaleWall)
         {
             _yInitialScale = _scaling.y;
+            transform.localScale = new Vector3(_scaling.x, 0, _scaling.z);
         }
     }
     public void DestroyWall()

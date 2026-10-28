@@ -85,9 +85,7 @@ public class Cryptographer {
         System.arraycopy(toProcess, 0, toReturn, 0, toProcess.length);
         BigInteger sum = new BigInteger(toProcess);
         short remainder = sum.mod(Cryptographer.ModChecksum).shortValue();
-        Main.LogDebug("Checksum remainder: " + remainder);
         byte[] remainderBytes = ByteUtils.ShortToByteArray(remainder);
-        Main.LogDebug("Checksum index: " + (toReturn.length - 2));
         System.arraycopy(remainderBytes, 0, toReturn, toReturn.length - 2, 2);
         return toReturn;
     }

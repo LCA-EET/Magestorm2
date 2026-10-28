@@ -13,6 +13,7 @@ public class PlayerStatusPanel : MonoBehaviour
     public TMP_Text Experience;
     public Counter Kills;
     public Counter Deaths;
+    
     private Dictionary<PlayerIndicator, BarIndicator> _indicators;
     private Dictionary<PlayerIndicator, Color> _indicatorColors;
     private PlayerCharacter _pc;
@@ -29,10 +30,12 @@ public class PlayerStatusPanel : MonoBehaviour
         _indicatorColors.Add(PlayerIndicator.Mana, Color.blue);
         _indicatorColors.Add(PlayerIndicator.Ley, Color.gray);
         _indicatorColors.Add(PlayerIndicator.Stamina, Color.yellow);
+        /*
         foreach (PlayerIndicator indicator in _indicators.Keys)
         {
             _indicators[indicator].SetFillColor(_indicatorColors[indicator]);
         }
+        */
         ComponentRegister.PlayerStatusPanel = this;
     }
     void Start()
@@ -70,12 +73,13 @@ public class PlayerStatusPanel : MonoBehaviour
         string baseString = team == Team.Neutral ? levelString + " {0} {1}" : levelString + " {0} {1} " + ofString + " {2}";
         if (team == Team.Neutral)
         {
-            baseString = string.Format(baseString, level, CharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName);
+            baseString = string.Format(baseString, level, Game.ActiveCharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName);
         }
         else
         {
-            baseString = string.Format(baseString, level, CharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName, Teams.GetTeamName(team));
+            baseString = string.Format(baseString, level, Game.ActiveCharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName, Teams.GetTeamName(team));
         }
+            
         LCT.text = baseString;
         Teams.SetTextColor(LCT);
     }

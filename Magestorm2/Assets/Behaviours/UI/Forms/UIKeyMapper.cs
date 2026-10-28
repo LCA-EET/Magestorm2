@@ -17,12 +17,8 @@ public class UIKeyMapper : ValidatableForm
         Game.ControlMode = true;
         _controlTable = InputControls.ControlTableCopy();
         AssociateFormToButtons();
-        _keySelectors = GetComponentsInChildren<KeySelector>();
-        for (int i = 0; i < _keySelectors.Length; i++)
-        {
-            _keySelectors[i].SetOwningForm(this, i);
-        }
         ShowPage();
+        
     }
     public KeyCode GetKeyCode(InputControl control)
     {
@@ -70,6 +66,11 @@ public class UIKeyMapper : ValidatableForm
             page.SetActive(false);
         }
         Pages[_page].SetActive(true);
+        _keySelectors = GetComponentsInChildren<KeySelector>();
+        for (int i = 0; i < _keySelectors.Length; i++)
+        {
+            _keySelectors[i].SetOwningForm(this, i);
+        }
     }
     private void DecrementPage()
     {

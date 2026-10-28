@@ -40,5 +40,6 @@
                         AllPlayerData = 39,
                         UsePotion = 40,
                         PotionTaken = 41,
-                        DropFlag = 42;
+                        DropFlag = 42,
+                        PingRequest = 43;
 }

@@ -36,10 +36,12 @@ public class ShrinePanel : MonoBehaviour
     void Start()
     {
         Teams.Init();
+        /*
         foreach (Team key in _indicators.Keys)
         {
             _indicators[key].SetFillColor(Teams.GetTeamColor(key));
         }
+        */
     }
     public void SetFill(Team team, byte health)
     {

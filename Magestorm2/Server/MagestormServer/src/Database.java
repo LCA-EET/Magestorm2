@@ -26,15 +26,17 @@ public class Database {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 byte classCode = rs.getByte(1);
+                short nameRef = rs.getShort(3);
                 int columnCount = rs.getMetaData().getColumnCount();
                 byte columnsToSkip = 4;
                 byte[] attrib = new byte[columnCount - columnsToSkip];
                 for(int i = columnsToSkip; i < columnCount; i++){
                     attrib[i - columnsToSkip] = rs.getByte(i + 1); // first column is one, not zero;
                 }
-                CharacterClass cclass = new CharacterClass(classCode, attrib);
+                CharacterClass cclass = new CharacterClass(classCode, attrib, nameRef);
                 CharacterClassManager.AddCharacterClass(classCode, cclass);
             }
+            CharacterClassManager.GenerateClientDataPacket();
         }
         catch(Exception e){
             Main.LogError("Database.LoadEffectData(): " + e.getMessage());

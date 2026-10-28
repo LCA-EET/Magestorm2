@@ -3,20 +3,25 @@ using System.Text;
 using UnityEngine;
 public static class Pregame_Packets
 {
-    public static byte[] RequestSpellDataPacket()
+    public static byte[] RequestCharacterClassDataPacket()
     {
-        byte[] unencrypted = new byte[5];
-        unencrypted[0] = Pregame_Send.RequestSpellData;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+        byte[] unencrypted = new byte[1];
+        unencrypted[0] = Pregame_Send.RequestCharacterClassData;
         return unencrypted;
     }
     public static byte[] RequestDisciplineDataPacket()
     {
-        byte[] unencrypted = new byte[5];
+        byte[] unencrypted = new byte[1];
         unencrypted[0] = Pregame_Send.RequestDisciplineData;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
         return unencrypted;
     }
+    public static byte[] RequestSpellDataPacket()
+    {
+        byte[] unencrypted = new byte[1];
+        unencrypted[0] = Pregame_Send.RequestSpellData;
+        return unencrypted;
+    }
+    
     public static byte[] OTPReplyPacket(int accountID, int otp)
     {
         byte[] toReturn = new byte[9];

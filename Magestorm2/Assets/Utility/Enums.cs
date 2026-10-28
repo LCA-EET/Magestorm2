@@ -87,6 +87,11 @@ public enum SettingKey : byte
     Shadows = 1,
     ShadowType = 2,
     MinimapLighting = 3,
-    LitProjectiles = 4
+    LitProjectiles = 4,
+    AAMode = 5,
+    AAQuality = 6,
+    Language = 7
 }
+
+
 

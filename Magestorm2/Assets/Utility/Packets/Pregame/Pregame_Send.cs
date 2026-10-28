@@ -25,7 +25,8 @@ public static class Pregame_Send
                         RequestMatchScore = 21,
                         OTPReply = 22,
                         RequestSpellData = 23,
-                        RequestDisciplineData = 24;
+                        RequestDisciplineData = 24,
+                        RequestCharacterClassData = 25;
                         
 }
         

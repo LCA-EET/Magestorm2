@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CharacterClassManager {
     private static ConcurrentHashMap<Byte, CharacterClass> _characterClasses;
     private static ConcurrentHashMap<Byte, List<DisciplineData>> _disciplinesOfClass;
+    private static byte[] _clientDataPacket;
     public static void init(Connection conn){
         _characterClasses = new ConcurrentHashMap<>();
         _disciplinesOfClass = new ConcurrentHashMap<>();
@@ -23,6 +24,21 @@ public class CharacterClassManager {
     }
     public static void AddCharacterClass(byte classCode, CharacterClass characterClass){
         _characterClasses.put(classCode, characterClass);
+    }
+    public static void GenerateClientDataPacket(){
+        _clientDataPacket = new byte[2 + _characterClasses.size() * 6];
+        _clientDataPacket[0] = Pregame_Send.CharacterClassData;
+        _clientDataPacket[1] = (byte)_characterClasses.size();
+        int index = 2;
+        for(CharacterClass cc : _characterClasses.values()){
+            byte[] data = cc.ClientData();
+            System.arraycopy(data, 0, _clientDataPacket, index, data.length);
+            index += data.length;
+        }
+        _clientDataPacket = Cryptographer.ApplyChecksum(_clientDataPacket);
+    }
+    public static byte[] ClientDataPacket(){
+        return _clientDataPacket;
     }
     public static ArrayList<Byte> GetClassCodes(){
         return new ArrayList<>(_characterClasses.keySet());

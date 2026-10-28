@@ -47,6 +47,7 @@ public static class ComponentRegister
     public static DamagePanel DamagePanel;
     public static FlagDisplay FlagDisplay;
     public static DHKEPacketProcessor DHKEPacketProcessor;
+    public static PingDisplay PingDisplay;
     public static Scene Scene
     {
         get { return _scene; }

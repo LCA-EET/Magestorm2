@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class DisciplineData
 {
@@ -17,40 +14,19 @@ public class DisciplineData
         _id = data[0];
         _availabilityMask = data[1];
         _nameRef = BitConverter.ToInt16(data, 2);
-    }
-    public DisciplineData(string[] fields, string contents)
-    {
         _spellsOfDiscipline = new List<SpellData>();
-        string[] split = contents.Split("\n");
-        string fieldID, fieldValue;
-        for (int i = 0; i < fields.Length-1; i++)
-        {
-            fieldID = fields[i].Trim();
-            fieldValue = split[i + 1].Trim();
-            switch (fieldID)
-            {
-                case DisciplineAttributes.ID:
-                    _id = byte.Parse(fieldValue);
-                    break;
-                case DisciplineAttributes.NAMEREFERENCE:
-                    _nameRef = short.Parse(fieldValue);
-                    break;
-                case DisciplineAttributes.AVAILABILITYMASK:
-                    _availabilityMask = byte.Parse(fieldValue);
-                    ParseMask();
-                    break;
-            }
-        }
+        ParseMask();
     }
+    
     private void ParseMask()
     {
         BitArray ba = ByteUtils.ByteToBoolArray(_availabilityMask);
-        List<byte> classCodes = CharacterClassManager.CharacterClassCodes;
+        List<byte> classCodes = Game.ActiveCharacterClassManager.CharacterClassCodes;
         foreach(byte classCode in classCodes)
         {
             if (ba[classCode])
             {
-                CharacterClassManager.AssociateDisciplineToClass(classCode, this);
+                Game.ActiveCharacterClassManager.AssociateDisciplineToClass(classCode, this);
             }
         }
     }
@@ -75,11 +51,3 @@ public class DisciplineData
     }
 }
 
-public static class DisciplineAttributes
-{
-    public const string ID = "id";
-    public const string NAME = "name";
-    public const string AVAILABILITYMASK = "availabilitymask";
-    public const string STATCODE = "statcode";
-    public const string NAMEREFERENCE = "nameref";
-}

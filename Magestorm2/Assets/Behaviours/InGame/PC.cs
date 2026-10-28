@@ -58,12 +58,8 @@ public class PC : MonoBehaviour
             _actionList = new List<PeriodicAction>();
             new PeriodicAction(Game.TickInterval, UpdateIndicators, _actionList);
             new PeriodicAction(1.0f, CountdownVectors, _actionList);
-
+            
         }
-    }
-    private void FlagCountdown()
-    {
-        
     }
     public void PickedUpPotion(byte potionID)
     {
@@ -145,6 +141,8 @@ public class PC : MonoBehaviour
         {
             _joinRerequest = new PeriodicAction(0.25f, AttemptJoin, null);
         }
+        GameSettings.ApplyAntiAliasQualitySetting();
+        GameSettings.ApplyAntiAliasModeSetting();
     }
     private void AttemptJoin()
     {

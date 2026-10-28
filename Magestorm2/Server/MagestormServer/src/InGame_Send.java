@@ -57,5 +57,6 @@ public class InGame_Send {
     public static final byte PotionTaken = 55;
     public static final byte PotionDropped = 56;
     public static final byte UsedPotion = 57;
+    public static final byte PingReply = 58;
 
 }
