@@ -12,6 +12,8 @@ public class Main {
     public static boolean Running = true;
     public static boolean Debug = false;
     public static void main(String args[]) throws FileNotFoundException {
+
+
         ThreadMonitor = new ThreadMonitor();
         SharedFunctions.Initialize();
         String paramFilePath = args[0];
@@ -30,6 +32,8 @@ public class Main {
             Main.LogError("Exiting due to a failure to access the database.");
             System.exit(0);
         }
+
+
     }
     private static void ProcessCommands(){
         try (Scanner scanner = new Scanner(System.in)) {

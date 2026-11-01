@@ -16,7 +16,7 @@ public class AsyncDBUpdater extends RegisteredThread{
                 _toProcess.take().ProcessRequest(_persistentConnection);
             }
             catch(InterruptedException ie){
-                _terminated = true;
+                OnInterrupt();
             }
             catch(Exception ex){
                 Main.LogError("AsyncDBUpdater.run(): " + ex.getMessage());

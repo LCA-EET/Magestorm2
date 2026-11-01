@@ -217,8 +217,8 @@ public static class Pregame_Packets
         toSend[0] = Pregame_Send.SubscribeToMatches;
         PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
         PlayerAccount.SelectedCharacter.IDBytes.CopyTo(toSend, 5);
-        toSend[toSend.Length - 2] = MatchParams.MatchID;
-        toSend[toSend.Length - 1] = (byte)(qm ? 1 : 0);
+        toSend[9] = MatchParams.MatchID;
+        toSend[10] = (byte)(qm ? 1 : 0);
         return toSend;
     }
     public static byte[] OpCodePlusAccountIDBytes(byte opCode)

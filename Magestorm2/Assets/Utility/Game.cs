@@ -49,13 +49,6 @@ public static class Game
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-#if !(UNITY_EDITOR)
-                    Running = false;
-                    if(UDP != null){
-                        UDP.StopListening();
-                    }
-                    Application.Quit();
-#endif
     }
     public static bool GameInputSet(InputControl toCheck)
     {

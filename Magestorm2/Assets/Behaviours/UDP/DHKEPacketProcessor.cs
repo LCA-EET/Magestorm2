@@ -50,6 +50,10 @@ public class DHKEPacketProcessor : UDPProcessor
     {
         Debug.Log("Key reply received");
         short kpubLength = BitConverter.ToInt16(payload, 1);
+        Debug.Log("DHKE Payload[1]: " + payload[1]);
+        Debug.Log("DHKE Payload[2]: " + payload[2]);
+
+        Debug.Log("KPubLength: " + kpubLength);
         byte[] kpub = new byte[kpubLength];
         Array.Copy(payload, 3, kpub, 0, kpubLength);
         short xorKeyLength = BitConverter.ToInt16(payload, 3 + kpubLength);

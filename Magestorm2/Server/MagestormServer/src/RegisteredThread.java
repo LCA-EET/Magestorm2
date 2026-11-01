@@ -13,10 +13,6 @@ public class RegisteredThread extends Thread implements Comparable<RegisteredThr
         return _threadID;
     }
 
-    public boolean IsTerminated(){
-        return _terminated;
-    }
-
     protected void Register(String desc){
         _formattedDT = SharedFunctions.GetDateTimeString();
         _threadID = Main.ThreadMonitor.RegisterThread(this);
@@ -28,6 +24,10 @@ public class RegisteredThread extends Thread implements Comparable<RegisteredThr
     protected void Deregister(){
         Main.ThreadMonitor.DeregisterThread(_threadID);
         Main.LogMessage("Deregistered thread " + _threadID + " (" + _descriptor + ")");
+    }
+
+    protected void OnInterrupt(){
+        _terminated = true;
     }
 
     public String ToString(){

@@ -4,11 +4,9 @@ using UnityEngine;
 public class AvailableSpellsPanel : MonoBehaviour
 {
     public AvailableSpell[] AvailableSpells;
-    private Dictionary<byte, AvailableSpell> _spellSelections;
     private PeriodicAction _msRefresh;
     private void Awake()
     {
-        _spellSelections = new Dictionary<byte, AvailableSpell>();
         _msRefresh = new PeriodicAction(0.2f, RefreshMS, null);
         ComponentRegister.AvailableSpellsPanel = this;
     }
@@ -35,6 +33,7 @@ public class AvailableSpellsPanel : MonoBehaviour
     }
     public void RefeshPanel()
     {
+        Debug.Log("Refresh Panel");
         byte index = 0;
         byte[] slottedSpells = PlayerAccount.SelectedCharacter.SlottedSpells;
         for (byte b = 0; b < slottedSpells.Length; b++)

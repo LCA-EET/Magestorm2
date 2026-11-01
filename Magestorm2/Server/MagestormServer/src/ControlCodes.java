@@ -30,6 +30,13 @@ public class ControlCodes {
         public static final byte MatchOptions_AntiStack = 2;
         public static final byte MatchOptions_NoResurrection = 3;
         public static final byte MatchOptions_NoHealOther = 4;
+        public static final byte MatchOptions_NoConsumables = 5;
+    //endregion
+
+    //region MatchType
+        public static final byte MatchType_DeathMatch = 0;
+        public static final byte MatchType_FreeForAll = 1;
+        public static final byte MatchType_CaptureTheFlag = 2;
     //endregion
 
     //region LogIDs

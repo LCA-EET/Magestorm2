@@ -94,7 +94,7 @@ public class MatchCharacter extends TimedObject{
             _ley = 0.6f;
         }
         else{
-            if(_owningMatch.GetMatchType() == MatchType.FreeForAll && classID != CharacterClass.Arcanist){
+            if(_owningMatch.GetMatchType() == ControlCodes.MatchType_FreeForAll && classID != CharacterClass.Arcanist){
                 _ley = 0.6f;
             }
             else{
@@ -105,9 +105,6 @@ public class MatchCharacter extends TimedObject{
     public void QuitGame(){
         SetDurationRemaining(0);
         _quitGame = true;
-    }
-    public boolean PlayerQuit(){
-        return _quitGame;
     }
     private void InitializeScoreBytes(byte[] nlc){
         _scoreBytes = new byte[3 + nlc.length];
@@ -126,17 +123,13 @@ public class MatchCharacter extends TimedObject{
     public boolean IsCarryingPotion(){
         return _carriedPotion != ControlCodes.Potion_None;
     }
-    public byte GetCarriedPotion(){
-        return _carriedPotion;
-    }
     public void PickedUpPotion(byte potion){
         if(_carriedPotion != ControlCodes.Potion_None){
             UsePotion();
         }
         _carriedPotion = potion;
     }
-    public byte UsePotion(){
-        byte potionUsed = _carriedPotion;
+    public void UsePotion(){
         switch (_carriedPotion){
             case ControlCodes.Potion_Health:
                 _currentHP = _maxHP;
@@ -150,7 +143,6 @@ public class MatchCharacter extends TimedObject{
                 break;
         }
         _carriedPotion = ControlCodes.Potion_None;
-        return potionUsed;
     }
     public void DropPotion(){
         _owningMatch.SendToAll(Packets.PotionDroppedPacket(_objectID.byteValue(), _carriedPotion));

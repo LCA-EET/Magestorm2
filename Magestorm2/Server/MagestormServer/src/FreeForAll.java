@@ -7,7 +7,7 @@ public class FreeForAll extends Match{
     }
 
     public FreeForAll(byte matchID, int creatorID, byte[] creatorName, byte sceneID,  byte duration, byte matchOptions) {
-        super(matchID, creatorID, creatorName, sceneID, duration, MatchType.FreeForAll, matchOptions);
+        super(matchID, creatorID, creatorName, sceneID, duration, ControlCodes.MatchType_FreeForAll, matchOptions);
         Main.LogMessage("Initializing FFA");
         _processor = new InGamePacketProcessor(_matchPort, this);
     }

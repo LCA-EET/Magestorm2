@@ -8,6 +8,7 @@ public static class MatchOption
     public const byte AntiStack = 2;
     public const byte NoResurrection = 3;
     public const byte NoHealOther = 4;
+    public const byte NoConsumables = 5;
 
     private static bool _init = false;
     private static Dictionary<byte, int> _stringRefs;
@@ -22,6 +23,7 @@ public static class MatchOption
             _stringRefs.Add(AntiStack, 200);
             _stringRefs.Add(NoResurrection, 201);
             _stringRefs.Add(NoHealOther, 202);
+            _stringRefs.Add(NoConsumables, 442);
         }
     }
 

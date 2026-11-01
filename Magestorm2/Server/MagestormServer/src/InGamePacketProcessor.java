@@ -20,7 +20,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         super.TerminateProcessor();
         _asyncThread.interrupt();
     }
-    @Override protected boolean PreProcess(DatagramPacket received)
+    @Override protected boolean PreProcess(UDPTransmission received)
     {
         super.PreProcess(received);
         _senderID = _decrypted[1];
@@ -31,7 +31,7 @@ public class InGamePacketProcessor extends UDPProcessor{
         _asyncProcessor.EnqueueRequest(new AsyncIGPPRequest(_decrypted, _opCode, _verified, _remote));
     }
     @Override
-    protected boolean ProcessPacket(DatagramPacket received){
+    protected boolean ProcessPacket(UDPTransmission received){
         if(PreProcess(received)){
             _remote = _owningMatch.GetVerifiedClient(_senderID);
             switch(_opCode){
@@ -267,7 +267,5 @@ public class InGamePacketProcessor extends UDPProcessor{
         }
         return -1;
     }
-    public boolean IsVerified(byte playerID){
-        return _owningMatch.IsPlayerVerified(playerID);
-    }
+
 }

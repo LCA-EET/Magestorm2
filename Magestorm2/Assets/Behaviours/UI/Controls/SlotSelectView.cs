@@ -5,7 +5,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
     private byte _characterLevel;
     private Dictionary<byte,byte> _disciplineTable;
     private byte[] _slottedSpells;
-    private const int _noSelectionRef = 276;
+    private const short _noSelectionRef = 276;
     private SkillPanel _skillPanel;
     void Awake()
     {
@@ -32,7 +32,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
         {
             byte spellID = slottedSpells[i];
             SpellData slottedSpell = null;
-            int referenceID = _noSelectionRef;
+            short referenceID = _noSelectionRef;
             if (Game.ActiveSpellManager.GetSpell(spellID, ref slottedSpell))
             {
                 referenceID = slottedSpell.SpellNameReference;
@@ -49,7 +49,7 @@ public class SlotSelectView : ScrollSelectView, ISpellProcessor
     public void SelectionMade(object[] args)
     {
         byte slotID = (byte)args[0];
-        int nameRef = (int)args[1];
+        short nameRef = (short)args[1];
         byte spellID = (byte)args[2];
         RecordSpellSelection(slotID, spellID);
         Labels[slotID].UpdateText(nameRef);

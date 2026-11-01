@@ -7,6 +7,27 @@ import java.util.BitSet;
 public class ByteUtils {
     private static final ByteOrder _order = ByteOrder.LITTLE_ENDIAN;
 
+    public static void WriteLongAtIndex_LE(byte[] array, long toWrite, int index){
+        array[index] =  (byte) (toWrite & 0xFF);
+        array[index + 1] = (byte) ((toWrite >>> 8) & 0xFF);
+        array[index + 2] = (byte) ((toWrite >>> 16) & 0xFF);
+        array[index + 3] = (byte) ((toWrite >>> 24) & 0xFF);
+        array[index + 4] = (byte) ((toWrite >>> 32) & 0xFF);
+        array[index + 5] = (byte) ((toWrite >>> 40) & 0xFF);
+        array[index + 6] = (byte) ((toWrite >>> 48) & 0xFF);
+        array[index + 7] = (byte) ((toWrite >>> 56) & 0xFF);
+    }
+
+    public static void WriteIntAtIndex_LE(byte[] array, int toWrite, int index){
+        array[index] =  (byte) (toWrite & 0xFF);
+        array[index + 1] = (byte) ((toWrite >>> 8) & 0xFF);
+        array[index + 2] = (byte) ((toWrite >>> 16) & 0xFF);
+        array[index + 3] = (byte) ((toWrite >>> 24) & 0xFF);
+    }
+    public static void WriteShortAtIndex_LE(byte[] array, short toWrite, int index){
+        array[index] =  (byte) (toWrite & 0xFF);
+        array[index + 1] = (byte) ((toWrite >>> 8) & 0xFF);
+    }
     public static short ExtractShort(byte[] decrypted, int index){
         if((index + 2) <= decrypted.length){
             return ByteBuffer.wrap(decrypted).order(_order).getShort(index);
@@ -28,28 +49,10 @@ public class ByteUtils {
         return ByteBuffer.wrap(decrypted).order(_order).getFloat(index);
     }
 
-    public static byte[] IntToByteArray(int value) {
-        ByteBuffer intBuffer = ByteBuffer.allocate(4);
-        intBuffer.order(_order);
-        return intBuffer.putInt(0, value).array();
-    }
-
     public static byte[] FloatToByteArray(float value){
         ByteBuffer floatBuffer = ByteBuffer.allocate(4);
         floatBuffer.order(_order);
         return  floatBuffer.putFloat(0, value).array();
-    }
-
-    public static byte[] ShortToByteArray(short value){
-        ByteBuffer shortBuffer = ByteBuffer.allocate(2);
-        shortBuffer.order(_order);
-        return shortBuffer.putShort(0, value).array();
-    }
-
-    public static byte[] LongToByteArray(long value){
-        ByteBuffer longBuffer = ByteBuffer.allocate(8);
-        longBuffer.order(_order);
-        return longBuffer.putLong(0, value).array();
     }
 
     public static byte[] ArrayListToByteArray(ArrayList<byte[]> arrayList, int totalLength, int startIndex){
@@ -82,60 +85,6 @@ public class ByteUtils {
         byte[] nameBytes = new byte[length];
         System.arraycopy(decrypted, index, nameBytes, 0, length);
         return BytesToUTF8(nameBytes);
-    }
-
-    public static void FillBooleanArray(boolean[] toFill, int value, int startIndex){
-        switch(value){
-            // higher index is the msb
-            case 0:
-                toFill[startIndex + 1]  = false;
-                toFill[startIndex]      = false;
-                break;
-            case 1:
-                toFill[startIndex + 1]  = false;
-                toFill[startIndex]      = true;
-                break;
-            case 2:
-                toFill[startIndex + 1]  = true;
-                toFill[startIndex]      = false;
-                break;
-            case 3:
-                toFill[startIndex + 1]  = true;
-                toFill[startIndex]      = true;
-                break;
-            case 4:
-                toFill[startIndex + 2]  = true;
-                toFill[startIndex + 1]  = false;
-                toFill[startIndex]      = false;
-                break;
-            case 5:
-                toFill[startIndex + 2]  = true;
-                toFill[startIndex + 1]  = false;
-                toFill[startIndex]      = true;
-                break;
-            case 6:
-                toFill[startIndex + 2]  = true;
-                toFill[startIndex + 1]  = true;
-                toFill[startIndex]      = false;
-                break;
-            case 7:
-                toFill[startIndex + 2]  = true;
-                toFill[startIndex + 1]  = true;
-                toFill[startIndex]      = true;
-                break;
-        }
-    }
-    public static boolean[] ShortToBoolArray(short toConvert)
-    {
-        int num = toConvert;
-        boolean[] binary = new boolean[16];
-        int id = 0;
-
-        while (num != 0) {
-            binary[id++] = num % 2 != 0;
-            num = num / 2;
-        }
-        return binary;
     }
     public static boolean[] IntegerToBoolArray(int num)
     {

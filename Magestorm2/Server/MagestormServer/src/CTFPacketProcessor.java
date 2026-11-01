@@ -1,5 +1,5 @@
 public class CTFPacketProcessor extends InGamePacketProcessor{
-    CaptureTheFlag _owningCTF;
+    private final CaptureTheFlag _owningCTF;
     public CTFPacketProcessor(int port, CaptureTheFlag owningMatch){
         super(port, owningMatch);
         _owningCTF = owningMatch;

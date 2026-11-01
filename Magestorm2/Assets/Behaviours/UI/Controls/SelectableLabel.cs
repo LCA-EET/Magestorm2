@@ -11,7 +11,7 @@ public class SelectableLabel : MonoBehaviour
     private byte _optionID;
     private ILabelCollection _owner;
     private bool _registered;
-    public void Register(int referenceID, byte optionID, ILabelCollection owner)
+    public void Register(short referenceID, byte optionID, ILabelCollection owner)
     {
         _optionID = optionID;
         UpdateText(referenceID);
@@ -23,7 +23,7 @@ public class SelectableLabel : MonoBehaviour
         _owner = owner;
         Background.color = Colors.EntrySelected;
     }
-    public void UpdateText(int newReferenceID)
+    public void UpdateText(short newReferenceID)
     {
         Caption.text = Language.GetBaseString(newReferenceID);
         gameObject.SetActive(true);

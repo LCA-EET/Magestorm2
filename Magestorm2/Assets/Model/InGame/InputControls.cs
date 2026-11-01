@@ -163,7 +163,7 @@ public static class InputControls
         {
             if (Input.GetKeyDown(_controls[(InputControl)b]) && Game.GameMode)
             {
-                return PlayerAccount.SelectedCharacter.SlottedSpells[b - _slot1];
+                return PlayerAccount.SelectedCharacter.GetSlottedSpell(b - _slot1);
             }
         }
         return 0;

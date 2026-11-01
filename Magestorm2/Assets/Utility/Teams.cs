@@ -7,6 +7,7 @@ public static class Teams
     private static Dictionary<Team, Sprite> _teamIcons;
     private static Dictionary<Team, int> _teamNames;
     private static Dictionary<Team, Color> _teamColors;
+    private static Dictionary<Team, Color> _teamTextColors;
     private static bool _init = false;
     public static void Init()
     {
@@ -30,6 +31,11 @@ public static class Teams
             _teamNames.Add(Team.Balance, 12);
             _teamNames.Add(Team.Order, 13);
             
+            _teamTextColors = new Dictionary<Team, Color>();
+            _teamTextColors.Add(Team.Neutral, Color.white);
+            _teamTextColors.Add(Team.Chaos, new Color(1f, 0.3451f, 0.3451f, 1f));
+            _teamTextColors.Add(Team.Balance, new Color(0, 1f, 0, 1f));
+            _teamTextColors.Add(Team.Order, new Color(0.2392f, 0.5176f, 1f, 1f));
             _init = true;
         }
     }
@@ -53,6 +59,10 @@ public static class Teams
 
     public static void SetTextColor(TMP_Text text, Team team)
     {
-        text.color = _teamColors[team];
+        text.color = _teamTextColors[team];
+    }
+    public static Color GetTeamTextColor(Team team)
+    {
+        return _teamTextColors[team];
     }
 }

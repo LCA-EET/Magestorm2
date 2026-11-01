@@ -53,7 +53,7 @@ public class TeamTorch : MonoBehaviour
         {
             TorchManager.RegisterTorch(this);
         }
-        Light.color = Colors.GetTeamColor(Team);
+        Light.color = Teams.GetTeamColor(Team);
     }
     public void Start()
     {

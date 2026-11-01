@@ -4,7 +4,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 
 public class AESCipher extends SymmetricCipher{
@@ -15,10 +14,8 @@ public class AESCipher extends SymmetricCipher{
     private final String _algorithmPlusPadding = "AES/CBC/PKCS5Padding";
     private final String _algorithm = "AES";
     private final byte[] _ivBytes;
-    private final ByteBuffer _intBuffer;
     public AESCipher(Cryptographer owner){
         super(owner);
-        _intBuffer = ByteBuffer.allocate(Integer.BYTES);
         _ivBytes = new byte[16];
         try{
             _secretKeyBytes = GetAESKey(128).getEncoded();
@@ -30,39 +27,35 @@ public class AESCipher extends SymmetricCipher{
     }
 
     @Override
-    public byte[] Encrypt(byte[] payload){
-        byte[] toReturn = null;
-        _iv++;
-        _intBuffer.putInt(0, _iv);
-        byte[] ivBytes = _intBuffer.array();
-        System.arraycopy(ivBytes, 0, _ivBytes, 0, ivBytes.length);
-        IvParameterSpec iv = new IvParameterSpec(_ivBytes);
-        try{
+    public byte[] Encrypt(byte[] payload) {
+        try {
+            _iv++;
+            ByteUtils.WriteIntAtIndex_LE(_ivBytes, _iv, 0);
+            IvParameterSpec iv = new IvParameterSpec(_ivBytes);
             _encryptionCipher.init(Cipher.ENCRYPT_MODE, _secretKey, iv);
-            byte[] encryptedPayload = _encryptionCipher.doFinal(payload);
-            toReturn = new byte[18 + encryptedPayload.length];
-            System.arraycopy(_ivBytes,0, toReturn,0, _ivBytes.length);
-            short payloadLength = (short)encryptedPayload.length;
-            byte[] lengthBytes = ByteUtils.ShortToByteArray(payloadLength);
-            System.arraycopy(lengthBytes, 0, toReturn, 16, 2);
-            System.arraycopy(encryptedPayload, 0, toReturn, 18, encryptedPayload.length);
-        } catch (Exception e) {
-            Main.LogError("AESCipher.Encrypt(): " + e.getMessage());
+            byte[] result = new byte[18 + _encryptionCipher.getOutputSize(payload.length)];
+            System.arraycopy(_ivBytes, 0, result, 0, 16);
+            int actualLength =
+                    _encryptionCipher.doFinal(payload, 0, payload.length,
+                            result, 18);
+            ByteUtils.WriteShortAtIndex_LE(result, (short) actualLength, 16);
+            return result;
         }
-        return toReturn;
+        catch (Exception e) {
+            Main.LogError("AESCipher.Encrypt(): " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public byte[] Decrypt(byte[] toDecrypt){
         byte[] ivBytes = new byte[16];
         short payloadLength = ByteUtils.ExtractShort(toDecrypt, 16);
-        byte[] payload = new byte[payloadLength];
         System.arraycopy(toDecrypt,0,ivBytes,0,ivBytes.length);
-        System.arraycopy(toDecrypt,18, payload, 0, payloadLength);
         try {
             IvParameterSpec iv = new IvParameterSpec(ivBytes);
             _decryptionCipher.init(Cipher.DECRYPT_MODE, _secretKey, iv);
-            return _decryptionCipher.doFinal(payload);
+            return _decryptionCipher.doFinal(toDecrypt, 18, payloadLength);
         } catch (Exception e) {
             Main.LogError("AESCipher.Decrypt(): Decryption error: " + e.getMessage());
         }

@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4203317623979844516}
   - component: {fileID: 5327740714840999265}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Inner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -538,7 +538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4024601292792206751}
   - component: {fileID: 1825890752308297531}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TeamIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

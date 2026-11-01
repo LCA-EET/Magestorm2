@@ -11,7 +11,7 @@ public class AntiStack {
         byte teamToJoin = 0;
         ArrayList<Byte> options = new ArrayList<>();
         for(byte code : MatchTeam.TeamCodes_NonNeutral){
-            if(_owningMatch.GetMatchType() == MatchType.DeathMatch){
+            if(_owningMatch.GetMatchType() == ControlCodes.MatchType_DeathMatch){
                 if(((DeathMatch)_owningMatch).IsTeamAlive(code)){
                     options.add(code);
                 }

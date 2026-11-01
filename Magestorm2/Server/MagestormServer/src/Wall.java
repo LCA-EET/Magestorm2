@@ -3,9 +3,8 @@ public class Wall extends DamagingSpell{
     public Wall(MatchCharacter caster, short castID, Spell baseReference, Match matchReference, byte[] prBytes){
         super(caster, castID, baseReference, matchReference);
         _bytes = new byte[27];
-        byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
+        ByteUtils.WriteShortAtIndex_LE(_bytes, castID, 1);
         _bytes[0] = _spellID;
-        System.arraycopy(castIDBytes, 0, _bytes, 1, 2);
         System.arraycopy(prBytes, 0, _bytes, 3, 24);
         _elementCode = _baseReference.GetElement0();
         caster.IncrementWallCount();

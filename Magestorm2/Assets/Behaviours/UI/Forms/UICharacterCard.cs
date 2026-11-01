@@ -42,10 +42,12 @@ public class UICharacterCard : ValidatableForm
     {
         _owner = form;
         _renderTexture = render;
+        //_renderTexture.GenerateMips();
         _rawImage = GetComponentInChildren<RawImage>();
         _modelCamera = GetComponentInChildren<Camera>();
         _modelCamera.targetTexture = _renderTexture;
         _rawImage.texture = _renderTexture;
+        
     }
     public void MarkSelected(bool selected)
     {

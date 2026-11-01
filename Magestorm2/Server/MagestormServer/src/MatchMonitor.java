@@ -19,7 +19,7 @@ public class MatchMonitor extends RegisteredThread{
                 Thread.sleep(_tick);
             }
             catch(InterruptedException ie){
-                _terminated = true;
+                OnInterrupt();
             }
             catch (Exception e) {
                 Main.LogError("MatchMonitor.run(): " + e.getMessage());

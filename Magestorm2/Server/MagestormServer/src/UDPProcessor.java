@@ -7,10 +7,9 @@ public class UDPProcessor extends RegisteredThread{
 
     protected RegisteredThread _processor, _sender, _listener;
     protected RemoteClient _remote;
-    protected DatagramPacket _received;
     protected final UDPClient _udpClient;
     protected final BlockingQueue<OutgoingPacket> _outgoingPackets;
-    protected final BlockingQueue<DatagramPacket> _toProcess;
+    protected final BlockingQueue<UDPTransmission> _toProcess;
     protected byte[] _decrypted;
     protected final int _listeningPort;
     protected byte _opCode;
@@ -23,7 +22,6 @@ public class UDPProcessor extends RegisteredThread{
         _outgoingPackets = new LinkedBlockingQueue<>();
         _toProcess = new LinkedBlockingQueue<>();
         _terminated = false;
-
         _listener = new RegisteredThread(_udpClient);
         _listener.start();
         _processor = new RegisteredThread(this);
@@ -39,15 +37,13 @@ public class UDPProcessor extends RegisteredThread{
     }
     public void TerminateProcessor(){
         Main.LogMessage("Terminating UDPProcessor for port: " + _listeningPort);
-        _terminated = true;
         _listener.interrupt();
-        _processor.interrupt(); // interrupt the blocking take()
+        _processor.interrupt();
         _sender.interrupt();
     }
-    protected boolean PreProcess(DatagramPacket received){
-        _decrypted = _cryptographer.Decrypt(received.getData());
+    protected boolean PreProcess(UDPTransmission received){
+        _decrypted = _cryptographer.Decrypt(received.GetData());
         _opCode = _decrypted[0];
-        _received = received;
         return true;
     }
 
@@ -69,12 +65,12 @@ public class UDPProcessor extends RegisteredThread{
         _outgoingPackets.add(new OutgoingPacket(_cryptographer.Encrypt(toEncrypt), rc));
     }
 
-    protected boolean ProcessPacket(DatagramPacket received){
-        Main.LogError("Unimplemented packet handler.");
+    protected boolean ProcessPacket(UDPTransmission received){
+        Main.LogError("UDPProcessor.ProcessPacket(): Unimplemented packet handler.");
         return true;
     }
 
-    public void EnqueuePacket(DatagramPacket received){
+    public void EnqueuePacket(UDPTransmission received){
         _toProcess.add(received);
     }
 
@@ -86,6 +82,7 @@ public class UDPProcessor extends RegisteredThread{
                 ProcessPacket(_toProcess.take());
             }
             catch(InterruptedException ie){
+                OnInterrupt();
                 Main.LogMessage("Terminating UDPProcessor on port " + _listeningPort);
             }
             catch(Exception ex){

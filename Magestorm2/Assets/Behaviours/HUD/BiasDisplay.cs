@@ -22,7 +22,7 @@ public class BiasDisplay : MonoBehaviour
 
     public void Refresh(ManaPool pool)
     {
-        Color toApply = Teams.GetTeamColor(pool.BiasedToward);
+        Color toApply = Teams.GetTeamTextColor(pool.BiasedToward);
         Power.color = toApply;
         Bias.color = toApply;
         Title.color = toApply;

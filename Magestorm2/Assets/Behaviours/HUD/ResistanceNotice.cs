@@ -12,7 +12,7 @@ public class ResistanceNotice : MonoBehaviour
     }
     private void Start()
     {
-        SetColor(Colors.GetTeamColor(MatchParams.MatchTeam));
+        SetColor(Teams.GetTeamTextColor(MatchParams.MatchTeam));
     }
     private void SetColor(Color color)
     {

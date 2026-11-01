@@ -372,7 +372,6 @@ public class Database {
                 for(int i = 0; i < slotString.length; i++){
                     slots[i] = Byte.parseByte(slotString[i]);
                 }
-                byte[] characterIDBytes = ByteUtils.IntToByteArray(characterID);
                 byte[] nameBytes = characterName.getBytes(UTF_8);
                 byte nameLength = (byte) nameBytes.length;
                 byte[] fetched = new byte[26 + slots.length + nameLength];
@@ -388,7 +387,7 @@ public class Database {
                  * 35:      NAMELENGTH
                  * 36 - END:NAME
                  */
-                System.arraycopy(characterIDBytes, 0, fetched, 0, 4);
+                ByteUtils.WriteIntAtIndex_LE(fetched, characterID, 0);
                 fetched[4] = charClass;
                 byte strength = rs.getByte("statstr");
                 byte dexterity = rs.getByte("statdex");
@@ -418,11 +417,9 @@ public class Database {
                 fetched[15] = apphead;
                 fetched[16] = level;
                 int index = 17;
-                byte[] experienceBytes = ByteUtils.IntToByteArray(experience);
-                System.arraycopy(experienceBytes, 0,fetched, index, 4);
+                ByteUtils.WriteIntAtIndex_LE(fetched, experience, index);
                 index += 4;
-                byte[] skillBytes = ByteUtils.IntToByteArray(skills);
-                System.arraycopy(skillBytes, 0,fetched, index, 4);
+                ByteUtils.WriteIntAtIndex_LE(fetched, skills, index);
                 index += 4;
                 for(int i = 0; i < slots.length; i++){
                     fetched[index] = slots[i];

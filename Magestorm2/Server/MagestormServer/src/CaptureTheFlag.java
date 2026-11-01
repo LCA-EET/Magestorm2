@@ -11,7 +11,7 @@ public class CaptureTheFlag extends Match{
 
 
     public CaptureTheFlag(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchOptions) {
-        super(matchID, creatorID, creatorName, sceneID, duration, MatchType.CaptureTheFlag, matchOptions);
+        super(matchID, creatorID, creatorName, sceneID, duration, ControlCodes.MatchType_CaptureTheFlag, matchOptions);
         _flagsChanged = true;
         _currentScores = new byte[3];
         _poolManager = new PoolManager(this);

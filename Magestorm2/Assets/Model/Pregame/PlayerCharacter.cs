@@ -32,6 +32,18 @@ public class PlayerCharacter
         _experience = experience;
         UpdateSkillsTable(skills);
     }
+
+    public byte GetSlottedSpell(int index)
+    {
+        if(index <= _slottedSpells.Length - 1)
+        {
+            return _slottedSpells[index];
+        }
+        else
+        {
+            return 0;
+        }
+    }
     public byte[] SlottedSpells
     {
         get

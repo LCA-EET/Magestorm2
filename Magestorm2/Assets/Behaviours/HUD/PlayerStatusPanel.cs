@@ -44,7 +44,7 @@ public class PlayerStatusPanel : MonoBehaviour
         Teams.Init();
         SetPlayerName(_pc.CharacterName);
         SetLCT(_pc.CharacterLevel, _pc.CharacterClass, MatchParams.MatchTeam);
-        Reticle.color = Teams.GetTeamColor(MatchParams.MatchTeam);
+        Reticle.color = Teams.GetTeamTextColor(MatchParams.MatchTeam);
     }
 
     // Update is called once per frame

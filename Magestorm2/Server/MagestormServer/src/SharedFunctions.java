@@ -69,7 +69,7 @@ public class SharedFunctions {
         }
         return chance > SharedFunctions.GetRandomFloat();
     }
-    public static boolean HandleTeamMessage(byte[] decrypted, InGamePacketProcessor proc, Match owner,
+    public static boolean HandleTeamMessage(byte[] decrypted, UDPProcessor proc, Match owner,
                                             RemoteClient remote, MatchCharacter verified){
         byte teamID = decrypted[2];
         int messageLength = ByteUtils.ExtractInt(decrypted, 3);

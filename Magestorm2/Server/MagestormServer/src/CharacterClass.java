@@ -22,8 +22,7 @@ public class CharacterClass {
         _clientData[1] = _hpMultiplier;
         _clientData[2] = _manaStatCode;
         _clientData[3] = _deadSight;
-        byte[] nameRefBytes = ByteUtils.ShortToByteArray(nameRef);
-        System.arraycopy(nameRefBytes, 0, _clientData, 4, 2);
+        ByteUtils.WriteShortAtIndex_LE(_clientData, nameRef, 4);
     }
     public byte[] ClientData(){
         return _clientData;

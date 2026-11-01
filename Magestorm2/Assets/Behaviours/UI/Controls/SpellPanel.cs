@@ -14,7 +14,7 @@ public class SpellPanel : MonoBehaviour
 
     private void Start()
     {
-        Color teamColor = Colors.GetTeamColor(MatchParams.MatchTeam);
+        Color teamColor = Teams.GetTeamTextColor(MatchParams.MatchTeam);
         SpellText.color = teamColor;
         SecondaryText.color = teamColor;
         _primary = Language.RegisterText(SpellText, _spellStringReference, 276);

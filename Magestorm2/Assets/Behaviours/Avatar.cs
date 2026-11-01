@@ -140,7 +140,10 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
                 TeamIndicator.layer = LayerManager.TeamLayer_Order;
                 break;
             case Team.Neutral:
-                TeamIndicator.gameObject.SetActive(false);
+                if(Game.PCAvatar.PlayerID != PlayerID)
+                {
+                    TeamIndicator.gameObject.SetActive(false);
+                }
                 break;
         }
         InnerIndicator.layer = TeamIndicator.layer;
@@ -358,7 +361,7 @@ public class Avatar : MonoBehaviour, IComparable<Avatar>, IDistanced
         _playerClassString = _classData.CharacterClassName;
         _team = team;
         _nameText.text = name;
-        _nameText.color = Teams.GetTeamColor(_team);
+        Teams.SetTextColor(_nameText, team);
         _playerID = id;
         _model = ComponentRegister.ModelBuilder.ConstructModel(appearance, (byte)team, level, gameObject, ref _isMale).GetComponent<CharacterModel>();
         _animator = _model.GetComponentInChildren<Animator>();

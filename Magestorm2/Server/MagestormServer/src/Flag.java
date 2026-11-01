@@ -39,13 +39,6 @@ public class Flag {
         _flagBytes[_idxHolder] = DROPPED;
         System.arraycopy(position,0, _flagBytes, 2, 12);
         _droppedTimeRemaining = _droppedTime;
-        /*
-        float x = ByteUtils.ExtractFloat(position, 0);
-        float y = ByteUtils.ExtractFloat(position, 4);
-        float z = ByteUtils.ExtractFloat(position, 8);
-
-        Main.LogMessage("Flag dropped at position " + x + ", " + y + ", " + z);
-        */
     }
 
     public boolean DropCountdown(long msElapsed){

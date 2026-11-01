@@ -7,10 +7,10 @@ public class RemoteClient extends TimedObject{
     private String _username;
     private boolean _subscribedToMatches;
 
-    public RemoteClient(DatagramPacket received){
+    public RemoteClient(UDPTransmission received){
         _subscribedToMatches = false;
-        _address = received.getAddress();
-        _remotePort = received.getPort();
+        _address = received.OriginAddress();
+        _remotePort = received.OriginPort();
         SetDurationRemaining(ServerParams.PregameInactivity);
     }
 

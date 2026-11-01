@@ -1,35 +1,23 @@
 import java.util.Arrays;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
-public class AsyncIGPP extends RegisteredThread{
-    private final BlockingQueue<AsyncIGPPRequest> _toProcess;
+public class AsyncIGPP extends AsyncRequestProcessor{
     private final Match _owningMatch;
-    private final InGamePacketProcessor _igp;
-    private RemoteClient _remote;
     private MatchCharacter _verified;
-    private byte[] _decrypted;
-    private boolean _terminated;
     public AsyncIGPP(Match owningMatch, InGamePacketProcessor igp)
     {
+        super("AsyncIGPP for match " + owningMatch.GetMatchID(), igp);
         _owningMatch = owningMatch;
-        _toProcess = new LinkedBlockingQueue<>();
-        _igp = igp;
     }
 
-    public void EnqueueRequest(AsyncIGPPRequest toEnqueue){
-        _toProcess.add(toEnqueue);
-    }
-
-    public void ProcessPacket(AsyncIGPPRequest toProcess){
-        _verified = toProcess.GetVerifiedCharacter();
-        _decrypted = toProcess.GetBytes();
-        _remote = toProcess.GetSender();
+    @Override
+    public void ProcessPacket(AsyncRequest toProcess){
+        super.PreProcess(toProcess);
+        _verified = ((AsyncIGPPRequest)toProcess).GetVerifiedCharacter();
         switch (toProcess.GetOpCode()) {
             case InGame_Receive.BroadcastMessage ->
                 HandleBroadcastMessage();
             case InGame_Receive.TeamMessage ->
-                SharedFunctions.HandleTeamMessage(_decrypted, _igp, _owningMatch, _remote, _verified);
+                SharedFunctions.HandleTeamMessage(_decrypted, _udp, _owningMatch, _remote, _verified);
             case InGame_Receive.DirectMessage ->
                 HandleDirectMessage();
             case InGame_Receive.RequestWallsAndSigils ->
@@ -47,19 +35,19 @@ public class AsyncIGPP extends RegisteredThread{
     }
     private void HandleDirectMessage(){
         byte recipientID = _decrypted[2];
-        if(_igp.IsVerified(recipientID)){
+        if(_owningMatch.IsPlayerVerified(recipientID)){
             int messageLength = ByteUtils.ExtractInt(_decrypted, 3);
             byte[] messageBytes = new byte[messageLength];
             System.arraycopy(_decrypted, 7, messageBytes, 0, messageLength);
             String messageString = ByteUtils.BytesToUTF8(messageBytes);
             if(ProfanityChecker.ContainsProhibitedLanguage(messageString)){
-                _igp.EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage), _remote);
+                _udp.EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage), _remote);
             }
             else{
                 Main.LogChat(_verified, messageString, _owningMatch.ObjectID());
                 RemoteClient messageRecipient = _owningMatch.GetMatchCharacter(recipientID).GetRemoteClient();
                 Iterable<RemoteClient> recipients = Arrays.asList(_remote, messageRecipient);
-                _igp.EnqueueForSend(Packets.MessagePacket(_decrypted, messageLength + 7), recipients);
+                _udp.EnqueueForSend(Packets.MessagePacket(_decrypted, messageLength + 7), recipients);
             }
         }
     }
@@ -67,7 +55,7 @@ public class AsyncIGPP extends RegisteredThread{
         int messageLength = ByteUtils.ExtractInt(_decrypted,2);
         String messageString = ByteUtils.BytesToUTF8(_decrypted, 6, messageLength);
         if(ProfanityChecker.ContainsProhibitedLanguage(messageString)){
-            _igp.EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage),
+            _udp.EnqueueForSend(Packets.ProhibitedLanguagePacket(InGame_Send.ProhibitedLanguage),
                     _remote);
         }
         else{
@@ -77,26 +65,10 @@ public class AsyncIGPP extends RegisteredThread{
                 _owningMatch.ParseCommand(split[0].toLowerCase().substring(1), split, _verified, _decrypted[1]);
             }
             else{
-                _igp.EnqueueForSend(Packets.MessagePacket(_decrypted, 6 + messageLength),
+                _udp.EnqueueForSend(Packets.MessagePacket(_decrypted, 6 + messageLength),
                         _owningMatch.GetVerifiedClients());
             }
         }
     }
-    @Override
-    public void run(){
-        Register("AsyncPacketProcessor for match " + _owningMatch.GetMatchID());
-        while(!_terminated){
-            try{
-                ProcessPacket(_toProcess.take());
-            }
-            catch(InterruptedException ex){
-                _terminated = true;
-            }
-            catch(Exception ex){
-                Main.LogError(ex.getMessage());
-                Main.LogStackTrace(ex);
-            }
-        }
-        Deregister();
-    }
+
 }

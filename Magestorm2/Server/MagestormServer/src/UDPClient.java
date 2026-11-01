@@ -23,23 +23,25 @@ public class UDPClient extends RegisteredThread{
         }
         final int bufferSize = 256;
         byte[] receivedBuffer = new byte[bufferSize];
+        DatagramPacket receivedPacket = new DatagramPacket(receivedBuffer, receivedBuffer.length);
         while (!_terminated) {
-            DatagramPacket receivedPacket = new DatagramPacket(receivedBuffer, receivedBuffer.length);
             try {
-                _udpSocket.receive((receivedPacket));
-                _processor.EnqueuePacket(receivedPacket);
+                receivedPacket.setLength(receivedBuffer.length);
+                _udpSocket.receive(receivedPacket);
+                _processor.EnqueuePacket(new UDPTransmission(receivedPacket));
             }
             catch(ClosedByInterruptException | SocketException ie){
-                _terminated = true;
+                OnInterrupt();
             }
-            catch (Exception e){ }
-            receivedBuffer = new byte[bufferSize];
+            catch (Exception e)
+            {
+                Main.LogError("UDPClient.run: " + e.getMessage());
+            }
         }
         GameServer.RemoveUsedPort(_localPort);
         Deregister();
     }
     public void StopListening() {
-        _terminated = true;
         _udpSocket.close(); // closing the socket causes the blocking receive method to throw a SocketException
     }
     public int GetLocalPort(){

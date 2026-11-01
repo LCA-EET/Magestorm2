@@ -1,15 +1,13 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Dictionary;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ProfanityChecker {
-    private static HashSet<String> _prohibitedTerms;
+    private static Set<String> _prohibitedTerms;
 
     public static void Init(String termsPath){
-        _prohibitedTerms = new HashSet<>();
+        _prohibitedTerms = ConcurrentHashMap.newKeySet();
         File termsFile = new File(termsPath);
         try {
             Scanner termsScanner = new Scanner(termsFile);

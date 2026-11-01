@@ -14,6 +14,7 @@ public class AvailableSpell : MonoBehaviour
     public void UpdateKeyText(byte keyCode)
     {
         KeyText.text = InputControls.GetKeyCode(keyCode).ToString();
+        Teams.SetTextColor(KeyText, MatchParams.MatchTeam);
     }
     public bool IsEnabled
     {

@@ -9,12 +9,9 @@ public class GameServer extends Thread {
     private static ConcurrentSkipListSet<Integer> _usedMatchPorts;
     private static ConcurrentHashMap<Byte, Byte> _maxPlayerData;
     private static ConcurrentHashMap<Integer, PlayerCharacter> _activeCharacters;
-    private static ConcurrentHashMap<Byte, byte[]> _objectData;
     private static PregamePacketProcessor _pgProcessor;
-    private static DHKEListener _dhkeProcessor;
     private static byte[] _levelData;
 
-    public static byte[] PregameAESKey;
     public static PregamePacketProcessor PGP;
     public static int VictoryCountdown = 30000;
     public static void init(){
@@ -22,7 +19,6 @@ public class GameServer extends Thread {
         CharacterManager.init();
         _maxPlayerData = new ConcurrentHashMap<>();
         _activeCharacters = new ConcurrentHashMap<>();
-        _objectData = new ConcurrentHashMap<>();
         try(Connection conn = Database.DBConnection()){
             CharacterClassManager.init(conn);
             DisciplineManager.init(conn);
@@ -37,7 +33,7 @@ public class GameServer extends Thread {
         }
         RemoteClientManager.init();
         MatchManager.init(ServerParams.MaxMatches);
-        _dhkeProcessor = new DHKEListener(ServerParams.DHKEListeningPort);
+        new DHKEListener(ServerParams.DHKEListeningPort);
         _pgProcessor = new PregamePacketProcessor(ServerParams.PregameListeningPort);
         _levelData = Database.GetLevelsList((byte)1);
         _usedMatchPorts = new ConcurrentSkipListSet<>();
@@ -54,12 +50,6 @@ public class GameServer extends Thread {
     }
     public static PlayerCharacter RemoveActiveCharacter(int accountID){
         return _activeCharacters.remove(accountID);
-    }
-    public static void SetActivatables(byte sceneID, byte[] aoBytes){
-        _objectData.put(sceneID, aoBytes);
-    }
-    public static byte[] GetActivatablesData(byte sceneID){
-        return _objectData.get(sceneID);
     }
     public static UDPProcessor PregameProcessor(){
         return _pgProcessor;

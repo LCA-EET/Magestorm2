@@ -10,7 +10,7 @@ public class BiasIndicator : MonoBehaviour
     }
     public void ChangeBias(Team team)
     {
-        Renderer.color = Colors.GetTeamColor(team);
+        Renderer.color = Teams.GetTeamColor(team);
     }
 }
 

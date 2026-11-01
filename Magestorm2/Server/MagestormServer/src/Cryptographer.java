@@ -55,15 +55,13 @@ public class Cryptographer {
     private byte[] BuildDPPacket(){
         byte[] toReturn;
         byte[] pBytes = _p.toByteArray();
-        byte[] pLengthBytes = ByteUtils.ShortToByteArray((short)pBytes.length);
         byte[] aBytes = _alpha.toByteArray();
-        byte[] aLengthBytes = ByteUtils.ShortToByteArray((short)aBytes.length);
         toReturn = new byte[1 + 2 + 2 + pBytes.length + aBytes.length];
         toReturn[0] = DHKE_Send.DPReply;
         int index = 1;
-        System.arraycopy(pLengthBytes, 0, toReturn, index, 2);
+        ByteUtils.WriteShortAtIndex_LE(toReturn, (short)pBytes.length, index);
         index += 2;
-        System.arraycopy(aLengthBytes, 0, toReturn, index, 2);
+        ByteUtils.WriteShortAtIndex_LE(toReturn, (short)aBytes.length, index);
         index += 2;
         System.arraycopy(pBytes, 0, toReturn, index, pBytes.length);
         index += pBytes.length;
@@ -85,8 +83,7 @@ public class Cryptographer {
         System.arraycopy(toProcess, 0, toReturn, 0, toProcess.length);
         BigInteger sum = new BigInteger(toProcess);
         short remainder = sum.mod(Cryptographer.ModChecksum).shortValue();
-        byte[] remainderBytes = ByteUtils.ShortToByteArray(remainder);
-        System.arraycopy(remainderBytes, 0, toReturn, toReturn.length - 2, 2);
+        ByteUtils.WriteShortAtIndex_LE(toReturn, remainder, toProcess.length);
         return toReturn;
     }
 

@@ -93,9 +93,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4840601450037070396}
     m_Modifications:
+    - target: {fileID: 103226, guid: 2736bbc2f2c78a949957b0719c2992bd, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 156244, guid: 2736bbc2f2c78a949957b0719c2992bd, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 178460, guid: 2736bbc2f2c78a949957b0719c2992bd, type: 3}
       propertyPath: m_Name
       value: LightningBoltPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 178460, guid: 2736bbc2f2c78a949957b0719c2992bd, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 430986, guid: 2736bbc2f2c78a949957b0719c2992bd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -233,6 +245,10 @@ PrefabInstance:
     - target: {fileID: 9131140880862615973, guid: f728cda6d1df6fd4aa7f947141b0ed9e, type: 3}
       propertyPath: m_Name
       value: LightningBolt Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 9131140880862615973, guid: f728cda6d1df6fd4aa7f947141b0ed9e, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

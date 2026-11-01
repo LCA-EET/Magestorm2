@@ -21,7 +21,7 @@ public class UIAvailableSpells : ValidatableForm, ISpellProcessor
         _characterLevel = characterLevel;
         FormHeader.text = Language.BuildString(277, slotID);
         Dictionary<byte, SpellData> availableSpells = Game.ActiveSpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
-        Dictionary<byte, int> options = new Dictionary<byte, int>();
+        Dictionary<byte, short> options = new Dictionary<byte, short>();
         foreach(byte spellKey in availableSpells.Keys)
         {
             options.Add(spellKey, availableSpells[spellKey].SpellNameReference);

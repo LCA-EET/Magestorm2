@@ -78,12 +78,12 @@ public class Packets {
         toFill[3] = mc.GetIDinMatch();
         toFill[4] = teamID;
         toFill[5] = matchID;
-        System.arraycopy(ByteUtils.IntToByteArray(port), 0, toFill, 6, 4);
+        ByteUtils.WriteIntAtIndex_LE(toFill, port, 6);
         System.arraycopy(secretKey, 0, toFill, 10, secretKey.length);
         System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxHP()), 0, toFill, 26, 4);
         System.arraycopy(ByteUtils.FloatToByteArray(mc.PC().GetMaxMana()), 0, toFill, 30, 4);
         toFill[34] = mc.PC().GetMaxStamina();
-        System.arraycopy(ByteUtils.LongToByteArray(expiration), 0, toFill, 35, 8);
+        ByteUtils.WriteLongAtIndex_LE(toFill, expiration, 35);
         return 43; // the next index;
     }
     public static byte[] DeathMatchEntryPacket(byte sceneID, byte teamID, MatchCharacter mc, int port, byte[] secretKey, byte matchID,
@@ -133,8 +133,7 @@ public class Packets {
     public static byte[] CharacterDeletedPacket(int characterID) {
         byte[] toEncrypt = new byte[5];
         toEncrypt[0] = Pregame_Send.CharacterDeleted;
-        byte[] idBytes = ByteUtils.IntToByteArray(characterID);
-        System.arraycopy(idBytes,0, toEncrypt, 1, 4);
+        ByteUtils.WriteIntAtIndex_LE(toEncrypt, characterID, 1);
         return toEncrypt;
     }
 
@@ -174,10 +173,8 @@ public class Packets {
             toSend = new byte[1 + 4 + 8 + 1 + 1 + 1 + discordLength];
         }
         toSend[0] = Pregame_Send.LogInSucceeded;
-        byte[] accountBytes = ByteUtils.IntToByteArray(accountID);
-        byte[] timeBytes = ByteUtils.LongToByteArray(System.currentTimeMillis());
-        System.arraycopy(accountBytes, 0, toSend, 1, 4);
-        System.arraycopy(timeBytes, 0, toSend, 5, 8);
+        ByteUtils.WriteIntAtIndex_LE(toSend, accountID, 1);
+        ByteUtils.WriteLongAtIndex_LE(toSend, System.currentTimeMillis(), 5);
         toSend[13] = ServerParams.TickInterval;
         toSend[14] = ServerParams.PollingFactor;
         toSend[15] = discordLength;
@@ -224,21 +221,16 @@ public class Packets {
     public static byte[] ExpLevelUpdatePacket(PlayerCharacter pc){
         byte[] toEncrypt = new byte[10];
         toEncrypt[0] = Pregame_Send.ExpLevelUpdate;
-        int characterID = pc.GetCharacterID();
-        byte[] cidBytes = ByteUtils.IntToByteArray(characterID);
-        System.arraycopy(cidBytes, 0, toEncrypt, 1, cidBytes.length);
+        ByteUtils.WriteIntAtIndex_LE(toEncrypt, pc.GetCharacterID(), 1);
         toEncrypt[5] = pc.GetCharacterLevel();
-        int experience = pc.GetExperience();
-        byte[] expBytes = ByteUtils.IntToByteArray(experience);
-        System.arraycopy(expBytes, 0, toEncrypt, 6, expBytes.length);
+        ByteUtils.WriteIntAtIndex_LE(toEncrypt, pc.GetExperience(), 6);
         return toEncrypt;
     }
     public static byte[] OTPRequestPacket(int accountID, String email){
         byte[] emailBytes = ByteUtils.UTF8toBytes(email);
         byte[] toEncrypt = new byte[5 + 1 + emailBytes.length];
         toEncrypt[0] = Pregame_Send.OTPRequest;
-        byte[] idBytes = ByteUtils.IntToByteArray(accountID);
-        System.arraycopy(idBytes, 0, toEncrypt, 1, 4);
+        ByteUtils.WriteIntAtIndex_LE(toEncrypt, accountID, 1);
         toEncrypt[5] = (byte)emailBytes.length;
         System.arraycopy(emailBytes, 0, toEncrypt, 6, emailBytes.length);
         return toEncrypt;
@@ -284,8 +276,7 @@ public class Packets {
         int idxCastID = ControlCodes.CastPayloadStartIndex + payloadLength;
         byte[] toEncrypt = new byte[idxCastID + 2];
         System.arraycopy(decrypted, 0, toEncrypt, 0, idxCastID);
-        byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
-        System.arraycopy(castIDBytes, 0, toEncrypt, idxCastID, 2);
+        ByteUtils.WriteShortAtIndex_LE(toEncrypt, castID, idxCastID);
         return toEncrypt;
     }
     public static byte[] TimedObjectDataPacket(byte opCode, ArrayList<byte[]> payload, int payloadSize){
@@ -329,7 +320,7 @@ public class Packets {
         byte[] toEncrypt = new byte[1 + 1 + 2];
         toEncrypt[0] = opCode;
         toEncrypt[1] = 1;
-        System.arraycopy(ByteUtils.ShortToByteArray((objectID)), 0, toEncrypt, 2, 2);
+        ByteUtils.WriteShortAtIndex_LE(toEncrypt, objectID, 2);
         return toEncrypt;
     }
 
@@ -342,8 +333,7 @@ public class Packets {
         toEncrypt[1] = numExpired;
         int index = 2;
         for(short objectID : expiredIDs){
-            byte[] objectIDBytes = ByteUtils.ShortToByteArray(objectID);
-            System.arraycopy(objectIDBytes, 0, toEncrypt, index, 2);
+            ByteUtils.WriteShortAtIndex_LE(toEncrypt, objectID, index);
             index += 2;
         }
         return toEncrypt;
@@ -359,12 +349,11 @@ public class Packets {
 
     public static byte[] TeamChatPacket(byte[] messageBytes, byte sender, byte teamID){
         int messageLength = messageBytes.length;
-        byte[] messageLengthBytes = ByteUtils.IntToByteArray(messageLength);
         byte[] toEncrypt = new byte[1 + 1 + 1 + 4 + messageLength];
         toEncrypt[0] = InGame_Send.TeamMessage;
         toEncrypt[1] = sender;
         toEncrypt[2] = teamID;
-        System.arraycopy(messageLengthBytes, 0, toEncrypt, 3, 4);
+        ByteUtils.WriteIntAtIndex_LE(toEncrypt, messageLength, 3);
         System.arraycopy(messageBytes, 0, toEncrypt, 7, messageLength);
         return toEncrypt;
     }
@@ -487,8 +476,7 @@ public class Packets {
         toEncrypt[0] = InGame_Send.ApplyForce;
         toEncrypt[1] = magnitude;
         toEncrypt[2] = duration;
-        byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
-        System.arraycopy(castIDBytes, 0, toEncrypt, 3, 2);
+        ByteUtils.WriteShortAtIndex_LE(toEncrypt, castID, 3);
         return toEncrypt;
     }
 

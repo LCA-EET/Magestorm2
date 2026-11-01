@@ -481,7 +481,7 @@ public class InGamePacketProcessor : UDPProcessor
         {
             senderName = sender.Name;
         }
-        MessageData md = new MessageData(message, senderName, Teams.GetTeamColor(recipientTeam));
+        MessageData md = new MessageData(message, senderName, Teams.GetTeamTextColor(recipientTeam));
     }
     private void HandleFlagTaken()
     {

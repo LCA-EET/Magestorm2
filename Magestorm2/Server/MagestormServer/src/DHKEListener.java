@@ -17,8 +17,8 @@ public class DHKEListener extends UDPProcessor{
         Main.LogMessage("DHKE listening on port " + listeningPort + ". DHKE packet length: " + _dhkeBytes.length);
     }
 
-    protected boolean ProcessPacket(DatagramPacket received){
-        byte[] payload = received.getData();
+    protected boolean ProcessPacket(UDPTransmission received){
+        byte[] payload = received.GetData();
         _opCode = payload[0];
         _remote = new RemoteClient(received);
         switch(_opCode){

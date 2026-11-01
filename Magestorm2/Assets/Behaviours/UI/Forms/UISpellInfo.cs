@@ -6,10 +6,10 @@ public class UISpellInfo : ValidatableForm, ISpellProcessor
     public TMP_Text SpellDescription;
     public DisciplineSelectView Disciplines;
     public SpellSelectView Spells;
-    private Dictionary<byte, int> _disciplines;
+    private Dictionary<byte, short> _disciplines;
     void Start()
     {
-        _disciplines = new Dictionary<byte, int>();
+        _disciplines = new Dictionary<byte, short>();
         _disciplines.Add(ControlCodes.SpellDiscipline_FireLaw, 229); // fire law
         _disciplines.Add(ControlCodes.SpellDiscipline_IceLaw, 230); // ice law
         _disciplines.Add(ControlCodes.SpellDiscipline_EarthLaw, 231); // earth law

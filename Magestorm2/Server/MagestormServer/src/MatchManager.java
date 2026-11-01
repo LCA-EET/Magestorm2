@@ -110,15 +110,15 @@ public class MatchManager{
                     Match newlyCreated = null;
                     PlayerCharacter activeCharacter = GameServer.GetActiveCharacter(accountID);
                     switch(matchType){
-                        case MatchType.DeathMatch:
+                        case ControlCodes.MatchType_DeathMatch:
                             newlyCreated = new DeathMatch(matchID, accountID, activeCharacter.GetNameBytes(),
                                     sceneID, duration, matchOptions);
                             break;
-                        case MatchType.FreeForAll:
+                        case ControlCodes.MatchType_FreeForAll:
                             newlyCreated = new FreeForAll(matchID, accountID, activeCharacter.GetNameBytes(),
                                     sceneID, duration, matchOptions);
                             break;
-                        case MatchType.CaptureTheFlag:
+                        case ControlCodes.MatchType_CaptureTheFlag:
                             newlyCreated = new CaptureTheFlag(matchID, accountID, activeCharacter.GetNameBytes(),
                                     sceneID, duration, matchOptions);
                             break;

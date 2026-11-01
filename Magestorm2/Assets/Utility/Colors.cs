@@ -37,14 +37,5 @@ public static class Colors
     {
         return isSelected ? EntrySelected : CardUnselected;
     }
-    public static Color GetTeamColor(Team team)
-    {
-        switch (team)
-        {
-            case Team.Order: return Colors.Order;
-            case Team.Chaos: return Colors.Chaos;
-            case Team.Balance: return Colors.Balance;
-            default: return Colors.Neutral;
-        }
-    }
+    
 }

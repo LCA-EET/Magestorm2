@@ -32,10 +32,6 @@ public class TimedObject {
         }
     }
 
-    public boolean DurationExpired(){
-        return _timedOut || _durationRemaining <= 0;
-    }
-
     public Number ObjectID(){
         return _objectID;
     }

@@ -21,6 +21,7 @@
         byte[] selections = SlotSelectView.SlotSelections;
         Game.SendInGameBytes(InGame_Packets.UpdateSlots(selections));
         PlayerAccount.SelectedCharacter.UpdateSlottedSpells(selections, 0);
+        ComponentRegister.AvailableSpellsPanel.RefeshPanel();
         CloseForm();
     }
 }

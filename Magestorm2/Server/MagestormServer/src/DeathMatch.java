@@ -9,7 +9,7 @@ public class DeathMatch extends Match{
     private boolean _victoryCountdown = false;
 
     public DeathMatch(byte matchID, int creatorID, byte[] creatorName, byte sceneID,  byte duration, byte matchOptions) {
-        super(matchID, creatorID, creatorName, sceneID, duration, MatchType.DeathMatch, matchOptions);
+        super(matchID, creatorID, creatorName, sceneID, duration, ControlCodes.MatchType_DeathMatch, matchOptions);
         _poolManager = new PoolManager(this);
         _shrines = new ConcurrentHashMap<>();
         for(int i = 1; i < MatchTeam.TeamCodes.length; i++){

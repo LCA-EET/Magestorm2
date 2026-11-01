@@ -2,10 +2,9 @@ public class Sigil extends DamagingSpell{
 
     public Sigil(MatchCharacter caster, short castID, Spell baseReference, Match matchReference, byte[] decrypted) {
         super(caster, castID, baseReference, matchReference);
-        byte[] castIDBytes = ByteUtils.ShortToByteArray(castID);
         _bytes = new byte[1 + 2 + 1 + 12];
         _bytes[0] = _spellID;
-        System.arraycopy(castIDBytes, 0, _bytes, 1, 2);
+        ByteUtils.WriteShortAtIndex_LE(_bytes, castID, 1);
         _bytes[3] = decrypted[ControlCodes.CastPayloadStartIndex]; // teamID
         System.arraycopy(decrypted,ControlCodes.CastPayloadStartIndex+1,_bytes, 4, 12);
         caster.IncrementSigilCount();

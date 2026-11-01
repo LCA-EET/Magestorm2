@@ -4,7 +4,6 @@ import java.util.concurrent.BlockingQueue;
 public class PacketSender extends RegisteredThread{
     private final UDPClient _udp;
     private final UDPProcessor _processor;
-    private BlockingQueue<OutgoingPacket> _outgoing;
 
     public PacketSender(UDPClient udp, UDPProcessor processor){
         _udp = udp;
@@ -12,10 +11,10 @@ public class PacketSender extends RegisteredThread{
     }
     public void run(){
         Register("PacketSender, port " + _udp.GetLocalPort());
-        _outgoing = _processor.OutgoingQueue();
+        BlockingQueue<OutgoingPacket> outgoing = _processor.OutgoingQueue();
         while(!_terminated){
             try {
-                OutgoingPacket toProcess = _outgoing.take();
+                OutgoingPacket toProcess = outgoing.take();
                 Iterable<RemoteClient> recipients = toProcess.Recipients();
                 byte[] packetBytes = toProcess.Bytes();
                 for(RemoteClient rc : recipients){
@@ -27,8 +26,11 @@ public class PacketSender extends RegisteredThread{
                     }
                 }
 
-            } catch (InterruptedException e) {
-                _terminated = true;
+            } catch (InterruptedException ie) {
+                OnInterrupt();
+            }
+            catch (Exception e){
+                Main.LogError("PacketSender.run(): " + e.getMessage());
             }
         }
         Main.LogMessage("No longer sending from port " + _processor._listeningPort);

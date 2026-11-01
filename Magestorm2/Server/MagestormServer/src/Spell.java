@@ -57,7 +57,7 @@ public class Spell {
     public byte[] GetClientSpellData(){
         return _clientSpellData;
     }
-    private void FillClientDataArray(short nameRef, short descReference){
+    private void FillClientDataArray(short nameRef, short descRef){
         _clientSpellData = new byte[18];
         _clientSpellData[0] = (byte)_spellID;
         _clientSpellData[1] = _spellCost;
@@ -73,10 +73,8 @@ public class Spell {
         _clientSpellData[11] = _autoAim;
         _clientSpellData[12] = _disciplineCode;
         _clientSpellData[13] = _spellType;
-        byte[] nameRefBytes = ByteUtils.ShortToByteArray(nameRef);
-        byte[] descRefBytes = ByteUtils.ShortToByteArray(descReference);
-        System.arraycopy(nameRefBytes, 0, _clientSpellData, 14, 2);
-        System.arraycopy(descRefBytes, 0, _clientSpellData, 16, 2);
+        ByteUtils.WriteShortAtIndex_LE(_clientSpellData, nameRef, 14);
+        ByteUtils.WriteShortAtIndex_LE(_clientSpellData, descRef, 16);
     }
     public float[] GetResistances(){
         return _resistances;

@@ -41,6 +41,7 @@ public class Match extends TimedObject{
     protected boolean _potionTaken;
     protected byte _potionLocation, _potionType;
     protected byte[] _potionBytes;
+    protected boolean _consumablesEnabled;
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchType, byte matchOptions){
         _objectID = matchID;
         _potionTaken = true;
@@ -50,6 +51,7 @@ public class Match extends TimedObject{
         if(_matchOptions.IsOptionSet(ControlCodes.MatchOptions_AntiStack)){
             _antiStack = new AntiStack(this);
         }
+        _consumablesEnabled = !_matchOptions.IsOptionSet(ControlCodes.MatchOptions_NoConsumables);
         _regenTick = _matchOptions.IsOptionSet(ControlCodes.MatchOptions_FastRegen)?1000:5000;
         _matchPort = GameServer.GetNextMatchPort();
         _matchType = matchType;
@@ -76,11 +78,9 @@ public class Match extends TimedObject{
         index++;
         _matchBytes[index] = sceneID;
         index++;
-        byte[] expirationBytes = ByteUtils.LongToByteArray(_expirationTime);
-        System.arraycopy(expirationBytes, 0, _matchBytes, index, 8);
+        ByteUtils.WriteLongAtIndex_LE(_matchBytes, _expirationTime, index);
         index+=8;
-        byte[] accountIDBytes = ByteUtils.IntToByteArray(creatorID);
-        System.arraycopy(accountIDBytes, 0, _matchBytes, index, 4);
+        ByteUtils.WriteIntAtIndex_LE(_matchBytes, creatorID, index);
         index+=4;
         _matchBytes[index] = nameBytesLength;
         index++;
@@ -546,7 +546,9 @@ public class Match extends TimedObject{
         CountDownTimedObjects(msElapsed);
         PlayerTick(msElapsed);
         ExpTick(msElapsed);
-        PotionCheck(msElapsed);
+        if(_consumablesEnabled){
+            PotionCheck(msElapsed);
+        }
     }
     private void PotionCheck(long msElapsed){
         if(_potionTaken){

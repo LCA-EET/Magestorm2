@@ -14,8 +14,7 @@ public class DisciplineData {
         _clientData = new byte[4];
         _clientData[0] = _id;
         _clientData[1] = _availabilityMask;
-        byte[] nameRefBytes = ByteUtils.ShortToByteArray(nameRef);
-        System.arraycopy(nameRefBytes, 0, _clientData, 2, 2);
+        ByteUtils.WriteShortAtIndex_LE(_clientData, nameRef, 2);
     }
     public byte[] ClientData(){
         return _clientData;

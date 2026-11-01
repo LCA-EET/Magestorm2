@@ -84,12 +84,6 @@ public class PlayerCharacter {
             }
             _skillsTable.put(classSkill, value);
         }
-        /*
-        Main.LogMessage("Skills Table");
-        for(Byte key : _skillsTable.keySet()){
-            Main.LogMessage(key + ":" + _skillsTable.get(key));
-        }
-        */
     }
     public void UpdateSlottedSpells(byte[] slots){
         System.arraycopy(slots, 0, _characterBytes, _indexSlotStart, 10);
@@ -115,8 +109,7 @@ public class PlayerCharacter {
     }
     public void UpdateExperience(int experience){
         _experience = experience;
-        byte[] expBytes = ByteUtils.IntToByteArray(experience);
-        System.arraycopy(expBytes,0,_characterBytes, _indexExperience, 4);
+        ByteUtils.WriteIntAtIndex_LE(_characterBytes, _experience, _indexExperience);
     }
     public int GetExperience(){
         return _experience;
@@ -159,22 +152,7 @@ public class PlayerCharacter {
     public byte GetIDinMatch(){
         return _idInCurrentMatch;
     }
-    public byte GetMatchID(){
-        return _currentMatchID;
-    }
-    public byte GetCurrentTeam(){
-        return _currentTeam;
-    }
-    public boolean IsInMatch(){
-        return _inMatch;
-    }
-    public void MarkRemovedFromMatch(){
-        _inMatch = false;
-        _idInCurrentMatch = 0;
-        _currentMatchID = 0;
-        _currentTeam = 0;
-        GameServer.RemoveActiveCharacter(_accountID);
-    }
+
     public CharacterClass GetCharacterClass(){
         return _characterClass;
     }

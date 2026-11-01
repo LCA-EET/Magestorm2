@@ -11,7 +11,7 @@ public class ConsumableDisplay : MonoBehaviour
     }
     private void Start()
     {
-        KeyString.color = Colors.GetTeamColor(MatchParams.MatchTeam);
+        Teams.SetTextColor(KeyString, MatchParams.MatchTeam);
         RefreshKey();
     }
     public void RefreshKey()

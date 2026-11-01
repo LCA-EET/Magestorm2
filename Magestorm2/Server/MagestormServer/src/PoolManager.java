@@ -1,14 +1,13 @@
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PoolManager {
-    private ConcurrentHashMap<Byte, Pool> _matchPools;
+    private final ConcurrentHashMap<Byte, Pool> _matchPools;
     private final Match _owningMatch;
     private byte[] _biasData;
     private boolean _biasChange;
 
     public PoolManager(Match owningMatch){
         _biasChange = true;
-        _matchPools = new ConcurrentHashMap<>();
         _owningMatch = owningMatch;
         _matchPools= new ConcurrentHashMap<>();
     }

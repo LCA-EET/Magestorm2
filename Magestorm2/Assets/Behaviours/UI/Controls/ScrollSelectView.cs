@@ -11,7 +11,7 @@ public class ScrollSelectView : MonoBehaviour, ILabelCollection
         //RecordSelection(Labels[0].OptionID);
     }
 
-    public void AssignKeys(Dictionary<byte, int> optionsTable)
+    public void AssignKeys(Dictionary<byte, short> optionsTable)
     {
         int index = 0;
         byte optionsShown = 0;
