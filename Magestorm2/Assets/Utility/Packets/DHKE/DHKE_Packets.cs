@@ -7,7 +7,10 @@ public class DHKE_Packets
     {
         return new byte[] { DHKE_Send.DPRequest };
     }
-
+    public static byte[] CipherInfoRequestPacket()
+    {
+        return new byte[] { DHKE_Send.CipherInfoRequest };
+    }
     public static byte[] ClientPublicKeyPacket(BigInteger kpub)
     {
         byte[] kpubBytes = Cryptographer.ToBigEndianBytes(kpub);

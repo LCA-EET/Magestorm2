@@ -4,11 +4,11 @@ using System.IO;
 using UnityEngine;
 using System.Numerics;
 
-public class AESCipher : SymmetricCipher
+public class AESCBCCipher : SymmetricCipher
 {
     private static AesCryptoServiceProvider _aesEncryptor, _aesDecryptor;
     private byte[] _ivBytes;
-    public AESCipher(Cryptographer owner, byte[] secretSymmetricKey) : base(owner, secretSymmetricKey)
+    public AESCBCCipher(Cryptographer owner, byte[] secretSymmetricKey) : base(owner, secretSymmetricKey)
     {
         InitAES(ref _aesEncryptor);
         InitAES(ref _aesDecryptor);
@@ -25,10 +25,6 @@ public class AESCipher : SymmetricCipher
     public override byte[] Encrypt(byte[] toEncrypt)
     {
         _iv++;
-        BigInteger secretKey = new BigInteger(_secretSymmetricKey, false, true);
-        //Debug.Log("SecretKey Encryption (Decimal): " + secretKey);
-        //Debug.Log("SecretKey Encryption (Hex): " + secretKey.ToString("X"));
-        //ByteUtils.PrintByteArray(_secretSymmetricKey);
         BitConverter.GetBytes(_iv).CopyTo(_ivBytes, 12);
         byte[] encryptedPayload = new byte[toEncrypt.Length];
         using (MemoryStream memoryStream = new MemoryStream())

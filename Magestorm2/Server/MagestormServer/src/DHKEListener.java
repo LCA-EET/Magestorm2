@@ -22,26 +22,17 @@ public class DHKEListener extends UDPProcessor{
         _opCode = payload[0];
         _remote = new RemoteClient(received);
         switch(_opCode){
-            case DHKE_Receive.DPRequest:
-                Main.LogMessage("Send domain parameters to " + _remote.IPAddress());
+            case DHKE_Receive.CipherInfoRequest ->
+                HandleCipherInfoRequest();
+            case DHKE_Receive.DPRequest ->
                 EnqueueForSendWithChecksum(_dhkeBytes, _remote);
-                return true;
-            case DHKE_Receive.ClientPublicKey:
+            case DHKE_Receive.ClientPublicKey ->
                 ProcessClientPublicKey(payload);
-                return true;
-            case DHKE_Receive.CheckPublickKey:
-                ProcessPublicKeyCheck(payload);
-                return true;
         }
-        return false;
+        return true;
     }
-    private void ProcessPublicKeyCheck(byte[] payload){
-        short keylength = ByteUtils.ExtractShort(payload, 1);
-        byte[] kpubBytes = new byte[keylength];
-        System.arraycopy(payload, 3, kpubBytes, 0, keylength);
-        BigInteger kpub = new BigInteger(kpubBytes);
-        byte checkResult = (byte)(kpub.equals(_kPub) ? 1 : 0);
-        EnqueueForSend(DHKEPackets.KeyVerificationPacket(checkResult), _remote);
+    private void HandleCipherInfoRequest(){
+        EnqueueForSend(DHKEPackets.CipherInfoPacket(), _remote);
     }
     private void ProcessClientPublicKey(byte[] payload){
         short keylength = ByteUtils.ExtractShort(payload, 1);

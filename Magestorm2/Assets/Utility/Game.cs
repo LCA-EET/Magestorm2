@@ -32,6 +32,7 @@ public static class Game
     public static CharacterClassManager ActiveCharacterClassManager;
     public static bool LoggedIn = false;
     public static byte[] PregameKey;
+    public static byte Cipher;
     //public static PMDByte PlayerPMDByte;
 
     public static bool GameMode

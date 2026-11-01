@@ -13,8 +13,8 @@
     public const byte CastPayloadStartIndex = 5;
 
     public const byte CipherCode_None = 0;
-    public const byte CipherCode_AES = 1;
-    public const byte CipherCode_XOR = 2;
+    public const byte CipherCode_AESCBC = 1;
+    public const byte CipherCode_AESGCM = 2;
 
     public const byte PlayerClass_Arcanist = 0;
     public const byte PlayerClass_Cleric = 1;

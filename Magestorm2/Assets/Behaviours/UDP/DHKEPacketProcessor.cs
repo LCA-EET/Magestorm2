@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Numerics;
 using System.Linq;
+using Unity.VisualScripting;
 public class DHKEPacketProcessor : UDPProcessor
 {
     private BigInteger _kPr, _alpha, _p;
@@ -19,7 +20,8 @@ public class DHKEPacketProcessor : UDPProcessor
     public override void Init(int remotePort, byte cipherCode, byte[] secretKey)
     {
         base.Init(remotePort, cipherCode, secretKey);
-        SendBytes(DHKE_Packets.DPRequestPacket());
+        //SendBytes(DHKE_Packets.DPRequestPacket());
+        SendBytes(DHKE_Packets.CipherInfoRequestPacket());
         Debug.Log("Sent DHKE Request to Server.");
     }
 
@@ -41,9 +43,27 @@ public class DHKEPacketProcessor : UDPProcessor
                     case DHKE_Receive.KeyReply:
                         ProcessKeyReply(payload);
                         break;
+                    case DHKE_Receive.CipherInfoReply:
+                        ProcessCipherInfoReply(payload[1]);
+                        break;
                 }
 
             }
+        }
+    }
+    private void ProcessCipherInfoReply(byte cipher)
+    {
+        Game.Cipher = cipher;
+        switch (cipher)
+        {
+            case ControlCodes.CipherCode_None:
+                Cryptographer.StoreKey(PlayerPrefs.GetString("server"), new byte[] {});
+                InstantiatePGPAndLogin();
+                break;
+            case ControlCodes.CipherCode_AESCBC:
+            case ControlCodes.CipherCode_AESGCM:
+                SendBytes(DHKE_Packets.DPRequestPacket());
+                break;
         }
     }
     private void ProcessKeyReply(byte[] payload)
@@ -81,16 +101,20 @@ public class DHKEPacketProcessor : UDPProcessor
             Debug.Log("AES Key (Decimal): " + aesKey.ToString());
             Game.PregameKey = keyBytes;
             ByteUtils.PrintByteArray(keyBytes);
-            if (ComponentRegister.PregamePacketProcessor == null)
-            {
-                ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
-                ComponentRegister.UILoginForm.ToPerform();
-            }
+            InstantiatePGPAndLogin();
         }
         else
         {
             Game.MessageBoxReference(414);
         }
+    }
+    private void InstantiatePGPAndLogin()
+    {
+        if (ComponentRegister.PregamePacketProcessor == null)
+        {
+            ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
+        }
+        ComponentRegister.UILoginForm.ToPerform();
     }
     private void ProcessDP(byte[] payload) 
     {

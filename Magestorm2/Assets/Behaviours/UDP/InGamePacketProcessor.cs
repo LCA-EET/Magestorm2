@@ -12,7 +12,7 @@ public class InGamePacketProcessor : UDPProcessor
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Init(MatchParams.RemotePort, ControlCodes.CipherCode_AES, MatchParams.MatchKey);
+        Init(MatchParams.RemotePort, Game.Cipher, MatchParams.MatchKey);
         ComponentRegister.UIPrefabManager.ClearStack();
     }
 

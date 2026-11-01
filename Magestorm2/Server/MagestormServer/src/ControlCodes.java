@@ -10,8 +10,8 @@ public class ControlCodes {
 
     //region CipherCode
         public static final byte CipherCode_None = 0;
-        public static final byte CipherCode_AES = 1;
-        public static final byte CipherCode_XOR = 2;
+        public static final byte CipherCode_AESCBC = 1;
+        public static final byte CipherCode_AECGCM = 2;
     //endregion
 
     //region EffectTarget

@@ -3,6 +3,7 @@
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
 .utmp/
+Magestorm2/linuxbuild
 Magestorm2/[Ll]ibrary/
 Magestorm2/[Tt]emp/
 Magestorm2/[Oo]bj/

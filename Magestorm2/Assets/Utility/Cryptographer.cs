@@ -18,8 +18,11 @@ public class Cryptographer
         _random = RandomNumberGenerator.Create();
         switch (cipherType)
         {
-            case ControlCodes.CipherCode_AES:
-                _cipher = new AESCipher(this, secretKey);
+            case ControlCodes.CipherCode_AESCBC:
+                _cipher = new AESCBCCipher(this, secretKey);
+                break;
+            case ControlCodes.CipherCode_AESGCM:
+                _cipher = new AESGCMCipher(this, secretKey);
                 break;
             default:
                 _cipher = new SymmetricCipher(this, secretKey);

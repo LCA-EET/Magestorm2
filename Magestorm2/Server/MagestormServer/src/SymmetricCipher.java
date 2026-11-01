@@ -3,7 +3,7 @@ import java.math.BigInteger;
 public class SymmetricCipher{
     protected byte[] _secretKeyBytes;
     protected BigInteger _secretSymmetricKeyBI;
-    protected int _iv;
+    protected long _iv;
     protected Cryptographer _owner;
     public SymmetricCipher(Cryptographer owner){
         _owner = owner;

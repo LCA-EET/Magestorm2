@@ -19,8 +19,8 @@ public class PregamePacketProcessor : UDPProcessor
             Destroy(ComponentRegister.DHKEPacketProcessor.gameObject);
         }
         _heartbeat = new PeriodicAction(30.0f, Heartbeat, null);
-        Debug.Log("PregamePacketProcessor PregameKey: " + new BigInteger(Game.PregameKey, false, true).ToString("X"));
-        Init(Game.GameServerPort + 1, ControlCodes.CipherCode_AES, Game.PregameKey);
+        //Debug.Log("PregamePacketProcessor PregameKey: " + new BigInteger(Game.PregameKey, false, true).ToString("X"));
+        Init(Game.GameServerPort + 1, Game.Cipher, Game.PregameKey);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

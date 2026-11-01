@@ -12,8 +12,11 @@ public class Cryptographer {
     public Cryptographer(int cipherCode){
         _secureRandom = new SecureRandom();
         switch(cipherCode){
-            case ControlCodes.CipherCode_AES:
-                _cipher = new AESCipher(this);
+            case ControlCodes.CipherCode_AESCBC:
+                _cipher = new AESCBCCipher(this);
+                break;
+            case ControlCodes.CipherCode_AECGCM:
+                _cipher = new AESGCMCipher(this);
                 break;
             default:
                 _cipher = new SymmetricCipher(this);
