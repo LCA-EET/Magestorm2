@@ -1,19 +1,30 @@
+using MidiPlayerTK;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using System.IO;
+using UnityEngine.Networking;
 
 public class MusicPlayer : MonoBehaviour
 {
     private AudioSource _musicSource;
     private bool _playMusic = true;
     private int _clipIndex;
-    public AudioClip[] MusicClips;
+    private MidiFilePlayer _midiPlayer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Awake()
+    {
+        Game.MusicPlayer = this;
+        DontDestroyOnLoad(gameObject);
+        _musicSource = GetComponent<AudioSource>();
+        _midiPlayer = GetComponentInChildren<MidiFilePlayer>();
+    }
     void Start()
     {
-        _musicSource = GetComponent<AudioSource>();
-        _clipIndex = MusicClips.Length;
-        PlayNextClip();
+        
+        //PlayNextClip();
     }
+    
+
     // Update is called once per frame
     void Update()
     {
@@ -44,7 +55,8 @@ public class MusicPlayer : MonoBehaviour
     private void PlayNextClip()
     {
         _musicSource.Stop();
-        if (_clipIndex == MusicClips.Length)
+        _midiPlayer.MPTK_Stop();
+        if (_clipIndex == Game.MusicFiles.Count)
         {
             _clipIndex = 0;
         }
@@ -59,7 +71,7 @@ public class MusicPlayer : MonoBehaviour
         _musicSource.Stop();
         if (_clipIndex == 0)
         {
-            _clipIndex = MusicClips.Length - 1;
+            _clipIndex = Game.MusicFiles.Count - 1;
         }
         else
         {
@@ -69,7 +81,16 @@ public class MusicPlayer : MonoBehaviour
     }
     private void PlayTrack()
     {
-        _musicSource.clip = MusicClips[_clipIndex];
-        _musicSource.Play();
+        MusicFile musicFile = Game.MusicFiles[_clipIndex];
+        if (musicFile.IsMidi)
+        {
+            
+        }
+        else
+        {
+            _musicSource.clip = musicFile.AudioClip;
+            _musicSource.Play();
+        }
+        
     }
 }

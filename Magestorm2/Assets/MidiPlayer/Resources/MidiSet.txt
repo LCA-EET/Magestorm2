@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<MidiSet xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SoundFonts>
+    <SoundFontInfo>
+      <Name>GeneralUser-GS-v2.0.1</Name>
+      <PatchCount>287</PatchCount>
+      <WaveCount>920</WaveCount>
+      <WaveSize>36724496</WaveSize>
+      <SF2Path>C:/Users/thier/AppData/LocalLow/MusIT/AudioThreadOboe\SoundFont\GeneralUser-GS-v2.0.1.sf2</SF2Path>
+    </SoundFontInfo>
+  </SoundFonts>
+  <IndexSelectedSF>0</IndexSelectedSF>
+  <MidiFiles>
+    <string>Albinoni - Adagio</string>
+    <string>Bach - Little fugue G minor</string>
+    <string>Bach - The Art of Fugue</string>
+    <string>Bach - Trisonate 3iem mvt</string>
+    <string>Beethoven-sonata-14-3</string>
+    <string>Mozart - Requiem Confutatis</string>
+    <string>Mozart - Requiem Dies Irae</string>
+    <string>Mozart - Requiem Introitus</string>
+    <string>Satie - Trois Gnossiennes</string>
+    <string>Super Mario 64 - Medley</string>
+    <string>Swan Lake, Act 4, No. 27</string>
+  </MidiFiles>
+</MidiSet>

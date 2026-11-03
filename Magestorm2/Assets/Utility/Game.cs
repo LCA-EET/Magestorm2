@@ -3,6 +3,9 @@ using System;
 using System.Net;
 using System.IO;
 using System.Collections.Generic;
+using UnityEngine.Networking;
+using System.Collections;
+using MPTK.NAudio.Midi;
 public static class Game
 {
     public const bool SymmetricEncryption = false;
@@ -30,6 +33,8 @@ public static class Game
     public static SpellManager ActiveSpellManager;
     public static DisciplineManager ActiveDisciplineManager;
     public static CharacterClassManager ActiveCharacterClassManager;
+    public static List<MusicFile> MusicFiles;
+    public static MusicPlayer MusicPlayer;
     public static bool LoggedIn = false;
     public static byte[] PregameKey;
     public static byte Cipher;
@@ -107,13 +112,13 @@ public static class Game
             ProfanityChecker.Init();
             SpellIcons.Init();
             SharedFunctions.Initialize();
-            
             Match.Init();
             _init = true;
         }
     }
     
     
+   
     public static void SetServerTime(long serverTime)
     {
         _serverTime = serverTime;
