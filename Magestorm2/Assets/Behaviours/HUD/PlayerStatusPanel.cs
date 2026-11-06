@@ -3,93 +3,97 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class PlayerStatusPanel : MonoBehaviour
+namespace Magus
 {
-    public Image Reticle;
-    public BarIndicator[] PlayerIndicators;
-    public TMP_Text PlayerName;
-    public TMP_Text LCT;
-    public TMP_Text Experience;
-    public Counter Kills;
-    public Counter Deaths;
-    
-    private Dictionary<PlayerIndicator, BarIndicator> _indicators;
-    private Dictionary<PlayerIndicator, Color> _indicatorColors;
-    private PlayerCharacter _pc;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Awake()
-    {
-        _indicators = new Dictionary<PlayerIndicator, BarIndicator>();
-        _indicators.Add(PlayerIndicator.Health, PlayerIndicators[0]);
-        _indicators.Add(PlayerIndicator.Mana, PlayerIndicators[1]);
-        _indicators.Add(PlayerIndicator.Ley, PlayerIndicators[2]);
-        _indicators.Add(PlayerIndicator.Stamina, PlayerIndicators[3]);
-        _indicatorColors = new Dictionary<PlayerIndicator, Color>();
-        _indicatorColors.Add(PlayerIndicator.Health, Color.red);
-        _indicatorColors.Add(PlayerIndicator.Mana, Color.blue);
-        _indicatorColors.Add(PlayerIndicator.Ley, Color.gray);
-        _indicatorColors.Add(PlayerIndicator.Stamina, Color.yellow);
-        /*
-        foreach (PlayerIndicator indicator in _indicators.Keys)
-        {
-            _indicators[indicator].SetFillColor(_indicatorColors[indicator]);
-        }
-        */
-        ComponentRegister.PlayerStatusPanel = this;
-    }
-    void Start()
-    {
-        _pc = PlayerAccount.SelectedCharacter;
-        Teams.Init();
-        SetPlayerName(_pc.CharacterName);
-        SetLCT(_pc.CharacterLevel, _pc.CharacterClass, MatchParams.MatchTeam);
-        Reticle.color = Teams.GetTeamTextColor(MatchParams.MatchTeam);
-    }
 
-    // Update is called once per frame
-    void Update()
+    public class PlayerStatusPanel : MonoBehaviour
     {
-        
-    }
-    public void SetExperience(int experience)
-    {
-        Experience.SetText("E: " + experience);
-        Teams.SetTextColor(Experience);
-    }
-    public void SetIndicator(PlayerIndicator indic, float fill)
-    {
-        _indicators[indic].SetFill(fill);
-    }
-    public void SetPlayerName(string name)
-    {
-        PlayerName.text = name;
-        Teams.SetTextColor(PlayerName);
-    }
-    public void SetLCT(byte level, byte playerClass, Team team)
-    {
-        string levelString = Language.GetBaseString(14); //
-        string ofString = Language.GetBaseString(15); //
-        string baseString = team == Team.Neutral ? levelString + " {0} {1}" : levelString + " {0} {1} " + ofString + " {2}";
-        if (team == Team.Neutral)
+        public Image Reticle;
+        public BarIndicator[] PlayerIndicators;
+        public TMP_Text PlayerName;
+        public TMP_Text LCT;
+        public TMP_Text Experience;
+        public Counter Kills;
+        public Counter Deaths;
+
+        private Dictionary<PlayerIndicator, BarIndicator> _indicators;
+        private Dictionary<PlayerIndicator, Color> _indicatorColors;
+        private PlayerCharacter _pc;
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        private void Awake()
         {
-            baseString = string.Format(baseString, level, Game.ActiveCharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName);
+            _indicators = new Dictionary<PlayerIndicator, BarIndicator>();
+            _indicators.Add(PlayerIndicator.Health, PlayerIndicators[0]);
+            _indicators.Add(PlayerIndicator.Mana, PlayerIndicators[1]);
+            _indicators.Add(PlayerIndicator.Ley, PlayerIndicators[2]);
+            _indicators.Add(PlayerIndicator.Stamina, PlayerIndicators[3]);
+            _indicatorColors = new Dictionary<PlayerIndicator, Color>();
+            _indicatorColors.Add(PlayerIndicator.Health, Color.red);
+            _indicatorColors.Add(PlayerIndicator.Mana, Color.blue);
+            _indicatorColors.Add(PlayerIndicator.Ley, Color.gray);
+            _indicatorColors.Add(PlayerIndicator.Stamina, Color.yellow);
+            /*
+            foreach (PlayerIndicator indicator in _indicators.Keys)
+            {
+                _indicators[indicator].SetFillColor(_indicatorColors[indicator]);
+            }
+            */
+            ComponentRegister.PlayerStatusPanel = this;
         }
-        else
+        void Start()
         {
-            baseString = string.Format(baseString, level, Game.ActiveCharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName, Teams.GetTeamName(team));
+            _pc = PlayerAccount.SelectedCharacter;
+            Teams.Init();
+            SetPlayerName(_pc.CharacterName);
+            SetLCT(_pc.CharacterLevel, _pc.CharacterClass, MatchParams.MatchTeam);
+            Reticle.color = Teams.GetTeamTextColor(MatchParams.MatchTeam);
         }
-            
-        LCT.text = baseString;
-        Teams.SetTextColor(LCT);
-    }
-    public void SetKillCounter(byte killCount)
-    {
-        Kills.SetCount(killCount);
-    }
-    public void SetDeathCounter(byte deathCount)
-    {
-        Deaths.SetCount(deathCount);   
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+        public void SetExperience(int experience)
+        {
+            Experience.SetText("E: " + experience);
+            Teams.SetTextColor(Experience);
+        }
+        public void SetIndicator(PlayerIndicator indic, float fill)
+        {
+            _indicators[indic].SetFill(fill);
+        }
+        public void SetPlayerName(string name)
+        {
+            PlayerName.text = name;
+            Teams.SetTextColor(PlayerName);
+        }
+        public void SetLCT(byte level, byte playerClass, Team team)
+        {
+            string levelString = Language.GetBaseString(14); //
+            string ofString = Language.GetBaseString(15); //
+            string baseString = team == Team.Neutral ? levelString + " {0} {1}" : levelString + " {0} {1} " + ofString + " {2}";
+            if (team == Team.Neutral)
+            {
+                baseString = string.Format(baseString, level, Game.ActiveCharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName);
+            }
+            else
+            {
+                baseString = string.Format(baseString, level, Game.ActiveCharacterClassManager.GetCharacterClassData(playerClass).CharacterClassName, Teams.GetTeamName(team));
+            }
+
+            LCT.text = baseString;
+            Teams.SetTextColor(LCT);
+        }
+        public void SetKillCounter(byte killCount)
+        {
+            Kills.SetCount(killCount);
+        }
+        public void SetDeathCounter(byte deathCount)
+        {
+            Deaths.SetCount(deathCount);
+        }
+
     }
 
 }

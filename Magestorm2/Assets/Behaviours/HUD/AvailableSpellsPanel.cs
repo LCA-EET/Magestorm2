@@ -1,58 +1,62 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class AvailableSpellsPanel : MonoBehaviour
+namespace Magus
 {
-    public AvailableSpell[] AvailableSpells;
-    private PeriodicAction _msRefresh;
-    private void Awake()
+    public class AvailableSpellsPanel : MonoBehaviour
     {
-        _msRefresh = new PeriodicAction(0.2f, RefreshMS, null);
-        ComponentRegister.AvailableSpellsPanel = this;
-    }
+        public AvailableSpell[] AvailableSpells;
+        private PeriodicAction _msRefresh;
+        private void Awake()
+        {
+            _msRefresh = new PeriodicAction(0.2f, RefreshMS, null);
+            ComponentRegister.AvailableSpellsPanel = this;
+        }
 
-    private void Start()
-    {
-        RefeshPanel();
-    }
-    private void Update()
-    {
-        _msRefresh.ProcessAction(Time.deltaTime);
-    }
-    public void RefreshMS()
-    {
-        float currentMana = ComponentRegister.PC.CurrentMana;
-        float currentStamina = ComponentRegister.PC.CurrentStamina; 
-        foreach (AvailableSpell spell in AvailableSpells)
+        private void Start()
         {
-            if (spell.IsEnabled)
+            RefeshPanel();
+        }
+        private void Update()
+        {
+            _msRefresh.ProcessAction(Time.deltaTime);
+        }
+        public void RefreshMS()
+        {
+            float currentMana = ComponentRegister.PC.CurrentMana;
+            float currentStamina = ComponentRegister.PC.CurrentStamina;
+            foreach (AvailableSpell spell in AvailableSpells)
             {
-                spell.RefreshMS(currentMana, currentStamina);
+                if (spell.IsEnabled)
+                {
+                    spell.RefreshMS(currentMana, currentStamina);
+                }
             }
         }
-    }
-    public void RefeshPanel()
-    {
-        Debug.Log("Refresh Panel");
-        byte index = 0;
-        byte[] slottedSpells = PlayerAccount.SelectedCharacter.SlottedSpells;
-        for (byte b = 0; b < slottedSpells.Length; b++)
+        public void RefeshPanel()
         {
-            byte spellID = slottedSpells[b];
-            if(spellID > 0)
+            Debug.Log("Refresh Panel");
+            byte index = 0;
+            byte[] slottedSpells = PlayerAccount.SelectedCharacter.SlottedSpells;
+            for (byte b = 0; b < slottedSpells.Length; b++)
             {
-                AvailableSpell spell = AvailableSpells[index];
-                //Debug.Log("Available Spell " + spell.name + " index: " + b);
-                spell.SetAssociatedSpell(spellID);
-                spell.MarkVisible(true);
-                //Debug.Log("b: " + b + " slotIndex: " + slotIndex + ". " + spellID);
-                spell.UpdateKeyText((byte)(b + 100));
-                index++;
+                byte spellID = slottedSpells[b];
+                if (spellID > 0)
+                {
+                    AvailableSpell spell = AvailableSpells[index];
+                    //Debug.Log("Available Spell " + spell.name + " index: " + b);
+                    spell.SetAssociatedSpell(spellID);
+                    spell.MarkVisible(true);
+                    //Debug.Log("b: " + b + " slotIndex: " + slotIndex + ". " + spellID);
+                    spell.UpdateKeyText((byte)(b + 100));
+                    index++;
+                }
             }
-        }
-        for (byte b = index; b < AvailableSpells.Length; b++)
-        {
-            AvailableSpells[b].MarkVisible(false);
+            for (byte b = index; b < AvailableSpells.Length; b++)
+            {
+                AvailableSpells[b].MarkVisible(false);
+            }
         }
     }
 }
+

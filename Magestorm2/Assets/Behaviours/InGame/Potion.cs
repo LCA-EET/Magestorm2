@@ -1,30 +1,35 @@
 ﻿using UnityEngine;
-public class Potion : Trigger
+namespace Magus
 {
-    public byte PotionType;
-    public Rigidbody RigidBody;
-    private float _elapsed, _period;
-    protected override void Awake()
+
+    public class Potion : Trigger
     {
-        ComponentRegister.Spawner.SpawnedPotion = this;
-        _period = 2 * Mathf.PI;
-    }
-    public override void EnterAction()
-    {
-        if (Game.PCAvatar.IsAlive)
+        public byte PotionType;
+        public Rigidbody RigidBody;
+        private float _elapsed, _period;
+        protected override void Awake()
         {
-            Game.SendInGameBytes(InGame_Packets.TakePotionPacket(PotionType));
-            Destroy(gameObject);
+            ComponentRegister.Spawner.SpawnedPotion = this;
+            _period = 2 * Mathf.PI;
+        }
+        public override void EnterAction()
+        {
+            if (Game.PCAvatar.IsAlive)
+            {
+                Game.SendInGameBytes(InGame_Packets.TakePotionPacket(PotionType));
+                Destroy(gameObject);
+            }
+        }
+        private void Update()
+        {
+            _elapsed += Time.deltaTime;
+            transform.Translate(0, (Mathf.Sin(_elapsed) * 0.25f * Time.deltaTime), 0);
+            if (_elapsed > _period)
+            {
+                _elapsed = 0;
+            }
+            transform.Rotate(0, 90 * Time.deltaTime, 0);
         }
     }
-    private void Update()
-    {
-        _elapsed += Time.deltaTime;
-        transform.Translate(0, (Mathf.Sin(_elapsed) * 0.25f * Time.deltaTime), 0);
-        if(_elapsed > _period)
-        {
-            _elapsed =  0;
-        }
-        transform.Rotate(0, 90 * Time.deltaTime, 0);
-    }
+
 }

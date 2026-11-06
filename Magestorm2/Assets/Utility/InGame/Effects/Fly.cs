@@ -1,21 +1,26 @@
 ﻿using UnityEngine;
-public class Fly : AppliedEffect
+namespace Magus
 {
-    public override void ApplyEffect(Avatar appliedTo)
+
+    public class Fly : AppliedEffect
     {
-        base.ApplyEffect(appliedTo);
-        if (_appliedToPlayer)
+        public override void ApplyEffect(Avatar appliedTo)
         {
-            ComponentRegister.PlayerMovement.MarkInFlight(true);
+            base.ApplyEffect(appliedTo);
+            if (_appliedToPlayer)
+            {
+                ComponentRegister.PlayerMovement.MarkInFlight(true);
+            }
+        }
+
+        public override void ReverseEffect()
+        {
+            base.ReverseEffect();
+            if (_appliedToPlayer)
+            {
+                ComponentRegister.PlayerMovement.MarkInFlight(false);
+            }
         }
     }
 
-    public override void ReverseEffect()
-    {
-        base.ReverseEffect();
-        if (_appliedToPlayer)
-        {
-            ComponentRegister.PlayerMovement.MarkInFlight(false);
-        }
-    }
 }

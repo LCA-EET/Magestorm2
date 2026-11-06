@@ -1,45 +1,50 @@
 ﻿using UnityEngine;
-public class TeamDomain : MonoBehaviour
+namespace Magus
 {
-    public Team Team;
-    
-    public void Start()
+
+    public class TeamDomain : MonoBehaviour
     {
-        TeamTorch[] torches = GetComponentsInChildren<TeamTorch>();
-        foreach (TeamTorch torch in torches)
+        public Team Team;
+
+        public void Start()
         {
-            torch.AssignTeam(Team);
-            
-        }
-        Shrine[] shrines = GetComponentsInChildren<Shrine>();
-        Flag[] flags = GetComponentsInChildren<Flag>();
-        if (MatchParams.IncludeShrines)
-        {
-            foreach (Shrine shrine in shrines)
+            TeamTorch[] torches = GetComponentsInChildren<TeamTorch>();
+            foreach (TeamTorch torch in torches)
             {
-                shrine.AssignToTeam(Team);
+                torch.AssignTeam(Team);
+
             }
-        }
-        else
-        {
-            foreach (Shrine shrine in shrines)
+            Shrine[] shrines = GetComponentsInChildren<Shrine>();
+            Flag[] flags = GetComponentsInChildren<Flag>();
+            if (MatchParams.IncludeShrines)
             {
-                shrine.gameObject.SetActive(false);
+                foreach (Shrine shrine in shrines)
+                {
+                    shrine.AssignToTeam(Team);
+                }
             }
-        }
-        if (MatchParams.IncludeFlags)
-        {
-            foreach (Flag flag in flags)
+            else
             {
-                flag.AssignToTeam(Team);
+                foreach (Shrine shrine in shrines)
+                {
+                    shrine.gameObject.SetActive(false);
+                }
             }
-        }
-        else
-        {
-            foreach (Flag flag in flags)
+            if (MatchParams.IncludeFlags)
             {
-                flag.gameObject.SetActive(false);
+                foreach (Flag flag in flags)
+                {
+                    flag.AssignToTeam(Team);
+                }
+            }
+            else
+            {
+                foreach (Flag flag in flags)
+                {
+                    flag.gameObject.SetActive(false);
+                }
             }
         }
     }
+
 }

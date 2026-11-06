@@ -1,49 +1,53 @@
 ﻿using UnityEngine;
-
-public class ViewAll : AppliedEffect
+namespace Magus
 {
-    private int[] _masks;
-    private void Awake()
+
+    public class ViewAll : AppliedEffect
     {
-        _masks = new int[2];
-    }
-    public override void ApplyEffect(Avatar appliedTo)
-    {
-        base.ApplyEffect(appliedTo);
-        if (_appliedToPlayer)
+        private int[] _masks;
+        private void Awake()
         {
-            switch (MatchParams.MatchTeam)
+            _masks = new int[2];
+        }
+        public override void ApplyEffect(Avatar appliedTo)
+        {
+            base.ApplyEffect(appliedTo);
+            if (_appliedToPlayer)
             {
-                case Team.Chaos:
-                    _masks[0] = LayerManager.TeamLayerMask_Balance;
-                    _masks[1] = LayerManager.TeamLayerMask_Order;
-                    break;
-                case Team.Balance:
-                    _masks[0] = LayerManager.TeamLayerMask_Chaos;
-                    _masks[1] = LayerManager.TeamLayerMask_Order;
-                    break;
-                case Team.Order:
-                    _masks[0] = LayerManager.TeamLayerMask_Balance;
-                    _masks[1] = LayerManager.TeamLayerMask_Chaos;
-                    break;
-                    
+                switch (MatchParams.MatchTeam)
+                {
+                    case Team.Chaos:
+                        _masks[0] = LayerManager.TeamLayerMask_Balance;
+                        _masks[1] = LayerManager.TeamLayerMask_Order;
+                        break;
+                    case Team.Balance:
+                        _masks[0] = LayerManager.TeamLayerMask_Chaos;
+                        _masks[1] = LayerManager.TeamLayerMask_Order;
+                        break;
+                    case Team.Order:
+                        _masks[0] = LayerManager.TeamLayerMask_Balance;
+                        _masks[1] = LayerManager.TeamLayerMask_Chaos;
+                        break;
+
+                }
+                foreach (int mask in _masks)
+                {
+                    ComponentRegister.Minimap.AddToCullingMask(mask);
+                }
             }
-            foreach (int mask in _masks)
+        }
+
+        public override void ReverseEffect()
+        {
+            base.ReverseEffect();
+            if (_appliedToPlayer)
             {
-                ComponentRegister.Minimap.AddToCullingMask(mask);
+                foreach (int mask in _masks)
+                {
+                    ComponentRegister.Minimap.RemoveFromCullingMask(mask);
+                }
             }
         }
     }
 
-    public override void ReverseEffect()
-    {
-        base.ReverseEffect();
-        if (_appliedToPlayer)
-        {
-            foreach (int mask in _masks)
-            {
-                ComponentRegister.Minimap.RemoveFromCullingMask(mask);
-            }
-        }
-    }
 }

@@ -1,147 +1,151 @@
 ﻿using System;
 using UnityEngine;
 
-public class ManaPool : BiasableTrigger, IComparable<ManaPool>
+namespace Magus
 {
-    public GameObject WaterPlane;
-    public byte PoolPower;
-    private byte _poolID;
-    public LeyInfluencer LeyInfluencer;
-    public BiasIndicator Indicator;
-    private bool _playerInPool = false;
+    public class ManaPool : BiasableTrigger, IComparable<ManaPool>
+    {
+        public GameObject WaterPlane;
+        public byte PoolPower;
+        private byte _poolID;
+        public LeyInfluencer LeyInfluencer;
+        public BiasIndicator Indicator;
+        private bool _playerInPool = false;
 
-    public byte PoolID
-    {
-        get
+        public byte PoolID
         {
-            return _poolID;
-        }
-    }
-    public void Start()
-    {
-        InitTrigger(TriggerType.ManaPool);
-        if (MatchParams.IncludePools && ComponentRegister.PC.CharacterClass != ControlCodes.PlayerClass_Arcanist)
-        {
-            new PeriodicAction(5.0f, BiasPool, _actionList);
-        }
-        Vector3 wpScale = gameObject.transform.localScale * 0.1f;
-        WaterPlane.transform.localScale = wpScale;
-        WaterPlane.gameObject.SetActive(true);
-        Debug.Log("Water Plane Active for pool " + PoolID);
-
-    }
-    public void RegisterPool(byte poolID)
-    {
-        _poolID = poolID;
-        PoolManager.RegisterPool(this);
-        Debug.Log("Registered Pool " + _poolID);
-        if (!MatchParams.IncludePools || ComponentRegister.PC.CharacterClass != ControlCodes.PlayerClass_Magician)
-        {
-            Destroy(LeyInfluencer.gameObject);
-        }
-        else
-        {
-            LeyInfluencer.AssignOwner(this, PoolPower, PoolID);
-        }
-    }
-    private void BiasPool()
-    {
-        if (PoolPower > 0 && ((MatchParams.MatchTeamID != (byte)BiasedToward) || (BiasAmount < 100)))
-        {
-            Game.SendInGameBytes(InGame_Packets.BiasPoolPacket(PoolID));
-            ComponentRegister.PC.UseStamina(ComponentRegister.PC.CurrentStamina);
-            Debug.Log("Bias packet sent.");
-        }
-    }
-    public void Update()
-    {
-        if (_playerInPool)
-        {
-            PeriodicAction.PerformActions(Time.deltaTime, _actionList);
-        }
-    }
-    public void SetBiasAmount(byte amount, Team team)
-    {
-        BiasAmount = amount;
-        BiasedToward = team;
-        Indicator.ChangeBias(team);
-        if (_playerInPool)
-        {
-            ComponentRegister.BiasDisplay.Refresh(this);
-        }
-    }
-    public void BiasPool(byte amount, Team team, byte biaserID)
-    {
-        SetBiasAmount(amount, team);
-        Avatar biaser = null;
-        if(Match.PlayerExists(biaserID, ref biaser))
-        {
-            string notificationText = "";
-            //increased bias
-            if(biaserID == MatchParams.IDinMatch)
+            get
             {
-                switch (team)
-                {
-                    case Team.Order:
-                        notificationText = Language.GetBaseString(BiasedToward == biaser.PlayerTeam ? 158: 159);
-                        break;
-                    case Team.Chaos:
-                        notificationText =  Language.GetBaseString(BiasedToward == biaser.PlayerTeam ? 162: 163); 
-                        break;
-                    case Team.Balance:
-                        notificationText =  Language.GetBaseString(BiasedToward == biaser.PlayerTeam ? 160: 161); 
-                        break;
-                }
+                return _poolID;
+            }
+        }
+        public void Start()
+        {
+            InitTrigger(TriggerType.ManaPool);
+            if (MatchParams.IncludePools && ComponentRegister.PC.CharacterClass != ControlCodes.PlayerClass_Arcanist)
+            {
+                new PeriodicAction(5.0f, BiasPool, _actionList);
+            }
+            Vector3 wpScale = gameObject.transform.localScale * 0.1f;
+            WaterPlane.transform.localScale = wpScale;
+            WaterPlane.gameObject.SetActive(true);
+            Debug.Log("Water Plane Active for pool " + PoolID);
+
+        }
+        public void RegisterPool(byte poolID)
+        {
+            _poolID = poolID;
+            PoolManager.RegisterPool(this);
+            Debug.Log("Registered Pool " + _poolID);
+            if (!MatchParams.IncludePools || ComponentRegister.PC.CharacterClass != ControlCodes.PlayerClass_Magician)
+            {
+                Destroy(LeyInfluencer.gameObject);
             }
             else
             {
-                switch (team)
-                {
-                    case Team.Order:
-                        notificationText = Language.BuildString(BiasedToward == biaser.PlayerTeam ? 164: 165, biaser.Name);
-                        break;
-                    case Team.Chaos:
-                        notificationText = Language.BuildString(BiasedToward == biaser.PlayerTeam ? 168: 169, biaser.Name); 
-                        break;
-                    case Team.Balance:
-                        notificationText =  Language.BuildString(BiasedToward == biaser.PlayerTeam ? 166: 167, biaser.Name); 
-                        break;
-                }
+                LeyInfluencer.AssignOwner(this, PoolPower, PoolID);
             }
-            ComponentRegister.Notifier.DisplayNotification(notificationText);
-            Game.Clips.PlayBias(biaser.AudioSource);
         }
-
-    }
-    public override void EnterAction()
-    {
-        base.EnterAction();
-        _playerInPool = true;
-        if (PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
+        private void BiasPool()
         {
-            if(PoolPower > 0 && MatchParams.IncludePools)
+            if (PoolPower > 0 && ((MatchParams.MatchTeamID != (byte)BiasedToward) || (BiasAmount < 100)))
+            {
+                Game.SendInGameBytes(InGame_Packets.BiasPoolPacket(PoolID));
+                ComponentRegister.PC.UseStamina(ComponentRegister.PC.CurrentStamina);
+                Debug.Log("Bias packet sent.");
+            }
+        }
+        public void Update()
+        {
+            if (_playerInPool)
+            {
+                PeriodicAction.PerformActions(Time.deltaTime, _actionList);
+            }
+        }
+        public void SetBiasAmount(byte amount, Team team)
+        {
+            BiasAmount = amount;
+            BiasedToward = team;
+            Indicator.ChangeBias(team);
+            if (_playerInPool)
             {
                 ComponentRegister.BiasDisplay.Refresh(this);
             }
         }
-        else
+        public void BiasPool(byte amount, Team team, byte biaserID)
         {
-            ComponentRegister.PC.InManaPool = true;
-        }
-    }
-    public override void ExitAction()
-    {
-        base.ExitAction();
-        _playerInPool = false;
-        if (MatchParams.IncludePools)
-        {
-            ComponentRegister.BiasDisplay.Toggle(false);
-        }
-        ComponentRegister.PC.InManaPool = false;
-    }
+            SetBiasAmount(amount, team);
+            Avatar biaser = null;
+            if (Match.PlayerExists(biaserID, ref biaser))
+            {
+                string notificationText = "";
+                //increased bias
+                if (biaserID == MatchParams.IDinMatch)
+                {
+                    switch (team)
+                    {
+                        case Team.Order:
+                            notificationText = Language.GetBaseString(BiasedToward == biaser.PlayerTeam ? 158 : 159);
+                            break;
+                        case Team.Chaos:
+                            notificationText = Language.GetBaseString(BiasedToward == biaser.PlayerTeam ? 162 : 163);
+                            break;
+                        case Team.Balance:
+                            notificationText = Language.GetBaseString(BiasedToward == biaser.PlayerTeam ? 160 : 161);
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (team)
+                    {
+                        case Team.Order:
+                            notificationText = Language.BuildString(BiasedToward == biaser.PlayerTeam ? 164 : 165, biaser.Name);
+                            break;
+                        case Team.Chaos:
+                            notificationText = Language.BuildString(BiasedToward == biaser.PlayerTeam ? 168 : 169, biaser.Name);
+                            break;
+                        case Team.Balance:
+                            notificationText = Language.BuildString(BiasedToward == biaser.PlayerTeam ? 166 : 167, biaser.Name);
+                            break;
+                    }
+                }
+                ComponentRegister.Notifier.DisplayNotification(notificationText);
+                Game.Clips.PlayBias(biaser.AudioSource);
+            }
 
-    public int CompareTo(ManaPool other)
-    {
-        return SharedFunctions.CompareVectors(transform.position, other.transform.position);
+        }
+        public override void EnterAction()
+        {
+            base.EnterAction();
+            _playerInPool = true;
+            if (PlayerAccount.SelectedCharacter.CharacterClass != ControlCodes.PlayerClass_Arcanist)
+            {
+                if (PoolPower > 0 && MatchParams.IncludePools)
+                {
+                    ComponentRegister.BiasDisplay.Refresh(this);
+                }
+            }
+            else
+            {
+                ComponentRegister.PC.InManaPool = true;
+            }
+        }
+        public override void ExitAction()
+        {
+            base.ExitAction();
+            _playerInPool = false;
+            if (MatchParams.IncludePools)
+            {
+                ComponentRegister.BiasDisplay.Toggle(false);
+            }
+            ComponentRegister.PC.InManaPool = false;
+        }
+
+        public int CompareTo(ManaPool other)
+        {
+            return SharedFunctions.CompareVectors(transform.position, other.transform.position);
+        }
     }
 }
+

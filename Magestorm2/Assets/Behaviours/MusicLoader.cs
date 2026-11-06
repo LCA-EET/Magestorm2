@@ -10,57 +10,62 @@ using UnityEngine.Audio;
 using UnityEngine.Networking;
 using MPTK.NAudio.Midi;
 using MidiPlayerTK;
-public class MusicLoader : MonoBehaviour
+
+namespace Magus
 {
-    void Start()
+    public class MusicLoader : MonoBehaviour
     {
-        if(Game.MusicFiles == null)
+        void Start()
         {
-            Game.MusicFiles = new List<MusicFile>();
-            string[] files = Directory.GetFiles(Application.streamingAssetsPath + "//music//mp3//", "*.mp3");
-            foreach (string file in files)
+            if (Game.MusicFiles == null)
             {
-                StartCoroutine(FetchAudioClip(file));
+                Game.MusicFiles = new List<MusicFile>();
+                string[] files = Directory.GetFiles(Application.streamingAssetsPath + "//music//mp3//", "*.mp3");
+                foreach (string file in files)
+                {
+                    StartCoroutine(FetchAudioClip(file));
+                }
+                files = Directory.GetFiles(Application.streamingAssetsPath + "//music//midi//", "*.bytes");
+                foreach (string file in files)
+                {
+                    StartCoroutine(FetchMIDI(file));
+                }
+                Game.MusicFiles.Sort();
             }
-            files = Directory.GetFiles(Application.streamingAssetsPath + "//music//midi//", "*.bytes");
-            foreach (string file in files)
+            else
             {
-                StartCoroutine(FetchMIDI(file));
+                Destroy(gameObject);
             }
-            Game.MusicFiles.Sort();
         }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
-    public static IEnumerator FetchAudioClip(string path)
-    {
-        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.UNKNOWN))
+        public static IEnumerator FetchAudioClip(string path)
         {
-            yield return www.SendWebRequest();
-            if (www.result == UnityWebRequest.Result.Success)
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.UNKNOWN))
             {
-                AudioClip myClip = DownloadHandlerAudioClip.GetContent(www);
-                Game.MusicFiles.Add(new MusicFile(path, myClip));
-                Debug.Log("Added " + myClip.ToString());
+                yield return www.SendWebRequest();
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    AudioClip myClip = DownloadHandlerAudioClip.GetContent(www);
+                    Game.MusicFiles.Add(new MusicFile(path, myClip));
+                    Debug.Log("Added " + myClip.ToString());
+                }
             }
         }
-    }
 
-    public static IEnumerator FetchMIDI(string path)
-    {
-        using (UnityWebRequest www = UnityWebRequest.Get(path)) 
+        public static IEnumerator FetchMIDI(string path)
         {
-            www.downloadHandler = new DownloadHandlerBuffer();
-            yield return www.SendWebRequest();
-            if (www.result == UnityWebRequest.Result.Success)
+            using (UnityWebRequest www = UnityWebRequest.Get(path))
             {
-                byte[] data = www.downloadHandler.data;
-                MidiFile midi = new MidiFile(data, false);
-                Game.MusicFiles.Add(new MusicFile(path, midi));
+                www.downloadHandler = new DownloadHandlerBuffer();
+                yield return www.SendWebRequest();
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    byte[] data = www.downloadHandler.data;
+                    MidiFile midi = new MidiFile(data, false);
+                    Game.MusicFiles.Add(new MusicFile(path, midi));
+                }
             }
         }
     }
 }
+

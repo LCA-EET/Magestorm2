@@ -1,29 +1,34 @@
 ﻿using UnityEngine;
-public class OOB : MonoBehaviour, ITrigger
+namespace Magus
 {
-    public void EnterAction()
-    {
-        ComponentRegister.Valhalla.EnterValhalla();
-    }
 
-    public void ExitAction()
+    public class OOB : MonoBehaviour, ITrigger
     {
-        return;
-    }
+        public void EnterAction()
+        {
+            ComponentRegister.Valhalla.EnterValhalla();
+        }
 
-    public int GetTriggerID()
-    {
-        return 0 ;
-    }
+        public void ExitAction()
+        {
+            return;
+        }
 
-    public bool HasEntered()
-    {
-        return false;
-    }
+        public int GetTriggerID()
+        {
+            return 0;
+        }
 
-    public bool HasExited()
-    {
-        return false;
+        public bool HasEntered()
+        {
+            return false;
+        }
+
+        public bool HasExited()
+        {
+            return false;
+        }
+
     }
 
 }

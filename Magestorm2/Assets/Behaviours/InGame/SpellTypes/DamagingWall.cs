@@ -1,28 +1,33 @@
 ﻿using UnityEngine;
-public class DamagingWall : NonSolidWall
+namespace Magus
 {
-    protected PeriodicAction _damageTick;
-    protected override void Awake()
+
+    public class DamagingWall : NonSolidWall
     {
-        base.Awake();
-        _damageTick = new PeriodicAction(1.0f, DamageTick, null);
-    }
-    public override void Update()
-    {
-        base.Update();
-        if (Game.PCAvatar.IsAlive)
+        protected PeriodicAction _damageTick;
+        protected override void Awake()
         {
-            if (_entered && !_exited)
+            base.Awake();
+            _damageTick = new PeriodicAction(1.0f, DamageTick, null);
+        }
+        public override void Update()
+        {
+            base.Update();
+            if (Game.PCAvatar.IsAlive)
             {
-                _damageTick.ProcessAction(Time.deltaTime);
+                if (_entered && !_exited)
+                {
+                    _damageTick.ProcessAction(Time.deltaTime);
+                }
             }
         }
-    }
 
-    private void DamageTick()
-    {
-        Debug.Log("Damage Tick.");
-        Game.SendInGameBytes(InGame_Packets.ReportHitByWallPacket(_castID));
+        private void DamageTick()
+        {
+            Debug.Log("Damage Tick.");
+            Game.SendInGameBytes(InGame_Packets.ReportHitByWallPacket(_castID));
+        }
+
     }
 
 }

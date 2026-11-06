@@ -1,47 +1,51 @@
 using System;
 using TMPro;
 using UnityEngine;
-
-public class MatchTimer : MonoBehaviour
+namespace Magus
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private float _elapsedSinceLastUpdate = 0.0f;
-    private float _secondsElapsed = 0.0f;
-    private TMP_Text _timeText;
-    private string _timeString;
 
-    private void Awake()
+    public class MatchTimer : MonoBehaviour
     {
-        ComponentRegister.MatchTimer = this;
-    }
-    void Start()
-    {
-        _timeString = Language.GetBaseString(3); //
-        _timeText = GetComponentInChildren<TMP_Text>();
-        Teams.SetTextColor(_timeText);
-        RefreshTime();
-    }
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        private float _elapsedSinceLastUpdate = 0.0f;
+        private float _secondsElapsed = 0.0f;
+        private TMP_Text _timeText;
+        private string _timeString;
 
-    // Update is called once per frame
-    void Update()
-    {
-        _elapsedSinceLastUpdate += Time.deltaTime;
-        _secondsElapsed += Time.deltaTime; 
-        if(_elapsedSinceLastUpdate >= 1.0f)
+        private void Awake()
         {
-            _elapsedSinceLastUpdate = 0.0f;
+            ComponentRegister.MatchTimer = this;
+        }
+        void Start()
+        {
+            _timeString = Language.GetBaseString(3); //
+            _timeText = GetComponentInChildren<TMP_Text>();
+            Teams.SetTextColor(_timeText);
             RefreshTime();
         }
-    }
-    private void RefreshTime()
-    {
-        _timeText.text = _timeString + TimeUtil.MinutesAndSecondsRemaining(MatchParams.ExpirationTime);
-    }
-    public float SecondsElapsed
-    {
-        get
+
+        // Update is called once per frame
+        void Update()
         {
-            return _secondsElapsed;
+            _elapsedSinceLastUpdate += Time.deltaTime;
+            _secondsElapsed += Time.deltaTime;
+            if (_elapsedSinceLastUpdate >= 1.0f)
+            {
+                _elapsedSinceLastUpdate = 0.0f;
+                RefreshTime();
+            }
+        }
+        private void RefreshTime()
+        {
+            _timeText.text = _timeString + TimeUtil.MinutesAndSecondsRemaining(MatchParams.ExpirationTime);
+        }
+        public float SecondsElapsed
+        {
+            get
+            {
+                return _secondsElapsed;
+            }
         }
     }
+
 }

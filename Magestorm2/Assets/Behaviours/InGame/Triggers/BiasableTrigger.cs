@@ -1,5 +1,9 @@
-﻿public class BiasableTrigger : Trigger
+﻿namespace Magus
 {
-    public byte BiasAmount;
-    public Team BiasedToward = Team.Neutral;
+    public class BiasableTrigger : Trigger
+    {
+        public byte BiasAmount;
+        public Team BiasedToward = Team.Neutral;
+    }
 }
+

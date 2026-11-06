@@ -1,30 +1,35 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-public class Level
+namespace Magus
 {
-    private byte _id;
-    private string _name;
-    private byte _maxPlayers;
-    public Level(byte id, string name, byte maxPlayers)
+
+    public class Level
     {
-        _id = id;
-        _name = name;
-        _maxPlayers = maxPlayers;
+        private byte _id;
+        private string _name;
+        private byte _maxPlayers;
+        public Level(byte id, string name, byte maxPlayers)
+        {
+            _id = id;
+            _name = name;
+            _maxPlayers = maxPlayers;
+        }
+
+        public byte LevelID
+        {
+            get { return _id; }
+        }
+        public string LevelName
+        {
+            get { return _name; }
+        }
+
+        public byte MaxPlayers
+        {
+            get { return _maxPlayers; }
+        }
+
     }
 
-    public byte LevelID
-    {
-        get { return _id; }
-    }
-    public string LevelName
-    {
-        get { return _name; }
-    }
-
-    public byte MaxPlayers
-    {
-        get { return _maxPlayers; }
-    }
 
 }
-

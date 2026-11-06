@@ -17,7 +17,7 @@ namespace MPTK.NAudio.Midi
         //private ushort tracks;
         private ushort deltaTicksPerQuarterNote;
         private bool strictChecking;
-
+        private string _fileName;
         private bool extendedText = false; // TBN
 
         /// <summary>@brief
@@ -60,7 +60,7 @@ namespace MPTK.NAudio.Midi
         {
             this.strictChecking = strictChecking;
             this.extendedText = extendedText; // TBN
-
+            _fileName = filename;
             var br = new BinaryReader(File.OpenRead(filename));
             using (br)
             {
@@ -90,7 +90,10 @@ namespace MPTK.NAudio.Midi
                 }
             }
         }
-
+        public string GetFileName()
+        {
+            return _fileName;
+        }
         private void MidiBinaryReader(BinaryReader br, bool strictChecking)
         {
             string chunkHeader = Encoding.UTF8.GetString(br.ReadBytes(4));

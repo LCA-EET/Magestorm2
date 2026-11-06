@@ -1,122 +1,126 @@
 using System;
 using UnityEngine;
-
-public class ActivateableObject : MonoBehaviour, IComparable<ActivateableObject>
+namespace Magus
 {
-    protected byte _objectKey;
-    public byte NumStates = 2;
-    public ClipID[] StateClips;
-    public bool[] DelayClips;
-    public AudioSource ActivationAudio;
-    public byte ReactivationInterval; // The minimum amount of time that must elapse, in seconds, before the AO can be reactivated.
-    public byte SelfResetInterval = 0; // The time that must elapse before the AO resets to its default state, after completing the transition to a non-default state.
 
-    protected byte _currentState = 0;
-    protected PeriodicAction _resetCountdownPA;
-    protected PeriodicAction _reactivationCountdownPA;
-    protected bool _resetCountDown;
-    protected bool _readyToActivate;
-
-    public byte ObjectKey
+    public class ActivateableObject : MonoBehaviour, IComparable<ActivateableObject>
     {
-        get { return _objectKey; }
-    }
+        protected byte _objectKey;
+        public byte NumStates = 2;
+        public ClipID[] StateClips;
+        public bool[] DelayClips;
+        public AudioSource ActivationAudio;
+        public byte ReactivationInterval; // The minimum amount of time that must elapse, in seconds, before the AO can be reactivated.
+        public byte SelfResetInterval = 0; // The time that must elapse before the AO resets to its default state, after completing the transition to a non-default state.
 
-    private void Awake()
-    {
-        _readyToActivate = true;
-        if(SelfResetInterval > 0)
+        protected byte _currentState = 0;
+        protected PeriodicAction _resetCountdownPA;
+        protected PeriodicAction _reactivationCountdownPA;
+        protected bool _resetCountDown;
+        protected bool _readyToActivate;
+
+        public byte ObjectKey
         {
-            _resetCountdownPA = new PeriodicAction(SelfResetInterval, ResetToDefault, null);
+            get { return _objectKey; }
         }
-        if (ReactivationInterval > 0)
-        {
-            _reactivationCountdownPA = new PeriodicAction(ReactivationInterval, MakeReadyForReactivation, null);
-        }
-    }
-    
-    // Update is called once per frame
-    protected virtual void Update()
-    {
-        if (!_readyToActivate)
-        {
-            _reactivationCountdownPA.ProcessAction(Time.deltaTime);
-        }
-        if (_resetCountDown && (_resetCountdownPA != null))
-        {
-            _resetCountdownPA.ProcessAction(Time.deltaTime);
-        }
-    }
 
-    public void RegisterObject(byte objectKey)
-    {
-        _objectKey = objectKey;
-        Debug.Log("Registered AO with key: " + _objectKey);
-        Match.RegisterActivateableObject(this);
-    }
-
-    public virtual void StateChangeRequest()
-    {
-        if(_readyToActivate)
+        private void Awake()
         {
-            byte newState = 0;
-            if (_currentState < (NumStates-1))
+            _readyToActivate = true;
+            if (SelfResetInterval > 0)
             {
-                newState = (byte)(_currentState + 1);
+                _resetCountdownPA = new PeriodicAction(SelfResetInterval, ResetToDefault, null);
             }
-            Debug.Log("Object State Change Packet Sent");
-            Match.Send(InGame_Packets.ChangedObjectStatePacket(_objectKey, newState, SelfResetInterval));
-        }
-    }
-    protected virtual void ApplyStateChange(bool force)
-    {
-        _resetCountDown = false;
-        if (ReactivationInterval > 0)
-        {
-            _readyToActivate = false;
-        }
-    }
-    public void StatusChanged(byte newStatus, bool force)
-    {
-        if (!force)
-        {
-            if (ValidClipIndex(_currentState))
+            if (ReactivationInterval > 0)
             {
-                if (!DelayClips[_currentState])
+                _reactivationCountdownPA = new PeriodicAction(ReactivationInterval, MakeReadyForReactivation, null);
+            }
+        }
+
+        // Update is called once per frame
+        protected virtual void Update()
+        {
+            if (!_readyToActivate)
+            {
+                _reactivationCountdownPA.ProcessAction(Time.deltaTime);
+            }
+            if (_resetCountDown && (_resetCountdownPA != null))
+            {
+                _resetCountdownPA.ProcessAction(Time.deltaTime);
+            }
+        }
+
+        public void RegisterObject(byte objectKey)
+        {
+            _objectKey = objectKey;
+            Debug.Log("Registered AO with key: " + _objectKey);
+            Match.RegisterActivateableObject(this);
+        }
+
+        public virtual void StateChangeRequest()
+        {
+            if (_readyToActivate)
+            {
+                byte newState = 0;
+                if (_currentState < (NumStates - 1))
                 {
-                    Game.Clips.PlayClip(StateClips[_currentState], ActivationAudio);
+                    newState = (byte)(_currentState + 1);
+                }
+                Debug.Log("Object State Change Packet Sent");
+                Match.Send(InGame_Packets.ChangedObjectStatePacket(_objectKey, newState, SelfResetInterval));
+            }
+        }
+        protected virtual void ApplyStateChange(bool force)
+        {
+            _resetCountDown = false;
+            if (ReactivationInterval > 0)
+            {
+                _readyToActivate = false;
+            }
+        }
+        public void StatusChanged(byte newStatus, bool force)
+        {
+            if (!force)
+            {
+                if (ValidClipIndex(_currentState))
+                {
+                    if (!DelayClips[_currentState])
+                    {
+                        Game.Clips.PlayClip(StateClips[_currentState], ActivationAudio);
+                    }
+                }
+            }
+            _currentState = newStatus;
+            ApplyStateChange(force);
+        }
+        public void OnStateChangeEnd(byte priorState)
+        {
+            ActivationAudio.Stop();
+            if (ValidClipIndex(priorState))
+            {
+                if (DelayClips[priorState])
+                {
+                    Game.Clips.PlayClip(StateClips[priorState], ActivationAudio);
                 }
             }
         }
-        _currentState = newStatus;
-        ApplyStateChange(force);
-    }
-    public void OnStateChangeEnd(byte priorState)
-    {
-        ActivationAudio.Stop();
-        if (ValidClipIndex(priorState))
+        protected bool ValidClipIndex(byte toCheck)
         {
-            if (DelayClips[priorState])
-            {
-                Game.Clips.PlayClip(StateClips[priorState], ActivationAudio);
-            }
+            return toCheck < DelayClips.Length && toCheck < StateClips.Length;
+        }
+        private void ResetToDefault()
+        {
+            StatusChanged(0, false);
+        }
+        private void MakeReadyForReactivation()
+        {
+            _readyToActivate = true;
+        }
+
+        public int CompareTo(ActivateableObject other)
+        {
+            return SharedFunctions.CompareVectors(transform.position, other.transform.position);
         }
     }
-    protected bool ValidClipIndex(byte toCheck)
-    {
-        return toCheck < DelayClips.Length && toCheck < StateClips.Length;
-    }
-    private void ResetToDefault()
-    {
-        StatusChanged(0, false);
-    }
-    private void MakeReadyForReactivation()
-    {
-        _readyToActivate = true;
-    }
 
-    public int CompareTo(ActivateableObject other)
-    {
-        return SharedFunctions.CompareVectors(transform.position, other.transform.position);
-    }
 }

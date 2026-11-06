@@ -4,65 +4,70 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-public class ListedMatch
+namespace Magus
 {
-    private byte _matchID, _sceneID, _matchType;
-    private byte _matchOptions;
-    private long _expiration;
-    private int _creatorID;
-    private string _sceneName;
-    private String _creatorName;
-    public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration, int creatorID, byte matchType, byte matchOptions)
+
+    public class ListedMatch
     {
-        _matchType = matchType;
-        _matchID = matchID;
-        _sceneID = sceneID;
-        _creatorName = creatorName;
-        Debug.Log("Creator Name: " + creatorName);
-        _expiration = expiration;
-        _creatorID = creatorID;
-        Debug.Log("CreatorID: " + CreatorID);
-        _sceneName = LevelData.GetLevel(sceneID).LevelName;
-        _matchOptions = matchOptions;
-    }
-    public byte MatchOptions
-    {
-        get { return _matchOptions; }
-    }
-    public string MatchTypeString
-    {
-        get
+        private byte _matchID, _sceneID, _matchType;
+        private byte _matchOptions;
+        private long _expiration;
+        private int _creatorID;
+        private string _sceneName;
+        private String _creatorName;
+        public ListedMatch(byte matchID, byte sceneID, string creatorName, long expiration, int creatorID, byte matchType, byte matchOptions)
         {
-            return SharedFunctions.MatchTypeString(MatchType);
+            _matchType = matchType;
+            _matchID = matchID;
+            _sceneID = sceneID;
+            _creatorName = creatorName;
+            Debug.Log("Creator Name: " + creatorName);
+            _expiration = expiration;
+            _creatorID = creatorID;
+            Debug.Log("CreatorID: " + CreatorID);
+            _sceneName = LevelData.GetLevel(sceneID).LevelName;
+            _matchOptions = matchOptions;
+        }
+        public byte MatchOptions
+        {
+            get { return _matchOptions; }
+        }
+        public string MatchTypeString
+        {
+            get
+            {
+                return SharedFunctions.MatchTypeString(MatchType);
+            }
+        }
+        public int CreatorID
+        {
+            get { return _creatorID; }
+        }
+        public byte MatchID
+        {
+            get { return _matchID; }
+        }
+        public byte MatchType
+        {
+            get { return _matchType; }
+        }
+        public byte SceneID
+        {
+            get { return _sceneID; }
+        }
+        public long Expiration
+        {
+            get { return _expiration; }
+        }
+        public string CreatorName
+        {
+            get { return _creatorName; }
+        }
+        public string SceneName
+        {
+            get { return _sceneName; }
         }
     }
-    public int CreatorID
-    {
-        get { return _creatorID; }
-    }
-    public byte MatchID
-    {
-        get { return _matchID; }
-    }
-    public byte MatchType
-    {
-        get { return _matchType; }
-    }
-    public byte SceneID
-    {
-        get { return _sceneID; }
-    }
-    public long Expiration
-    {
-        get { return _expiration; }
-    }
-    public string CreatorName
-    {
-        get { return _creatorName; }
-    }
-    public string SceneName
-    {
-        get { return _sceneName; }
-    }
-}
 
+
+}

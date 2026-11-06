@@ -1,29 +1,32 @@
 ﻿using UnityEngine;
 
-public class Telekinesis : Bolt
+namespace Magus
 {
-    protected override void OnTriggerEnter(Collider other)
+    public class Telekinesis : Bolt
     {
-        if (!_destroyOnNextUpdate)
+        protected override void OnTriggerEnter(Collider other)
         {
-            if (_casterID == Game.PCAvatar.PlayerID)
+            if (!_destroyOnNextUpdate)
             {
-                ActivateableObject hitObject = other.GetComponent<ActivateableObject>();
-                if (hitObject != null)
+                if (_casterID == Game.PCAvatar.PlayerID)
                 {
-                    hitObject.StateChangeRequest();
+                    ActivateableObject hitObject = other.GetComponent<ActivateableObject>();
+                    if (hitObject != null)
+                    {
+                        hitObject.StateChangeRequest();
+                    }
                 }
+                base.OnTriggerEnter(other);
             }
-            base.OnTriggerEnter(other);
+
         }
-        
-    }
-    protected override void OnWallHit(Wall hitWall)
-    {
-        return;
-    }
-    protected override void OnRemoteHit()
-    {
-        return;
+        protected override void OnWallHit(Wall hitWall)
+        {
+            return;
+        }
+        protected override void OnRemoteHit()
+        {
+            return;
+        }
     }
 }

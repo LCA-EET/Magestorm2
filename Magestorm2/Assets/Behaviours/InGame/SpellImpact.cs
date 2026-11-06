@@ -1,25 +1,30 @@
 ﻿using UnityEngine;
-public class SpellImpact : MonoBehaviour
+namespace Magus
 {
-    public float Lifetime;
-    public AudioClip ImpactClip;
-    public AudioSource AudioSource;
-    private PeriodicAction _destroyObject;
-    private void Awake()
+
+    public class SpellImpact : MonoBehaviour
     {
-        _destroyObject = new PeriodicAction(Lifetime, DestroyObject, null);
-    }
-    private void Update()
-    {
-        _destroyObject.ProcessAction(Time.deltaTime);
-    }
-    private void DestroyObject()
-    {
-        Destroy(gameObject);
+        public float Lifetime;
+        public AudioClip ImpactClip;
+        public AudioSource AudioSource;
+        private PeriodicAction _destroyObject;
+        private void Awake()
+        {
+            _destroyObject = new PeriodicAction(Lifetime, DestroyObject, null);
+        }
+        private void Update()
+        {
+            _destroyObject.ProcessAction(Time.deltaTime);
+        }
+        private void DestroyObject()
+        {
+            Destroy(gameObject);
+        }
+
+        public void InvertDirection(Vector3 spawnerForward)
+        {
+            transform.forward = spawnerForward * -1;
+        }
     }
 
-    public void InvertDirection(Vector3 spawnerForward)
-    {
-        transform.forward = spawnerForward * -1;
-    }
 }

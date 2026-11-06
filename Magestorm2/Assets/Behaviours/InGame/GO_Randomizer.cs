@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
-
-public class GO_Randomizer : MonoBehaviour 
+namespace Magus
 {
-    public GameObject[] Candidates;
 
-    private void Awake()
+    public class GO_Randomizer : MonoBehaviour
     {
-        int index = SharedFunctions.RandomInt(0, Candidates.Length - 1);
-        Candidates[index].gameObject.SetActive(true);
+        public GameObject[] Candidates;
+
+        private void Awake()
+        {
+            int index = SharedFunctions.RandomInt(0, Candidates.Length - 1);
+            Candidates[index].gameObject.SetActive(true);
+        }
     }
+
 }

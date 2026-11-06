@@ -1,41 +1,46 @@
 using UnityEngine;
 
-public static class Colors
+namespace Magus
 {
-    public static Color Transparent;
-    public static Color Opaque;
-    public static Color UnavailableSpell;
-    public static Color TextBackground;
-    public static Color Neutral, Order, Balance, Chaos;
-    public static Color TeamSelected, TeamUnselected;
-    public static Color EntrySelected, EntryUnselected, CardUnselected;
-    private static bool _init = false;
-    public static void Init()
+
+    public static class Colors
     {
-        if (!_init)
+        public static Color Transparent;
+        public static Color Opaque;
+        public static Color UnavailableSpell;
+        public static Color TextBackground;
+        public static Color Neutral, Order, Balance, Chaos;
+        public static Color TeamSelected, TeamUnselected;
+        public static Color EntrySelected, EntryUnselected, CardUnselected;
+        private static bool _init = false;
+        public static void Init()
         {
-            Transparent = new Color(1f, 1f, 1f, 0f);
-            Opaque = new Color(1f, 1f, 1f, 1f);
-            Neutral = Color.white;
-            Order = Color.blue;
-            Chaos = Color.red;
-            Balance = Color.green;
-            UnavailableSpell = new Color(1f, 1f, 1f, 0.25f);
-            EntrySelected = new Color(0f, 1f, 0.125f, 0.4313f);
-            EntryUnselected = new Color(0f, 0f, 0f, 0f);
-            CardUnselected = new Color(1f, 1f, 1f, 1f);
-            TeamSelected = new Color(1f, 1f, 1f, 1f);
-            TeamUnselected = new Color(1f, 1f, 1f, 0.3f);
-            _init = true;
+            if (!_init)
+            {
+                Transparent = new Color(1f, 1f, 1f, 0f);
+                Opaque = new Color(1f, 1f, 1f, 1f);
+                Neutral = Color.white;
+                Order = Color.blue;
+                Chaos = Color.red;
+                Balance = Color.green;
+                UnavailableSpell = new Color(1f, 1f, 1f, 0.25f);
+                EntrySelected = new Color(0f, 1f, 0.125f, 0.4313f);
+                EntryUnselected = new Color(0f, 0f, 0f, 0f);
+                CardUnselected = new Color(1f, 1f, 1f, 1f);
+                TeamSelected = new Color(1f, 1f, 1f, 1f);
+                TeamUnselected = new Color(1f, 1f, 1f, 0.3f);
+                _init = true;
+            }
         }
+        public static Color ApplySelectionHighlightColor(bool isSelected)
+        {
+            return isSelected ? EntrySelected : EntryUnselected;
+        }
+        public static Color ApplyCardSelectionColor(bool isSelected)
+        {
+            return isSelected ? EntrySelected : CardUnselected;
+        }
+
     }
-    public static Color ApplySelectionHighlightColor(bool isSelected)
-    {
-        return isSelected ? EntrySelected : EntryUnselected;
-    }
-    public static Color ApplyCardSelectionColor(bool isSelected)
-    {
-        return isSelected ? EntrySelected : CardUnselected;
-    }
-    
+
 }

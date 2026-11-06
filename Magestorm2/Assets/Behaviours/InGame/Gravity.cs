@@ -1,30 +1,33 @@
 ﻿using UnityEngine;
-
-public class Gravity : MonoBehaviour
+namespace Magus
 {
-    private float _deltaY;
-    public GameObject ToMove;
-    private void Awake()
+    public class Gravity : MonoBehaviour
     {
-        if(ToMove == null)
+        private float _deltaY;
+        public GameObject ToMove;
+        private void Awake()
         {
-            ToMove = transform.parent.gameObject;
+            if (ToMove == null)
+            {
+                ToMove = transform.parent.gameObject;
+            }
+            _deltaY = ToMove.transform.position.y - transform.position.y;
         }
-        _deltaY = ToMove.transform.position.y - transform.position.y;
+
+        private float GetDeltaY()
+        {
+            return ToMove.transform.position.y - transform.position.y;
+        }
+        private void Update()
+        {
+            float delta = GetDeltaY();
+            if (delta != _deltaY)
+            {
+                Vector3 translation = new Vector3(0, _deltaY - delta, 0);
+                ToMove.transform.Translate(translation);
+                transform.Translate(translation * -1);
+            }
+        }
     }
 
-    private float GetDeltaY()
-    {
-        return ToMove.transform.position.y - transform.position.y;
-    }
-    private void Update()
-    {
-        float delta = GetDeltaY();
-        if(delta != _deltaY)
-        {
-            Vector3 translation = new Vector3(0, _deltaY - delta, 0);
-            ToMove.transform.Translate(translation);
-            transform.Translate(translation * -1);
-        }
-    }
 }

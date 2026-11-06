@@ -1,4 +1,8 @@
-﻿public interface IToggleGroupOwner
+﻿namespace Magus
 {
-    public void GroupToggleChange(byte groupID, byte selectedIndex);
+    public interface IToggleGroupOwner
+    {
+        public void GroupToggleChange(byte groupID, byte selectedIndex);
+    }
+
 }

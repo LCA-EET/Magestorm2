@@ -1,158 +1,163 @@
 ﻿using NUnit.Framework.Internal;
 using UnityEngine;
-public class SpellSpawner : MonoBehaviour 
+
+namespace Magus
 {
-    public byte SpellKey;
-    private byte _casterID;
-    protected SpellData _spellReference;
-    private byte[] _payload;
-    private short _castID;
-    private bool _flowDown;
-    private Team _castingTeam;
-    private Avatar _caster;
-    public void Start()
+    public class SpellSpawner : MonoBehaviour
     {
-        SpawnedSpell[] childObjects = GetComponentsInChildren<SpawnedSpell>();
-        foreach (SpawnedSpell obj in childObjects)
+        public byte SpellKey;
+        private byte _casterID;
+        protected SpellData _spellReference;
+        private byte[] _payload;
+        private short _castID;
+        private bool _flowDown;
+        private Team _castingTeam;
+        private Avatar _caster;
+        public void Start()
         {
-            if (_flowDown)
+            SpawnedSpell[] childObjects = GetComponentsInChildren<SpawnedSpell>();
+            foreach (SpawnedSpell obj in childObjects)
             {
-                obj.InitializeNoCaster(_castingTeam, _castID, transform.parent, _spellReference, _payload);
+                if (_flowDown)
+                {
+                    obj.InitializeNoCaster(_castingTeam, _castID, transform.parent, _spellReference, _payload);
+                }
+                else
+                {
+                    obj.Initialize(_casterID, _castingTeam, _castID, transform.parent, _spellReference, _payload);
+                }
+
+            }
+            Destroy(gameObject);
+        }
+        public void InitializeWithoutCaster(byte spellType, short castID, byte[] payload, bool flowDown)
+        {
+            Debug.Log("InitializeWithoutCaster: " + SpellKey);
+            _flowDown = flowDown;
+            _castID = castID;
+            _payload = payload;
+
+            if (Game.ActiveSpellManager.GetSpell(SpellKey, ref _spellReference))
+            {
+                switch (spellType)
+                {
+                    case ControlCodes.SpellTypes_PBAoE:
+                        AssociateToCaster(1.0f);
+                        break;
+                    case ControlCodes.SpellTypes_Self:
+                        AssociateToCaster(0.0f);
+                        break;
+                    case ControlCodes.SpellTypes_Projectile:
+                        InitializeProjectile();
+                        break;
+                    case ControlCodes.SpellTypes_Summon:
+                        InitializeSummon();
+                        break;
+                    case ControlCodes.SpellTypes_Bolt:
+                        InitializeBolt();
+                        break;
+                    case ControlCodes.SpellTypes_NonSolidWall:
+                    case ControlCodes.SpellTypes_SolidWall:
+                        InitializeWall();
+                        break;
+                    case ControlCodes.SpellTypes_HarmfulSigil:
+                    case ControlCodes.SpellTypes_Sigil:
+                        InitializeSigil();
+                        break;
+                }
             }
             else
             {
-                obj.Initialize(_casterID, _castingTeam, _castID, transform.parent, _spellReference, _payload);
+                Destroy(gameObject);
+                return;
             }
-                
         }
-        Destroy(gameObject);
-    }
-    public void InitializeWithoutCaster(byte spellType, short castID, byte[] payload, bool flowDown)
-    {
-        Debug.Log("InitializeWithoutCaster: " + SpellKey);
-        _flowDown = flowDown;
-        _castID = castID;
-        _payload = payload;
-
-        if(Game.ActiveSpellManager.GetSpell(SpellKey, ref _spellReference))
+        public void Initialize(Avatar caster, byte spellType, short castID, byte[] payload)
         {
-            switch (spellType)
+            _caster = caster;
+            _casterID = _caster.PlayerID;
+            _castingTeam = caster.PlayerTeam;
+            InitializeWithoutCaster(spellType, castID, payload, false);
+            if (_casterID == MatchParams.IDinMatch)
             {
-                case ControlCodes.SpellTypes_PBAoE:
-                    AssociateToCaster(1.0f);
-                    break;
-                case ControlCodes.SpellTypes_Self:
-                    AssociateToCaster(0.0f);
-                    break;
-                case ControlCodes.SpellTypes_Projectile:
-                    InitializeProjectile();
-                    break;
-                case ControlCodes.SpellTypes_Summon:
-                    InitializeSummon();
-                    break;
-                case ControlCodes.SpellTypes_Bolt:
-                    InitializeBolt();
-                    break;
-                case ControlCodes.SpellTypes_NonSolidWall:
-                case ControlCodes.SpellTypes_SolidWall:
-                    InitializeWall();
-                    break;
-                case ControlCodes.SpellTypes_HarmfulSigil:
-                case ControlCodes.SpellTypes_Sigil:
-                    InitializeSigil();
-                    break;
+                UseStamina();
             }
         }
-        else
+        private void InitializeHitScan()
         {
-            Destroy(gameObject);
-            return;
-        }
-    }
-    public void Initialize(Avatar caster, byte spellType, short castID, byte[] payload)
-    {
-        _caster = caster;
-        _casterID = _caster.PlayerID;
-        _castingTeam = caster.PlayerTeam;
-        InitializeWithoutCaster(spellType, castID, payload, false);
-        if (_casterID == MatchParams.IDinMatch)
-        {
-            UseStamina();
-        }
-    }
-    private void InitializeHitScan()
-    {
-        
-    }
-    private void InitializeSigil()
-    {
-        byte teamID = _payload[0];
-        Vector3 position = ByteUtils.BytesToVector3(_payload, 1);
-        transform.position = position;
 
-    }
-    private void InitializeWall()
-    {
-        Vector3 position = ByteUtils.BytesToVector3(_payload, 0);
-        Vector3 eulers = ByteUtils.BytesToVector3(_payload, 12);
-        transform.eulerAngles = eulers;
-        transform.position = position;
-        Debug.Log("Wall Position: " + position.ToString());
-    }
-    private void InitializeBolt()
-    {
-        byte targetID = _payload[0];
-        Debug.Log("Bolt target: " + targetID);
-        Avatar target = null;
-        Vector3 direction;        
-        if(Match.GetAvatar(targetID, ref target))
-        {
-            direction = SharedFunctions.DirectionVector(_caster.transform.position, target.transform.position - new Vector3(0, 0.5f, 0));
-            Debug.Log("Direction2: " + direction.ToString());
         }
-        else
+        private void InitializeSigil()
         {
-            direction = ByteUtils.BytesToVector3(_payload, 1);
-            Debug.Log("Direction3: " + direction.ToString());
-        }
-        //direction.y -= 0.5f;
-        SetOrigin(direction);
-    }
-    private void AssociateToCaster(float y)
-    {
-        transform.parent = _caster.transform;
-        transform.position = _caster.transform.position;
-        transform.localPosition = new Vector3(0, y, 0);
-    }
+            byte teamID = _payload[0];
+            Vector3 position = ByteUtils.BytesToVector3(_payload, 1);
+            transform.position = position;
 
-    private void InitializeSummon()
-    {
-        Debug.Log("Initialize Summon.");
-        AssociateToCaster(1.0f);
-        byte summonedPlayerID = _payload[0];
-        Avatar summonedPlayer = null;
-        if (Match.GetAvatar(summonedPlayerID, ref summonedPlayer))
+        }
+        private void InitializeWall()
         {
-            if (summonedPlayerID == MatchParams.IDinMatch)
+            Vector3 position = ByteUtils.BytesToVector3(_payload, 0);
+            Vector3 eulers = ByteUtils.BytesToVector3(_payload, 12);
+            transform.eulerAngles = eulers;
+            transform.position = position;
+            Debug.Log("Wall Position: " + position.ToString());
+        }
+        private void InitializeBolt()
+        {
+            byte targetID = _payload[0];
+            Debug.Log("Bolt target: " + targetID);
+            Avatar target = null;
+            Vector3 direction;
+            if (Match.GetAvatar(targetID, ref target))
             {
-                ComponentRegister.PC.UpdatePosition(_caster.transform.position + ((_caster.transform.forward) * 0.67f));
+                direction = SharedFunctions.DirectionVector(_caster.transform.position, target.transform.position - new Vector3(0, 0.5f, 0));
+                Debug.Log("Direction2: " + direction.ToString());
+            }
+            else
+            {
+                direction = ByteUtils.BytesToVector3(_payload, 1);
+                Debug.Log("Direction3: " + direction.ToString());
+            }
+            //direction.y -= 0.5f;
+            SetOrigin(direction);
+        }
+        private void AssociateToCaster(float y)
+        {
+            transform.parent = _caster.transform;
+            transform.position = _caster.transform.position;
+            transform.localPosition = new Vector3(0, y, 0);
+        }
+
+        private void InitializeSummon()
+        {
+            Debug.Log("Initialize Summon.");
+            AssociateToCaster(1.0f);
+            byte summonedPlayerID = _payload[0];
+            Avatar summonedPlayer = null;
+            if (Match.GetAvatar(summonedPlayerID, ref summonedPlayer))
+            {
+                if (summonedPlayerID == MatchParams.IDinMatch)
+                {
+                    ComponentRegister.PC.UpdatePosition(_caster.transform.position + ((_caster.transform.forward) * 0.67f));
+                }
             }
         }
-    }
-    private void SetOrigin(Vector3 direction)
-    {
-        Vector3 adjustedPosition = _caster.transform.position + (direction * 0.67f);
-        adjustedPosition.y += 1.4f;
-        transform.position = adjustedPosition;
-        transform.forward = direction;
-    }
-    private void InitializeProjectile()
-    {
-        Vector3 direction = ByteUtils.BytesToVector3(_payload, 0);
-        SetOrigin(direction);
-    }
-    private void UseStamina()
-    {
-        ComponentRegister.PC.UseStamina(_spellReference.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel));
+        private void SetOrigin(Vector3 direction)
+        {
+            Vector3 adjustedPosition = _caster.transform.position + (direction * 0.67f);
+            adjustedPosition.y += 1.4f;
+            transform.position = adjustedPosition;
+            transform.forward = direction;
+        }
+        private void InitializeProjectile()
+        {
+            Vector3 direction = ByteUtils.BytesToVector3(_payload, 0);
+            SetOrigin(direction);
+        }
+        private void UseStamina()
+        {
+            ComponentRegister.PC.UseStamina(_spellReference.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel));
+        }
     }
 }
+

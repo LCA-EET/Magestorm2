@@ -1,56 +1,61 @@
 ﻿using TMPro;
 using UnityEngine;
-public class MultiOption : ValidatableForm
+namespace Magus
 {
-    public SettingKey SettingKey;
-    public int[] OptionStrings;
-    public int CaptionStringReference;
-    public TMP_Text CaptionTextObject, OptionTextObject;
-    private int _selectedOption;
-    private void Start()
+
+    public class MultiOption : ValidatableForm
     {
-        AssociateFormToButtons();
-        CaptionTextObject.text = Language.GetBaseString(CaptionStringReference);
-    }
-    public void SetOption(byte optionIndex)
-    {
-        _selectedOption = optionIndex - 1;
-        Debug.Log("Multioption: Setting " + SettingKey + " to " + _selectedOption);
-        RefreshText();
-    }
-    public byte SelectedOption
-    {
-        get { return (byte)(_selectedOption + 1); }
-    }
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        switch (buttonType)
+        public SettingKey SettingKey;
+        public int[] OptionStrings;
+        public int CaptionStringReference;
+        public TMP_Text CaptionTextObject, OptionTextObject;
+        private int _selectedOption;
+        private void Start()
         {
-            case ButtonType.Misc0:
-                IncrementOption(false);
-                break;
-            case ButtonType.Misc1:
-                IncrementOption(true);
-                break;
+            AssociateFormToButtons();
+            CaptionTextObject.text = Language.GetBaseString(CaptionStringReference);
+        }
+        public void SetOption(byte optionIndex)
+        {
+            _selectedOption = optionIndex - 1;
+            Debug.Log("Multioption: Setting " + SettingKey + " to " + _selectedOption);
+            RefreshText();
+        }
+        public byte SelectedOption
+        {
+            get { return (byte)(_selectedOption + 1); }
+        }
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Misc0:
+                    IncrementOption(false);
+                    break;
+                case ButtonType.Misc1:
+                    IncrementOption(true);
+                    break;
+            }
+        }
+        private void IncrementOption(bool increase)
+        {
+            _selectedOption += increase ? 1 : -1;
+            if (_selectedOption < 0)
+            {
+                _selectedOption = OptionStrings.Length - 1;
+            }
+            else if (_selectedOption == OptionStrings.Length)
+            {
+                _selectedOption = 0;
+            }
+            RefreshText();
+        }
+        private void RefreshText()
+        {
+            string newText = Language.GetBaseString(OptionStrings[_selectedOption]);
+            Debug.Log("Refeshing text to " + newText);
+            OptionTextObject.text = newText;
         }
     }
-    private void IncrementOption(bool increase)
-    {
-        _selectedOption += increase ? 1 : -1;
-        if(_selectedOption < 0)
-        {
-            _selectedOption = OptionStrings.Length-1;
-        }
-        else if (_selectedOption == OptionStrings.Length)
-        {
-            _selectedOption = 0;
-        }
-        RefreshText();
-    }
-    private void RefreshText()
-    {
-        string newText = Language.GetBaseString(OptionStrings[_selectedOption]);
-        Debug.Log("Refeshing text to " + newText);
-        OptionTextObject.text = newText;
-    }
+
 }

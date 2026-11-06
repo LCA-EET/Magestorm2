@@ -1,22 +1,26 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class MatchOptionSelection : MonoBehaviour
+namespace Magus
 {
-    public Toggle[] MatchOptions;
 
-    public byte[] GenerateValue()
+    public class MatchOptionSelection : MonoBehaviour
     {
-        BitArray ba = new BitArray(8);
-        for (int i = 0; i < MatchOptions.Length; i++)
+        public Toggle[] MatchOptions;
+
+        public byte[] GenerateValue()
         {
-            ba[i] = MatchOptions[i].isOn;
+            BitArray ba = new BitArray(8);
+            for (int i = 0; i < MatchOptions.Length; i++)
+            {
+                ba[i] = MatchOptions[i].isOn;
+            }
+            byte[] toReturn = new byte[(ba.Length + 7) / 8];
+            ba.CopyTo(toReturn, 0);
+            return toReturn;
         }
-        byte[] toReturn = new byte[(ba.Length + 7)/ 8];
-        ba.CopyTo(toReturn, 0);
-        return toReturn;
+
+
     }
 
-    
 }

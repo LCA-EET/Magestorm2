@@ -4,33 +4,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-
-public class IndexedSprite : IComparable<IndexedSprite>
+namespace Magus
 {
-    private Sprite _sprite;
-    private int _index;
 
-    public IndexedSprite(Sprite sprite, int index)
+    public class IndexedSprite : IComparable<IndexedSprite>
     {
-        _sprite = sprite; 
-        _index = index;
-    }
+        private Sprite _sprite;
+        private int _index;
 
-    public int Index
-    {
-        get
+        public IndexedSprite(Sprite sprite, int index)
         {
-            return _index;
+            _sprite = sprite;
+            _index = index;
+        }
+
+        public int Index
+        {
+            get
+            {
+                return _index;
+            }
+        }
+
+        public Sprite Sprite
+        {
+            get { return _sprite; }
+        }
+
+        public int CompareTo(IndexedSprite other)
+        {
+            return _index.CompareTo(other._index);
         }
     }
 
-    public Sprite Sprite
-    {
-        get { return _sprite; }
-    }
-
-    public int CompareTo(IndexedSprite other)
-    {
-        return _index.CompareTo(other._index);
-    }
 }

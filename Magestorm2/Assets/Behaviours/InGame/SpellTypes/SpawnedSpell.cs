@@ -1,96 +1,101 @@
 ﻿using UnityEngine;
-public class SpawnedSpell : MonoBehaviour 
+
+namespace Magus
 {
-    public AudioClip CastClip;
-    protected byte _casterID;
-    protected short _castID;
-    protected Avatar _casterReference;
-    public float ExpireAfter;
-    public float DestroyAfter;
-    private float _expiration;
-    private float _destructionElapsed;
-    protected SpellData _spellReference;
-    protected Team _castingTeam;
-    protected bool _destroyOnNextUpdate;
-    protected byte[] _payload;
-    protected virtual void Awake()
+    public class SpawnedSpell : MonoBehaviour
     {
-        if (GameSettings.GetSettingValue(SettingKey.LitProjectiles) == ControlCodes.LitProjectiles_Off)
+        public AudioClip CastClip;
+        protected byte _casterID;
+        protected short _castID;
+        protected Avatar _casterReference;
+        public float ExpireAfter;
+        public float DestroyAfter;
+        private float _expiration;
+        private float _destructionElapsed;
+        protected SpellData _spellReference;
+        protected Team _castingTeam;
+        protected bool _destroyOnNextUpdate;
+        protected byte[] _payload;
+        protected virtual void Awake()
         {
-            Light[] components = GetComponentsInChildren<Light>();
-            foreach (Light light in components)
+            if (GameSettings.GetSettingValue(SettingKey.LitProjectiles) == ControlCodes.LitProjectiles_Off)
             {
-                light.intensity = 0;
+                Light[] components = GetComponentsInChildren<Light>();
+                foreach (Light light in components)
+                {
+                    light.intensity = 0;
+                }
             }
         }
-    }
-    public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
-    {
-        if(Match.GetAvatar(casterID, ref _casterReference))
+        public virtual void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
         {
-            _casterID = casterID;
-            InitializeNoCaster(castingTeam, castID, parent, spellReference, payload);
-            if(CastClip != null)
+            if (Match.GetAvatar(casterID, ref _casterReference))
             {
-                Game.Clips.PlayClip(CastClip, _casterReference.AudioSource, 7.5f);
+                _casterID = casterID;
+                InitializeNoCaster(castingTeam, castID, parent, spellReference, payload);
+                if (CastClip != null)
+                {
+                    Game.Clips.PlayClip(CastClip, _casterReference.AudioSource, 7.5f);
+                }
+                else
+                {
+                    AudioClip toPlay = Game.Clips.GetDisciplineCast(spellReference.Discipline);
+                    Game.Clips.PlayClip(toPlay, _casterReference.AudioSource, 7.5f);
+                }
             }
             else
             {
-                AudioClip toPlay = Game.Clips.GetDisciplineCast(spellReference.Discipline);
-                Game.Clips.PlayClip(toPlay, _casterReference.AudioSource, 7.5f);
-            }
-        }
-        else
-        {
-            Debug.Log("SpawnedSpell.Initialize Destroy GameObject");
-            Destroy(gameObject);
-        }
-    }
-    public virtual void InitializeNoCaster(Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
-    {
-        _payload = payload;
-        _spellReference = spellReference;
-        _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
-        transform.parent = parent;
-        //Debug.Log("INC parent transform: " + parent.ToString());
-        _castingTeam = castingTeam;
-        _castID = castID;
-        if (_spellReference.ForceDuration > 0)
-        {
-            Match.AddStoredVector(_castID, transform.forward);
-        }
-        ComponentRegister.Spawner.RegisterSpawnedSpell(this);
-    }
-    public bool IsExpired(float currentTime)
-    {
-        return currentTime >= _expiration;
-    }
-    public virtual void Update()
-    {
-        if (_destroyOnNextUpdate)
-        {
-            if(_destructionElapsed >= DestroyAfter)
-            {
-                ComponentRegister.Spawner.DeregisterSpawnedSpell(this);
+                Debug.Log("SpawnedSpell.Initialize Destroy GameObject");
                 Destroy(gameObject);
             }
-            else
+        }
+        public virtual void InitializeNoCaster(Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
+        {
+            _payload = payload;
+            _spellReference = spellReference;
+            _expiration = Time.realtimeSinceStartup + (ExpireAfter == 0 ? 60 : ExpireAfter);
+            transform.parent = parent;
+            //Debug.Log("INC parent transform: " + parent.ToString());
+            _castingTeam = castingTeam;
+            _castID = castID;
+            if (_spellReference.ForceDuration > 0)
             {
-                _destructionElapsed += Time.deltaTime;
+                Match.AddStoredVector(_castID, transform.forward);
+            }
+            ComponentRegister.Spawner.RegisterSpawnedSpell(this);
+        }
+        public bool IsExpired(float currentTime)
+        {
+            return currentTime >= _expiration;
+        }
+        public virtual void Update()
+        {
+            if (_destroyOnNextUpdate)
+            {
+                if (_destructionElapsed >= DestroyAfter)
+                {
+                    ComponentRegister.Spawner.DeregisterSpawnedSpell(this);
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    _destructionElapsed += Time.deltaTime;
+                }
             }
         }
-    }
-    public void MarkForDestruction()
-    {
-        Debug.Log("MarkForDestruction");
-        _destroyOnNextUpdate = true;
-    }
-    public short CastID
-    {
-        get { return _castID; }
-    }
-    public byte CasterID
-    {
-        get { return _casterID; }
+        public void MarkForDestruction()
+        {
+            Debug.Log("MarkForDestruction");
+            _destroyOnNextUpdate = true;
+        }
+        public short CastID
+        {
+            get { return _castID; }
+        }
+        public byte CasterID
+        {
+            get { return _casterID; }
+        }
     }
 }
+

@@ -1,63 +1,67 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-public class SceneInitializer : MonoBehaviour
+namespace Magus
 {
-    public Scene SceneGO;
-    public Material NeutralBiased;
-    public Material BalanceBiased;
-    public Material OrderBiased;
-    public Material ChaosBiased;
-    private void Awake()
+
+    public class SceneInitializer : MonoBehaviour
     {
-        if (!Game.Running)
+        public Scene SceneGO;
+        public Material NeutralBiased;
+        public Material BalanceBiased;
+        public Material OrderBiased;
+        public Material ChaosBiased;
+        private void Awake()
         {
-            SceneManager.LoadScene("Pregame");
+            if (!Game.Running)
+            {
+                SceneManager.LoadScene("Pregame");
+            }
+            else
+            {
+                ComponentRegister.SceneInitializer = this;
+                Match.Reinitialize();
+                InputControls.Init();
+            }
+
         }
-        else
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            ComponentRegister.SceneInitializer = this;
-            Match.Reinitialize();
-            InputControls.Init();
+            Teams.Init();
+            Game.Init();
+            Language.Init();
+            LayerManager.Init();
+            PoolManager.InitializePools();
+            AssignPools();
+            AssignActivatables();
+            Game.ChatMode = false;
+            Game.MenuMode = false;
         }
-        
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        Teams.Init();
-        Game.Init();
-        Language.Init();
-        LayerManager.Init();
-        PoolManager.InitializePools();
-        AssignPools();
-        AssignActivatables();
-        Game.ChatMode = false;
-        Game.MenuMode = false;
-    }
-    private void AssignPools()
-    {
-        ManaPool[] mp = SceneGO.GetComponentsInChildren<ManaPool>();
-        Array.Sort(mp);
-        for (byte b = 0; b < mp.Length; b++)
+        private void AssignPools()
         {
-            Debug.Log("Registering pool " + b);
-            mp[b].RegisterPool(b);
+            ManaPool[] mp = SceneGO.GetComponentsInChildren<ManaPool>();
+            Array.Sort(mp);
+            for (byte b = 0; b < mp.Length; b++)
+            {
+                Debug.Log("Registering pool " + b);
+                mp[b].RegisterPool(b);
+            }
         }
-    }
-    private void AssignActivatables()
-    {
-        ActivateableObject[] ao = SceneGO.GetComponentsInChildren<ActivateableObject>();
-        Array.Sort(ao);
-        for (byte b = 0; b < ao.Length; b++)
+        private void AssignActivatables()
         {
-            ao[b].RegisterObject(b);
+            ActivateableObject[] ao = SceneGO.GetComponentsInChildren<ActivateableObject>();
+            Array.Sort(ao);
+            for (byte b = 0; b < ao.Length; b++)
+            {
+                ao[b].RegisterObject(b);
+            }
+        }
+        // Update is called once per frame
+        void Update()
+        {
+
         }
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

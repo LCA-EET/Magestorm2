@@ -1,35 +1,39 @@
 ﻿using UnityEngine;
 
-public class Valhalla : Trigger
+namespace Magus
 {
-    public GameObject[] EntryPoints;
-
-    protected override void Awake()
+    public class Valhalla : Trigger
     {
-        base.Awake();
-        ComponentRegister.Valhalla = this;
-    }
+        public GameObject[] EntryPoints;
 
-    public void EnterValhalla()
-    {
-        Debug.Log("PC has entered Valhalla.");
-        byte teamID = MatchParams.MatchTeamID;
-        GameObject entry = EntryPoints[teamID];
-        ComponentRegister.PC.UpdatePosition(entry.transform.position);
-        ComponentRegister.PC.transform.localEulerAngles = entry.transform.localEulerAngles;
-    }
+        protected override void Awake()
+        {
+            base.Awake();
+            ComponentRegister.Valhalla = this;
+        }
 
-    public override void EnterAction()
-    {
-        base.EnterAction();
-        ComponentRegister.PC.InValhalla = true;
-        ComponentRegister.ValhallaNotice.Show(true);
-    }
+        public void EnterValhalla()
+        {
+            Debug.Log("PC has entered Valhalla.");
+            byte teamID = MatchParams.MatchTeamID;
+            GameObject entry = EntryPoints[teamID];
+            ComponentRegister.PC.UpdatePosition(entry.transform.position);
+            ComponentRegister.PC.transform.localEulerAngles = entry.transform.localEulerAngles;
+        }
 
-    public override void ExitAction()
-    {
-        base.ExitAction();
-        ComponentRegister.PC.InValhalla = false;
-        ComponentRegister.ValhallaNotice.Show(false);
+        public override void EnterAction()
+        {
+            base.EnterAction();
+            ComponentRegister.PC.InValhalla = true;
+            ComponentRegister.ValhallaNotice.Show(true);
+        }
+
+        public override void ExitAction()
+        {
+            base.ExitAction();
+            ComponentRegister.PC.InValhalla = false;
+            ComponentRegister.ValhallaNotice.Show(false);
+        }
     }
 }
+

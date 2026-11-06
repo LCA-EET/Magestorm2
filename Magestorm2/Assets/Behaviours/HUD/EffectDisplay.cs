@@ -1,46 +1,50 @@
 using UnityEngine;
 using UnityEngine.UI;
-
-public class EffectDisplay : MonoBehaviour
+namespace Magus
 {
-    public Image Image;
-    private bool _isShown;
-    private PeriodicAction _advanceSprite;
-    private SpriteSet _spriteSet;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Awake()
-    {
-        _advanceSprite = new PeriodicAction(0.167f, AdvanceFrame, null);
-    }
-    void Start()
-    {
-        Hide();
-    }
 
-    // Update is called once per frame
-    void Update()
+    public class EffectDisplay : MonoBehaviour
     {
-        if (_isShown)
+        public Image Image;
+        private bool _isShown;
+        private PeriodicAction _advanceSprite;
+        private SpriteSet _spriteSet;
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        private void Awake()
         {
-            _advanceSprite.ProcessAction(Time.deltaTime);
+            _advanceSprite = new PeriodicAction(0.167f, AdvanceFrame, null);
+        }
+        void Start()
+        {
+            Hide();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (_isShown)
+            {
+                _advanceSprite.ProcessAction(Time.deltaTime);
+            }
+        }
+        public void Hide()
+        {
+            _isShown = false;
+            Image.color = Colors.Transparent;
+            Image.gameObject.SetActive(false);
+        }
+        public void Show(bool show, SpriteSet spriteSet)
+        {
+            _spriteSet = spriteSet;
+            Image.color = Colors.Opaque;
+            Image.gameObject.SetActive(show);
+            _isShown = show;
+        }
+
+        private void AdvanceFrame()
+        {
+            Image.sprite = _spriteSet.GetNextSprite();
         }
     }
-    public void Hide()
-    {
-        _isShown = false;
-        Image.color = Colors.Transparent;
-        Image.gameObject.SetActive(false);
-    }
-    public void Show(bool show, SpriteSet spriteSet)
-    {
-        _spriteSet = spriteSet;
-        Image.color = Colors.Opaque;
-        Image.gameObject.SetActive(show);
-        _isShown = show;
-    }
 
-    private void AdvanceFrame()
-    {
-        Image.sprite = _spriteSet.GetNextSprite();
-    }
 }

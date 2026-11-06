@@ -1,53 +1,57 @@
 ﻿using UnityEngine;
 
-public class LeyInfluencer : Trigger
+namespace Magus
 {
-    public SphereCollider SphereCollider;
-    private BiasableTrigger _owner;
-    private byte _key;
-    private byte _power;
-    
-    public void AssignOwner(BiasableTrigger owner, byte power, byte key)
+    public class LeyInfluencer : Trigger
     {
-        _key = key;
-        _triggerType = TriggerType.LeyInfluencer;
-        _owner = owner;
-        _power = power;
-        SphereCollider.radius = _power;
-    }
-    
-    public TriggerType OwningTriggerType
-    {
-        get
+        public SphereCollider SphereCollider;
+        private BiasableTrigger _owner;
+        private byte _key;
+        private byte _power;
+
+        public void AssignOwner(BiasableTrigger owner, byte power, byte key)
         {
-            return _owner.TriggerType;
+            _key = key;
+            _triggerType = TriggerType.LeyInfluencer;
+            _owner = owner;
+            _power = power;
+            SphereCollider.radius = _power;
         }
-    }
-    public float GetLeyContribution()
-    {
-        float contribution = 0;
-        //Debug.Log("Ley contribution from: " + _owner.name);
-        if(_owner.BiasedToward != Team.Neutral)
+
+        public TriggerType OwningTriggerType
         {
-            float distance = Vector3.Distance(transform.position, ComponentRegister.PC.transform.position);
-            //Debug.Log("Distance: " + distance);
-            float distanceFactor = 1.0f - (distance / _power); 
-            //Debug.Log("Distance Factir: " + distanceFactor);
-            contribution = (distanceFactor * (_owner.BiasAmount / 100.0f)) * (_owner.BiasedToward == MatchParams.MatchTeam ? 1.0f : -1.0f);
+            get
+            {
+                return _owner.TriggerType;
+            }
         }
-        //Debug.Log("Ley contribution: " + contribution);
-        return contribution;
-    }
-    public override void EnterAction()
-    {
-        base.EnterAction();
-        ComponentRegister.PC.RegisterLeyInfluencer(_key, this);
-        //Debug.Log("Ley Influence Enter");
-    }
-    public override void ExitAction()
-    {
-        base.ExitAction();
-        ComponentRegister.PC.DeregisterLeyInfluencer(_key);
-        //Debug.Log("Ley Influence Exit");
+        public float GetLeyContribution()
+        {
+            float contribution = 0;
+            //Debug.Log("Ley contribution from: " + _owner.name);
+            if (_owner.BiasedToward != Team.Neutral)
+            {
+                float distance = Vector3.Distance(transform.position, ComponentRegister.PC.transform.position);
+                //Debug.Log("Distance: " + distance);
+                float distanceFactor = 1.0f - (distance / _power);
+                //Debug.Log("Distance Factir: " + distanceFactor);
+                contribution = (distanceFactor * (_owner.BiasAmount / 100.0f)) * (_owner.BiasedToward == MatchParams.MatchTeam ? 1.0f : -1.0f);
+            }
+            //Debug.Log("Ley contribution: " + contribution);
+            return contribution;
+        }
+        public override void EnterAction()
+        {
+            base.EnterAction();
+            ComponentRegister.PC.RegisterLeyInfluencer(_key, this);
+            //Debug.Log("Ley Influence Enter");
+        }
+        public override void ExitAction()
+        {
+            base.ExitAction();
+            ComponentRegister.PC.DeregisterLeyInfluencer(_key);
+            //Debug.Log("Ley Influence Exit");
+        }
     }
 }
+

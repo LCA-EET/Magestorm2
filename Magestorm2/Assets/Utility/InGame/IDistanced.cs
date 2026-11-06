@@ -1,5 +1,10 @@
 ﻿using UnityEngine;
-interface IDistanced
+namespace Magus
 {
-    public float DetermineDistance(Transform remote);
+
+    interface IDistanced
+    {
+        public float DetermineDistance(Transform remote);
+    }
+
 }

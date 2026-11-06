@@ -1,15 +1,19 @@
 ﻿using TMPro;
 using UnityEngine;
-
-public class CTFTeamScore : MonoBehaviour
+namespace Magus
 {
-    public TMP_Text Score;
-    public TMP_Text TeamName;
-    public Team Team;
 
-    public void Refresh()
+    public class CTFTeamScore : MonoBehaviour
     {
-        TeamName.text = Teams.GetTeamName(Team);
-        Score.text = FlagManager.GetScore(Team).ToString();
+        public TMP_Text Score;
+        public TMP_Text TeamName;
+        public Team Team;
+
+        public void Refresh()
+        {
+            TeamName.text = Teams.GetTeamName(Team);
+            Score.text = FlagManager.GetScore(Team).ToString();
+        }
     }
+
 }

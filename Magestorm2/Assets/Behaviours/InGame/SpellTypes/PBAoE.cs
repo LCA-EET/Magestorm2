@@ -1,37 +1,41 @@
 ﻿using UnityEngine;
 
-public class PBAoE : SpawnedSpell
+namespace Magus
 {
-    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
+    public class PBAoE : SpawnedSpell
     {
-        bool reportHit = false;
-        base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
-        ComponentRegister.Spawner.SpawnMarker(transform.position, 1.0f);
-        if(SharedFunctions.IsPlayerInRadius(transform.position, _spellReference.EffectRadius))
+        public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
         {
-            if (_spellReference.IsFriendly && castingTeam == MatchParams.MatchTeam)
+            bool reportHit = false;
+            base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
+            ComponentRegister.Spawner.SpawnMarker(transform.position, 1.0f);
+            if (SharedFunctions.IsPlayerInRadius(transform.position, _spellReference.EffectRadius))
             {
-                reportHit = true;
-            }
-            if (!_spellReference.IsFriendly && casterID != MatchParams.IDinMatch)
-            {
-                if(MatchParams.MatchType == ControlCodes.MatchTypes_FreeForAll)
+                if (_spellReference.IsFriendly && castingTeam == MatchParams.MatchTeam)
                 {
                     reportHit = true;
                 }
-                else
+                if (!_spellReference.IsFriendly && casterID != MatchParams.IDinMatch)
                 {
-                    if(castingTeam != MatchParams.MatchTeam)
+                    if (MatchParams.MatchType == ControlCodes.MatchTypes_FreeForAll)
                     {
                         reportHit = true;
                     }
+                    else
+                    {
+                        if (castingTeam != MatchParams.MatchTeam)
+                        {
+                            reportHit = true;
+                        }
+                    }
                 }
             }
+            if (reportHit)
+            {
+                Game.SendInGameBytes(InGame_Packets.ReportHitPacket(castID));
+            }
         }
-        if (reportHit)
-        {
-            Game.SendInGameBytes(InGame_Packets.ReportHitPacket(castID));
-        }
-    }
 
+    }
 }
+

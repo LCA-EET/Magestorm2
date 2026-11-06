@@ -1,4 +1,9 @@
-﻿public interface ISpellProcessor
+﻿namespace Magus
 {
-    void SelectionMade(object[] args);
+
+    public interface ISpellProcessor
+    {
+        void SelectionMade(object[] args);
+    }
+
 }

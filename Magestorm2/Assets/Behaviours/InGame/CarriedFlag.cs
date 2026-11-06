@@ -1,34 +1,39 @@
 ﻿using UnityEngine;
-public class CarriedFlag : MonoBehaviour
+
+namespace Magus
 {
-    public GameObject Chaos, Balance, Order;
-    private void Awake()
+    public class CarriedFlag : MonoBehaviour
     {
-        if (!MatchParams.IsCTF)
+        public GameObject Chaos, Balance, Order;
+        private void Awake()
         {
-            Destroy(gameObject);
+            if (!MatchParams.IsCTF)
+            {
+                Destroy(gameObject);
+            }
         }
-    }
-    private void HideFlags()
-    {
-        Chaos.SetActive(false);
-        Balance.SetActive(false);
-        Order.SetActive(false);
-    }
-    public void ShowFlag(Team flag)
-    {
-        HideFlags();
-        switch (flag)
+        private void HideFlags()
         {
-            case Team.Balance:
-                Balance.SetActive(true);        
-                break;
-            case Team.Order:
-                Order.SetActive(true);
-                break;
-            case Team.Chaos:
-                Chaos.SetActive(true);
-                break;
+            Chaos.SetActive(false);
+            Balance.SetActive(false);
+            Order.SetActive(false);
+        }
+        public void ShowFlag(Team flag)
+        {
+            HideFlags();
+            switch (flag)
+            {
+                case Team.Balance:
+                    Balance.SetActive(true);
+                    break;
+                case Team.Order:
+                    Order.SetActive(true);
+                    break;
+                case Team.Chaos:
+                    Chaos.SetActive(true);
+                    break;
+            }
         }
     }
 }
+

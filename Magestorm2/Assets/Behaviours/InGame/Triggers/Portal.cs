@@ -1,20 +1,24 @@
 ﻿using UnityEngine;
 
-public class Portal : Trigger
+namespace Magus
 {
-    public GameObject[] Exits;
-    
-    public override void EnterAction()
+    public class Portal : Trigger
     {
-        Debug.Log("Entered Portal.");
-        if (Game.PCAvatar.IsAlive)
-        {
-            int exitID = Random.Range(0, Exits.Length);
-            GameObject selectedExit = Exits[exitID];
-            ComponentRegister.PC.UpdatePosition(selectedExit.transform.position);
-            ComponentRegister.PC.transform.eulerAngles = selectedExit.transform.eulerAngles;
-            Game.PCAvatar.PlayAudioClip(Game.Clips.SFXTeleport);
-        }
-    }
+        public GameObject[] Exits;
 
+        public override void EnterAction()
+        {
+            Debug.Log("Entered Portal.");
+            if (Game.PCAvatar.IsAlive)
+            {
+                int exitID = Random.Range(0, Exits.Length);
+                GameObject selectedExit = Exits[exitID];
+                ComponentRegister.PC.UpdatePosition(selectedExit.transform.position);
+                ComponentRegister.PC.transform.eulerAngles = selectedExit.transform.eulerAngles;
+                Game.PCAvatar.PlayAudioClip(Game.Clips.SFXTeleport);
+            }
+        }
+
+    }
 }
+

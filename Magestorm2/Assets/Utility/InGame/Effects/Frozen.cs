@@ -1,19 +1,23 @@
 ﻿using UnityEngine;
-
-public class Frozen : AppliedEffect
+namespace Magus
 {
-    public override void ApplyEffect(Avatar appliedTo)
+
+    public class Frozen : AppliedEffect
     {
-        base.ApplyEffect(appliedTo);
-        if (_appliedToPlayer)
+        public override void ApplyEffect(Avatar appliedTo)
         {
-            ComponentRegister.PlayerMovement.MarkFrozen(true);
+            base.ApplyEffect(appliedTo);
+            if (_appliedToPlayer)
+            {
+                ComponentRegister.PlayerMovement.MarkFrozen(true);
+            }
+        }
+
+        public override void ReverseEffect()
+        {
+            base.ReverseEffect();
+            ComponentRegister.PlayerMovement.MarkFrozen(false);
         }
     }
 
-    public override void ReverseEffect()
-    {
-        base.ReverseEffect();
-        ComponentRegister.PlayerMovement.MarkFrozen(false);
-    }
 }

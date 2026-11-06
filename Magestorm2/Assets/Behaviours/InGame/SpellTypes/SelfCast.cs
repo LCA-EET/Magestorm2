@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 
-public class SelfCast : SpawnedSpell
+namespace Magus
 {
-    public byte VFXCode;
-    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
+    public class SelfCast : SpawnedSpell
     {
-        base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
-        if(VFXCode != ControlCodes.VFX_None)
+        public byte VFXCode;
+        public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
         {
-            ComponentRegister.Spawner.SpawnVFX(VFXCode, _casterReference.transform);
+            base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
+            if (VFXCode != ControlCodes.VFX_None)
+            {
+                ComponentRegister.Spawner.SpawnVFX(VFXCode, _casterReference.transform);
+            }
         }
     }
 }
+

@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-
-public class HingedDoor : RotatingAO
+﻿
+namespace Magus
 {
-    protected override void ApplyStateChange(bool force)
+    public class HingedDoor : RotatingAO
     {
-        if (!force)
+        protected override void ApplyStateChange(bool force)
         {
-            
+            if (!force)
+            {
+
+            }
+            base.ApplyStateChange(force);
         }
-        base.ApplyStateChange(force);
     }
+
 }

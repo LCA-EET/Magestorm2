@@ -1,118 +1,122 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-
-public class UIJoinMatch : ValidatableForm
+namespace Magus
 {
-    public TeamPlayerList ChaosPlayerList;
-    public TeamPlayerList BalancePlayerList;
-    public TeamPlayerList OrderPlayerList;
-    public TMP_Text MatchCreatorText;
-    public TMP_Text MatchIDText;
-    public TMP_Text MatchLevelText;
-    public TMP_Text MatchTypeText;
-    public TMP_Text MatchOptionsListing;
-    private Team _selectedTeam;
-    private ListedMatch _match;
 
-    protected override void Awake()
+    public class UIJoinMatch : ValidatableForm
     {
-        _selectedTeam = Team.Neutral;
-        ComponentRegister.UIJoinMatch = this;
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        AssociateFormToButtons();
-        object[] matchParams = SharedFunctions.Params;
-        _match = (ListedMatch)matchParams[0];
-        ChaosPlayerList.FillTeam((RemotePlayerData[])matchParams[1]);
-        BalancePlayerList.FillTeam((RemotePlayerData[])matchParams[2]);
-        OrderPlayerList.FillTeam((RemotePlayerData[])matchParams[3]);
-        byte teamsAliveByte = (byte)matchParams[4];
-        if(teamsAliveByte != 7)
+        public TeamPlayerList ChaosPlayerList;
+        public TeamPlayerList BalancePlayerList;
+        public TeamPlayerList OrderPlayerList;
+        public TMP_Text MatchCreatorText;
+        public TMP_Text MatchIDText;
+        public TMP_Text MatchLevelText;
+        public TMP_Text MatchTypeText;
+        public TMP_Text MatchOptionsListing;
+        private Team _selectedTeam;
+        private ListedMatch _match;
+
+        protected override void Awake()
         {
-            BitArray ba = new BitArray(new byte[] { teamsAliveByte });
-            if (!ba[0])
+            _selectedTeam = Team.Neutral;
+            ComponentRegister.UIJoinMatch = this;
+        }
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            AssociateFormToButtons();
+            object[] matchParams = SharedFunctions.Params;
+            _match = (ListedMatch)matchParams[0];
+            ChaosPlayerList.FillTeam((RemotePlayerData[])matchParams[1]);
+            BalancePlayerList.FillTeam((RemotePlayerData[])matchParams[2]);
+            OrderPlayerList.FillTeam((RemotePlayerData[])matchParams[3]);
+            byte teamsAliveByte = (byte)matchParams[4];
+            if (teamsAliveByte != 7)
             {
-                ChaosPlayerList.gameObject.SetActive(false);
+                BitArray ba = new BitArray(new byte[] { teamsAliveByte });
+                if (!ba[0])
+                {
+                    ChaosPlayerList.gameObject.SetActive(false);
+                }
+                if (!ba[1])
+                {
+                    BalancePlayerList.gameObject.SetActive(false);
+                }
+                if (!ba[2])
+                {
+                    OrderPlayerList.gameObject.SetActive(false);
+                }
             }
-            if (!ba[1])
+            MatchIDText.text = Language.BuildString(98, _match.MatchID.ToString());  //
+            MatchLevelText.text = Language.BuildString(100, _match.SceneName);       //
+            MatchCreatorText.text = Language.BuildString(99, _match.CreatorName);   //
+            MatchTypeText.text = Language.BuildString(112, _match.MatchTypeString); //   
+            MatchOptionsListing.text = MatchOption.BuildOptionsString(_match.MatchOptions);
+        }
+
+        // Update is called once per frame
+        protected override void Update()
+        {
+            base.Update();
+            if (Input.GetKeyUp(KeyCode.PageDown))
             {
-                BalancePlayerList.gameObject.SetActive(false);
+                ChaosPlayerList.DecrementStartIndex();
+                BalancePlayerList.DecrementStartIndex();
+                OrderPlayerList.DecrementStartIndex();
             }
-            if (!ba[2])
+            if (Input.GetKeyUp(KeyCode.PageUp))
             {
-                OrderPlayerList.gameObject.SetActive(false);
+                ChaosPlayerList.IncrementStartIndex();
+                BalancePlayerList.IncrementStartIndex();
+                OrderPlayerList.IncrementStartIndex();
             }
         }
-        MatchIDText.text = Language.BuildString(98,_match.MatchID.ToString());  //
-        MatchLevelText.text = Language.BuildString(100,_match.SceneName);       //
-        MatchCreatorText.text = Language.BuildString(99, _match.CreatorName);   //
-        MatchTypeText.text = Language.BuildString(112, _match.MatchTypeString); //   
-        MatchOptionsListing.text = MatchOption.BuildOptionsString(_match.MatchOptions);
+        private void JoinMatch()
+        {
+            if (ValidateForm())
+            {
+                MatchParams.ExpirationTime = _match.Expiration;
+                Game.SendPregameBytes(Pregame_Packets.JoinMatchPacket(_match.MatchID, (byte)_selectedTeam));
+            }
+            else
+            {
+                Game.MessageBoxReference(83);
+            }
+        }
+        protected override bool ValidateForm()
+        {
+            return _selectedTeam > Team.Neutral;
+        }
+        private void SelectTeam(Team team)
+        {
+            ChaosPlayerList.MarkSelected(team);
+            BalancePlayerList.MarkSelected(team);
+            OrderPlayerList.MarkSelected(team);
+            _selectedTeam = team;
+        }
+
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Cancel:
+                    CloseForm();
+                    break;
+                case ButtonType.Submit:
+                    JoinMatch();
+                    break;
+                case ButtonType.Misc0:
+                    SelectTeam(Team.Chaos);
+                    break;
+                case ButtonType.Misc1:
+                    SelectTeam(Team.Balance);
+                    break;
+                case ButtonType.Misc2:
+                    SelectTeam(Team.Order);
+                    break;
+            }
+        }
     }
 
-    // Update is called once per frame
-    protected override void Update()
-    {
-        base.Update();
-        if (Input.GetKeyUp(KeyCode.PageDown))
-        {
-            ChaosPlayerList.DecrementStartIndex();
-            BalancePlayerList.DecrementStartIndex();
-            OrderPlayerList.DecrementStartIndex();
-        }
-        if (Input.GetKeyUp(KeyCode.PageUp))
-        {
-            ChaosPlayerList.IncrementStartIndex();
-            BalancePlayerList.IncrementStartIndex();
-            OrderPlayerList.IncrementStartIndex();
-        }
-    }
-    private void JoinMatch()
-    {
-        if (ValidateForm())
-        {
-            MatchParams.ExpirationTime = _match.Expiration;
-            Game.SendPregameBytes(Pregame_Packets.JoinMatchPacket(_match.MatchID, (byte)_selectedTeam));
-        }
-        else
-        {
-            Game.MessageBoxReference(83);
-        }
-    }
-    protected override bool ValidateForm()
-    {
-        return _selectedTeam > Team.Neutral;
-    }
-    private void SelectTeam(Team team)
-    {
-        ChaosPlayerList.MarkSelected(team);
-        BalancePlayerList.MarkSelected(team);
-        OrderPlayerList.MarkSelected(team);
-        _selectedTeam = team;
-    }
-    
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        switch (buttonType)
-        {
-            case ButtonType.Cancel:
-                CloseForm();
-                break;
-            case ButtonType.Submit:
-                JoinMatch();
-                break;
-            case ButtonType.Misc0:
-                SelectTeam(Team.Chaos);
-                break;
-            case ButtonType.Misc1:
-                SelectTeam(Team.Balance);
-                break;
-            case ButtonType.Misc2:
-                SelectTeam(Team.Order);
-                break;
-        }
-    }
 }

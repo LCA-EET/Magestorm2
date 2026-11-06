@@ -1,55 +1,59 @@
 ﻿using UnityEngine;
-
-public class TranslatingAO : ActuatingAO
+namespace Magus
 {
-    public GameObject EndPosition;
-    private Vector3 _priorPosition;
-    public Trigger PlatformTrigger;
-    protected override void Start()
+
+    public class TranslatingAO : ActuatingAO
     {
-        _default = ActuatingObject.transform.position;
-        _priorPosition = _default;
-        _end = EndPosition.transform.position;
-        base.Start();
-    }
-    protected override void Update()
-    {
-        base.Update();
-        
-        if (_actuating)
+        public GameObject EndPosition;
+        private Vector3 _priorPosition;
+        public Trigger PlatformTrigger;
+        protected override void Start()
         {
-            Vector3 calculatedLerp = SharedFunctions.CalculateVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b);
-            Vector3 delta = calculatedLerp - _priorPosition;
-            _priorPosition = calculatedLerp;
-            if (PlatformTrigger != null)
+            _default = ActuatingObject.transform.position;
+            _priorPosition = _default;
+            _end = EndPosition.transform.position;
+            base.Start();
+        }
+        protected override void Update()
+        {
+            base.Update();
+
+            if (_actuating)
             {
-                if (PlatformTrigger.HasEntered())
+                Vector3 calculatedLerp = SharedFunctions.CalculateVector3Lerp(ref _actuationElapsed, _actuationTime, _a, _b);
+                Vector3 delta = calculatedLerp - _priorPosition;
+                _priorPosition = calculatedLerp;
+                if (PlatformTrigger != null)
                 {
-                    Debug.Log("Adjusting player position.");
-                    ComponentRegister.PC.ApplyPositionDelta(delta);
+                    if (PlatformTrigger.HasEntered())
+                    {
+                        Debug.Log("Adjusting player position.");
+                        ComponentRegister.PC.ApplyPositionDelta(delta);
+                    }
+                }
+                SharedFunctions.ApplyVector3Lerp(calculatedLerp, ActuatingObject.transform, false, true);
+                if (_actuationElapsed == 0) // this is 0 when it is reset by the CalculateVector3Lerp function above. It is reset when elapsed >= actuationTime.
+                {
+                    _actuating = false;
+                    OnStateChangeEnd((byte)((_currentState + 1) % 2));
+                    if (ActuatingObject.transform.position == _end)
+                    {
+                        _resetCountDown = true;
+                    }
                 }
             }
-            SharedFunctions.ApplyVector3Lerp(calculatedLerp, ActuatingObject.transform, false, true);
-            if (_actuationElapsed == 0) // this is 0 when it is reset by the CalculateVector3Lerp function above. It is reset when elapsed >= actuationTime.
+        }
+        protected override void ApplyStateChange(bool force)
+        {
+            if (force)
             {
-                _actuating = false;
-                OnStateChangeEnd((byte)((_currentState + 1) % 2));
-                if (ActuatingObject.transform.position == _end)
-                {
-                    _resetCountDown = true;
-                }
+                ActuatingObject.transform.position = _end;
+            }
+            else
+            {
+                base.ApplyStateChange(force);
             }
         }
     }
-    protected override void ApplyStateChange(bool force)
-    {
-        if (force)
-        {
-            ActuatingObject.transform.position = _end;
-        }
-        else
-        {
-            base.ApplyStateChange(force);
-        }
-    }
+
 }

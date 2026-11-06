@@ -1,14 +1,19 @@
 ﻿using UnityEngine;
-public class ValhallaNotice : MonoBehaviour
+namespace Magus
 {
-    public GameObject TextObject;
-    public void Awake()
+
+    public class ValhallaNotice : MonoBehaviour
     {
-        ComponentRegister.ValhallaNotice = this;
+        public GameObject TextObject;
+        public void Awake()
+        {
+            ComponentRegister.ValhallaNotice = this;
+        }
+
+        public void Show(bool show)
+        {
+            TextObject.SetActive(show);
+        }
     }
 
-    public void Show(bool show)
-    {
-        TextObject.SetActive(show);
-    }
 }

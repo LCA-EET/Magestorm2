@@ -1,31 +1,36 @@
 ﻿using TMPro;
 using UnityEngine;
-public class SpellPanel : MonoBehaviour
+namespace Magus
 {
-    private int _spellStringReference, _secondaryReference;
-    public TMP_Text SpellText, SecondaryText;
-    private LanguageWrapper _primary, _secondary;
-    public void Awake()
+
+    public class SpellPanel : MonoBehaviour
     {
-        _spellStringReference = 296;
-        _secondaryReference = 297;
-        ComponentRegister.SpellPanel = this;
+        private int _spellStringReference, _secondaryReference;
+        public TMP_Text SpellText, SecondaryText;
+        private LanguageWrapper _primary, _secondary;
+        public void Awake()
+        {
+            _spellStringReference = 296;
+            _secondaryReference = 297;
+            ComponentRegister.SpellPanel = this;
+        }
+
+        private void Start()
+        {
+            Color teamColor = Teams.GetTeamTextColor(MatchParams.MatchTeam);
+            SpellText.color = teamColor;
+            SecondaryText.color = teamColor;
+            _primary = Language.RegisterText(SpellText, _spellStringReference, 276);
+            _secondary = Language.RegisterText(SecondaryText, _secondaryReference, 276);
+        }
+        public void UpdateSecondaryReference(int newReference)
+        {
+            _secondary.UpdateParameterIndex(newReference);
+        }
+        public void UpdatePrimaryReference(int newReference)
+        {
+            _primary.UpdateParameterIndex(newReference);
+        }
     }
 
-    private void Start()
-    {
-        Color teamColor = Teams.GetTeamTextColor(MatchParams.MatchTeam);
-        SpellText.color = teamColor;
-        SecondaryText.color = teamColor;
-        _primary = Language.RegisterText(SpellText, _spellStringReference, 276);
-        _secondary = Language.RegisterText(SecondaryText, _secondaryReference, 276);
-    }
-    public void UpdateSecondaryReference(int newReference)
-    {
-        _secondary.UpdateParameterIndex(newReference);
-    }
-    public void UpdatePrimaryReference(int newReference)
-    {
-        _primary.UpdateParameterIndex(newReference);
-    }
 }

@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
-public class DisciplineSelectView : ScrollSelectView {
-    
-    public SpellSelectView SpellSelectView;
+namespace Magus
+{
 
-    public override void Start()
+    public class DisciplineSelectView : ScrollSelectView
     {
-        base.Start();
+
+        public SpellSelectView SpellSelectView;
+
+        public override void Start()
+        {
+            base.Start();
+        }
+
+        protected override void ProcessSelection()
+        {
+            SpellSelectView.PopulateOptions(_selectedOption);
+        }
     }
 
-    protected override void ProcessSelection()
-    {
-        SpellSelectView.PopulateOptions(_selectedOption);
-    }
 }

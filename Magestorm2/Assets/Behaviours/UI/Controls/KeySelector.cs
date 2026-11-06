@@ -8,48 +8,53 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class KeySelector : ValidatableForm
+namespace Magus
 {
-    public InputControl InputKey;
-    private KeyCode _selectedKey;
-    private UIKeyMapper _owner;
-    private KeyCode _keyCode;
-    private int _index;
 
-    public TMP_Text Descriptor;
-    public TMP_Text Key;
+    public class KeySelector : ValidatableForm
+    {
+        public InputControl InputKey;
+        private KeyCode _selectedKey;
+        private UIKeyMapper _owner;
+        private KeyCode _keyCode;
+        private int _index;
 
-    public void SetKeyText()
-    {
-        _keyCode = _owner.GetKeyCode(InputKey);
-        Key.text = _keyCode.ToString();
-    }
-    public void SetOwningForm(UIKeyMapper owner, int index)
-    {
-        _owner = owner;
-        _index = index;
-        SetKeyText();
-        AssociateFormToButtons();
-    }
+        public TMP_Text Descriptor;
+        public TMP_Text Key;
 
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        switch (buttonType)
+        public void SetKeyText()
         {
-            case ButtonType.Submit:
-                _keyCode = KeyCode.None;
-                Key.text = "[UNSET]";
-                if(_owner == null)
-                {
-                    Debug.Log("Owner is null!");
-                }
-                _owner.RemapControl(Descriptor.text, InputKey, _index);
-                break;
+            _keyCode = _owner.GetKeyCode(InputKey);
+            Key.text = _keyCode.ToString();
+        }
+        public void SetOwningForm(UIKeyMapper owner, int index)
+        {
+            _owner = owner;
+            _index = index;
+            SetKeyText();
+            AssociateFormToButtons();
+        }
+
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Submit:
+                    _keyCode = KeyCode.None;
+                    Key.text = "[UNSET]";
+                    if (_owner == null)
+                    {
+                        Debug.Log("Owner is null!");
+                    }
+                    _owner.RemapControl(Descriptor.text, InputKey, _index);
+                    break;
+            }
+        }
+
+        public KeyCode KeyCode
+        {
+            get { return _keyCode; }
         }
     }
 
-    public KeyCode KeyCode
-    {
-        get { return _keyCode; }
-    }
 }

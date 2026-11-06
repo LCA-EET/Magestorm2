@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
-
-public class AoEProjectile : Projectile
+namespace Magus
 {
-    protected override void OnTriggerEnter(Collider other)
+
+    public class AoEProjectile : Projectile
     {
-        base.OnTriggerEnter(other);
-        if (!_directHit && _impact && (_casterID != MatchParams.IDinMatch))
+        protected override void OnTriggerEnter(Collider other)
         {
-            if (SharedFunctions.IsPlayerInRadius(transform.position, _spellReference.EffectRadius))
+            base.OnTriggerEnter(other);
+            if (!_directHit && _impact && (_casterID != MatchParams.IDinMatch))
             {
-                Debug.Log("Splash hit!");
-                Game.SendInGameBytes(InGame_Packets.ReportSplashHit(_castID));                
+                if (SharedFunctions.IsPlayerInRadius(transform.position, _spellReference.EffectRadius))
+                {
+                    Debug.Log("Splash hit!");
+                    Game.SendInGameBytes(InGame_Packets.ReportSplashHit(_castID));
+                }
             }
         }
     }

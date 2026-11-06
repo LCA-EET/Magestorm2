@@ -1,87 +1,92 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-public class HMLUpdater
+namespace Magus
 {
-    private float _elapsed;
-    private float _period;
-    private float _priorValue;
-    private float _maxValue;
-    private float _newValue;
-    private float _currentValue;
-    private bool _updateNeeded;
-    private PlayerIndicator _barIndicator;
-    private Dictionary<PlayerIndicator, HMLUpdater> _owner;
-    public HMLUpdater(float period, float maxValue, PlayerIndicator indicator, Dictionary<PlayerIndicator, HMLUpdater> owner)
+
+    public class HMLUpdater
     {
-        _period = period;
-        _maxValue = maxValue;
-        _barIndicator = indicator;
-        _owner = owner;
-        _owner.Add(_barIndicator, this);
+        private float _elapsed;
+        private float _period;
+        private float _priorValue;
+        private float _maxValue;
+        private float _newValue;
+        private float _currentValue;
+        private bool _updateNeeded;
+        private PlayerIndicator _barIndicator;
+        private Dictionary<PlayerIndicator, HMLUpdater> _owner;
+        public HMLUpdater(float period, float maxValue, PlayerIndicator indicator, Dictionary<PlayerIndicator, HMLUpdater> owner)
+        {
+            _period = period;
+            _maxValue = maxValue;
+            _barIndicator = indicator;
+            _owner = owner;
+            _owner.Add(_barIndicator, this);
+        }
+
+        public void UpdateIndication()
+        {
+            if (SharedFunctions.ProcessFloatLerp(ref _elapsed, _period, _priorValue, _newValue, ref _currentValue))
+            {
+                _updateNeeded = false;
+            }
+            ComponentRegister.PlayerStatusPanel.SetIndicator(_barIndicator, _currentValue / _maxValue);
+        }
+
+        public void UpdateValue(float newValue)
+        {
+            ///Debug.Log("UpdateValue: " + newValue);
+            if (newValue < 0)
+            {
+                newValue = 0;
+            }
+            else if (newValue > _maxValue)
+            {
+                newValue = _maxValue;
+            }
+            _priorValue = _currentValue;
+            _newValue = newValue;
+            _updateNeeded = _newValue != _currentValue;
+            if (_updateNeeded)
+            {
+                _elapsed = 0.0f;
+            }
+        }
+        public float PercentOfMax()
+        {
+            return Value / _maxValue;
+        }
+        public float Value
+        {
+            get
+            {
+                return _newValue;
+            }
+        }
+        public bool UpdateNeeded
+        {
+            get { return _updateNeeded; }
+        }
+        public bool IsLessThanMax
+        {
+            get
+            {
+                return _currentValue < _maxValue;
+            }
+        }
+
+        public float AdjustValue(float adjustment)
+        {
+            float toReturn = _newValue + adjustment;
+            UpdateValue(toReturn);
+            return toReturn;
+        }
+
+        public float AdjustPct(byte percentOfMax)
+        {
+            float toReturn = (percentOfMax / 100.0f) * _maxValue;
+            UpdateValue(toReturn);
+            return toReturn;
+        }
     }
 
-    public void UpdateIndication()
-    {
-        if (SharedFunctions.ProcessFloatLerp(ref _elapsed, _period, _priorValue, _newValue, ref _currentValue))
-        {
-            _updateNeeded = false;
-        }
-        ComponentRegister.PlayerStatusPanel.SetIndicator(_barIndicator, _currentValue / _maxValue);
-    }
-    
-    public void UpdateValue(float newValue)
-    {
-        ///Debug.Log("UpdateValue: " + newValue);
-        if(newValue < 0)
-        {
-            newValue = 0;
-        }
-        else if(newValue > _maxValue)
-        {
-            newValue = _maxValue;
-        }
-        _priorValue = _currentValue;
-        _newValue = newValue;
-        _updateNeeded = _newValue != _currentValue;
-        if (_updateNeeded)
-        {
-            _elapsed = 0.0f;
-        }
-    }
-    public float PercentOfMax()
-    {
-        return Value / _maxValue;
-    }
-    public float Value
-    {
-        get
-        {
-            return _newValue;
-        }
-    }
-    public bool UpdateNeeded
-    {
-        get { return _updateNeeded; }
-    }
-    public bool IsLessThanMax
-    {
-        get
-        {
-            return _currentValue < _maxValue;
-        }
-    }
-
-    public float AdjustValue(float adjustment)
-    {
-        float toReturn = _newValue + adjustment;
-        UpdateValue(toReturn);
-        return toReturn;
-    }
-
-    public float AdjustPct(byte percentOfMax)
-    {
-        float toReturn = (percentOfMax / 100.0f) * _maxValue;
-        UpdateValue(toReturn);
-        return toReturn;
-    }
 }

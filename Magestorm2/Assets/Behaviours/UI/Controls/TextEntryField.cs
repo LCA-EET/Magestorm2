@@ -2,74 +2,78 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
-
-public class TextField : ValidateableObject
+namespace Magus
 {
-    public TMP_InputField TextInput;
-    public TMP_Text PlaceholderField;
-    public TMP_Text Header;
-    public byte MaxLength;
-    public byte MinLength;
-    public string RegexExpression;
-    public Image InvalidEntryImage;
-    private string _priorText;
-    private Regex _regex;
-    protected virtual void Awake()
-    {
-        MarkInvalid(false);
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected virtual void Start()
-    {
-        if(RegexExpression.Length > 0)
-        {
-            _regex = new Regex(RegexExpression, RegexOptions.IgnoreCase);
-           
-        }
-    }
 
-    // Update is called once per frame
-    protected virtual void Update()
+    public class TextField : ValidateableObject
     {
-        if(_priorText != TextInput.text)
+        public TMP_InputField TextInput;
+        public TMP_Text PlaceholderField;
+        public TMP_Text Header;
+        public byte MaxLength;
+        public byte MinLength;
+        public string RegexExpression;
+        public Image InvalidEntryImage;
+        private string _priorText;
+        private Regex _regex;
+        protected virtual void Awake()
         {
             MarkInvalid(false);
         }
-        _priorText = TextInput.text;
-    }
-    public override void MarkInvalid(bool invalid)
-    {
-        InvalidEntryImage.gameObject.SetActive(invalid);
-    }
-    public override bool Validate()
-    {
-        string input = TextInput.text;
-        if (input.Contains(" "))
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        protected virtual void Start()
         {
-            return false;
+            if (RegexExpression.Length > 0)
+            {
+                _regex = new Regex(RegexExpression, RegexOptions.IgnoreCase);
+
+            }
         }
-        if (RegexExpression.Length > 0)
+
+        // Update is called once per frame
+        protected virtual void Update()
         {
-            if (!_regex.Match(input).Success)
+            if (_priorText != TextInput.text)
+            {
+                MarkInvalid(false);
+            }
+            _priorText = TextInput.text;
+        }
+        public override void MarkInvalid(bool invalid)
+        {
+            InvalidEntryImage.gameObject.SetActive(invalid);
+        }
+        public override bool Validate()
+        {
+            string input = TextInput.text;
+            if (input.Contains(" "))
             {
                 return false;
             }
+            if (RegexExpression.Length > 0)
+            {
+                if (!_regex.Match(input).Success)
+                {
+                    return false;
+                }
+            }
+            bool toReturn = CheckLength(input);
+            return CheckLength(input);
         }
-        bool toReturn = CheckLength(input);
-        return CheckLength(input);
-    }
-    protected bool CheckLength(string input)
-    {
-        return (input.Length >= MinLength) && (input.Length <= MaxLength);
-    }
-    public override object GetValue()
-    {
-        return TextInput.text;
+        protected bool CheckLength(string input)
+        {
+            return (input.Length >= MinLength) && (input.Length <= MaxLength);
+        }
+        public override object GetValue()
+        {
+            return TextInput.text;
+        }
+
+        public void SetValue(string text, bool readOnly)
+        {
+            TextInput.text = text;
+            TextInput.enabled = !readOnly;
+        }
     }
 
-    public void SetValue(string text, bool readOnly)
-    {
-        TextInput.text = text;
-        TextInput.enabled = !readOnly;
-    }
 }

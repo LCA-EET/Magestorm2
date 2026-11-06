@@ -1,34 +1,38 @@
 using UnityEngine;
-
-public class ValidateableObject : MonoBehaviour
+namespace Magus
 {
-    protected string _validationFailureMessage;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public class ValidateableObject : MonoBehaviour
     {
-        
+        protected string _validationFailureMessage;
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+        public virtual void MarkInvalid(bool invalid)
+        {
+
+        }
+        public virtual bool Validate()
+        {
+            return true;
+        }
+        public virtual object GetValue()
+        {
+            return null;
+        }
+
+        public string ValidationFailureMessage
+        {
+            get { return _validationFailureMessage; }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public virtual void MarkInvalid(bool invalid)
-    {
-
-    }
-    public virtual bool Validate()
-    {
-        return true;
-    }
-    public virtual object GetValue()
-    {
-        return null;
-    }
-
-    public string ValidationFailureMessage
-    {
-        get { return _validationFailureMessage; }
-    }
 }

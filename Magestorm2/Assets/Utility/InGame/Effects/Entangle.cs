@@ -1,18 +1,23 @@
 ﻿using UnityEngine;
-public class Entangle : AppliedEffect
+namespace Magus
 {
-    public override void ApplyEffect(Avatar appliedTo)
+
+    public class Entangle : AppliedEffect
     {
-        base.ApplyEffect(appliedTo);
-        if (_appliedToPlayer)
+        public override void ApplyEffect(Avatar appliedTo)
         {
-            ComponentRegister.PlayerMovement.MarkEntangled(true);
+            base.ApplyEffect(appliedTo);
+            if (_appliedToPlayer)
+            {
+                ComponentRegister.PlayerMovement.MarkEntangled(true);
+            }
+        }
+
+        public override void ReverseEffect()
+        {
+            base.ReverseEffect();
+            ComponentRegister.PlayerMovement.MarkEntangled(false);
         }
     }
 
-    public override void ReverseEffect()
-    {
-        base.ReverseEffect();
-        ComponentRegister.PlayerMovement.MarkEntangled(false);
-    }
 }

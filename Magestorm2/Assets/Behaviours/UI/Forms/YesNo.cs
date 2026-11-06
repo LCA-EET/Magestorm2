@@ -1,40 +1,44 @@
 using TMPro;
 using UnityEngine;
-
-public class YesNo : ValidatableForm
+namespace Magus
 {
-    public TMP_Text MessageText;
-    private ValidatableForm _instantiator;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class YesNo : ValidatableForm
     {
-        AssociateFormToButtons();
-    }
+        public TMP_Text MessageText;
+        private ValidatableForm _instantiator;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public override void SetParams(object[] paramArray)
-    {
-        MessageText.text = paramArray[0].ToString();
-        _instantiator = (ValidatableForm)paramArray[1];
-    }
-
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        switch (buttonType)
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            case ButtonType.Submit:
-                _instantiator.SetResult(FormResult.Yes);
-                break;
-            case ButtonType.Cancel:
-                _instantiator.SetResult(FormResult.No);
-                break;
+            AssociateFormToButtons();
         }
-        base.CloseForm();
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        public override void SetParams(object[] paramArray)
+        {
+            MessageText.text = paramArray[0].ToString();
+            _instantiator = (ValidatableForm)paramArray[1];
+        }
+
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Submit:
+                    _instantiator.SetResult(FormResult.Yes);
+                    break;
+                case ButtonType.Cancel:
+                    _instantiator.SetResult(FormResult.No);
+                    break;
+            }
+            base.CloseForm();
+        }
     }
+
 }

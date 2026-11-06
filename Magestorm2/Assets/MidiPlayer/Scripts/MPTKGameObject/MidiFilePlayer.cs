@@ -1,8 +1,11 @@
 //#define MPTK_PRO
+
 #define DEBUG_START_MIDIx
+using MPTK.NAudio.Midi;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 namespace MidiPlayerTK
 {
@@ -200,6 +203,11 @@ namespace MidiPlayerTK
         /// @ingroup midifileplayer_playback_controls
         public bool MPTK_IsPlaying { get { return midiIsPlaying; } }
 
+        public void PlayMidi(MidiFile toPlay)
+        {
+            MPTK_MidiName = toPlay.GetFileName();
+            MPTK_Play();
+        }
 
         /// <summary>@brief
         /// Plays the midi file defined with #MPTK_MidiName or #MPTK_MidiIndex.

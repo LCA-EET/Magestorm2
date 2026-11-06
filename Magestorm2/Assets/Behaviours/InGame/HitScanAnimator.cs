@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
-
-public class HitScanAnimator : MonoBehaviour
+namespace Magus
 {
-    public virtual void AnimateHitScan(HitScan hitScan)
+    public class HitScanAnimator : MonoBehaviour
     {
+        public virtual void AnimateHitScan(HitScan hitScan)
+        {
 
+        }
     }
 }
+

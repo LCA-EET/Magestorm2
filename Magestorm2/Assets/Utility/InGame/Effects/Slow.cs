@@ -1,19 +1,23 @@
 ﻿using UnityEngine;
-
-public class Slow : AppliedEffect
+namespace Magus
 {
-    public override void ApplyEffect(Avatar appliedTo)
+
+    public class Slow : AppliedEffect
     {
-        base.ApplyEffect(appliedTo);
-        if (_appliedToPlayer)
+        public override void ApplyEffect(Avatar appliedTo)
         {
-            ComponentRegister.PlayerMovement.MarkSlow(true);
+            base.ApplyEffect(appliedTo);
+            if (_appliedToPlayer)
+            {
+                ComponentRegister.PlayerMovement.MarkSlow(true);
+            }
+        }
+
+        public override void ReverseEffect()
+        {
+            base.ReverseEffect();
+            ComponentRegister.PlayerMovement.MarkSlow(false);
         }
     }
 
-    public override void ReverseEffect()
-    {
-        base.ReverseEffect();
-        ComponentRegister.PlayerMovement.MarkSlow(false);
-    }
 }

@@ -1,67 +1,72 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-public class SpriteSheetRenderer : MonoBehaviour
+namespace Magus
 {
-    public SpriteRenderer Renderer;
-    public Sprite[] Frames;
-    public int StartingFrame = 0;
-    public float CycleDuration = 1.0f;
-    private int _currentFrame, _numFrames;
-    private bool _forward = true;
-    public bool ResetAfterLastFrame = true;
-    private List<PeriodicAction> _actions;
-    private void Start()
+
+    public class SpriteSheetRenderer : MonoBehaviour
     {
-        _actions = new List<PeriodicAction>();
-        _numFrames = Frames.Length;
-        new PeriodicAction(0.1f, RotateToCamera, _actions);
-        new PeriodicAction(CycleDuration / _numFrames, AdvanceFrame, _actions);
-        _currentFrame = StartingFrame;
-        Renderer.sprite = Frames[_currentFrame];
-        RotateToCamera();
-    }
-    private void Update()
-    {
-        PeriodicAction.PerformActions(Time.deltaTime, _actions);
-    }
-    private void AdvanceFrame()
-    {
-        if (_forward)
+        public SpriteRenderer Renderer;
+        public Sprite[] Frames;
+        public int StartingFrame = 0;
+        public float CycleDuration = 1.0f;
+        private int _currentFrame, _numFrames;
+        private bool _forward = true;
+        public bool ResetAfterLastFrame = true;
+        private List<PeriodicAction> _actions;
+        private void Start()
         {
-            _currentFrame++;
-            if(_currentFrame == _numFrames)
+            _actions = new List<PeriodicAction>();
+            _numFrames = Frames.Length;
+            new PeriodicAction(0.1f, RotateToCamera, _actions);
+            new PeriodicAction(CycleDuration / _numFrames, AdvanceFrame, _actions);
+            _currentFrame = StartingFrame;
+            Renderer.sprite = Frames[_currentFrame];
+            RotateToCamera();
+        }
+        private void Update()
+        {
+            PeriodicAction.PerformActions(Time.deltaTime, _actions);
+        }
+        private void AdvanceFrame()
+        {
+            if (_forward)
             {
-                if (ResetAfterLastFrame)
+                _currentFrame++;
+                if (_currentFrame == _numFrames)
                 {
-                    _currentFrame = 0;
-                }
-                else
-                {
-                    _currentFrame -= 2;
-                    _forward = false;
+                    if (ResetAfterLastFrame)
+                    {
+                        _currentFrame = 0;
+                    }
+                    else
+                    {
+                        _currentFrame -= 2;
+                        _forward = false;
+                    }
                 }
             }
-        }
-        else
-        {
-            _currentFrame--;
-            if(_currentFrame == -1)
+            else
             {
-                if (ResetAfterLastFrame)
+                _currentFrame--;
+                if (_currentFrame == -1)
                 {
-                    _currentFrame = Frames.Length-1;
-                }
-                else
-                {
-                    _currentFrame += 2;
-                    _forward = true;
+                    if (ResetAfterLastFrame)
+                    {
+                        _currentFrame = Frames.Length - 1;
+                    }
+                    else
+                    {
+                        _currentFrame += 2;
+                        _forward = true;
+                    }
                 }
             }
+            Renderer.sprite = Frames[_currentFrame];
         }
-        Renderer.sprite = Frames[_currentFrame];
+        private void RotateToCamera()
+        {
+            SharedFunctions.RotateToCamera(transform);
+        }
     }
-    private void RotateToCamera()
-    {
-        SharedFunctions.RotateToCamera(transform);
-    }
+
 }

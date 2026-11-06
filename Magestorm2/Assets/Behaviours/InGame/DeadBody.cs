@@ -1,42 +1,47 @@
 ﻿using UnityEngine;
 
-public class DeadBody : MonoBehaviour
+namespace Magus
 {
-    public RuntimeAnimatorController MaleDeath, FemaleDeath;
-    private PeriodicAction _destroy;
-    private bool _initialized, _shrink;
-    private float _shrinkElapsed;
-    public void Initialize(GameObject model, Transform parent)
+
+    public class DeadBody : MonoBehaviour
     {
-        _destroy = new PeriodicAction(10.0f, DestroySelf, null);
-        GameObject db = Instantiate(model);
-        db.transform.parent = parent;
-        
-        _initialized = true;
-    }
-    private void Update()
-    {
-        if (_initialized && !_shrink)
+        public RuntimeAnimatorController MaleDeath, FemaleDeath;
+        private PeriodicAction _destroy;
+        private bool _initialized, _shrink;
+        private float _shrinkElapsed;
+        public void Initialize(GameObject model, Transform parent)
         {
-            _destroy.ProcessAction(Time.deltaTime);
+            _destroy = new PeriodicAction(10.0f, DestroySelf, null);
+            GameObject db = Instantiate(model);
+            db.transform.parent = parent;
+
+            _initialized = true;
         }
-        if (_shrink)
+        private void Update()
         {
-            if(_shrinkElapsed >= 1.0f)
+            if (_initialized && !_shrink)
             {
-                Destroy(gameObject);
+                _destroy.ProcessAction(Time.deltaTime);
             }
-            else
+            if (_shrink)
             {
-                _shrinkElapsed += Time.deltaTime;
-                float shrinkFactor = 1.0f - _shrinkElapsed;
-                transform.localScale = new Vector3(shrinkFactor, shrinkFactor, shrinkFactor);
+                if (_shrinkElapsed >= 1.0f)
+                {
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    _shrinkElapsed += Time.deltaTime;
+                    float shrinkFactor = 1.0f - _shrinkElapsed;
+                    transform.localScale = new Vector3(shrinkFactor, shrinkFactor, shrinkFactor);
+                }
             }
+            //see if the player tapped or was rezzed;
         }
-        //see if the player tapped or was rezzed;
+        public void DestroySelf()
+        {
+            _shrink = true;
+        }
     }
-    public void DestroySelf()
-    {
-        _shrink = true; 
-    }
+
 }

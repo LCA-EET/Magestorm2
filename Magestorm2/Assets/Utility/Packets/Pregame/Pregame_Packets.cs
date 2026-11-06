@@ -1,231 +1,236 @@
 ﻿using System;
 using System.Text;
 using UnityEngine;
-public static class Pregame_Packets
+namespace Magus
 {
-    public static byte[] RequestCharacterClassDataPacket()
-    {
-        byte[] unencrypted = new byte[1];
-        unencrypted[0] = Pregame_Send.RequestCharacterClassData;
-        return unencrypted;
-    }
-    public static byte[] RequestDisciplineDataPacket()
-    {
-        byte[] unencrypted = new byte[1];
-        unencrypted[0] = Pregame_Send.RequestDisciplineData;
-        return unencrypted;
-    }
-    public static byte[] RequestSpellDataPacket()
-    {
-        byte[] unencrypted = new byte[1];
-        unencrypted[0] = Pregame_Send.RequestSpellData;
-        return unencrypted;
-    }
-    
-    public static byte[] OTPReplyPacket(int accountID, int otp)
-    {
-        byte[] toReturn = new byte[9];
-        toReturn[0] = Pregame_Send.OTPReply;
-        BitConverter.GetBytes(accountID).CopyTo(toReturn, 1);
-        BitConverter.GetBytes(otp).CopyTo(toReturn, 5);
-        return toReturn;
-    }
-    public static byte[] HeartbeatPacket()
-    {
-        byte[] unencrypted = new byte[5];
-        unencrypted[0] = Pregame_Send.Heartbeat;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
-        return unencrypted;
-    }
-    public static byte[] UpdateSkillsPacket(int characterID, int skills)
-    {
-        byte[] unencrypted = new byte[9];
-        unencrypted[0] = Pregame_Send.UpdateSkills;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
-        BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
-        return unencrypted;
-    }
-    public static byte[] UpdateSlottingPacket(int characterID, byte[] slots)
-    {
-        byte[] unencrypted = new byte[19];
-        unencrypted[0] = Pregame_Send.UpdateSlotting;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
-        BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
-        slots.CopyTo(unencrypted, 9);
-        return unencrypted;
-    }
-    public static byte[] JoinMatchPacket(byte matchID, byte teamID)
-    {
-        byte[] unencrypted = new byte[7];
-        unencrypted[0] = Pregame_Send.JoinMatch;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
-        unencrypted[5] = matchID;
-        unencrypted[6] = teamID;
-        return unencrypted;
-    }
-    public static byte[] UpdateAppearancePacket(byte[] appearaneBytes, int characterID)
-    {
-        byte[] unencrypted = new byte[14];
-        unencrypted[0] = Pregame_Send.UpdateAppearance;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
-        BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
-        appearaneBytes.CopyTo(unencrypted, 9);
-        return unencrypted;
-    }
-    public static byte[] NameCheckPacket(string name)
-    {
-        byte[] nameBytes = ByteUtils.UTF8ToBytes(name);
-        byte nameLength = (byte)nameBytes.Length;
-        byte[] unencrypted = new byte[6 + nameLength];
-        unencrypted[0] = Pregame_Send.NameCheck;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
-        unencrypted[5] = nameLength;
-        nameBytes.CopyTo(unencrypted, 6);
-        return unencrypted;
-    }
-    public static byte[] MatchDetailsPacket(byte matchID)
-    {
-        byte[] unencrypted = new byte[6];
-        unencrypted[0] = Pregame_Send.RequestMatchDetails;
-        PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
-        unencrypted[5] = matchID;
-        return unencrypted;
-    }
-    public static byte[] CreateAccountPacket(string username, string hashedPassword, string email)
-    {
-        byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(username);
-        byte[] hashedBytes = Convert.FromBase64String(hashedPassword);
-        byte[] emailBytes = UTF8Encoding.UTF8.GetBytes(email);
 
-        byte[] unencryptedPayload = new byte[usernameBytes.Length + hashedBytes.Length + emailBytes.Length + 4];
-
-        unencryptedPayload[0] = Pregame_Send.CreateAccount;
-        unencryptedPayload[1] = (byte)usernameBytes.Length;
-        unencryptedPayload[2] = (byte)hashedBytes.Length;
-        unencryptedPayload[3] = (byte)emailBytes.Length;
-
-        usernameBytes.CopyTo(unencryptedPayload, 4);
-        hashedBytes.CopyTo(unencryptedPayload, 4 + usernameBytes.Length);
-        emailBytes.CopyTo(unencryptedPayload, 4 + usernameBytes.Length + hashedBytes.Length);
-
-        return unencryptedPayload;
-    }
-    
-    public static byte[] LogInPacket()
+    public static class Pregame_Packets
     {
-        byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(PlayerAccount.Username);
-        byte[] hashedBytes = Convert.FromBase64String(PlayerAccount.HashedPassword);
-
-        byte[] unencryptedPayload = new byte[usernameBytes.Length + hashedBytes.Length + 3];
-        unencryptedPayload[0] = Pregame_Send.LogIn;
-        unencryptedPayload[1] = (byte)usernameBytes.Length;
-        unencryptedPayload[2] = (byte)hashedBytes.Length;
-        usernameBytes.CopyTo(unencryptedPayload, 3);
-        hashedBytes.CopyTo(unencryptedPayload, 3 + usernameBytes.Length);
-
-        return unencryptedPayload;
-    }
-    public static byte[] RequestLevelsListPacket()
-    {
-        return OpCodePlusAccountIDBytes(Pregame_Send.RequestLevelsList);
-    }
-    public static byte[] DeleteMatchPacket()
-    {
-        return OpCodePlusAccountIDBytes(Pregame_Send.DeleteMatch);
-    }
-    public static byte[] CreateMatchPacket(byte sceneID, byte duration, byte matchType, byte[] matchOptions)
-    {
-        byte[] idBytes = PlayerAccount.AccountIDBytes;
-        byte[] toSend = new byte[1 + 4 + 1 + 1 + 1 + matchOptions.Length];
-        toSend[0] = Pregame_Send.CreateMatch;
-        idBytes.CopyTo(toSend, 1);
-        toSend[5] = sceneID;
-        toSend[6] = duration;
-        toSend[7] = matchType;
-        Debug.Log("Match Creation Byte Length: " + toSend.Length);
-        for(int i = 0; i < matchOptions.Length; i++)
+        public static byte[] RequestCharacterClassDataPacket()
         {
-            toSend[8 + i] = matchOptions[i];
-            Debug.Log("Options Byte: " + matchOptions[i]);
+            byte[] unencrypted = new byte[1];
+            unencrypted[0] = Pregame_Send.RequestCharacterClassData;
+            return unencrypted;
         }
-        return toSend;
-    }
-    public static byte[] UpdateSkillsAndSlotsPacket(int characterID, int skillsInt, byte[] slots)
-    {
-        byte[] accountIDBytes = PlayerAccount.AccountIDBytes;
-        byte[] characterIDBytes = BitConverter.GetBytes(characterID);
-        byte[] toSend = new byte[1 + 4 + 4 + 4 + slots.Length];
-        toSend[0] = Pregame_Send.UpdateSkillsAndSlotting;
-        accountIDBytes.CopyTo(toSend, 1);
-        characterIDBytes.CopyTo(toSend, 5);
-        byte[] skillsBytes = BitConverter.GetBytes(skillsInt);
-        skillsBytes.CopyTo(toSend, 9);
-        slots.CopyTo(toSend, 13);
-        return toSend;
-    }
-    public static byte[] CreateCharacterPacket(string charname, byte charclass, byte[] stats, byte[] appearance, byte[] slots, int skills)
-    {
-        byte[] idBytes = PlayerAccount.AccountIDBytes;
-        byte[] nameBytes = Encoding.UTF8.GetBytes(charname);
-        byte nameLength = (byte)nameBytes.Length;
-        byte[] toSend = new byte[1 + 4 + 1 + 6 + 5 + 10 + 4 + 1 + nameLength];
-        toSend[0] = Pregame_Send.CreateCharacter;
-        idBytes.CopyTo(toSend, 1);
-        toSend[5] = charclass;
-        stats.CopyTo(toSend, 6);
-        appearance.CopyTo(toSend, 12);
-        slots.CopyTo(toSend, 17);
-        BitConverter.GetBytes(skills).CopyTo(toSend, 27);
-        toSend[31] = nameLength;
-        nameBytes.CopyTo(toSend, 32);
-        return toSend;
+        public static byte[] RequestDisciplineDataPacket()
+        {
+            byte[] unencrypted = new byte[1];
+            unencrypted[0] = Pregame_Send.RequestDisciplineData;
+            return unencrypted;
+        }
+        public static byte[] RequestSpellDataPacket()
+        {
+            byte[] unencrypted = new byte[1];
+            unencrypted[0] = Pregame_Send.RequestSpellData;
+            return unencrypted;
+        }
+
+        public static byte[] OTPReplyPacket(int accountID, int otp)
+        {
+            byte[] toReturn = new byte[9];
+            toReturn[0] = Pregame_Send.OTPReply;
+            BitConverter.GetBytes(accountID).CopyTo(toReturn, 1);
+            BitConverter.GetBytes(otp).CopyTo(toReturn, 5);
+            return toReturn;
+        }
+        public static byte[] HeartbeatPacket()
+        {
+            byte[] unencrypted = new byte[5];
+            unencrypted[0] = Pregame_Send.Heartbeat;
+            PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+            return unencrypted;
+        }
+        public static byte[] UpdateSkillsPacket(int characterID, int skills)
+        {
+            byte[] unencrypted = new byte[9];
+            unencrypted[0] = Pregame_Send.UpdateSkills;
+            PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+            BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
+            return unencrypted;
+        }
+        public static byte[] UpdateSlottingPacket(int characterID, byte[] slots)
+        {
+            byte[] unencrypted = new byte[19];
+            unencrypted[0] = Pregame_Send.UpdateSlotting;
+            PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+            BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
+            slots.CopyTo(unencrypted, 9);
+            return unencrypted;
+        }
+        public static byte[] JoinMatchPacket(byte matchID, byte teamID)
+        {
+            byte[] unencrypted = new byte[7];
+            unencrypted[0] = Pregame_Send.JoinMatch;
+            PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+            unencrypted[5] = matchID;
+            unencrypted[6] = teamID;
+            return unencrypted;
+        }
+        public static byte[] UpdateAppearancePacket(byte[] appearaneBytes, int characterID)
+        {
+            byte[] unencrypted = new byte[14];
+            unencrypted[0] = Pregame_Send.UpdateAppearance;
+            PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+            BitConverter.GetBytes(characterID).CopyTo(unencrypted, 5);
+            appearaneBytes.CopyTo(unencrypted, 9);
+            return unencrypted;
+        }
+        public static byte[] NameCheckPacket(string name)
+        {
+            byte[] nameBytes = ByteUtils.UTF8ToBytes(name);
+            byte nameLength = (byte)nameBytes.Length;
+            byte[] unencrypted = new byte[6 + nameLength];
+            unencrypted[0] = Pregame_Send.NameCheck;
+            PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+            unencrypted[5] = nameLength;
+            nameBytes.CopyTo(unencrypted, 6);
+            return unencrypted;
+        }
+        public static byte[] MatchDetailsPacket(byte matchID)
+        {
+            byte[] unencrypted = new byte[6];
+            unencrypted[0] = Pregame_Send.RequestMatchDetails;
+            PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+            unencrypted[5] = matchID;
+            return unencrypted;
+        }
+        public static byte[] CreateAccountPacket(string username, string hashedPassword, string email)
+        {
+            byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(username);
+            byte[] hashedBytes = Convert.FromBase64String(hashedPassword);
+            byte[] emailBytes = UTF8Encoding.UTF8.GetBytes(email);
+
+            byte[] unencryptedPayload = new byte[usernameBytes.Length + hashedBytes.Length + emailBytes.Length + 4];
+
+            unencryptedPayload[0] = Pregame_Send.CreateAccount;
+            unencryptedPayload[1] = (byte)usernameBytes.Length;
+            unencryptedPayload[2] = (byte)hashedBytes.Length;
+            unencryptedPayload[3] = (byte)emailBytes.Length;
+
+            usernameBytes.CopyTo(unencryptedPayload, 4);
+            hashedBytes.CopyTo(unencryptedPayload, 4 + usernameBytes.Length);
+            emailBytes.CopyTo(unencryptedPayload, 4 + usernameBytes.Length + hashedBytes.Length);
+
+            return unencryptedPayload;
+        }
+
+        public static byte[] LogInPacket()
+        {
+            byte[] usernameBytes = UTF8Encoding.UTF8.GetBytes(PlayerAccount.Username);
+            byte[] hashedBytes = Convert.FromBase64String(PlayerAccount.HashedPassword);
+
+            byte[] unencryptedPayload = new byte[usernameBytes.Length + hashedBytes.Length + 3];
+            unencryptedPayload[0] = Pregame_Send.LogIn;
+            unencryptedPayload[1] = (byte)usernameBytes.Length;
+            unencryptedPayload[2] = (byte)hashedBytes.Length;
+            usernameBytes.CopyTo(unencryptedPayload, 3);
+            hashedBytes.CopyTo(unencryptedPayload, 3 + usernameBytes.Length);
+
+            return unencryptedPayload;
+        }
+        public static byte[] RequestLevelsListPacket()
+        {
+            return OpCodePlusAccountIDBytes(Pregame_Send.RequestLevelsList);
+        }
+        public static byte[] DeleteMatchPacket()
+        {
+            return OpCodePlusAccountIDBytes(Pregame_Send.DeleteMatch);
+        }
+        public static byte[] CreateMatchPacket(byte sceneID, byte duration, byte matchType, byte[] matchOptions)
+        {
+            byte[] idBytes = PlayerAccount.AccountIDBytes;
+            byte[] toSend = new byte[1 + 4 + 1 + 1 + 1 + matchOptions.Length];
+            toSend[0] = Pregame_Send.CreateMatch;
+            idBytes.CopyTo(toSend, 1);
+            toSend[5] = sceneID;
+            toSend[6] = duration;
+            toSend[7] = matchType;
+            Debug.Log("Match Creation Byte Length: " + toSend.Length);
+            for (int i = 0; i < matchOptions.Length; i++)
+            {
+                toSend[8 + i] = matchOptions[i];
+                Debug.Log("Options Byte: " + matchOptions[i]);
+            }
+            return toSend;
+        }
+        public static byte[] UpdateSkillsAndSlotsPacket(int characterID, int skillsInt, byte[] slots)
+        {
+            byte[] accountIDBytes = PlayerAccount.AccountIDBytes;
+            byte[] characterIDBytes = BitConverter.GetBytes(characterID);
+            byte[] toSend = new byte[1 + 4 + 4 + 4 + slots.Length];
+            toSend[0] = Pregame_Send.UpdateSkillsAndSlotting;
+            accountIDBytes.CopyTo(toSend, 1);
+            characterIDBytes.CopyTo(toSend, 5);
+            byte[] skillsBytes = BitConverter.GetBytes(skillsInt);
+            skillsBytes.CopyTo(toSend, 9);
+            slots.CopyTo(toSend, 13);
+            return toSend;
+        }
+        public static byte[] CreateCharacterPacket(string charname, byte charclass, byte[] stats, byte[] appearance, byte[] slots, int skills)
+        {
+            byte[] idBytes = PlayerAccount.AccountIDBytes;
+            byte[] nameBytes = Encoding.UTF8.GetBytes(charname);
+            byte nameLength = (byte)nameBytes.Length;
+            byte[] toSend = new byte[1 + 4 + 1 + 6 + 5 + 10 + 4 + 1 + nameLength];
+            toSend[0] = Pregame_Send.CreateCharacter;
+            idBytes.CopyTo(toSend, 1);
+            toSend[5] = charclass;
+            stats.CopyTo(toSend, 6);
+            appearance.CopyTo(toSend, 12);
+            slots.CopyTo(toSend, 17);
+            BitConverter.GetBytes(skills).CopyTo(toSend, 27);
+            toSend[31] = nameLength;
+            nameBytes.CopyTo(toSend, 32);
+            return toSend;
+        }
+
+        public static byte[] DeleteCharacterPacket(int characterID)
+        {
+            byte[] characterIDbytes = BitConverter.GetBytes(characterID);
+            byte[] accountIDbytes = PlayerAccount.AccountIDBytes;
+            byte[] toSend = new byte[1 + 4 + 4];
+            toSend[0] = Pregame_Send.DeleteCharacter;
+            accountIDbytes.CopyTo(toSend, 1);
+            characterIDbytes.CopyTo(toSend, 5);
+            return toSend;
+        }
+        public static byte[] LogOutPacket()
+        {
+            return OpCodePlusAccountIDBytes(Pregame_Send.LogOut);
+        }
+        public static byte[] UnsubscribeFromMatchesPacket()
+        {
+            return OpCodePlusAccountIDBytes(Pregame_Send.UnsubscribeFromMatches);
+        }
+        public static byte[] RequestMatchListPacket()
+        {
+            return OpCodePlusAccountIDBytes(Pregame_Send.RequestMatchList);
+        }
+        public static byte[] MatchScoreRequestPacket()
+        {
+            byte[] toSend = new byte[1 + 4 + 1];
+            toSend[0] = Pregame_Send.RequestMatchScore;
+            PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
+            toSend[5] = MatchParams.MatchID;
+            return toSend;
+        }
+        public static byte[] SubscribeToMatchesPacket(bool qm)
+        {
+            byte[] toSend = new byte[1 + 4 + 4 + 1 + 1];
+            toSend[0] = Pregame_Send.SubscribeToMatches;
+            PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
+            PlayerAccount.SelectedCharacter.IDBytes.CopyTo(toSend, 5);
+            toSend[9] = MatchParams.MatchID;
+            toSend[10] = (byte)(qm ? 1 : 0);
+            return toSend;
+        }
+        public static byte[] OpCodePlusAccountIDBytes(byte opCode)
+        {
+            byte[] toSend = new byte[1 + 4];
+            toSend[0] = opCode;
+            PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
+            return toSend;
+        }
     }
 
-    public static byte[] DeleteCharacterPacket(int characterID)
-    {
-        byte[] characterIDbytes = BitConverter.GetBytes(characterID);
-        byte[] accountIDbytes = PlayerAccount.AccountIDBytes;
-        byte[] toSend = new byte[1 + 4 + 4];
-        toSend[0] = Pregame_Send.DeleteCharacter;
-        accountIDbytes.CopyTo(toSend, 1);
-        characterIDbytes.CopyTo(toSend, 5);
-        return toSend;
-    }
-    public static byte[] LogOutPacket()
-    {
-        return OpCodePlusAccountIDBytes(Pregame_Send.LogOut);
-    }
-    public static byte[] UnsubscribeFromMatchesPacket()
-    {
-        return OpCodePlusAccountIDBytes(Pregame_Send.UnsubscribeFromMatches);
-    }
-    public static byte[] RequestMatchListPacket()
-    {
-        return OpCodePlusAccountIDBytes(Pregame_Send.RequestMatchList);
-    }
-    public static byte[] MatchScoreRequestPacket()
-    {
-        byte[] toSend = new byte[1 + 4 + 1];
-        toSend[0] = Pregame_Send.RequestMatchScore;
-        PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
-        toSend[5] = MatchParams.MatchID;
-        return toSend;
-    }
-    public static byte[] SubscribeToMatchesPacket(bool qm)
-    {
-        byte[] toSend = new byte[1 + 4 + 4 + 1 + 1];
-        toSend[0] = Pregame_Send.SubscribeToMatches;
-        PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
-        PlayerAccount.SelectedCharacter.IDBytes.CopyTo(toSend, 5);
-        toSend[9] = MatchParams.MatchID;
-        toSend[10] = (byte)(qm ? 1 : 0);
-        return toSend;
-    }
-    public static byte[] OpCodePlusAccountIDBytes(byte opCode)
-    {
-        byte[] toSend = new byte[1 + 4];
-        toSend[0] = opCode;
-        PlayerAccount.AccountIDBytes.CopyTo(toSend, 1);
-        return toSend;
-    }
 }

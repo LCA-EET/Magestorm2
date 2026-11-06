@@ -1,69 +1,73 @@
 using UnityEngine;
-
-public class UICreateAccountForm : ValidatableForm
+namespace Magus
 {
-    private string _username;
-    private string _hashedPassword;
-    private string _email;
-    private string _hashedPasswordConfirm;
-    private string _emailConfirm;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public class UICreateAccountForm : ValidatableForm
     {
-        AssociateFormToButtons();
-    }
-    protected override bool ValidateForm()
-    {
-        bool validated = base.ValidateForm();
-        if (validated)
+        private string _username;
+        private string _hashedPassword;
+        private string _email;
+        private string _hashedPasswordConfirm;
+        private string _emailConfirm;
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            VariableAssignment();
-            if (_email.Equals(_emailConfirm))
+            AssociateFormToButtons();
+        }
+        protected override bool ValidateForm()
+        {
+            bool validated = base.ValidateForm();
+            if (validated)
             {
-                if (_hashedPassword.Equals(_hashedPasswordConfirm))
+                VariableAssignment();
+                if (_email.Equals(_emailConfirm))
                 {
-                    return true;
+                    if (_hashedPassword.Equals(_hashedPasswordConfirm))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Game.MessageBoxReference(419);
+                    }
                 }
                 else
                 {
-                    Game.MessageBoxReference(419);
+                    Game.MessageBoxReference(418);
                 }
             }
-            else
+            return false;
+        }
+        private void VariableAssignment()
+        {
+            _username = ((TextField)EntriesToValidate[0]).GetValue().ToString();
+            _hashedPassword = Cryptographer.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString());
+            _email = ((TextField)EntriesToValidate[2]).GetValue().ToString().ToLower();
+            _hashedPasswordConfirm = Cryptographer.SHA256Hash(((TextField)EntriesToValidate[3]).GetValue().ToString());
+            _emailConfirm = ((TextField)EntriesToValidate[4]).GetValue().ToString().ToLower();
+        }
+        protected override void PassedValidation()
+        {
+            ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateAccountPacket(_username, _hashedPassword, _email));
+            CloseForm();
+        }
+
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            Debug.Log(buttonType);
+            switch (buttonType)
             {
-                Game.MessageBoxReference(418);
+                case ButtonType.Submit:
+                    if (ValidateForm())
+                    {
+                        PassedValidation();
+                    }
+                    break;
+                case ButtonType.Cancel:
+                    CloseForm();
+                    break;
             }
         }
-        return false;
-    }
-    private void VariableAssignment()
-    {
-        _username = ((TextField)EntriesToValidate[0]).GetValue().ToString();
-        _hashedPassword = Cryptographer.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString());
-        _email = ((TextField)EntriesToValidate[2]).GetValue().ToString().ToLower();
-        _hashedPasswordConfirm = Cryptographer.SHA256Hash(((TextField)EntriesToValidate[3]).GetValue().ToString());
-        _emailConfirm = ((TextField)EntriesToValidate[4]).GetValue().ToString().ToLower();
-    }
-    protected override void PassedValidation()
-    {
-        ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.CreateAccountPacket(_username, _hashedPassword, _email));
-        CloseForm();
     }
 
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        Debug.Log(buttonType);
-        switch (buttonType)
-        {
-            case ButtonType.Submit:
-                if (ValidateForm())
-                {
-                    PassedValidation();
-                }
-                break;
-            case ButtonType.Cancel:
-                CloseForm();
-                break;
-        }
-    }
 }

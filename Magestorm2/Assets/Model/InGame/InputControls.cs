@@ -1,368 +1,374 @@
 using UnityEngine;
 using System.Collections.Generic;
-public enum InputControl : byte
-{
-    Forward = 0,
-    Backward = 1,
-    StrafeLeft = 2,
-    StrafeRight = 3,
-    Run = 4,
-    Jump = 5,
-    ShootPrimary = 6,
-    ShootSecondary = 7,
-    Action = 8,
-    Ascend = 9,
-    Descend = 10,
-    HUDToggle = 11,
-    ChatMode = 12,
-    CancelChat = 13,
-    SendMessage = 14,
-    NextTrack = 15,
-    PreviousTrack = 16,
-    ToggleMusic = 17,
-    ChatScrollUp = 18,
-    ChatScrollDown = 19,
-    ChatScrollTop=20,
-    ChatScrollBottom = 21,
-    MiniMapZoomIn=22,
-    MiniMapZoomOut=23,
-    MiniMapZoomDefault=24,
-    InGameMenu = 25,
-    UsePotion = 26,
-    DropFlag = 27,
 
-    Slot1 = 100,
-    Slot2 = 101,
-    Slot3 = 102,
-    Slot4 = 103,
-    Slot5 = 104,
-    Slot6 = 105,
-    Slot7 = 106,
-    Slot8 = 107,
-    Slot9 = 108,
-    Slot10 = 109,
-    Slot11 = 110,
-    Slot12 = 111,
-    MouseMode = 38,
-    Crouch = 39,
-    SetSecondary = 40,
-    Unset = 255
-}
-public static class InputControls
+namespace Magus
 {
-    private static Dictionary<InputControl, KeyCode> _controls;
-    private static bool _init = false;
-    private static byte _slot1 = (byte)InputControl.Slot1;
-    private static byte _slot12 = (byte)InputControl.Slot12;
-    public static void Init()
+
+    public enum InputControl : byte
     {
-        if (!_init)
+        Forward = 0,
+        Backward = 1,
+        StrafeLeft = 2,
+        StrafeRight = 3,
+        Run = 4,
+        Jump = 5,
+        ShootPrimary = 6,
+        ShootSecondary = 7,
+        Action = 8,
+        Ascend = 9,
+        Descend = 10,
+        HUDToggle = 11,
+        ChatMode = 12,
+        CancelChat = 13,
+        SendMessage = 14,
+        NextTrack = 15,
+        PreviousTrack = 16,
+        ToggleMusic = 17,
+        ChatScrollUp = 18,
+        ChatScrollDown = 19,
+        ChatScrollTop = 20,
+        ChatScrollBottom = 21,
+        MiniMapZoomIn = 22,
+        MiniMapZoomOut = 23,
+        MiniMapZoomDefault = 24,
+        InGameMenu = 25,
+        UsePotion = 26,
+        DropFlag = 27,
+
+        Slot1 = 100,
+        Slot2 = 101,
+        Slot3 = 102,
+        Slot4 = 103,
+        Slot5 = 104,
+        Slot6 = 105,
+        Slot7 = 106,
+        Slot8 = 107,
+        Slot9 = 108,
+        Slot10 = 109,
+        Slot11 = 110,
+        Slot12 = 111,
+        MouseMode = 38,
+        Crouch = 39,
+        SetSecondary = 40,
+        Unset = 255
+    }
+    public static class InputControls
+    {
+        private static Dictionary<InputControl, KeyCode> _controls;
+        private static bool _init = false;
+        private static byte _slot1 = (byte)InputControl.Slot1;
+        private static byte _slot12 = (byte)InputControl.Slot12;
+        public static void Init()
         {
-            _controls = new Dictionary<InputControl, KeyCode>();
-            Dictionary<InputControl, KeyCode> defaults = GetDefaultKeys();
-            foreach (InputControl control in defaults.Keys)
+            if (!_init)
             {
-                _controls.Add(control, defaults[control]);
-            }
-            Dictionary<InputControl, KeyCode> keysToUpdate = new Dictionary<InputControl, KeyCode>();
-            foreach (InputControl playerfunction in _controls.Keys)
-            {
-                string stringKey = PlayerAccount.AccountID + "key:" + playerfunction;
-                if (PlayerPrefs.HasKey(stringKey))
+                _controls = new Dictionary<InputControl, KeyCode>();
+                Dictionary<InputControl, KeyCode> defaults = GetDefaultKeys();
+                foreach (InputControl control in defaults.Keys)
                 {
-                    //Debug.Log("Loading preference " + stringKey + ", " + (KeyCode)PlayerPrefs.GetInt(stringKey));
-                    keysToUpdate.Add(playerfunction, (KeyCode)PlayerPrefs.GetInt(stringKey));
+                    _controls.Add(control, defaults[control]);
+                }
+                Dictionary<InputControl, KeyCode> keysToUpdate = new Dictionary<InputControl, KeyCode>();
+                foreach (InputControl playerfunction in _controls.Keys)
+                {
+                    string stringKey = PlayerAccount.AccountID + "key:" + playerfunction;
+                    if (PlayerPrefs.HasKey(stringKey))
+                    {
+                        //Debug.Log("Loading preference " + stringKey + ", " + (KeyCode)PlayerPrefs.GetInt(stringKey));
+                        keysToUpdate.Add(playerfunction, (KeyCode)PlayerPrefs.GetInt(stringKey));
+                    }
+                }
+                foreach (InputControl control in keysToUpdate.Keys)
+                {
+                    _controls[control] = keysToUpdate[control];
+                }
+                _init = true;
+            }
+        }
+        public static KeyCode GetKeyCode(byte controlCode)
+        {
+            InputControl key = (InputControl)controlCode;
+            if (_controls.ContainsKey(key))
+            {
+                return _controls[key];
+            }
+            else
+            {
+                return KeyCode.None;
+            }
+        }
+        public static KeyCode GetKeyCode(InputControl control)
+        {
+            if (_controls.ContainsKey(control))
+            {
+                return _controls[control];
+            }
+            else
+            {
+                return KeyCode.None;
+            }
+        }
+        public static void SetKey(InputControl control, KeyCode key)
+        {
+            _controls[control] = key;
+        }
+        public static Dictionary<InputControl, KeyCode> GetDefaultKeys()
+        {
+            Dictionary<InputControl, KeyCode> defaults = new Dictionary<InputControl, KeyCode>();
+            defaults.Add(InputControl.Forward, KeyCode.W);
+            defaults.Add(InputControl.Backward, KeyCode.S);
+            defaults.Add(InputControl.StrafeLeft, KeyCode.Q);
+            defaults.Add(InputControl.StrafeRight, KeyCode.E);
+            defaults.Add(InputControl.Run, KeyCode.LeftShift);
+            defaults.Add(InputControl.Jump, KeyCode.Space);
+            defaults.Add(InputControl.ShootPrimary, KeyCode.Mouse0);
+            defaults.Add(InputControl.ShootSecondary, KeyCode.Mouse1);
+            defaults.Add(InputControl.Action, KeyCode.Return);
+            defaults.Add(InputControl.Ascend, KeyCode.PageUp);
+            defaults.Add(InputControl.Descend, KeyCode.PageDown);
+            defaults.Add(InputControl.HUDToggle, KeyCode.H);
+            defaults.Add(InputControl.ChatMode, KeyCode.Quote);
+            defaults.Add(InputControl.CancelChat, KeyCode.Escape); //Escape
+            defaults.Add(InputControl.SendMessage, KeyCode.Return);
+            defaults.Add(InputControl.PreviousTrack, KeyCode.B);
+            defaults.Add(InputControl.NextTrack, KeyCode.N);
+            defaults.Add(InputControl.ToggleMusic, KeyCode.M);
+            defaults.Add(InputControl.ChatScrollUp, KeyCode.PageUp);
+            defaults.Add(InputControl.ChatScrollDown, KeyCode.PageDown);
+            defaults.Add(InputControl.ChatScrollTop, KeyCode.Home);
+            defaults.Add(InputControl.ChatScrollBottom, KeyCode.End);
+            defaults.Add(InputControl.MiniMapZoomIn, KeyCode.LeftBracket);
+            defaults.Add(InputControl.MiniMapZoomOut, KeyCode.RightBracket);
+            defaults.Add(InputControl.MiniMapZoomDefault, KeyCode.Backslash);
+            defaults.Add(InputControl.InGameMenu, KeyCode.Escape); //Escape
+            defaults.Add(InputControl.Slot1, KeyCode.Alpha1);
+            defaults.Add(InputControl.Slot2, KeyCode.Alpha2);
+            defaults.Add(InputControl.Slot3, KeyCode.Alpha3);
+            defaults.Add(InputControl.Slot4, KeyCode.Alpha4);
+            defaults.Add(InputControl.Slot5, KeyCode.Alpha5);
+            defaults.Add(InputControl.Slot6, KeyCode.Alpha6);
+            defaults.Add(InputControl.Slot7, KeyCode.Alpha7);
+            defaults.Add(InputControl.Slot8, KeyCode.Alpha8);
+            defaults.Add(InputControl.Slot9, KeyCode.Alpha9);
+            defaults.Add(InputControl.Slot10, KeyCode.Alpha0);
+            defaults.Add(InputControl.Slot11, KeyCode.Minus);
+            defaults.Add(InputControl.Slot12, KeyCode.Equals);
+            defaults.Add(InputControl.MouseMode, KeyCode.P);
+            defaults.Add(InputControl.Crouch, KeyCode.LeftControl);
+            defaults.Add(InputControl.SetSecondary, KeyCode.LeftAlt);
+            defaults.Add(InputControl.UsePotion, KeyCode.U);
+            defaults.Add(InputControl.DropFlag, KeyCode.F);
+            return defaults;
+        }
+
+        public static byte GetSlottedSpellID()
+        {
+            for (byte b = _slot1; b < _slot12; b++)
+            {
+                if (Input.GetKeyDown(_controls[(InputControl)b]) && Game.GameMode)
+                {
+                    return PlayerAccount.SelectedCharacter.GetSlottedSpell(b - _slot1);
                 }
             }
-            foreach (InputControl control in keysToUpdate.Keys)
+            return 0;
+        }
+        public static bool SetSecondary
+        {
+            get
             {
-                _controls[control] = keysToUpdate[control];
+                return (Input.GetKeyDown(_controls[InputControl.SetSecondary])) && Game.GameMode;
             }
-            _init = true;
         }
-    }
-    public static KeyCode GetKeyCode(byte controlCode)
-    {
-        InputControl key = (InputControl)controlCode;
-        if (_controls.ContainsKey(key))
+
+        public static bool MouseMode
         {
-            return _controls[key];
+            get
+            {
+                return (Input.GetKeyDown(_controls[InputControl.MouseMode])) && Game.GameMode;
+            }
         }
-        else
+        public static bool UsePotion
         {
+            get
+            {
+                return (Input.GetKeyDown(_controls[InputControl.UsePotion])) && Game.GameMode;
+            }
+        }
+        public static bool DropFlag
+        {
+            get
+            {
+                return (Input.GetKeyDown(_controls[InputControl.DropFlag])) && Game.GameMode;
+            }
+        }
+        public static bool Action
+        {
+            get
+            {
+                return (Input.GetKeyDown(_controls[InputControl.Action])) && Game.GameMode;
+            }
+        }
+        public static bool MiniMapZoomIn
+        {
+            get
+            {
+                return (Input.GetKey(_controls[InputControl.MiniMapZoomIn])) && Game.GameMode;
+            }
+        }
+
+        public static bool MiniMapZoomOut
+        {
+            get
+            {
+                return (Input.GetKey(_controls[InputControl.MiniMapZoomOut])) && Game.GameMode;
+            }
+        }
+        public static bool ChatScrollTop
+        {
+            get
+            {
+                return (Input.GetKeyDown(_controls[InputControl.ChatScrollTop])) && !Game.MenuMode;
+            }
+        }
+        public static bool ChatScrollBottom
+        {
+            get
+            {
+                return (Input.GetKeyDown(_controls[InputControl.ChatScrollBottom])) && !Game.MenuMode;
+            }
+        }
+        public static bool ChatScrollUp
+        {
+            get
+            {
+                return (Input.GetKeyDown(_controls[InputControl.ChatScrollUp])) && !Game.MenuMode;
+            }
+        }
+        public static bool ChatScrollDown
+        {
+            get
+            {
+                return (Input.GetKeyDown(_controls[InputControl.ChatScrollDown])) && !Game.MenuMode;
+            }
+        }
+        public static bool ShootPrimary
+        {
+            get
+            {
+                return Input.GetKey(_controls[InputControl.ShootPrimary]) && Game.GameMode;
+            }
+        }
+        public static bool ShootSecondary
+        {
+            get
+            {
+                return Input.GetKey(_controls[InputControl.ShootSecondary]) && Game.GameMode;
+            }
+        }
+        public static bool Ascend
+        {
+            get
+            {
+                return Input.GetKey(_controls[InputControl.Ascend]) && Game.GameMode;
+            }
+        }
+        public static bool Descend
+        {
+            get
+            {
+                return Input.GetKey(_controls[InputControl.Descend]) && Game.GameMode;
+            }
+        }
+        public static bool HUD
+        {
+            get
+            {
+                return Input.GetKeyDown(_controls[InputControl.HUDToggle]) && Game.GameMode;
+            }
+        }
+        public static bool SendMessage
+        {
+            get
+            {
+                return Input.GetKeyDown(_controls[InputControl.SendMessage]) && Game.ChatMode;
+            }
+        }
+        public static bool ChatMode
+        {
+            get
+            {
+                return Input.GetKeyDown(_controls[InputControl.ChatMode]) && Game.GameMode;
+            }
+        }
+        public static bool InGameMenu
+        {
+            get
+            {
+                return Input.GetKeyDown(_controls[InputControl.InGameMenu]);
+            }
+        }
+        public static bool CancelChat
+        {
+            get
+            {
+                return Input.GetKeyDown(_controls[InputControl.CancelChat]) && Game.ChatMode;
+            }
+        }
+        public static bool ToggleMusic
+        {
+            get
+            {
+                return Input.GetKeyDown(_controls[InputControl.ToggleMusic]) && Game.GameMode;
+            }
+        }
+        public static bool PreviousTrack
+        {
+            get
+            {
+                return Input.GetKeyDown(_controls[InputControl.PreviousTrack]) && Game.GameMode;
+            }
+        }
+        public static bool NextTrack
+        {
+            get
+            {
+                return Input.GetKeyDown(_controls[InputControl.NextTrack]) && Game.GameMode;
+            }
+        }
+        public static bool IsPressed(InputControl key)
+        {
+            return Input.GetKey(_controls[key]) && Game.GameMode;
+        }
+        public static bool IsPressed_IgnoreChatMode(InputControl key)
+        {
+            return Input.GetKey(_controls[key]);
+        }
+        public static string KeyToString(InputControl key)
+        {
+            KeyCode requested = _controls[key];
+            return requested.ToString();
+        }
+        public static Dictionary<InputControl, KeyCode> ControlTableCopy()
+        {
+            Dictionary<InputControl, KeyCode> copy = new Dictionary<InputControl, KeyCode>();
+            foreach (InputControl key in _controls.Keys)
+            {
+                copy.Add(key, _controls[key]);
+            }
+            return copy;
+        }
+
+        public static KeyCode GetKeyCode()
+        {
+            foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+            {
+                if (Input.GetKeyDown(key))
+                {
+                    return key;
+                }
+            }
             return KeyCode.None;
         }
     }
-    public static KeyCode GetKeyCode(InputControl control)
-    {
-        if (_controls.ContainsKey(control))
-        {
-            return _controls[control];
-        }
-        else
-        {
-            return KeyCode.None;
-        }
-    }
-    public static void SetKey(InputControl control, KeyCode key)
-    {
-        _controls[control] = key;
-    }
-    public static Dictionary<InputControl, KeyCode> GetDefaultKeys()
-    {
-        Dictionary<InputControl, KeyCode> defaults = new Dictionary<InputControl, KeyCode>();
-        defaults.Add(InputControl.Forward, KeyCode.W);
-        defaults.Add(InputControl.Backward, KeyCode.S);
-        defaults.Add(InputControl.StrafeLeft, KeyCode.Q);
-        defaults.Add(InputControl.StrafeRight, KeyCode.E);
-        defaults.Add(InputControl.Run, KeyCode.LeftShift);
-        defaults.Add(InputControl.Jump, KeyCode.Space);
-        defaults.Add(InputControl.ShootPrimary, KeyCode.Mouse0);
-        defaults.Add(InputControl.ShootSecondary, KeyCode.Mouse1);
-        defaults.Add(InputControl.Action, KeyCode.Return);
-        defaults.Add(InputControl.Ascend, KeyCode.PageUp);
-        defaults.Add(InputControl.Descend, KeyCode.PageDown);
-        defaults.Add(InputControl.HUDToggle, KeyCode.H);
-        defaults.Add(InputControl.ChatMode, KeyCode.Quote);
-        defaults.Add(InputControl.CancelChat, KeyCode.Escape); //Escape
-        defaults.Add(InputControl.SendMessage, KeyCode.Return);
-        defaults.Add(InputControl.PreviousTrack, KeyCode.B); 
-        defaults.Add(InputControl.NextTrack, KeyCode.N);
-        defaults.Add(InputControl.ToggleMusic, KeyCode.M);
-        defaults.Add(InputControl.ChatScrollUp, KeyCode.PageUp);
-        defaults.Add(InputControl.ChatScrollDown, KeyCode.PageDown);
-        defaults.Add(InputControl.ChatScrollTop, KeyCode.Home);
-        defaults.Add(InputControl.ChatScrollBottom, KeyCode.End);
-        defaults.Add(InputControl.MiniMapZoomIn, KeyCode.LeftBracket);
-        defaults.Add(InputControl.MiniMapZoomOut, KeyCode.RightBracket);
-        defaults.Add(InputControl.MiniMapZoomDefault, KeyCode.Backslash);
-        defaults.Add(InputControl.InGameMenu, KeyCode.Escape); //Escape
-        defaults.Add(InputControl.Slot1, KeyCode.Alpha1);
-        defaults.Add(InputControl.Slot2, KeyCode.Alpha2);
-        defaults.Add(InputControl.Slot3, KeyCode.Alpha3);
-        defaults.Add(InputControl.Slot4, KeyCode.Alpha4);
-        defaults.Add(InputControl.Slot5, KeyCode.Alpha5);
-        defaults.Add(InputControl.Slot6, KeyCode.Alpha6);
-        defaults.Add(InputControl.Slot7, KeyCode.Alpha7);
-        defaults.Add(InputControl.Slot8, KeyCode.Alpha8);
-        defaults.Add(InputControl.Slot9, KeyCode.Alpha9);
-        defaults.Add(InputControl.Slot10, KeyCode.Alpha0);
-        defaults.Add(InputControl.Slot11, KeyCode.Minus);
-        defaults.Add(InputControl.Slot12, KeyCode.Equals);
-        defaults.Add(InputControl.MouseMode, KeyCode.P);
-        defaults.Add(InputControl.Crouch, KeyCode.LeftControl);
-        defaults.Add(InputControl.SetSecondary, KeyCode.LeftAlt);
-        defaults.Add(InputControl.UsePotion, KeyCode.U);
-        defaults.Add(InputControl.DropFlag, KeyCode.F);
-        return defaults;
-    }
-    
-    public static byte GetSlottedSpellID()
-    {
-        for(byte b = _slot1; b < _slot12; b++)
-        {
-            if (Input.GetKeyDown(_controls[(InputControl)b]) && Game.GameMode)
-            {
-                return PlayerAccount.SelectedCharacter.GetSlottedSpell(b - _slot1);
-            }
-        }
-        return 0;
-    }
-    public static bool SetSecondary
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.SetSecondary])) && Game.GameMode;
-        }
-    }
 
-    public static bool MouseMode
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.MouseMode])) && Game.GameMode;
-        }
-    }
-    public static bool UsePotion
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.UsePotion])) && Game.GameMode;
-        }
-    }
-    public static bool DropFlag
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.DropFlag])) && Game.GameMode;
-        }
-    }
-    public static bool Action
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.Action]) ) && Game.GameMode; 
-        }
-    }
-    public static bool MiniMapZoomIn
-    {
-        get
-        {
-            return (Input.GetKey(_controls[InputControl.MiniMapZoomIn])) && Game.GameMode;
-        }
-    }
-
-    public static bool MiniMapZoomOut
-    {
-        get
-        {
-            return (Input.GetKey(_controls[InputControl.MiniMapZoomOut])) && Game.GameMode;
-        }
-    }
-    public static bool ChatScrollTop
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.ChatScrollTop])) && !Game.MenuMode;
-        }
-    }
-    public static bool ChatScrollBottom
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.ChatScrollBottom])) && !Game.MenuMode;
-        }
-    }
-    public static bool ChatScrollUp
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.ChatScrollUp])) && !Game.MenuMode;
-        }
-    }
-    public static bool ChatScrollDown
-    {
-        get
-        {
-            return (Input.GetKeyDown(_controls[InputControl.ChatScrollDown])) && !Game.MenuMode;
-        }
-    }
-    public static bool ShootPrimary
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.ShootPrimary]) && Game.GameMode;
-        }
-    }
-    public static bool ShootSecondary
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.ShootSecondary]) && Game.GameMode;
-        }
-    }
-    public static bool Ascend
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.Ascend]) && Game.GameMode;
-        }
-    }
-    public static bool Descend
-    {
-        get
-        {
-            return Input.GetKey(_controls[InputControl.Descend]) && Game.GameMode;
-        }
-    }
-    public static bool HUD
-    {
-        get
-        {
-            return Input.GetKeyDown(_controls[InputControl.HUDToggle]) && Game.GameMode;
-        }
-    }
-    public static bool SendMessage
-    {
-        get
-        {
-            return Input.GetKeyDown(_controls[InputControl.SendMessage]) && Game.ChatMode;
-        }
-    }
-    public static bool ChatMode
-    {
-        get
-        {
-            return Input.GetKeyDown(_controls[InputControl.ChatMode]) && Game.GameMode;
-        }
-    }
-    public static bool InGameMenu
-    {
-        get
-        {
-            return Input.GetKeyDown(_controls[InputControl.InGameMenu]);
-        }
-    }
-    public static bool CancelChat
-    {
-        get
-        {
-            return Input.GetKeyDown(_controls[InputControl.CancelChat]) && Game.ChatMode;
-        }
-    }
-    public static bool ToggleMusic
-    {
-        get
-        {
-            return Input.GetKeyDown(_controls[InputControl.ToggleMusic]) && Game.GameMode;
-        }
-    }
-    public static bool PreviousTrack
-    {
-        get
-        {
-            return Input.GetKeyDown(_controls[InputControl.PreviousTrack]) && Game.GameMode;
-        }
-    }
-    public static bool NextTrack
-    {
-        get
-        {
-            return Input.GetKeyDown(_controls[InputControl.NextTrack]) && Game.GameMode;
-        }
-    }
-    public static bool IsPressed(InputControl key)
-    {
-        return Input.GetKey(_controls[key]) && Game.GameMode;
-    }
-    public static bool IsPressed_IgnoreChatMode(InputControl key)
-    {
-        return Input.GetKey(_controls[key]);
-    }
-    public static string KeyToString(InputControl key)
-    {
-        KeyCode requested = _controls[key];
-        return requested.ToString();
-    }
-    public static Dictionary<InputControl, KeyCode> ControlTableCopy()
-    {
-        Dictionary<InputControl, KeyCode> copy = new Dictionary<InputControl, KeyCode>();
-        foreach (InputControl key in _controls.Keys)
-        {
-            copy.Add(key, _controls[key]);
-        }
-        return copy;
-    }
-
-    public static KeyCode GetKeyCode()
-    {
-        foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
-        {
-            if (Input.GetKeyDown(key))
-            {
-                return key;
-            }
-        }
-        return KeyCode.None;
-    }
 }

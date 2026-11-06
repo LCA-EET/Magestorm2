@@ -1,82 +1,87 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-public static class ShrineManager
+namespace Magus
 {
-    private static Dictionary<byte, Shrine> _shrines;
-    private static Dictionary<Team, byte> _shrineData;
-    private static Team _winning;
-    public static void Init(byte[] decrypted, ref int index)
-    {
-        _shrines = new Dictionary<byte, Shrine>();
-        _shrineData = new Dictionary<Team, byte>();
-        _shrineData.Add(Team.Chaos, decrypted[index]);
-        index++;
-        _shrineData.Add(Team.Balance, decrypted[index]);
-        index++;
-        _shrineData.Add(Team.Order, decrypted[index]);
-        index++;
-    }
 
-    public static void CheckVictoryCondition()
+    public static class ShrineManager
     {
-        byte fullHealth = 0;
-        byte destroyed = 0;
-        foreach (Shrine shrine in _shrines.Values)
+        private static Dictionary<byte, Shrine> _shrines;
+        private static Dictionary<Team, byte> _shrineData;
+        private static Team _winning;
+        public static void Init(byte[] decrypted, ref int index)
         {
-            if (shrine.BiasAmount == 100)
+            _shrines = new Dictionary<byte, Shrine>();
+            _shrineData = new Dictionary<Team, byte>();
+            _shrineData.Add(Team.Chaos, decrypted[index]);
+            index++;
+            _shrineData.Add(Team.Balance, decrypted[index]);
+            index++;
+            _shrineData.Add(Team.Order, decrypted[index]);
+            index++;
+        }
+
+        public static void CheckVictoryCondition()
+        {
+            byte fullHealth = 0;
+            byte destroyed = 0;
+            foreach (Shrine shrine in _shrines.Values)
             {
-                fullHealth++;
-                //Debug.Log("CVC: " + shrine.Team + " at full health.");
-                _winning = shrine.Team;
+                if (shrine.BiasAmount == 100)
+                {
+                    fullHealth++;
+                    //Debug.Log("CVC: " + shrine.Team + " at full health.");
+                    _winning = shrine.Team;
+                }
+                else if (shrine.BiasAmount == 0)
+                {
+                    //Debug.Log("CVC: " + shrine.Team + " is destroyed.");
+                    destroyed++;
+                }
             }
-            else if (shrine.BiasAmount == 0)
+            if (fullHealth == 1 && destroyed == _shrines.Count - 1)
             {
-                //Debug.Log("CVC: " + shrine.Team + " is destroyed.");
-                destroyed++;
+                ComponentRegister.ShrinePanel.ShowVictoryNotification(_winning);
+            }
+            else
+            {
+                ComponentRegister.ShrinePanel.HideVictoryNotification();
             }
         }
-        if (fullHealth == 1 && destroyed == _shrines.Count - 1)
+        public static void RegisterShrine(Shrine toRegister)
         {
-            ComponentRegister.ShrinePanel.ShowVictoryNotification(_winning);
-        }
-        else
-        {
-            ComponentRegister.ShrinePanel.HideVictoryNotification();
-        }
-    }
-    public static void RegisterShrine(Shrine toRegister)
-    {
-        _shrines.Add((byte)toRegister.Team, toRegister);
-        toRegister.SetHealth(_shrineData[toRegister.Team]);
-        //Debug.Log("Registered Shrine.");
-    }
-
-    public static void ProcessShrineAdjustment(byte shrineID, byte newHealth, byte adjuster)
-    {
-        if (_shrines.ContainsKey(shrineID))
-        {
-            _shrines[shrineID].AdjustHealth(newHealth, adjuster);
+            _shrines.Add((byte)toRegister.Team, toRegister);
+            toRegister.SetHealth(_shrineData[toRegister.Team]);
+            //Debug.Log("Registered Shrine.");
         }
 
-    }
-    public static bool IsShrineAlive(Team team)
-    {
-        Shrine toCheck = GetShrine(team);
-        if(toCheck != null)
+        public static void ProcessShrineAdjustment(byte shrineID, byte newHealth, byte adjuster)
         {
-            return toCheck.BiasAmount > 0;
+            if (_shrines.ContainsKey(shrineID))
+            {
+                _shrines[shrineID].AdjustHealth(newHealth, adjuster);
+            }
+
         }
-        else
+        public static bool IsShrineAlive(Team team)
         {
-            return false;
+            Shrine toCheck = GetShrine(team);
+            if (toCheck != null)
+            {
+                return toCheck.BiasAmount > 0;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public static Shrine GetShrine(Team team)
+        {
+            if (_shrineData.ContainsKey(team))
+            {
+                return _shrines[(byte)team];
+            }
+            return null;
         }
     }
-    public static Shrine GetShrine(Team team)
-    {
-        if (_shrineData.ContainsKey(team))
-        {
-            return _shrines[(byte)team];
-        }
-        return null;
-    }
+
 }

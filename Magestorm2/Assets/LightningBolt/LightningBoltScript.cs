@@ -7,6 +7,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using Magus;
 
 namespace DigitalRuby.LightningBolt
 {

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-interface ISlotManager
+namespace Magus
 {
+    interface ISlotManager
+    {
+
+    }
 
 }

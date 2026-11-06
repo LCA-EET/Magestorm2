@@ -1,78 +1,82 @@
 using UnityEngine;
 using UnityEngine.UI;
-
-public class PasswordField : TextField
+namespace Magus
 {
-    private UnityEngine.UI.Button _showTextButton;
-    private bool _textShown = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected override void Awake()
-    {
-        base.Awake();
-        _showTextButton = GetComponentInChildren<Button>();
-        _showTextButton.onClick.AddListener(ShowTextClicked);
-        TextInput.contentType = TMPro.TMP_InputField.ContentType.Password;
-    }
-    protected override void Start()
-    {
-        base.Start();
-    }
 
-    // Update is called once per frame
-    protected override void Update()
+    public class PasswordField : TextField
     {
-        base.Update();
-    }
-    private void ShowTextClicked()
-    {
-        _textShown = !_textShown;
-        if (_textShown)
+        private UnityEngine.UI.Button _showTextButton;
+        private bool _textShown = false;
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        protected override void Awake()
         {
-            TextInput.contentType = TMPro.TMP_InputField.ContentType.Standard;
-        }
-        else
-        {
+            base.Awake();
+            _showTextButton = GetComponentInChildren<Button>();
+            _showTextButton.onClick.AddListener(ShowTextClicked);
             TextInput.contentType = TMPro.TMP_InputField.ContentType.Password;
         }
-        TextInput.ForceLabelUpdate();
-    }
-    public override bool Validate()
-    {
-        
-        if (!base.Validate())
+        protected override void Start()
         {
-            return false;
+            base.Start();
         }
-        else
+
+        // Update is called once per frame
+        protected override void Update()
         {
-            string textInput = TextInput.text;
-            byte characterTypes = 0;
-            bool letterFound = false;
-            bool digitFound = false;
-            bool symbolFound = false;
-            foreach (char c in textInput)
+            base.Update();
+        }
+        private void ShowTextClicked()
+        {
+            _textShown = !_textShown;
+            if (_textShown)
             {
-                if (char.IsLetter(c) && !letterFound)
-                {
-                    letterFound = true;
-                    characterTypes++; 
-                }
-                if (char.IsDigit(c) && !digitFound) 
-                {
-                    digitFound = true;
-                    characterTypes++;
-                }
-                if (char.IsSymbol(c) && !symbolFound)
-                {
-                    symbolFound = true;
-                    characterTypes++;
-                }
-                if(characterTypes >= 2)
-                {
-                    break;
-                }
+                TextInput.contentType = TMPro.TMP_InputField.ContentType.Standard;
             }
-            return characterTypes >= 2;
+            else
+            {
+                TextInput.contentType = TMPro.TMP_InputField.ContentType.Password;
+            }
+            TextInput.ForceLabelUpdate();
+        }
+        public override bool Validate()
+        {
+
+            if (!base.Validate())
+            {
+                return false;
+            }
+            else
+            {
+                string textInput = TextInput.text;
+                byte characterTypes = 0;
+                bool letterFound = false;
+                bool digitFound = false;
+                bool symbolFound = false;
+                foreach (char c in textInput)
+                {
+                    if (char.IsLetter(c) && !letterFound)
+                    {
+                        letterFound = true;
+                        characterTypes++;
+                    }
+                    if (char.IsDigit(c) && !digitFound)
+                    {
+                        digitFound = true;
+                        characterTypes++;
+                    }
+                    if (char.IsSymbol(c) && !symbolFound)
+                    {
+                        symbolFound = true;
+                        characterTypes++;
+                    }
+                    if (characterTypes >= 2)
+                    {
+                        break;
+                    }
+                }
+                return characterTypes >= 2;
+            }
         }
     }
+
 }

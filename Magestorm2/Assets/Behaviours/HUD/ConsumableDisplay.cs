@@ -1,49 +1,54 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-public class ConsumableDisplay : MonoBehaviour
+namespace Magus
 {
-    public Image RedPotion, BluePotion, PurplePotion;
-    public TMP_Text KeyString;
-    private void Awake()
+
+    public class ConsumableDisplay : MonoBehaviour
     {
-        Game.ConsumableDisplay = this;
-    }
-    private void Start()
-    {
-        Teams.SetTextColor(KeyString, MatchParams.MatchTeam);
-        RefreshKey();
-    }
-    public void RefreshKey()
-    {
-        KeyString.text = InputControls.KeyToString(InputControl.UsePotion);
-    }
-    public void DisplayConsumable(byte id)
-    {
-        HideImage();
-        switch (id)
+        public Image RedPotion, BluePotion, PurplePotion;
+        public TMP_Text KeyString;
+        private void Awake()
         {
-            case ControlCodes.Potion_Rejuvenation:
-                PurplePotion.gameObject.SetActive(true); 
-                break;
-            case ControlCodes.Potion_Health:
-                RedPotion.gameObject.SetActive(true);
-                break;
-            case ControlCodes.Potion_Mana:
-                BluePotion.gameObject.SetActive(true);
-                break;
+            Game.ConsumableDisplay = this;
         }
-        if(id != ControlCodes.Potion_None)
+        private void Start()
         {
-            KeyString.gameObject.SetActive(true);
-        }    
+            Teams.SetTextColor(KeyString, MatchParams.MatchTeam);
+            RefreshKey();
+        }
+        public void RefreshKey()
+        {
+            KeyString.text = InputControls.KeyToString(InputControl.UsePotion);
+        }
+        public void DisplayConsumable(byte id)
+        {
+            HideImage();
+            switch (id)
+            {
+                case ControlCodes.Potion_Rejuvenation:
+                    PurplePotion.gameObject.SetActive(true);
+                    break;
+                case ControlCodes.Potion_Health:
+                    RedPotion.gameObject.SetActive(true);
+                    break;
+                case ControlCodes.Potion_Mana:
+                    BluePotion.gameObject.SetActive(true);
+                    break;
+            }
+            if (id != ControlCodes.Potion_None)
+            {
+                KeyString.gameObject.SetActive(true);
+            }
+        }
+
+        public void HideImage()
+        {
+            RedPotion.gameObject.SetActive(false);
+            BluePotion.gameObject.SetActive(false);
+            PurplePotion.gameObject.SetActive(false);
+            KeyString.gameObject.SetActive(false);
+        }
     }
 
-    public void HideImage()
-    {
-        RedPotion.gameObject.SetActive(false);
-        BluePotion.gameObject.SetActive(false);
-        PurplePotion.gameObject.SetActive(false);
-        KeyString.gameObject.SetActive(false);
-    }
 }

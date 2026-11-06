@@ -1,31 +1,34 @@
 using UnityEngine;
 
-public class GameInitializer : MonoBehaviour
+namespace Magus
 {
-    
-    private void Awake()
+    public class GameInitializer : MonoBehaviour
     {
-        Game.Running = true;
-        if (!MatchParams.ReturningFromMatch)
+        private void Awake()
         {
-            LoadPrefs();
-            Game.Init();
+            Game.Running = true;
+            if (!MatchParams.ReturningFromMatch)
+            {
+                LoadPrefs();
+                Game.Init();
+            }
+        }
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            ComponentRegister.UIPrefabManager.InstantiateLoginForm();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        private void LoadPrefs()
+        {
+
         }
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        ComponentRegister.UIPrefabManager.InstantiateLoginForm();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void LoadPrefs()
-    {
-
-    }
 }
+

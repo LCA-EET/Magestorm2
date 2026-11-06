@@ -1,110 +1,115 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-public class SkillPanel : ValidateableObject
+namespace Magus
 {
-    public SlotSelectView SlotSelectView;
-    public SkillLine[] SkillLines;
-    public TMP_Text RemainingText;
 
-    private PeriodicAction _counter;
-    private byte _characterLevel;
-    private int _pointsRemaining, _priorPointsRemaining;
-    private void Start()
+    public class SkillPanel : ValidateableObject
     {
-        _counter = new PeriodicAction(0.1f, UpdateRemainingPoints, null);
-    }
-    public void InitControl(byte characterLevel)
-    {
-        _characterLevel = characterLevel;   
-    }
-    private void Update()
-    {
-        if(_counter != null)
+        public SlotSelectView SlotSelectView;
+        public SkillLine[] SkillLines;
+        public TMP_Text RemainingText;
+
+        private PeriodicAction _counter;
+        private byte _characterLevel;
+        private int _pointsRemaining, _priorPointsRemaining;
+        private void Start()
         {
-            _counter.ProcessAction(Time.deltaTime);
+            _counter = new PeriodicAction(0.1f, UpdateRemainingPoints, null);
         }
-    }
-    private void UpdateRemainingPoints()
-    {
-        _pointsRemaining = (SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel) - GetUsedSkillPoints());
-        Debug.Log("Remaining Skill Points: " + _pointsRemaining);
-        RemainingText.text = Language.BuildString(286, _pointsRemaining);
-        if(_pointsRemaining != _priorPointsRemaining)
+        public void InitControl(byte characterLevel)
         {
-            _priorPointsRemaining = _pointsRemaining;
-            SlotSelectView.CheckAvailability(_characterLevel, GetDisciplineTable()); 
+            _characterLevel = characterLevel;
         }
-    }
-    public void RefreshClass(byte playerClass)
-    {
-        byte[] availableDisciplines = Game.ActiveCharacterClassManager.GetDisciplineCodesOfClass(playerClass);
-        int index = 0;
-        for (int i = 0; i < availableDisciplines.Length; i++)
+        private void Update()
         {
-            SkillLines[i].Init(0, availableDisciplines[i], _characterLevel);
-            index++;
+            if (_counter != null)
+            {
+                _counter.ProcessAction(Time.deltaTime);
+            }
         }
-        while(index < SkillLines.Length)
+        private void UpdateRemainingPoints()
         {
-            SkillLines[index].gameObject.SetActive(false);
-            index++;
+            _pointsRemaining = (SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel) - GetUsedSkillPoints());
+            Debug.Log("Remaining Skill Points: " + _pointsRemaining);
+            RemainingText.text = Language.BuildString(286, _pointsRemaining);
+            if (_pointsRemaining != _priorPointsRemaining)
+            {
+                _priorPointsRemaining = _pointsRemaining;
+                SlotSelectView.CheckAvailability(_characterLevel, GetDisciplineTable());
+            }
         }
-    }
-    public void FillSkills(PlayerCharacter pc)
-    {
-        RefreshClass(pc.CharacterClass);
-        for (int i = 0; i < SkillLines.Length; i++) 
+        public void RefreshClass(byte playerClass)
         {
-            SkillLine toUpdate = SkillLines[i];
-            byte skillLevel = pc.GetSkillLevel(toUpdate.SpellDiscipline);
-            Debug.Log("Updating skill level " + (byte)toUpdate.SpellDiscipline + ": " + skillLevel);
-            toUpdate.SetSkillLevel(skillLevel);
+            byte[] availableDisciplines = Game.ActiveCharacterClassManager.GetDisciplineCodesOfClass(playerClass);
+            int index = 0;
+            for (int i = 0; i < availableDisciplines.Length; i++)
+            {
+                SkillLines[i].Init(0, availableDisciplines[i], _characterLevel);
+                index++;
+            }
+            while (index < SkillLines.Length)
+            {
+                SkillLines[index].gameObject.SetActive(false);
+                index++;
+            }
         }
-        if(GetUsedSkillPoints() == SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel))
+        public void FillSkills(PlayerCharacter pc)
         {
-            RemainingText.gameObject.SetActive(false);
+            RefreshClass(pc.CharacterClass);
             for (int i = 0; i < SkillLines.Length; i++)
             {
-                SkillLines[i].DisableButtons();
+                SkillLine toUpdate = SkillLines[i];
+                byte skillLevel = pc.GetSkillLevel(toUpdate.SpellDiscipline);
+                Debug.Log("Updating skill level " + (byte)toUpdate.SpellDiscipline + ": " + skillLevel);
+                toUpdate.SetSkillLevel(skillLevel);
             }
-        }
-    }
-    private byte GetUsedSkillPoints()
-    {
-        byte usedSkillPoints = 0;
-        for (int i = 0; i< SkillLines.Length; i++)
-        {
-            SkillLine toCheck = SkillLines[i];
-            if (toCheck.gameObject.activeSelf)
+            if (GetUsedSkillPoints() == SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel))
             {
-                usedSkillPoints += toCheck.SkillLevel;
+                RemainingText.gameObject.SetActive(false);
+                for (int i = 0; i < SkillLines.Length; i++)
+                {
+                    SkillLines[i].DisableButtons();
+                }
             }
         }
-        Debug.Log("UsedSkillPoints: " + usedSkillPoints);
-        return usedSkillPoints;
-    }
-    public override bool Validate()
-    {
-        bool toReturn = GetUsedSkillPoints() == SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel);
-        _validationFailureMessage = toReturn?"":Language.GetBaseString(291);
-        return toReturn;
-    }
-    public Dictionary<byte, byte> GetDisciplineTable()
-    {
-        Dictionary<byte, byte> toReturn = new Dictionary<byte, byte>();
-        foreach (SkillLine line in SkillLines)
+        private byte GetUsedSkillPoints()
         {
-            if (line.gameObject.activeSelf)
+            byte usedSkillPoints = 0;
+            for (int i = 0; i < SkillLines.Length; i++)
             {
-                toReturn.Add(line.SpellDiscipline, line.SkillLevel);
+                SkillLine toCheck = SkillLines[i];
+                if (toCheck.gameObject.activeSelf)
+                {
+                    usedSkillPoints += toCheck.SkillLevel;
+                }
             }
+            Debug.Log("UsedSkillPoints: " + usedSkillPoints);
+            return usedSkillPoints;
         }
-        Debug.Log("DT");
-        foreach (byte key in toReturn.Keys)
+        public override bool Validate()
         {
-            Debug.Log(key + ": " + toReturn[key].ToString());
+            bool toReturn = GetUsedSkillPoints() == SharedFunctions.GetMaxSkillPointsForLevel(_characterLevel);
+            _validationFailureMessage = toReturn ? "" : Language.GetBaseString(291);
+            return toReturn;
         }
-        return toReturn;
+        public Dictionary<byte, byte> GetDisciplineTable()
+        {
+            Dictionary<byte, byte> toReturn = new Dictionary<byte, byte>();
+            foreach (SkillLine line in SkillLines)
+            {
+                if (line.gameObject.activeSelf)
+                {
+                    toReturn.Add(line.SpellDiscipline, line.SkillLevel);
+                }
+            }
+            Debug.Log("DT");
+            foreach (byte key in toReturn.Keys)
+            {
+                Debug.Log(key + ": " + toReturn[key].ToString());
+            }
+            return toReturn;
+        }
     }
+
 }

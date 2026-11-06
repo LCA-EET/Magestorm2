@@ -4,7 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public interface ILabelCollection
+namespace Magus
 {
-    void RecordSelection(byte optionID);
+
+    public interface ILabelCollection
+    {
+        void RecordSelection(byte optionID);
+    }
+
 }

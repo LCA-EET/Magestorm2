@@ -5,36 +5,41 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-public class ShrineDisplay : MonoBehaviour
+
+namespace Magus
 {
-    public TMP_Text Title;
-    public TMP_Text Health;
+    public class ShrineDisplay : MonoBehaviour
+    {
+        public TMP_Text Title;
+        public TMP_Text Health;
 
-    public void Awake()
-    {
-        if (!MatchParams.IncludeShrines)
+        public void Awake()
         {
-            Destroy(gameObject);
+            if (!MatchParams.IncludeShrines)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                ComponentRegister.ShrineDisplay = this;
+                Toggle(false);
+            }
         }
-        else
-        {
-            ComponentRegister.ShrineDisplay = this;
-            Toggle(false);
-        }
-    }
 
-    public void Toggle(bool show)
-    {
-        Title.gameObject.SetActive(show);
-        Health.gameObject.SetActive(show);
-    }
-    public void Refresh(Shrine shrine)
-    {
-        Color toApply = Teams.GetTeamColor(shrine.Team);
-        Health.color = toApply;
-        Title.color = toApply;
-        Health.text = Language.GetBaseString(181) + " " + shrine.BiasAmount.ToString(); //
-        Title.text = Teams.GetTeamName(shrine.Team) + " " + Language.GetBaseString(171); //
-        Toggle(true);
+        public void Toggle(bool show)
+        {
+            Title.gameObject.SetActive(show);
+            Health.gameObject.SetActive(show);
+        }
+        public void Refresh(Shrine shrine)
+        {
+            Color toApply = Teams.GetTeamColor(shrine.Team);
+            Health.color = toApply;
+            Title.color = toApply;
+            Health.text = Language.GetBaseString(181) + " " + shrine.BiasAmount.ToString(); //
+            Title.text = Teams.GetTeamName(shrine.Team) + " " + Language.GetBaseString(171); //
+            Toggle(true);
+        }
     }
 }
+

@@ -1,37 +1,41 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
-public class CTFScorePanel : MonoBehaviour
+namespace Magus
 {
-    public CTFTeamScore ChaosEntry;
-    public CTFTeamScore BalanceEntry;
-    public CTFTeamScore OrderEntry;
 
-    private Dictionary<Team, CTFTeamScore> _teamScores;
-    private void Awake()
+    public class CTFScorePanel : MonoBehaviour
     {
-        _teamScores = new Dictionary<Team, CTFTeamScore>();
-        if (!MatchParams.IncludeFlags)
+        public CTFTeamScore ChaosEntry;
+        public CTFTeamScore BalanceEntry;
+        public CTFTeamScore OrderEntry;
+
+        private Dictionary<Team, CTFTeamScore> _teamScores;
+        private void Awake()
         {
-            Destroy(gameObject);
+            _teamScores = new Dictionary<Team, CTFTeamScore>();
+            if (!MatchParams.IncludeFlags)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                ComponentRegister.CTFScorePanel = this;
+                _teamScores.Add(Team.Chaos, ChaosEntry);
+                _teamScores.Add(Team.Balance, BalanceEntry);
+                _teamScores.Add(Team.Order, OrderEntry);
+            }
         }
-        else
+        private void Start()
         {
-            ComponentRegister.CTFScorePanel = this;
-            _teamScores.Add(Team.Chaos, ChaosEntry);
-            _teamScores.Add(Team.Balance, BalanceEntry);
-            _teamScores.Add(Team.Order, OrderEntry);
+            RefreshScores();
+        }
+        public void RefreshScores()
+        {
+            foreach (CTFTeamScore score in _teamScores.Values)
+            {
+                score.Refresh();
+            }
         }
     }
-    private void Start()
-    {
-        RefreshScores();
-    }
-    public void RefreshScores()
-    {
-        foreach (CTFTeamScore score in _teamScores.Values)
-        {
-            score.Refresh();
-        }
-    }
+
 }

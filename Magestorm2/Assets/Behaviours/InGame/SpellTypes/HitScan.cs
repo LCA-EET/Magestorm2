@@ -1,54 +1,58 @@
 ﻿using UnityEngine;
-
-public class HitScan : OutwardCast
+namespace Magus
 {
-    private Vector3 _start, _end;
-    private PeriodicAction _action;
-    public float AnimationTimer;
-    public HitScanAnimator Animator;
-    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
-    {
-        base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
-        _start = _casterReference.transform.position;
-        _end = ByteUtils.BytesToVector3(payload, 0);
-        transform.position = _end;
-    }
-    protected override void Awake()
-    {
-        base.Awake();
-        _action = AnimationTimer > 0 ? new PeriodicAction(AnimationTimer, DestroyAnimator, null) : null;
-    }
-    private void DestroyAnimator()
-    {
-        if(Animator != null)
-        {
-            Destroy(Animator.gameObject);
-        }
-    }
-    public void Start()
-    {
-        
-        if(Animator != null)
-        {
-            Animator.AnimateHitScan(this);
-        }
-    }
-    public Vector3 StartPosition
-    {
-        get { return _start; }
-    }
 
-    public Vector3 EndPosition
+    public class HitScan : OutwardCast
     {
-        get { return _end; }
-    }
-    public override void Update()
-    {
-        base.Update();
-        if(_action != null)
+        private Vector3 _start, _end;
+        private PeriodicAction _action;
+        public float AnimationTimer;
+        public HitScanAnimator Animator;
+        public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
         {
-            _action.ProcessAction(Time.deltaTime);
+            base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
+            _start = _casterReference.transform.position;
+            _end = ByteUtils.BytesToVector3(payload, 0);
+            transform.position = _end;
         }
+        protected override void Awake()
+        {
+            base.Awake();
+            _action = AnimationTimer > 0 ? new PeriodicAction(AnimationTimer, DestroyAnimator, null) : null;
+        }
+        private void DestroyAnimator()
+        {
+            if (Animator != null)
+            {
+                Destroy(Animator.gameObject);
+            }
+        }
+        public void Start()
+        {
+
+            if (Animator != null)
+            {
+                Animator.AnimateHitScan(this);
+            }
+        }
+        public Vector3 StartPosition
+        {
+            get { return _start; }
+        }
+
+        public Vector3 EndPosition
+        {
+            get { return _end; }
+        }
+        public override void Update()
+        {
+            base.Update();
+            if (_action != null)
+            {
+                _action.ProcessAction(Time.deltaTime);
+            }
+        }
+
     }
 
 }

@@ -1,29 +1,33 @@
 ﻿using UnityEngine;
-
-public class UIGraphics : ValidatableForm
+namespace Magus
 {
-    private MultiOption[] _options;
-    protected override void Awake()
+
+    public class UIGraphics : ValidatableForm
     {
-        base.Awake();
-        _options = GetComponentsInChildren<MultiOption>();
-    }
-    private void Start()
-    {
-        foreach(MultiOption option in _options)
+        private MultiOption[] _options;
+        protected override void Awake()
         {
-            option.SetOption(GameSettings.GetSettingValue(option.SettingKey));
+            base.Awake();
+            _options = GetComponentsInChildren<MultiOption>();
         }
-        AssociateFormToButtons();
-    }
-    protected override void PassedValidation()
-    {
-        foreach (MultiOption option in _options)
+        private void Start()
         {
-            GameSettings.SetSettingValue(option.SettingKey, option.SelectedOption);
-            Debug.Log("Saving setting: " + option.SettingKey + ", " + option.SelectedOption);
+            foreach (MultiOption option in _options)
+            {
+                option.SetOption(GameSettings.GetSettingValue(option.SettingKey));
+            }
+            AssociateFormToButtons();
         }
-        GameSettings.WriteSettings();
-        CloseForm();
+        protected override void PassedValidation()
+        {
+            foreach (MultiOption option in _options)
+            {
+                GameSettings.SetSettingValue(option.SettingKey, option.SelectedOption);
+                Debug.Log("Saving setting: " + option.SettingKey + ", " + option.SelectedOption);
+            }
+            GameSettings.WriteSettings();
+            CloseForm();
+        }
     }
+
 }

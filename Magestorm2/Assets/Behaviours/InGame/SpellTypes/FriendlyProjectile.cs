@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
-public class FriendlyProjectile : Projectile 
+namespace Magus
 {
-    public byte VFXCode;
-    protected override void OnTriggerEnter(Collider other)
+    public class FriendlyProjectile : Projectile
     {
-        base.OnTriggerEnter(other);
-        if(_impact && _hitPlayer != null)
+        public byte VFXCode;
+        protected override void OnTriggerEnter(Collider other)
         {
-            if(_casterReference.PlayerTeam == _hitPlayer.PlayerTeam)
+            base.OnTriggerEnter(other);
+            if (_impact && _hitPlayer != null)
             {
-                ComponentRegister.Spawner.SpawnVFX(VFXCode, _hitPlayer.transform);
+                if (_casterReference.PlayerTeam == _hitPlayer.PlayerTeam)
+                {
+                    ComponentRegister.Spawner.SpawnVFX(VFXCode, _hitPlayer.transform);
+                }
             }
         }
     }
 }
+

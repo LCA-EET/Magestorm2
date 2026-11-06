@@ -4,8 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-
-public class MatchOptionToggle : MonoBehaviour
+namespace Magus
 {
-    public int BitIndex;
+
+    public class MatchOptionToggle : MonoBehaviour
+    {
+        public int BitIndex;
+    }
+
 }

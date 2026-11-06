@@ -1,8 +1,13 @@
 ﻿using TMPro;
 using UnityEngine;
-public class PlayerScoreEntry : MonoBehaviour
+namespace Magus
 {
-    public TMP_Text Position, PlayerName, Level, Class, TotalScore, Kills, Deaths, Raises;
 
+    public class PlayerScoreEntry : MonoBehaviour
+    {
+        public TMP_Text Position, PlayerName, Level, Class, TotalScore, Kills, Deaths, Raises;
+
+
+    }
 
 }

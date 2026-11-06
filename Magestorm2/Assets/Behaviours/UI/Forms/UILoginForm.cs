@@ -3,162 +3,167 @@ using System.Net;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class UILoginForm : ValidatableForm
+namespace Magus
 {
-    public Toggle RememberToggle;
-    public Action ToPerform;
-    protected override void Awake()
-    {
-        base.Awake ();
-        Game.LoggedIn = false;
-        ComponentRegister.UILoginForm = this;
-    }
-   
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class UILoginForm : ValidatableForm
     {
-        if(PlayerPrefs.GetInt("remember") == 1)
+        public Toggle RememberToggle;
+        public Action ToPerform;
+        protected override void Awake()
         {
-            RememberToggle.isOn = true;
-            ((TextField)EntriesToValidate[0]).SetValue(PlayerPrefs.GetString("user"), false);
-            ((TextField)EntriesToValidate[1]).SetValue(PlayerPrefs.GetString("password"), false);
+            base.Awake();
+            Game.LoggedIn = false;
+            ComponentRegister.UILoginForm = this;
         }
-        ((TextField)EntriesToValidate[2]).SetValue(PlayerPrefs.GetString("server"), false);
-        Debug.Log("Time since epoch: " + TimeUtil.CurrentTime());
-        AssociateFormToButtons();
-        if(Game.GameServerPort > 0)
+
+
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            
-            if (MatchParams.ReturningFromMatch)
+            if (PlayerPrefs.GetInt("remember") == 1)
             {
-                Cursor.lockState = CursorLockMode.None;
-                ToPerform = RequestData;
-                ObtainKeyAndPerformAction();
+                RememberToggle.isOn = true;
+                ((TextField)EntriesToValidate[0]).SetValue(PlayerPrefs.GetString("user"), false);
+                ((TextField)EntriesToValidate[1]).SetValue(PlayerPrefs.GetString("password"), false);
             }
-            else
+            ((TextField)EntriesToValidate[2]).SetValue(PlayerPrefs.GetString("server"), false);
+            Debug.Log("Time since epoch: " + TimeUtil.CurrentTime());
+            AssociateFormToButtons();
+            if (Game.GameServerPort > 0)
             {
-                ComponentRegister.UIPrefabManager.InstantiateDHKEPacketProcessor();
-            }
-        }
-    }
-    private bool IsValidServer(ref byte[] keyBytes)
-    {
-        string fieldText = ((TextField)EntriesToValidate[2]).GetValue().ToString().ToLower();
-        string[] split = fieldText.Split(":");
-        if(split.Length == 2)
-        {
-            try
-            {
-                IPHostEntry server = Dns.GetHostEntry(split[0]);
-                int remoteport;
-                if (int.TryParse(split[1], out remoteport))
+
+                if (MatchParams.ReturningFromMatch)
                 {
-                    Game.GameServerPort = remoteport;
-                    Game.GameServerAddress = server.AddressList[0];
-                    PlayerPrefs.SetString("server", fieldText);
-                    Debug.Log("Saved server: " + fieldText);
-                    if (Game.SpellManagerTable.ContainsKey(fieldText))
-                    {
-                        Game.ActiveSpellManager = Game.SpellManagerTable[fieldText];
-                        Game.ActiveDisciplineManager = Game.DisciplineManagerTable[fieldText];
-                        Game.ActiveCharacterClassManager = Game.ClassManagerTable[fieldText];
-                    }
-                    else
-                    {
-                        Game.SpellManagerTable.Add(fieldText, new SpellManager());
-                        Game.DisciplineManagerTable.Add(fieldText, new DisciplineManager());
-                        Game.ClassManagerTable.Add(fieldText, new CharacterClassManager());
-                        
-                    }
-                    Cryptographer.GetStoredSecretKey(fieldText, out keyBytes);
-                    return true;
-                }
-                else
-                {
-                    Game.MessageBoxReference(413);
-                }
-            }
-            catch (Exception ex)
-            {
-                Game.MessageBoxReference(412);
-            }
-        }
-        return false;
-    }
-    private void ObtainKeyDHKE()
-    {
-        if (ComponentRegister.DHKEPacketProcessor == null)
-        {
-            ComponentRegister.UIPrefabManager.InstantiateDHKEPacketProcessor();
-        }
-        ComponentRegister.DHKEPacketProcessor.Init(Game.GameServerPort, ControlCodes.CipherCode_None, null);
-    }
-  
-    private void ObtainKeyAndPerformAction()
-    {
-        byte[] storedSecret = null;
-        if (IsValidServer(ref storedSecret))
-        {
-            if (storedSecret == null)
-            {
-                ObtainKeyDHKE();
-            }
-            else
-            {
-                Game.PregameKey = storedSecret;
-                if (ComponentRegister.PregamePacketProcessor != null)
-                {
-                    Destroy(ComponentRegister.PregamePacketProcessor.gameObject);
-                }
-                ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
-                ToPerform();
-            }
-        }
-    }
-    private void RequestData()
-    {
-        if (RememberToggle.isOn)
-        {
-            PlayerPrefs.SetString("user", ((TextField)EntriesToValidate[0]).GetValue().ToString());
-            PlayerPrefs.SetString("password", ((TextField)EntriesToValidate[1]).GetValue().ToString());
-        }
-        PlayerPrefs.SetInt("remember", RememberToggle.isOn ? 1 : 0);
-        if (Game.ActiveSpellManager.SpellsLoaded)
-        {
-            Game.SendPregameBytes(Pregame_Packets.LogInPacket());
-        }
-        else
-        {
-            Game.SendPregameBytes(Pregame_Packets.RequestCharacterClassDataPacket());
-        }
-    }
-    private void CreateAccount()
-    {
-        ComponentRegister.UIPrefabManager.InstantiateCreateAccountForm(gameObject);
-    }
-   
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        switch (buttonType)
-        {
-            case ButtonType.LogIn:
-                if (ValidateForm())
-                {
-                    PlayerAccount.StoreCredentials(((TextField)EntriesToValidate[0]).GetValue().ToString(),
-                        Cryptographer.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString()));
+                    Cursor.lockState = CursorLockMode.None;
                     ToPerform = RequestData;
                     ObtainKeyAndPerformAction();
                 }
-                break;
-            case ButtonType.CreateAccount:
-                ToPerform = CreateAccount;
-                ObtainKeyAndPerformAction();
-                break;
-            case ButtonType.Cancel:
-                Game.Quit();
-                break;
+                else
+                {
+                    ComponentRegister.UIPrefabManager.InstantiateDHKEPacketProcessor();
+                }
+            }
+            InputControls.Init();
+        }
+        private bool IsValidServer(ref byte[] keyBytes)
+        {
+            string fieldText = ((TextField)EntriesToValidate[2]).GetValue().ToString().ToLower();
+            string[] split = fieldText.Split(":");
+            if (split.Length == 2)
+            {
+                try
+                {
+                    IPHostEntry server = Dns.GetHostEntry(split[0]);
+                    int remoteport;
+                    if (int.TryParse(split[1], out remoteport))
+                    {
+                        Game.GameServerPort = remoteport;
+                        Game.GameServerAddress = server.AddressList[0];
+                        PlayerPrefs.SetString("server", fieldText);
+                        Debug.Log("Saved server: " + fieldText);
+                        if (Game.SpellManagerTable.ContainsKey(fieldText))
+                        {
+                            Game.ActiveSpellManager = Game.SpellManagerTable[fieldText];
+                            Game.ActiveDisciplineManager = Game.DisciplineManagerTable[fieldText];
+                            Game.ActiveCharacterClassManager = Game.ClassManagerTable[fieldText];
+                        }
+                        else
+                        {
+                            Game.SpellManagerTable.Add(fieldText, new SpellManager());
+                            Game.DisciplineManagerTable.Add(fieldText, new DisciplineManager());
+                            Game.ClassManagerTable.Add(fieldText, new CharacterClassManager());
+
+                        }
+                        Cryptographer.GetStoredSecretKey(fieldText, out keyBytes);
+                        return true;
+                    }
+                    else
+                    {
+                        Game.MessageBoxReference(413);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Game.MessageBoxReference(412);
+                }
+            }
+            return false;
+        }
+        private void ObtainKeyDHKE()
+        {
+            if (ComponentRegister.DHKEPacketProcessor == null)
+            {
+                ComponentRegister.UIPrefabManager.InstantiateDHKEPacketProcessor();
+            }
+            ComponentRegister.DHKEPacketProcessor.Init(Game.GameServerPort, ControlCodes.CipherCode_None, null);
+        }
+
+        private void ObtainKeyAndPerformAction()
+        {
+            byte[] storedSecret = null;
+            if (IsValidServer(ref storedSecret))
+            {
+                if (storedSecret == null)
+                {
+                    ObtainKeyDHKE();
+                }
+                else
+                {
+                    Game.PregameKey = storedSecret;
+                    if (ComponentRegister.PregamePacketProcessor != null)
+                    {
+                        Destroy(ComponentRegister.PregamePacketProcessor.gameObject);
+                    }
+                    ComponentRegister.UIPrefabManager.InstantiatePregamePacketProcessor();
+                    ToPerform();
+                }
+            }
+        }
+        private void RequestData()
+        {
+            if (RememberToggle.isOn)
+            {
+                PlayerPrefs.SetString("user", ((TextField)EntriesToValidate[0]).GetValue().ToString());
+                PlayerPrefs.SetString("password", ((TextField)EntriesToValidate[1]).GetValue().ToString());
+            }
+            PlayerPrefs.SetInt("remember", RememberToggle.isOn ? 1 : 0);
+            if (Game.ActiveSpellManager.SpellsLoaded)
+            {
+                Game.SendPregameBytes(Pregame_Packets.LogInPacket());
+            }
+            else
+            {
+                Game.SendPregameBytes(Pregame_Packets.RequestCharacterClassDataPacket());
+            }
+        }
+        private void CreateAccount()
+        {
+            ComponentRegister.UIPrefabManager.InstantiateCreateAccountForm(gameObject);
+        }
+
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.LogIn:
+                    if (ValidateForm())
+                    {
+                        PlayerAccount.StoreCredentials(((TextField)EntriesToValidate[0]).GetValue().ToString(),
+                            Cryptographer.SHA256Hash(((TextField)EntriesToValidate[1]).GetValue().ToString()));
+                        ToPerform = RequestData;
+                        ObtainKeyAndPerformAction();
+                    }
+                    break;
+                case ButtonType.CreateAccount:
+                    ToPerform = CreateAccount;
+                    ObtainKeyAndPerformAction();
+                    break;
+                case ButtonType.Cancel:
+                    Game.Quit();
+                    break;
+            }
         }
     }
+
 }

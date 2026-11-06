@@ -1,31 +1,35 @@
 using UnityEngine;
 using UnityEngine.UI;
-
-public class BarIndicator : MonoBehaviour
+namespace Magus
 {
-    public Image FillImage;
-    private Slider _slider;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+
+    public class BarIndicator : MonoBehaviour
     {
-        _slider = GetComponent<Slider>();
-    }
-    void Start()
-    {
-        
+        public Image FillImage;
+        private Slider _slider;
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Awake()
+        {
+            _slider = GetComponent<Slider>();
+        }
+        void Start()
+        {
+
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+        public void SetFillColor(Color color)
+        {
+            FillImage.color = color;
+        }
+        public void SetFill(float fill)
+        {
+            _slider.value = fill;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public void SetFillColor(Color color)
-    {
-        FillImage.color = color;
-    }
-    public void SetFill(float fill)
-    {
-        _slider.value = fill;
-    }
 }

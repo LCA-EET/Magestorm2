@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
-
-public class Rotater : MonoBehaviour
+namespace Magus
 {
-    public float RotationPerSecond;
-    public bool xAxis, yAxis, zAxis;
 
-    public void Update()
+    public class Rotater : MonoBehaviour
     {
-        float deltaTime = Time.deltaTime;
-        transform.Rotate(xAxis ? RotationPerSecond * deltaTime : 0, yAxis ? RotationPerSecond * deltaTime : 0, zAxis ? RotationPerSecond * deltaTime : 0);
+        public float RotationPerSecond;
+        public bool xAxis, yAxis, zAxis;
+
+        public void Update()
+        {
+            float deltaTime = Time.deltaTime;
+            transform.Rotate(xAxis ? RotationPerSecond * deltaTime : 0, yAxis ? RotationPerSecond * deltaTime : 0, zAxis ? RotationPerSecond * deltaTime : 0);
+        }
+
     }
 
 }

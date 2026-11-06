@@ -1,40 +1,44 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public class BiasDisplay : MonoBehaviour
+namespace Magus
 {
-    public TMP_Text Title;
-    public TMP_Text Power;
-    public TMP_Text Bias;
+    public class BiasDisplay : MonoBehaviour
+    {
+        public TMP_Text Title;
+        public TMP_Text Power;
+        public TMP_Text Bias;
 
-    public void Awake()
-    {
-        if (!MatchParams.IncludePools)
+        public void Awake()
         {
-            Destroy(gameObject);
+            if (!MatchParams.IncludePools)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                ComponentRegister.BiasDisplay = this;
+                Toggle(false);
+            }
         }
-        else
-        {
-            ComponentRegister.BiasDisplay = this;
-            Toggle(false);
-        }
-    }
 
-    public void Refresh(ManaPool pool)
-    {
-        Color toApply = Teams.GetTeamTextColor(pool.BiasedToward);
-        Power.color = toApply;
-        Bias.color = toApply;
-        Title.color = toApply;
-        Power.text = Language.GetBaseString(173) + " " + pool.PoolPower.ToString();    //
-        Bias.text = Language.GetBaseString(174) + " " + pool.BiasAmount.ToString();    //
-        Title.text = Teams.GetTeamName(pool.BiasedToward) + " " + Language.GetBaseString(172); //
-        Toggle(true);
-    }
-    public void Toggle(bool show)
-    {
-        Title.gameObject.SetActive(show);
-        Power.gameObject.SetActive(show);
-        Bias.gameObject.SetActive(show);
+        public void Refresh(ManaPool pool)
+        {
+            Color toApply = Teams.GetTeamTextColor(pool.BiasedToward);
+            Power.color = toApply;
+            Bias.color = toApply;
+            Title.color = toApply;
+            Power.text = Language.GetBaseString(173) + " " + pool.PoolPower.ToString();    //
+            Bias.text = Language.GetBaseString(174) + " " + pool.BiasAmount.ToString();    //
+            Title.text = Teams.GetTeamName(pool.BiasedToward) + " " + Language.GetBaseString(172); //
+            Toggle(true);
+        }
+        public void Toggle(bool show)
+        {
+            Title.gameObject.SetActive(show);
+            Power.gameObject.SetActive(show);
+            Bias.gameObject.SetActive(show);
+        }
     }
 }
+

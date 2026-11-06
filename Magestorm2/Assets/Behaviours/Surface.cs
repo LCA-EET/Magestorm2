@@ -1,28 +1,32 @@
 using UnityEngine;
-
-public class Surface : MonoBehaviour
+namespace Magus
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public Collider Collider;
-    public Footstep FootstepType;
-    void Start()
+
+    public class Surface : MonoBehaviour
     {
-        //Debug.Log("SurfaceTest");
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        public Collider Collider;
+        public Footstep FootstepType;
+        void Start()
+        {
+            //Debug.Log("SurfaceTest");
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            //Debug.Log(other.gameObject.name);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        //Debug.Log(other.gameObject.name);
-    }
 }

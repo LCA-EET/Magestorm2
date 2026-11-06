@@ -1,97 +1,101 @@
 using TMPro;
 using Unity.Collections;
 using UnityEngine;
-
-public class StatLine : ValidatableForm
+namespace Magus
 {
-    public byte Statistic;
-    public TMP_Text StatText;
-    public TMP_Text StatValue;
-    private byte _stat;
-    private StatPanel _owningPanel;
 
-    private void Awake()
+    public class StatLine : ValidatableForm
     {
-        _stat = 15;
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        AssociateFormToButtons();
-        RefreshStatValue();
-    }
+        public byte Statistic;
+        public TMP_Text StatText;
+        public TMP_Text StatValue;
+        private byte _stat;
+        private StatPanel _owningPanel;
 
-    public void DisableButtons()
-    {
-        foreach(FormButton button in FormButtons)
+        private void Awake()
         {
-            button.gameObject.SetActive(false);
+            _stat = 15;
         }
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void RefreshStatValue()
-    {
-        StatValue.text = _stat.ToString();
-    }
-    public void AssignOwner(StatPanel owner)
-    {
-        _owningPanel = owner;
-    }
-    private void AdjustStatistic(bool increase)
-    {
-        if (increase)
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            if(_stat >= 20)
+            AssociateFormToButtons();
+            RefreshStatValue();
+        }
+
+        public void DisableButtons()
+        {
+            foreach (FormButton button in FormButtons)
             {
-                Game.MessageBox(Language.GetBaseString(67)); //
-            }
-            else
-            {
-                _stat++;
+                button.gameObject.SetActive(false);
             }
         }
-        else
+        // Update is called once per frame
+        void Update()
         {
-            if(_stat <= 10)
-            {
-                Game.MessageBox(Language.GetBaseString(67)); //
-            }
-            else
-            {
-                _stat--;
-            }
+
         }
-        RefreshStatValue();
-    }
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        switch (buttonType) 
+
+        private void RefreshStatValue()
         {
-            case ButtonType.Increase:
-                if(_owningPanel.StatTotal() >= 90)
+            StatValue.text = _stat.ToString();
+        }
+        public void AssignOwner(StatPanel owner)
+        {
+            _owningPanel = owner;
+        }
+        private void AdjustStatistic(bool increase)
+        {
+            if (increase)
+            {
+                if (_stat >= 20)
                 {
-                    Game.MessageBoxReference(68);
+                    Game.MessageBox(Language.GetBaseString(67)); //
                 }
                 else
                 {
-                    AdjustStatistic(true);
+                    _stat++;
                 }
-                break;
-            case ButtonType.Decrease:
-                AdjustStatistic(false);
-                break;
+            }
+            else
+            {
+                if (_stat <= 10)
+                {
+                    Game.MessageBox(Language.GetBaseString(67)); //
+                }
+                else
+                {
+                    _stat--;
+                }
+            }
+            RefreshStatValue();
         }
-        _owningPanel.RefreshTotal();
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Increase:
+                    if (_owningPanel.StatTotal() >= 90)
+                    {
+                        Game.MessageBoxReference(68);
+                    }
+                    else
+                    {
+                        AdjustStatistic(true);
+                    }
+                    break;
+                case ButtonType.Decrease:
+                    AdjustStatistic(false);
+                    break;
+            }
+            _owningPanel.RefreshTotal();
+        }
+
+        public byte Value
+        {
+            get { return _stat; }
+            set { _stat = value; }
+        }
     }
 
-    public byte Value
-    {
-        get { return _stat; }
-        set {  _stat = value; }
-    }
 }

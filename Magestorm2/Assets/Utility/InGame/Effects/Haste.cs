@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
-
-public class Haste : AppliedEffect
+namespace Magus
 {
-    public override void ApplyEffect(Avatar appliedTo)
+
+    public class Haste : AppliedEffect
     {
-        base.ApplyEffect(appliedTo);
-        if (_appliedToPlayer)
+        public override void ApplyEffect(Avatar appliedTo)
         {
-            ComponentRegister.PlayerMovement.MarkHaste(true);
+            base.ApplyEffect(appliedTo);
+            if (_appliedToPlayer)
+            {
+                ComponentRegister.PlayerMovement.MarkHaste(true);
+            }
+        }
+
+        public override void ReverseEffect()
+        {
+            base.ReverseEffect();
+            if (_appliedToPlayer)
+            {
+                ComponentRegister.PlayerMovement.MarkHaste(false);
+            }
         }
     }
 
-    public override void ReverseEffect()
-    {
-        base.ReverseEffect();
-        if (_appliedToPlayer)
-        {
-            ComponentRegister.PlayerMovement.MarkHaste(false);
-        }
-    }
 }

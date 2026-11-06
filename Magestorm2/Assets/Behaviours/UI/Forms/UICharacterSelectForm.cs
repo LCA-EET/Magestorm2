@@ -1,168 +1,172 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class UICharacterSelectForm : ValidatableForm
+namespace Magus
 {
-    public UICharacterCard[] CharacterCards;
-    public RenderTexture[] RenderTextures;
-    private bool _qmJoin;
-    protected override void Awake()
+
+    public class UICharacterSelectForm : ValidatableForm
     {
-        base.Awake();
-        Game.LoggedIn = true;
-        for (int i = 0; i < CharacterCards.Length; i++)
+        public UICharacterCard[] CharacterCards;
+        public RenderTexture[] RenderTextures;
+        private bool _qmJoin;
+        protected override void Awake()
         {
-            CharacterCards[i].SetOwningForm(this, RenderTextures[i]);
-        }
-        RefreshCards();
-        ReselectExisting();
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-    }
-    private void ReselectExisting()
-    {
-        if (PlayerAccount.SelectedCharacter != null)
-        {
-            int charID = PlayerAccount.SelectedCharacter.CharacterID;
-            foreach (UICharacterCard card in CharacterCards)
+            base.Awake();
+            Game.LoggedIn = true;
+            for (int i = 0; i < CharacterCards.Length; i++)
             {
-                if (card.Populated)
+                CharacterCards[i].SetOwningForm(this, RenderTextures[i]);
+            }
+            RefreshCards();
+            ReselectExisting();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        private void ReselectExisting()
+        {
+            if (PlayerAccount.SelectedCharacter != null)
+            {
+                int charID = PlayerAccount.SelectedCharacter.CharacterID;
+                foreach (UICharacterCard card in CharacterCards)
                 {
-                    if(charID == card.CharacterID())
+                    if (card.Populated)
                     {
-                        card.MarkSelected(true);
-                        return;
+                        if (charID == card.CharacterID())
+                        {
+                            card.MarkSelected(true);
+                            return;
+                        }
                     }
                 }
+                PlayerAccount.SelectedCharacter = null;
             }
-            PlayerAccount.SelectedCharacter = null;
         }
-    }
-    public void RefreshCards()
-    {
-        
-        List<PlayerCharacter> characterList = PlayerAccount.GetCharacterList();
-        int cardIndex = 0;
-        foreach (PlayerCharacter character in characterList)
+        public void RefreshCards()
         {
-            CharacterCards[cardIndex].Populate(character);
-            cardIndex++;
+
+            List<PlayerCharacter> characterList = PlayerAccount.GetCharacterList();
+            int cardIndex = 0;
+            foreach (PlayerCharacter character in characterList)
+            {
+                CharacterCards[cardIndex].Populate(character);
+                cardIndex++;
+            }
+            while (cardIndex < CharacterCards.Length)
+            {
+                CharacterCards[cardIndex].ActivatePanel(true);
+                cardIndex++;
+            }
+            PlayerAccount.UpdatesMade = false;
         }
-        while (cardIndex < CharacterCards.Length)
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            CharacterCards[cardIndex].ActivatePanel(true);
-            cardIndex++;
+            AssociateFormToButtons();
+            //InputControls.Init();
+            if (MatchParams.ReturningFromMatch)
+            {
+                Game.SendPregameBytes(Pregame_Packets.MatchScoreRequestPacket());
+            }
         }
-        PlayerAccount.UpdatesMade = false;
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        AssociateFormToButtons();
-        InputControls.Init();
-        if(MatchParams.ReturningFromMatch)
+
+        // Update is called once per frame
+        void Update()
         {
-            Game.SendPregameBytes(Pregame_Packets.MatchScoreRequestPacket());
+            if (PlayerAccount.UpdatesMade)
+            {
+                RefreshCards();
+                DeselectCards();
+            }
+        }
+        private void DeselectCards()
+        {
+            foreach (UICharacterCard card in CharacterCards)
+            {
+                card.MarkSelected(false);
+            }
+        }
+        public void CardSelected(UICharacterCard selected)
+        {
+            DeselectCards();
+            selected.MarkSelected(true);
+        }
+        protected override void PassedValidation()
+        {
+            Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket(_qmJoin));
+        }
+        protected override bool ValidateForm()
+        {
+            return PlayerAccount.SelectedCharacter != null;
+        }
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Delete:
+                    if (ValidateForm())
+                    {
+                        Game.YesNo(Language.BuildString(50, PlayerAccount.SelectedCharacter.CharacterName), this);
+                    }
+                    break;
+                case ButtonType.Cancel:
+                    Game.LoggedIn = false;
+                    CloseForm();
+                    break;
+                case ButtonType.Submit:
+                    if (ValidateForm())
+                    {
+                        _qmJoin = false;
+                        PassedValidation();
+                    }
+                    else
+                    {
+                        Game.MessageBox(Language.GetBaseString(36)); //
+                    }
+                    break;
+                case ButtonType.Edit:
+                    ComponentRegister.UIPrefabManager.InstantiateKeyMapper();
+                    break;
+                case ButtonType.Misc0:
+                    ComponentRegister.UIPrefabManager.InstantiateSpellInfo();
+                    break;
+                case ButtonType.Misc1:
+                    if (ValidateForm())
+                    {
+                        _qmJoin = true;
+                        PassedValidation();
+                    }
+                    else
+                    {
+                        Game.MessageBox(Language.GetBaseString(36)); //
+                    }
+                    break;
+                case ButtonType.Misc2:
+                    if (ValidateForm())
+                    {
+                        ComponentRegister.UIPrefabManager.InstantiateCharacterEditor(PlayerAccount.SelectedCharacter);
+                    }
+                    else
+                    {
+                        Game.MessageBox(Language.GetBaseString(36));
+                    }
+                    break;
+                case ButtonType.Misc3:
+                    ComponentRegister.UIPrefabManager.InstantiateUIGraphics();
+                    break;
+            }
+        }
+        public override void SetResult(FormResult result)
+        {
+            if (result == FormResult.Yes)
+            {
+                Game.SendPregameBytes(Pregame_Packets.DeleteCharacterPacket(PlayerAccount.SelectedCharacter.CharacterID));
+            }
+        }
+        public override void CloseForm()
+        {
+            ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.LogOutPacket());
+            base.CloseForm();
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (PlayerAccount.UpdatesMade)
-        {
-            RefreshCards();
-            DeselectCards();
-        }
-    }
-    private void DeselectCards()
-    {
-        foreach (UICharacterCard card in CharacterCards)
-        {
-            card.MarkSelected(false);
-        }
-    }
-    public void CardSelected(UICharacterCard selected)
-    {
-        DeselectCards();
-        selected.MarkSelected(true);   
-    }
-    protected override void PassedValidation()
-    {
-        Game.SendPregameBytes(Pregame_Packets.SubscribeToMatchesPacket(_qmJoin));
-    }
-    protected override bool ValidateForm()
-    {
-        return PlayerAccount.SelectedCharacter != null;
-    }
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        switch (buttonType)
-        {
-            case ButtonType.Delete:
-                if (ValidateForm())
-                {
-                    Game.YesNo(Language.BuildString(50, PlayerAccount.SelectedCharacter.CharacterName), this);
-                }
-                break;
-            case ButtonType.Cancel:
-                Game.LoggedIn = false;
-                CloseForm();
-                break;
-            case ButtonType.Submit:
-                if (ValidateForm())
-                {
-                    _qmJoin = false;
-                    PassedValidation();
-                }
-                else
-                {
-                    Game.MessageBox(Language.GetBaseString(36)); //
-                }
-                break;
-            case ButtonType.Edit:
-                ComponentRegister.UIPrefabManager.InstantiateKeyMapper();
-                break;
-            case ButtonType.Misc0:
-                ComponentRegister.UIPrefabManager.InstantiateSpellInfo();
-                break;
-            case ButtonType.Misc1:
-                if (ValidateForm())
-                {
-                    _qmJoin = true;
-                    PassedValidation();
-                }
-                else
-                {
-                    Game.MessageBox(Language.GetBaseString(36)); //
-                }
-                break;
-            case ButtonType.Misc2:
-                if (ValidateForm())
-                {
-                    ComponentRegister.UIPrefabManager.InstantiateCharacterEditor(PlayerAccount.SelectedCharacter);
-                }
-                else
-                {
-                    Game.MessageBox(Language.GetBaseString(36));
-                }
-                break;
-            case ButtonType.Misc3:
-                ComponentRegister.UIPrefabManager.InstantiateUIGraphics();
-                break;
-        }
-    }
-    public override void SetResult(FormResult result)
-    {
-        if(result == FormResult.Yes)
-        {
-            Game.SendPregameBytes(Pregame_Packets.DeleteCharacterPacket(PlayerAccount.SelectedCharacter.CharacterID));
-        }
-    }
-    public override void CloseForm()
-    {
-        ComponentRegister.PregamePacketProcessor.SendBytes(Pregame_Packets.LogOutPacket());
-        base.CloseForm();
-    }
 }

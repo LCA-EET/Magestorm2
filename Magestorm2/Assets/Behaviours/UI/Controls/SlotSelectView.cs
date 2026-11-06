@@ -1,91 +1,96 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-public class SlotSelectView : ScrollSelectView, ISpellProcessor
+namespace Magus
 {
-    private byte _characterLevel;
-    private Dictionary<byte,byte> _disciplineTable;
-    private byte[] _slottedSpells;
-    private const short _noSelectionRef = 276;
-    private SkillPanel _skillPanel;
-    void Awake()
+
+    public class SlotSelectView : ScrollSelectView, ISpellProcessor
     {
-        _slottedSpells = new byte[10];
-    }
-    public void ClearSelections()
-    {
-        for(byte slotID = 0; slotID < 10; slotID++)
+        private byte _characterLevel;
+        private Dictionary<byte, byte> _disciplineTable;
+        private byte[] _slottedSpells;
+        private const short _noSelectionRef = 276;
+        private SkillPanel _skillPanel;
+        void Awake()
         {
-            ResetLine(slotID);
+            _slottedSpells = new byte[10];
         }
-    }
-    private void ResetLine(byte slotID)
-    {
-        _slottedSpells[slotID] = 0;
-        Labels[slotID].UpdateText(_noSelectionRef);
-    }
-    public void Init(byte[] slottedSpells, byte characterLevel, Dictionary<byte, byte> disciplineTable, SkillPanel skillPanel)
-    {
-        _disciplineTable = disciplineTable;
-        _characterLevel = characterLevel;
-        _skillPanel = skillPanel;
-        for (byte i = 0; i < slottedSpells.Length; i++)
+        public void ClearSelections()
         {
-            byte spellID = slottedSpells[i];
-            SpellData slottedSpell = null;
-            short referenceID = _noSelectionRef;
-            if (Game.ActiveSpellManager.GetSpell(spellID, ref slottedSpell))
+            for (byte slotID = 0; slotID < 10; slotID++)
             {
-                referenceID = slottedSpell.SpellNameReference;
-            }
-            _slottedSpells[i] = spellID;
-            Labels[i].Register(referenceID, i, this);
-            Labels[i].MarkSelected(false);
-        }
-    }
-    public void RecordSpellSelection(byte slotID, byte spellID)
-    {
-        _slottedSpells[slotID] = spellID;
-    }
-    public void SelectionMade(object[] args)
-    {
-        byte slotID = (byte)args[0];
-        short nameRef = (short)args[1];
-        byte spellID = (byte)args[2];
-        RecordSpellSelection(slotID, spellID);
-        Labels[slotID].UpdateText(nameRef);
-    }
-
-    protected override void ProcessSelection()
-    {
-        Dictionary<byte, byte> toUse;
-        if (_disciplineTable == null)
-        {
-            toUse = _skillPanel.GetDisciplineTable();
-        }
-        else
-        {
-            toUse = _disciplineTable;
-        }
-        ComponentRegister.UIPrefabManager.InstantiateAvailableSpellList(_characterLevel, _selectedOption, this, toUse);
-    }
-
-    public byte[] SlotSelections
-    {
-        get
-        {
-            return _slottedSpells;
-        }
-    }
-
-    public void CheckAvailability(byte characterLevel, Dictionary<byte, byte> disciplineLevels)
-    {
-        Dictionary<byte, SpellData> availableSpells = Game.ActiveSpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
-        for (byte i = 0; i < _slottedSpells.Length; i++)
-        {
-            if (!availableSpells.ContainsKey(_slottedSpells[i]))
-            {
-                ResetLine(i);
+                ResetLine(slotID);
             }
         }
+        private void ResetLine(byte slotID)
+        {
+            _slottedSpells[slotID] = 0;
+            Labels[slotID].UpdateText(_noSelectionRef);
+        }
+        public void Init(byte[] slottedSpells, byte characterLevel, Dictionary<byte, byte> disciplineTable, SkillPanel skillPanel)
+        {
+            _disciplineTable = disciplineTable;
+            _characterLevel = characterLevel;
+            _skillPanel = skillPanel;
+            for (byte i = 0; i < slottedSpells.Length; i++)
+            {
+                byte spellID = slottedSpells[i];
+                SpellData slottedSpell = null;
+                short referenceID = _noSelectionRef;
+                if (Game.ActiveSpellManager.GetSpell(spellID, ref slottedSpell))
+                {
+                    referenceID = slottedSpell.SpellNameReference;
+                }
+                _slottedSpells[i] = spellID;
+                Labels[i].Register(referenceID, i, this);
+                Labels[i].MarkSelected(false);
+            }
+        }
+        public void RecordSpellSelection(byte slotID, byte spellID)
+        {
+            _slottedSpells[slotID] = spellID;
+        }
+        public void SelectionMade(object[] args)
+        {
+            byte slotID = (byte)args[0];
+            short nameRef = (short)args[1];
+            byte spellID = (byte)args[2];
+            RecordSpellSelection(slotID, spellID);
+            Labels[slotID].UpdateText(nameRef);
+        }
+
+        protected override void ProcessSelection()
+        {
+            Dictionary<byte, byte> toUse;
+            if (_disciplineTable == null)
+            {
+                toUse = _skillPanel.GetDisciplineTable();
+            }
+            else
+            {
+                toUse = _disciplineTable;
+            }
+            ComponentRegister.UIPrefabManager.InstantiateAvailableSpellList(_characterLevel, _selectedOption, this, toUse);
+        }
+
+        public byte[] SlotSelections
+        {
+            get
+            {
+                return _slottedSpells;
+            }
+        }
+
+        public void CheckAvailability(byte characterLevel, Dictionary<byte, byte> disciplineLevels)
+        {
+            Dictionary<byte, SpellData> availableSpells = Game.ActiveSpellManager.GetAvailableSpells(characterLevel, disciplineLevels);
+            for (byte i = 0; i < _slottedSpells.Length; i++)
+            {
+                if (!availableSpells.ContainsKey(_slottedSpells[i]))
+                {
+                    ResetLine(i);
+                }
+            }
+        }
     }
+
 }

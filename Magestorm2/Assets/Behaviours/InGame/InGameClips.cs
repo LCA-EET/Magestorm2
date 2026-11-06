@@ -1,170 +1,174 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
-public class InGameClips : MonoBehaviour
+namespace Magus
 {
-    public float FootstepAudioDistance;
 
-    public AudioClip SFXBias;
-    public AudioClip SFXDestroyedShrine;
-    public AudioClip[] SFXWaterSplash;
-    public AudioClip[] SFXFootstep_Stone;
-    public AudioClip[] SFXFootstep_Wood;
-    public AudioClip[] SFXFootstep_Grass;
-    public AudioClip[] SFXFootstep_Dirt;
-    public AudioClip[] SFXDeathMale, SFXDeathFemale, SFXGruntMale, SFXGruntFemale;
-    public AudioClip[] SFXCastFire, SFXCastIce, SFXCastEarth, SFXCastBrilliance;
-    public AudioClip SFXWoosh_HeavyFast;
-    public AudioClip SFXWoosh_HeavyMedium;
-    public AudioClip SFXWoosh_HeavySlow;
-    public AudioClip SFXWoosh_NormalFast;
-    public AudioClip SFXWoosh_NormalMedium;
-    public AudioClip SFXWoosh_NormalSlow;
-    public AudioClip SFXTeleport;
-    public AudioClip SFXOpenDoor;
-    public AudioClip SFXPortcullis;
-    public AudioClip SFXCloseDoor;
-    public AudioClip SFXMagicElevator;
-    public AudioClip SFXPickUpItem;
-    public AudioClip SFXDrinkPotion;
-    public void Awake()
+    public class InGameClips : MonoBehaviour
     {
-        Game.Clips = this;
-    }
-    public AudioClip GetDisciplineCast(byte disciplineCode)
-    {
-        AudioClip[] clips = null;
-        switch (disciplineCode)
-        {
-            case ControlCodes.SpellDiscipline_Healing:
+        public float FootstepAudioDistance;
 
-                break;
-            case ControlCodes.SpellDiscipline_Brilliance:
-                clips = SFXCastBrilliance;
-                break;
-            case ControlCodes.SpellDiscipline_EarthLaw:
-                clips = SFXCastEarth;
-                break;
-            case ControlCodes.SpellDiscipline_IceLaw:
-                clips = SFXCastIce;
-                break;
-            default:
-                clips = SFXCastFire;
-                break;
-        }
-        return clips[Random.Range(0, clips.Length)];
-    }
-    public AudioClip GetDeathScream(bool male)
-    {
-        AudioClip[] clips = male ? SFXDeathMale : SFXDeathFemale;
-        return clips[Random.Range(0, clips.Length)];
-    }
-    public AudioClip GetGrunt(bool male)
-    {
-        AudioClip[] clips = male ? SFXGruntMale : SFXGruntFemale;
-        return clips[Random.Range(0, clips.Length)];
-    }
-    private AudioClip GetRandomSplash()
-    {
-        return SFXWaterSplash[SharedFunctions.RandomInt(0, SFXWaterSplash.Length)];
-    }
-    public void PlayRandomSplash(AudioSource source)
-    {
-        source.PlayOneShot(GetRandomSplash());
-    }
-    public void PlayShrineDestroyed()
-    {
-        Game.UIAudio.PlayClip(SFXDestroyedShrine);
-    }
-    public void PlayBias(AudioSource source)
-    {
-        source.PlayOneShot(SFXBias);
-    }
-    public void PlayClip(ClipID clipID, AudioSource source)
-    {
-        AudioClip toPlay = null;
-        switch (clipID)
+        public AudioClip SFXBias;
+        public AudioClip SFXDestroyedShrine;
+        public AudioClip[] SFXWaterSplash;
+        public AudioClip[] SFXFootstep_Stone;
+        public AudioClip[] SFXFootstep_Wood;
+        public AudioClip[] SFXFootstep_Grass;
+        public AudioClip[] SFXFootstep_Dirt;
+        public AudioClip[] SFXDeathMale, SFXDeathFemale, SFXGruntMale, SFXGruntFemale;
+        public AudioClip[] SFXCastFire, SFXCastIce, SFXCastEarth, SFXCastBrilliance;
+        public AudioClip SFXWoosh_HeavyFast;
+        public AudioClip SFXWoosh_HeavyMedium;
+        public AudioClip SFXWoosh_HeavySlow;
+        public AudioClip SFXWoosh_NormalFast;
+        public AudioClip SFXWoosh_NormalMedium;
+        public AudioClip SFXWoosh_NormalSlow;
+        public AudioClip SFXTeleport;
+        public AudioClip SFXOpenDoor;
+        public AudioClip SFXPortcullis;
+        public AudioClip SFXCloseDoor;
+        public AudioClip SFXMagicElevator;
+        public AudioClip SFXPickUpItem;
+        public AudioClip SFXDrinkPotion;
+        public void Awake()
         {
-            case ClipID.DoorOpen:
-                toPlay = SFXOpenDoor;
-                break;
-            case ClipID.DoorClose:
-                toPlay = SFXCloseDoor;
-                break;
-            case ClipID.Portcullis:
-                toPlay = SFXPortcullis;
-                break;
-            case ClipID.MagicElevator:
-                toPlay = SFXMagicElevator;
-                break;
-                
+            Game.Clips = this;
         }
-        if(toPlay != null)
+        public AudioClip GetDisciplineCast(byte disciplineCode)
         {
-            PlayClip(toPlay, source, source.maxDistance);
+            AudioClip[] clips = null;
+            switch (disciplineCode)
+            {
+                case ControlCodes.SpellDiscipline_Healing:
+
+                    break;
+                case ControlCodes.SpellDiscipline_Brilliance:
+                    clips = SFXCastBrilliance;
+                    break;
+                case ControlCodes.SpellDiscipline_EarthLaw:
+                    clips = SFXCastEarth;
+                    break;
+                case ControlCodes.SpellDiscipline_IceLaw:
+                    clips = SFXCastIce;
+                    break;
+                default:
+                    clips = SFXCastFire;
+                    break;
+            }
+            return clips[Random.Range(0, clips.Length)];
         }
-    }
-    public void PlayClip(AudioClip toPlay, AudioSource source, float maxDistance)
-    {
-        source.maxDistance = maxDistance;
-        source.PlayOneShot(toPlay);
-    }
-    public void PlayFootstep(Footstep step, AudioSource source)
-    {
-        AudioClip[] toPlay = null;
-        switch (step)
+        public AudioClip GetDeathScream(bool male)
         {
-            case Footstep.Stone:
-                toPlay = SFXFootstep_Stone;
-                break;
-            case Footstep.Wood:
-                toPlay = SFXFootstep_Wood;
-                break;
-            case Footstep.Dirt:
-                toPlay = SFXFootstep_Dirt;
-                break;
-            case Footstep.Grass:
-                toPlay = SFXFootstep_Grass;
-                break;
-            case Footstep.Water:
-                toPlay = SFXWaterSplash;
-                break;
+            AudioClip[] clips = male ? SFXDeathMale : SFXDeathFemale;
+            return clips[Random.Range(0, clips.Length)];
         }
-        PlayClip(toPlay[SharedFunctions.RandomInt(0, toPlay.Length - 1)], source, FootstepAudioDistance);
-    }
-    public void PlayWoosh(Woosh woosh, AudioSource source)
-    {
-        AudioClip toPlay = null;
-        switch (woosh)
+        public AudioClip GetGrunt(bool male)
         {
-            case Woosh.NormalFast:
-                toPlay = SFXWoosh_NormalFast;
-                break;
-            case Woosh.NormalMedium:
-                toPlay = SFXWoosh_NormalMedium;
-                break;
-            case Woosh.NormalSlow:
-                toPlay = SFXWoosh_NormalSlow;
-                break;
-            case Woosh.HeavyFast:
-                toPlay = SFXWoosh_HeavyFast;
-                break;
-            case Woosh.HeavyMedium:
-                toPlay = SFXWoosh_HeavyFast;
-                break;
-            case Woosh.HeavySlow:
-                toPlay = SFXWoosh_HeavyFast;
-                break;
+            AudioClip[] clips = male ? SFXGruntMale : SFXGruntFemale;
+            return clips[Random.Range(0, clips.Length)];
         }
-        if(toPlay != null)
+        private AudioClip GetRandomSplash()
         {
+            return SFXWaterSplash[SharedFunctions.RandomInt(0, SFXWaterSplash.Length)];
+        }
+        public void PlayRandomSplash(AudioSource source)
+        {
+            source.PlayOneShot(GetRandomSplash());
+        }
+        public void PlayShrineDestroyed()
+        {
+            Game.UIAudio.PlayClip(SFXDestroyedShrine);
+        }
+        public void PlayBias(AudioSource source)
+        {
+            source.PlayOneShot(SFXBias);
+        }
+        public void PlayClip(ClipID clipID, AudioSource source)
+        {
+            AudioClip toPlay = null;
+            switch (clipID)
+            {
+                case ClipID.DoorOpen:
+                    toPlay = SFXOpenDoor;
+                    break;
+                case ClipID.DoorClose:
+                    toPlay = SFXCloseDoor;
+                    break;
+                case ClipID.Portcullis:
+                    toPlay = SFXPortcullis;
+                    break;
+                case ClipID.MagicElevator:
+                    toPlay = SFXMagicElevator;
+                    break;
+
+            }
+            if (toPlay != null)
+            {
+                PlayClip(toPlay, source, source.maxDistance);
+            }
+        }
+        public void PlayClip(AudioClip toPlay, AudioSource source, float maxDistance)
+        {
+            source.maxDistance = maxDistance;
             source.PlayOneShot(toPlay);
         }
+        public void PlayFootstep(Footstep step, AudioSource source)
+        {
+            AudioClip[] toPlay = null;
+            switch (step)
+            {
+                case Footstep.Stone:
+                    toPlay = SFXFootstep_Stone;
+                    break;
+                case Footstep.Wood:
+                    toPlay = SFXFootstep_Wood;
+                    break;
+                case Footstep.Dirt:
+                    toPlay = SFXFootstep_Dirt;
+                    break;
+                case Footstep.Grass:
+                    toPlay = SFXFootstep_Grass;
+                    break;
+                case Footstep.Water:
+                    toPlay = SFXWaterSplash;
+                    break;
+            }
+            PlayClip(toPlay[SharedFunctions.RandomInt(0, toPlay.Length - 1)], source, FootstepAudioDistance);
+        }
+        public void PlayWoosh(Woosh woosh, AudioSource source)
+        {
+            AudioClip toPlay = null;
+            switch (woosh)
+            {
+                case Woosh.NormalFast:
+                    toPlay = SFXWoosh_NormalFast;
+                    break;
+                case Woosh.NormalMedium:
+                    toPlay = SFXWoosh_NormalMedium;
+                    break;
+                case Woosh.NormalSlow:
+                    toPlay = SFXWoosh_NormalSlow;
+                    break;
+                case Woosh.HeavyFast:
+                    toPlay = SFXWoosh_HeavyFast;
+                    break;
+                case Woosh.HeavyMedium:
+                    toPlay = SFXWoosh_HeavyFast;
+                    break;
+                case Woosh.HeavySlow:
+                    toPlay = SFXWoosh_HeavyFast;
+                    break;
+            }
+            if (toPlay != null)
+            {
+                source.PlayOneShot(toPlay);
+            }
+        }
     }
-}
-public enum ClipID
-{
-    DoorClose,
-    DoorOpen,
-    Portcullis,
-    MagicElevator
+    public enum ClipID
+    {
+        DoorClose,
+        DoorOpen,
+        Portcullis,
+        MagicElevator
+    }
 }

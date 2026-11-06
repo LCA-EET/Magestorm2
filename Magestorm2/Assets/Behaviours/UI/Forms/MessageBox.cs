@@ -2,44 +2,49 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class MessageBox : ValidatableForm
+namespace Magus
 {
-    private TMP_Text _textBox;
-    private Action _function;
-    protected override void Awake()
-    {
-        base.Awake();
-        _textBox = GetComponentInChildren<TMP_Text>();
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        AssociateFormToButtons();
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-    }
 
-    // Update is called once per frame
-    void Update()
+    public class MessageBox : ValidatableForm
     {
-
-    }
-
-    public override void SetParams(object[] paramArray)
-    {
-        _textBox.text = paramArray[0].ToString();
-        if(paramArray.Length > 1)
+        private TMP_Text _textBox;
+        private Action _function;
+        protected override void Awake()
         {
-            _function = (Action)paramArray[1];
+            base.Awake();
+            _textBox = GetComponentInChildren<TMP_Text>();
+        }
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            AssociateFormToButtons();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        public override void SetParams(object[] paramArray)
+        {
+            _textBox.text = paramArray[0].ToString();
+            if (paramArray.Length > 1)
+            {
+                _function = (Action)paramArray[1];
+            }
+        }
+
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            CloseForm();
+            if (_function != null)
+            {
+                _function();
+            }
         }
     }
 
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        CloseForm();
-        if (_function != null)
-        {
-            _function();
-        }
-    }
 }

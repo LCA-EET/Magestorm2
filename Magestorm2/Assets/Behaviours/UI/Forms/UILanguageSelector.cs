@@ -1,31 +1,35 @@
 using UnityEngine;
-
-public class UILanguageSelector : ValidatableForm
+namespace Magus
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public class UILanguageSelector : ValidatableForm
     {
-        AssociateFormToButtons();
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            AssociateFormToButtons();
+        }
+
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            /*
+            Debug.Log(buttonType.ToString());
+            switch (buttonType)
+            {
+                case ButtonType.English:
+                    Language.SetLanguage(Languages.English);
+                    break;
+                case ButtonType.Russian:
+                    Language.SetLanguage(Languages.Russian);
+                    break;
+                case ButtonType.Spanish:
+                    Language.SetLanguage(Languages.Spanish);
+                    break;
+                case ButtonType.Chinese:
+                    break;
+            }
+            */
+        }
     }
 
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        /*
-        Debug.Log(buttonType.ToString());
-        switch (buttonType)
-        {
-            case ButtonType.English:
-                Language.SetLanguage(Languages.English);
-                break;
-            case ButtonType.Russian:
-                Language.SetLanguage(Languages.Russian);
-                break;
-            case ButtonType.Spanish:
-                Language.SetLanguage(Languages.Spanish);
-                break;
-            case ButtonType.Chinese:
-                break;
-        }
-        */
-    }
 }

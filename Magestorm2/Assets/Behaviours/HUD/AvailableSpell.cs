@@ -1,43 +1,48 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class AvailableSpell : MonoBehaviour
+namespace Magus
 {
-    public TMP_Text KeyText;
-    public Image Icon;
-    public Slider Slider;
 
-    private SpellData _associatedSpell;
-    private byte _manaRequired;
-    private float _staminaRequired;
-    private bool _enabled;
-    public void UpdateKeyText(byte keyCode)
+    public class AvailableSpell : MonoBehaviour
     {
-        KeyText.text = InputControls.GetKeyCode(keyCode).ToString();
-        Teams.SetTextColor(KeyText, MatchParams.MatchTeam);
-    }
-    public bool IsEnabled
-    {
-        get { return _enabled; }
-    }
-    public void MarkVisible(bool visible)
-    {
-        gameObject.SetActive(visible);
-       _enabled = visible;
-    }
-    
-    public void SetAssociatedSpell(byte spellID)
-    {
-        if (Game.ActiveSpellManager.GetSpell(spellID, ref _associatedSpell))
+        public TMP_Text KeyText;
+        public Image Icon;
+        public Slider Slider;
+
+        private SpellData _associatedSpell;
+        private byte _manaRequired;
+        private float _staminaRequired;
+        private bool _enabled;
+        public void UpdateKeyText(byte keyCode)
         {
-            Icon.sprite = SpellIcons.GetIcon(spellID);
-            //Debug.Log("ICON: " + Icon.sprite.ToString() + " " + Icon.name);
-            _manaRequired = _associatedSpell.SpellCost;
-            _staminaRequired = _associatedSpell.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel);
+            KeyText.text = InputControls.GetKeyCode(keyCode).ToString();
+            Teams.SetTextColor(KeyText, MatchParams.MatchTeam);
+        }
+        public bool IsEnabled
+        {
+            get { return _enabled; }
+        }
+        public void MarkVisible(bool visible)
+        {
+            gameObject.SetActive(visible);
+            _enabled = visible;
+        }
+
+        public void SetAssociatedSpell(byte spellID)
+        {
+            if (Game.ActiveSpellManager.GetSpell(spellID, ref _associatedSpell))
+            {
+                Icon.sprite = SpellIcons.GetIcon(spellID);
+                //Debug.Log("ICON: " + Icon.sprite.ToString() + " " + Icon.name);
+                _manaRequired = _associatedSpell.SpellCost;
+                _staminaRequired = _associatedSpell.GetStaminaCost(PlayerAccount.SelectedCharacter.CharacterLevel);
+            }
+        }
+        public void RefreshMS(float currentMana, float currentStamina)
+        {
+            Icon.color = (currentMana >= _manaRequired && currentStamina > _staminaRequired) ? Colors.Neutral : Colors.UnavailableSpell;
         }
     }
-    public void RefreshMS(float currentMana, float currentStamina)
-    {
-        Icon.color = (currentMana >= _manaRequired && currentStamina > _staminaRequired) ? Colors.Neutral : Colors.UnavailableSpell;
-    }
+
 }

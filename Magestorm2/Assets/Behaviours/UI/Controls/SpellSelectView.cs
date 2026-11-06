@@ -1,38 +1,42 @@
 ﻿using System.Collections.Generic;
-
-public class SpellSelectView : ScrollSelectView
+namespace Magus
 {
-    private ISpellProcessor _owner;
-    public override void Start()
-    {
-        base.Start();
-    }
 
-    public void SetOwningForm(ISpellProcessor owner)
+    public class SpellSelectView : ScrollSelectView
     {
-        _owner = owner;
-    }
-
-    public void PopulateOptions(byte disciplineCode)
-    {
-        List<SpellData> spellData = Game.ActiveDisciplineManager.GetSpellsOfDiscipline(new byte[] { (byte)disciplineCode });
-        Dictionary<byte, short> options = new Dictionary<byte, short>();
-        foreach(SpellData sd in spellData)
+        private ISpellProcessor _owner;
+        public override void Start()
         {
-            options.Add(sd.SpellID, sd.SpellNameReference);
+            base.Start();
         }
-        AssignKeys(options);
-        _selectedOption = Labels[0].OptionID;
-        Labels[0].MarkSelected(true);
-        ProcessSelection();
+
+        public void SetOwningForm(ISpellProcessor owner)
+        {
+            _owner = owner;
+        }
+
+        public void PopulateOptions(byte disciplineCode)
+        {
+            List<SpellData> spellData = Game.ActiveDisciplineManager.GetSpellsOfDiscipline(new byte[] { (byte)disciplineCode });
+            Dictionary<byte, short> options = new Dictionary<byte, short>();
+            foreach (SpellData sd in spellData)
+            {
+                options.Add(sd.SpellID, sd.SpellNameReference);
+            }
+            AssignKeys(options);
+            _selectedOption = Labels[0].OptionID;
+            Labels[0].MarkSelected(true);
+            ProcessSelection();
+        }
+
+        protected override void ProcessSelection()
+        {
+            SpellData reference = null;
+            if (Game.ActiveSpellManager.GetSpell(_selectedOption, ref reference))
+            {
+                _owner.SelectionMade(new object[] { reference });
+            }
+        }
     }
 
-    protected override void ProcessSelection()
-    {
-        SpellData reference = null;
-        if(Game.ActiveSpellManager.GetSpell(_selectedOption, ref reference))
-        {
-            _owner.SelectionMade(new object[] { reference });
-        }
-    }
 }

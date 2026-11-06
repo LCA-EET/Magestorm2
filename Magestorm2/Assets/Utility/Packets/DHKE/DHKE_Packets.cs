@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Numerics;
-
-public class DHKE_Packets
+namespace Magus
 {
-    public static byte[] DPRequestPacket()
+
+    public class DHKE_Packets
     {
-        return new byte[] { DHKE_Send.DPRequest };
+        public static byte[] DPRequestPacket()
+        {
+            return new byte[] { DHKE_Send.DPRequest };
+        }
+        public static byte[] CipherInfoRequestPacket()
+        {
+            return new byte[] { DHKE_Send.CipherInfoRequest };
+        }
+        public static byte[] ClientPublicKeyPacket(BigInteger kpub)
+        {
+            byte[] kpubBytes = Cryptographer.ToBigEndianBytes(kpub);
+            byte[] lengthBytes = BitConverter.GetBytes((short)kpubBytes.Length);
+            byte[] toReturn = new byte[1 + 2 + kpubBytes.Length + 2];
+            toReturn[0] = DHKE_Send.ClientPublicKey;
+            Array.Copy(lengthBytes, 0, toReturn, 1, 2);
+            Array.Copy(kpubBytes, 0, toReturn, 3, kpubBytes.Length);
+            byte[] remainder = BitConverter.GetBytes(Cryptographer.ModChecksum(kpub));
+            Array.Copy(remainder, 0, toReturn, 3 + kpubBytes.Length, 2);
+            return toReturn;
+        }
     }
-    public static byte[] CipherInfoRequestPacket()
-    {
-        return new byte[] { DHKE_Send.CipherInfoRequest };
-    }
-    public static byte[] ClientPublicKeyPacket(BigInteger kpub)
-    {
-        byte[] kpubBytes = Cryptographer.ToBigEndianBytes(kpub);
-        byte[] lengthBytes = BitConverter.GetBytes((short)kpubBytes.Length);
-        byte[] toReturn = new byte[1 + 2 + kpubBytes.Length + 2];
-        toReturn[0] = DHKE_Send.ClientPublicKey;
-        Array.Copy(lengthBytes, 0, toReturn, 1, 2);
-        Array.Copy(kpubBytes, 0, toReturn, 3, kpubBytes.Length);
-        byte[] remainder = BitConverter.GetBytes(Cryptographer.ModChecksum(kpub));
-        Array.Copy(remainder, 0, toReturn, 3 + kpubBytes.Length, 2);
-        return toReturn;
-    }
+
 }

@@ -1,25 +1,29 @@
 ﻿using UnityEngine;
-
-public class Devour : SpawnedSpell
+namespace Magus
 {
-    public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
+
+    public class Devour : SpawnedSpell
     {
-        base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
-        Debug.Log("Devour.Initialize");
-        RaycastHit hitInfo;
-        if (SharedFunctions.CastForward(Camera.main.transform, LayerManager.DeadPlayerLayerMask, 5.0f, out hitInfo))
+        public override void Initialize(byte casterID, Team castingTeam, short castID, Transform parent, SpellData spellReference, byte[] payload)
         {
-            if(hitInfo.collider != null)
+            base.Initialize(casterID, castingTeam, castID, parent, spellReference, payload);
+            Debug.Log("Devour.Initialize");
+            RaycastHit hitInfo;
+            if (SharedFunctions.CastForward(Camera.main.transform, LayerManager.DeadPlayerLayerMask, 5.0f, out hitInfo))
             {
-                Avatar deadPlayer = hitInfo.collider.GetComponent<Avatar>();
-                ComponentRegister.Spawner.SpawnVFX(ControlCodes.VFX_Banish, deadPlayer.transform.position);
-                Debug.Log("Casting Team = " + _castingTeam);
-                Debug.Log("Dead Player Team = " + deadPlayer.PlayerTeam);
-                if(deadPlayer.PlayerTeam != castingTeam || castingTeam == Team.Neutral)
+                if (hitInfo.collider != null)
                 {
-                    Game.SendInGameBytes(InGame_Packets.DevourPacket(_castID, deadPlayer.PlayerID));
+                    Avatar deadPlayer = hitInfo.collider.GetComponent<Avatar>();
+                    ComponentRegister.Spawner.SpawnVFX(ControlCodes.VFX_Banish, deadPlayer.transform.position);
+                    Debug.Log("Casting Team = " + _castingTeam);
+                    Debug.Log("Dead Player Team = " + deadPlayer.PlayerTeam);
+                    if (deadPlayer.PlayerTeam != castingTeam || castingTeam == Team.Neutral)
+                    {
+                        Game.SendInGameBytes(InGame_Packets.DevourPacket(_castID, deadPlayer.PlayerID));
+                    }
                 }
             }
         }
     }
+
 }

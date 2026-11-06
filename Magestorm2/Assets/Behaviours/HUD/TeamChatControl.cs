@@ -1,44 +1,48 @@
 using UnityEngine;
-
-public class TeamChatControl : ValidatableForm
+namespace Magus
 {
-    private Team _selectedTeam;
-    private void Awake()
+
+    public class TeamChatControl : ValidatableForm
     {
-        if (!MatchParams.IncludeTeams)
+        private Team _selectedTeam;
+        private void Awake()
         {
-            Destroy(gameObject);
+            if (!MatchParams.IncludeTeams)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                ComponentRegister.TeamChatControl = this;
+            }
         }
-        else
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            ComponentRegister.TeamChatControl = this;
+            AssociateFormToButtons();
         }
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        AssociateFormToButtons();
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        public override void ButtonPressed(ButtonType buttonType)
+        {
+            foreach (FormButton button in _buttonTable.Values)
+            {
+                button.CallBack(buttonType);
+            }
+        }
+        public void SetTeam(Team team)
+        {
+            _selectedTeam = team;
+        }
+        public Team SelectedTeam
+        {
+            get { return _selectedTeam; }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public override void ButtonPressed(ButtonType buttonType)
-    {
-        foreach(FormButton button in _buttonTable.Values)
-        {
-            button.CallBack(buttonType);
-        }
-    }
-    public void SetTeam(Team team)
-    {
-        _selectedTeam = team;
-    }
-    public Team SelectedTeam
-    {
-        get { return _selectedTeam; }
-    }
 }
