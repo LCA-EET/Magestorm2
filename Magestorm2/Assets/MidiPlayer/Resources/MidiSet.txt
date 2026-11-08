@@ -11,15 +11,6 @@
   </SoundFonts>
   <IndexSelectedSF>0</IndexSelectedSF>
   <MidiFiles>
-    <string>Albinoni - Adagio</string>
-    <string>Bach - Little fugue G minor</string>
-    <string>Bach - The Art of Fugue</string>
-    <string>Bach - Trisonate 3iem mvt</string>
-    <string>Beethoven-sonata-14-3</string>
-    <string>Mozart - Requiem Confutatis</string>
-    <string>Mozart - Requiem Dies Irae</string>
-    <string>Mozart - Requiem Introitus</string>
-    <string>Satie - Trois Gnossiennes</string>
     <string>Super Mario 64 - Medley</string>
     <string>Swan Lake, Act 4, No. 27</string>
   </MidiFiles>

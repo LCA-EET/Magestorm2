@@ -1,14 +1,67 @@
 //#define MPTK_PRO
-
 #define DEBUG_START_MIDIx
 using MPTK.NAudio.Midi;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UIElements;
 
 namespace MidiPlayerTK
 {
+
+    /// <summary>
+    /// Plays a MIDI file from the MidiDB. This class must be used with the prefab MidiFilePlayer.\n
+    /// See "Window/Maestro MIDI File Setup" (also under Tools/Maestro) for adding MIDI in MidiDB.\n
+    /// @attention 
+    ///     - MidiFilePlayer inherits from class MidiSynth. For clarity, only MidiFilePlayer attributes are provided here.\n 
+    ///       Look at the class MidiSynth to discover all attributes available.
+    ///     - #MPTK_MidiLoaded is an important attribute for MidiFilePlayer class.\n 
+    ///       It contains an instance of the class MidiLoad with all detailed information about the MIDI loaded and/or which are playing. \n
+    ///       Check that #MPTK_MidiLoaded is not null before using these attributes.
+    /// 
+    /// There is no need to writing a script. For a simple usage, all the job can be done in the prefab inspector.\n
+    /// For more information see here https://paxstellar.fr/midi-file-player-detailed-view-2/\n
+    /// But for specific interactions, this class can be useful. Some use cases:\n
+    ///     - changing the current MIDI playing: #MPTK_MidiName or #MPTK_MidiIndex
+    ///     - changing the speed of the MIDI: #MPTK_Speed   
+    ///     - know the duration: #MPTK_Duration
+    ///     - know the current real time: #MPTK_RealTime
+    ///     - apply filter, reverb, chorus effects in relation with the gameplay
+    ///     - triggering action when MIDI start: #OnEventStartPlayMidi
+    ///     - triggering action when MIDI end: #OnEventEndPlayMidi
+    ///     - triggering action according MIDI events: #OnEventNotesMidi
+    ///     - triggering action for each synth frame: #OnAudioFrameStart
+    ///     - change on the fly current MIDI event: #OnMidiEvent (pro)
+    ///     - force a preset on a channel: #MPTK_ChannelForcedPresetSet from the inherited MidiSynth class.
+    ///     - get the current preset name for a channel: #MPTK_ChannelPresetGetName from the inherited MidiSynth class.
+    ///     - mute a channel: #MPTK_ChannelEnableSet from the inherited MidiSynth class.
+    ///     - ...
+    /// 
+    /// @code
+    /// 
+    /// // This example randomly select a MIDI to play.
+    /// using MidiPlayerTK; // Add a reference to the MPTK namespace at the top of your script
+    /// using UnityEngine;        
+    ///  
+    /// public class YourClass : MonoBehaviour
+    /// {
+    ///     // See TestMidiFilePlayerScripting.cs for a more detailed usage of this class.
+    ///     public void RandomPlay()
+    ///     {
+    ///         // Need a reference to the prefab MidiFilePlayer that you have added in your scene hierarchy.
+    ///         MidiFilePlayer midiFilePlayer = FindFirstObjectByType<MidiFilePlayer>();
+    ///
+    ///         // Random select for the Midi
+    ///         midiFilePlayer.MPTK_MidiIndex = UnityEngine.Random.Range(0, MidiPlayerGlobal.MPTK_ListMidi.Count);
+    /// 
+    ///         // Play! How to make more simple?
+    ///         midiFilePlayer.MPTK_Play();
+    ///     }
+    /// }
+    /// 
+    /// @endcode
+    /// </summary>
+    /// @ingroup midifileplayer_management
     //[RequireComponent(typeof(MidiPlayerGlobal))] -- not possible. It's a singleton object, all gameobjects will be merge at run time
     [RequireComponent(typeof(AudioSource))]
     [RequireComponent(typeof(AudioReverbFilter))]
@@ -16,6 +69,24 @@ namespace MidiPlayerTK
     [HelpURL("https://paxstellar.fr/midi-file-player-detailed-view-2/")]
     public partial class MidiFilePlayer : MidiSynth
     {
+        /// @name MIDI Channels
+        /// @{
+
+        /// <summary>@brief
+        /// Description and list of MIDI Channels associated to the MIDI synth.\n
+        /// Each MIDI synth has 16 channels that carry all the relevant MIDI information.
+        ///     - Current instrument / bank
+        ///     - Volume
+        ///     - Mute / Unmute (see Enable)
+        ///     - Pitch bend ...
+        ///     
+        /// They serve to distinguish between instruments and provide independent control over each one. \n
+        /// By transmitting MIDI messages on their respective channels, you can alter the instrument, volume, pitch, and other parameters. \n
+        /// Within the Maestro Midi Player Toolkit, MIDI channels are designated numerically from 0 to 15. Notably, channel 9 is set aside specifically for drum sounds.
+        /// 
+        /// @snippet TestMidiFilePlayerScripting.cs ExampleUsingChannelAPI_Full
+        /// </summary>
+        /// @ingroup midifileplayer_channels
         public MPTKChannels MPTK_Channels
         {
             get { return Channels; }
@@ -23,7 +94,20 @@ namespace MidiPlayerTK
         /// @}
 
         #region Play and Stop MIDI
+        /// @name Play and Stop MIDI
+        /// @{
 
+        /// <summary>@brief 
+        /// Select a MIDI from the MIDIDB to play by its name.\n
+        /// Use the exact name as seen in the MIDI setup windows (Unity menu MPTK/ without any path or extension.\n
+        /// Tips: Add MIDI files to your project with the Unity menu MPTK.
+        /// @code
+        /// // Play the MIDI "Albinoni - Adagio"
+        /// midiFilePlayer.MPTK_MidiName = "Albinoni - Adagio";
+        /// midiFilePlayer.MPTK_Play();
+        /// @endcode
+        /// </summary>
+        /// @ingroup midifileplayer_selection
         virtual public string MPTK_MidiName
         {
             get
@@ -203,11 +287,6 @@ namespace MidiPlayerTK
         /// @ingroup midifileplayer_playback_controls
         public bool MPTK_IsPlaying { get { return midiIsPlaying; } }
 
-        public void PlayMidi(MidiFile toPlay)
-        {
-            MPTK_MidiName = toPlay.GetFileName();
-            MPTK_Play();
-        }
 
         /// <summary>@brief
         /// Plays the midi file defined with #MPTK_MidiName or #MPTK_MidiIndex.
@@ -223,44 +302,45 @@ namespace MidiPlayerTK
         /// @snippet LoadMidiAndPlay.cs LoadMidiAndPlay
         /// <param name="alreadyLoaded">true: the MIDI has already been loaded (see #MPTK_Load() v2.9.0</param>
         /// @ingroup midifileplayer_playback_controls
-        public virtual void MPTK_Play(bool alreadyLoaded = false)
+        /// 
+        public void PlayMidi(byte[] midiBytes, string midiName)
         {
             try
             {
                 if (MPTK_SoundFont.IsReady)
                 {
                     if (MPTK_IsPaused)
-                    {
                         MPTK_UnPause();
-                    }
                     if (!MPTK_IsPlaying)
                     {
                         MPTK_InitSynth();
                         MPTK_StartSequencerMidi();
+                        if (Application.isPlaying)
+                            Routine.RunCoroutine(MidiPlayCoroutine(midiBytes, midiName).CancelWith(gameObject), Segment.RealtimeUpdate);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                MidiPlayerGlobal.ErrorDetail(ex);
+            }
+        }
+        
+        public virtual void MPTK_Play(bool alreadyLoaded = false)
+        {
+            try
+            {
 
-                        if (!alreadyLoaded)
-                        {
-
-                            // Load description of available soundfont
-                            if (MidiPlayerGlobal.ImSFCurrent != null && MidiPlayerGlobal.CurrentMidiSet != null && MidiPlayerGlobal.CurrentMidiSet.MidiFiles != null && MidiPlayerGlobal.CurrentMidiSet.MidiFiles.Count > 0)
-                            {
-                                //if (VerboseSynth) Debug.Log(MPTK_MidiName);
-                                if (string.IsNullOrEmpty(MPTK_MidiName))
-                                    MPTK_MidiName = MidiPlayerGlobal.CurrentMidiSet.MidiFiles[0];
-                                int selectedMidi = MidiPlayerGlobal.CurrentMidiSet.MidiFiles.FindIndex(s => s == MPTK_MidiName);
-                                if (selectedMidi < 0)
-                                {
-                                    Debug.LogWarning($"MidiFilePlayer - MidiFile '{MPTK_MidiName}' not found. Trying with the first in list.");
-                                    selectedMidi = 0;
-                                    MPTK_MidiName = MidiPlayerGlobal.CurrentMidiSet.MidiFiles[0];
-                                }
-                            }
-                            else
-                                Debug.LogWarning(MidiPlayerGlobal.ErrorNoMidiFile);
-                        }
+                if (MPTK_SoundFont.IsReady)
+                {
+                    if (MPTK_IsPaused)
+                        MPTK_UnPause();
+                    if (!MPTK_IsPlaying)
+                    {
+                        MPTK_InitSynth();
+                        MPTK_StartSequencerMidi();
                         if (MPTK_CorePlayer)
                         {
-                            //Debug.Log($"MPTK_Play ThreadCorePlay {MPTK_MidiName}");
                             if (Application.isPlaying)
                                 Routine.RunCoroutine(ThreadCorePlay(alreadyLoaded: alreadyLoaded).CancelWith(gameObject), Segment.RealtimeUpdate);
                             else
@@ -268,7 +348,6 @@ namespace MidiPlayerTK
                         }
                         else
                         {
-                            //Debug.Log($"MPTK_Play ThreadLegacyPlay");
                             Routine.RunCoroutine(ThreadLegacyPlay(alreadyLoaded: alreadyLoaded).CancelWith(gameObject), Segment.RealtimeUpdate);
                         }
                     }
@@ -385,10 +464,16 @@ namespace MidiPlayerTK
                 MidiPlayerGlobal.ErrorDetail(ex);
             }
         }
+
+        /// <summary>@brief 
+        /// UnPause the current playing when MidiPlayer is paused with MPTK_Pause.
+        /// </summary>
+        /// @ingroup midifileplayer_playback_controls
         public void MPTK_UnPause()
         {
             try
             {
+                //Debug.Log($"MPTK_UnPause {MPTK_IsSpatialSynthMaster} {MPTK_SpatialSynthIndex}");
                 pauseWhenFocusLost = false;
                 if (MPTK_CorePlayer)
                 {
@@ -406,6 +491,12 @@ namespace MidiPlayerTK
                 MidiPlayerGlobal.ErrorDetail(ex);
             }
         }
+
+
+        /// <summary>@brief 
+        /// Plays next MIDI from the list of midi defined in MPTK (see Unity menu Midi)
+        /// </summary>
+        /// @ingroup midifileplayer_playback_controls
         public void MPTK_Next()
         {
             try
@@ -413,6 +504,7 @@ namespace MidiPlayerTK
                 if (MidiPlayerGlobal.CurrentMidiSet.MidiFiles != null && MidiPlayerGlobal.CurrentMidiSet.MidiFiles.Count > 0)
                 {
                     int selectedMidi = 0;
+                    //Debug.Log("Next search " + MPTK_MidiName);
                     if (!string.IsNullOrEmpty(MPTK_MidiName))
                         selectedMidi = MidiPlayerGlobal.CurrentMidiSet.MidiFiles.FindIndex(s => s == MPTK_MidiName);
                     if (selectedMidi >= 0)
@@ -421,6 +513,7 @@ namespace MidiPlayerTK
                         if (selectedMidi >= MidiPlayerGlobal.CurrentMidiSet.MidiFiles.Count)
                             selectedMidi = 0;
                         MPTK_MidiName = MidiPlayerGlobal.CurrentMidiSet.MidiFiles[selectedMidi];
+                        //Debug.Log("Next found " + MPTK_MidiName);
                         nextMidi = true;
                         MPTK_RePlay();
                     }
@@ -433,6 +526,11 @@ namespace MidiPlayerTK
                 MidiPlayerGlobal.ErrorDetail(ex);
             }
         }
+
+        /// <summary>@brief 
+        /// Plays previous MIDI from the list of midi defined in MPTK (see Unity menu Midi)
+        /// </summary>
+        /// @ingroup midifileplayer_playback_controls
         public void MPTK_Previous()
         {
             try
@@ -967,14 +1065,27 @@ namespace MidiPlayerTK
         new void Start()
         {
             if (VerboseSynth) Debug.Log($"Start MidiFilePlayer {this.name} isPlaying:{Application.isPlaying} midiIsPlaying:{midiIsPlaying} MPTK_PlayOnStart:{MPTK_PlayOnStart}");
+            //if (Application.isPlaying && name == "MidiSequencerEditor")
+            //    DestroyImmediate(this.gameObject, true);
             StartMidiFilePlayer();
         }
 
         protected void StartMidiFilePlayer()
         {
+            //Debug.Log("StartMidiFilePlayer MidiFilePlayer midiIsPlaying:" + midiIsPlaying + " MPTK_PlayOnStart:" + MPTK_PlayOnStart);
+
+            // V2.10.1 always init the synth at start
+            // to be evaluated MPTK_InitSynth();
+
+            // V2.11.0 already instanciated by Unity
+            //if (OnEventStartPlayMidi == null) OnEventStartPlayMidi = new EventStartMidiClass();
+            //if (OnEventNotesMidi == null) OnEventNotesMidi = new EventNotesMidiClass();
+            //if (OnEventEndPlayMidi == null) OnEventEndPlayMidi = new EventEndMidiClass();
+
             base.Start();
             try
             {
+                //Debug.Log("   midiIsPlaying:" + midiIsPlaying + " MPTK_PlayOnStart:" + MPTK_PlayOnStart);
                 if (MPTK_PlayOnStart)
                 {
                     Routine.RunCoroutine(TheadPlayIfReady(), Segment.RealtimeUpdate);
@@ -988,6 +1099,9 @@ namespace MidiPlayerTK
 
         private void OnDestroy()
         {
+            //Debug.Log("OnDestroy " + Time.time + " seconds");
+            // MPTK_Stop(); this call launch a coroutine, not a good idea when scene is closing!
+            // Extract of MPTK_Stop:
             if (midiLoaded != null)
             {
                 midiLoaded.ReadyToPlay = false;
@@ -1000,12 +1114,14 @@ namespace MidiPlayerTK
 
         void OnApplicationQuit()
         {
+            //Debug.Log("OnApplicationQuit " + Time.time + " seconds");
             MPTK_Stop();
             MPTK_StopSynth();
         }
 
         private void OnApplicationPause(bool pause)
         {
+            //Debug.Log("MidiFilePlayer OnApplicationPause " + pause);
             if (pause && MPTK_PauseOnFocusLoss)
             {
                 if (watchMidi.IsRunning)
@@ -1021,18 +1137,21 @@ namespace MidiPlayerTK
         private bool pauseWhenFocusLost = false;
         void OnApplicationFocus(bool hasFocus)
         {
+            //Debug.Log("MidiFilePlayer OnApplicationFocus " + hasFocus);
             if (MPTK_PauseOnFocusLoss)
             {
                 if (!hasFocus)
                 {
                     if (!MPTK_IsPaused)
                     {
+                        // focus lost, need to be paused 
                         pauseWhenFocusLost = true;
                         MPTK_Pause();
                     }
                 }
                 else
                 {
+                    // unpause only if paused from a focus lost
                     if (pauseWhenFocusLost)
                         MPTK_UnPause();
                 }
@@ -1721,11 +1840,40 @@ namespace MidiPlayerTK
             }
             //Debug.Log("Stop play");
         }
-
-        public IEnumerator<float> ThreadCorePlay(byte[] midiBytesToPlay = null, float fromPosition = 0, float toPosition = 0, bool alreadyLoaded = false)
+        public IEnumerator<float> MidiPlayCoroutine(byte[] toPlay, string midiName)
         {
             StartPlaying();
-            string currentMidiName = MPTK_MidiName;
+            try
+            {
+                if (toPlay != null && toPlay.Length != 0)
+                {
+                    midiLoaded = new MidiLoad();
+                    midiLoaded.MPTK_KeepNoteOff = MPTK_KeepNoteOff;
+                    midiLoaded.MPTK_KeepEndTrack = MPTK_KeepEndTrack;
+                    midiLoaded.MPTK_LogLoadEvents = MPTK_LogLoadEvents;
+                    midiLoaded.MPTK_EnableChangeTempo = MPTK_EnableChangeTempo;
+                    midiLoaded.MPTK_ExtendedText = MPTK_ExtendedText;
+                    if (!midiLoaded.MPTK_Load(toPlay))
+                        midiLoaded = null;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                MidiPlayerGlobal.ErrorDetail(ex);
+            }
+            if (playerMidiHandle != null && playerMidiHandle.IsRunning)
+            {
+                Debug.Log("Force stop MidiPlayer Thread");
+                Routine.KillCoroutines(playerMidiHandle);
+            }
+            playerMidiHandle = Routine.RunCoroutine(ThreadInternalMidiPlaying(midiName, 0, 0, false).CancelWith(gameObject), Segment.RealtimeUpdate);
+            yield return 0;
+        }
+        public IEnumerator<float> ThreadCorePlay(byte[] midiBytesToPlay = null, float fromPosition = 0, float toPosition = 0, bool alreadyLoaded = false)
+        {
+            yield return 0;
+            /*
+            StartPlaying();
             if (alreadyLoaded)
             {
                 //Debug.Log("Start playing same loaded MIDI");
@@ -1779,6 +1927,7 @@ namespace MidiPlayerTK
             else
                 playerMidiHandle = Routine.RunCoroutine(ThreadInternalMidiPlaying(currentMidiName, fromPosition, toPosition, alreadyLoaded), Segment.EditorUpdate);
             yield return 0;
+            */
         }
 
         [System.NonSerialized]

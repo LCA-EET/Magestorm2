@@ -31,6 +31,7 @@ namespace MidiPlayerTK
         public MidiSet()
         {
             SoundFonts = new List<SoundFontInfo>();
+            MidiFiles = new List<string>();
         }
 
         public void AddSoundFont(ImSoundFont imsf)

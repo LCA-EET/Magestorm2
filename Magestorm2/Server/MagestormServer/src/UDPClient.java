@@ -19,7 +19,10 @@ public class UDPClient extends RegisteredThread{
             _udpSocket = new DatagramSocket(_localPort);
         }
         catch(Exception e){
-            Main.LogError("Could not open datagram socket on port: " + _localPort + ", " + e.getMessage());
+            String message = "Could not open datagram socket on port: " + _localPort + ", " + e.getMessage();
+            Main.LogError(message);
+            System.err.println(message);
+            _terminated = true;
         }
         final int bufferSize = 256;
         byte[] receivedBuffer = new byte[bufferSize];

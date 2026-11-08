@@ -50,10 +50,6 @@ namespace Magus
         {
             get { return _path; }
         }
-        public void Play()
-        {
-
-        }
     }
 
 }

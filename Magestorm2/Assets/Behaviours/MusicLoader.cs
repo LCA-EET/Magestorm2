@@ -15,18 +15,24 @@ namespace Magus
 {
     public class MusicLoader : MonoBehaviour
     {
-        void Start()
+        private string[] _clipTypes = new string[] { "*.mp3", "*.ogg", "*.wav" };
+        private void Awake()
         {
             if (Game.MusicFiles == null)
             {
                 Game.MusicFiles = new List<MusicFile>();
-                string[] files = Directory.GetFiles(Application.streamingAssetsPath + "//music//mp3//", "*.mp3");
-                foreach (string file in files)
+                foreach(string fileType in _clipTypes)
                 {
-                    StartCoroutine(FetchAudioClip(file));
+                    string[] files = Directory.GetFiles(Application.streamingAssetsPath + "//music//", fileType);
+                    foreach (string file in files)
+                    {
+                        StartCoroutine(FetchAudioClip(file));
+                    }
                 }
-                files = Directory.GetFiles(Application.streamingAssetsPath + "//music//midi//", "*.bytes");
-                foreach (string file in files)
+                MidiPlayerGlobal.CurrentMidiSet = new MidiSet();
+
+                string[] midi = Directory.GetFiles(Application.streamingAssetsPath + "//music//", "*.midi");
+                foreach (string file in midi)
                 {
                     StartCoroutine(FetchMIDI(file));
                 }
@@ -62,6 +68,7 @@ namespace Magus
                 {
                     byte[] data = www.downloadHandler.data;
                     MidiFile midi = new MidiFile(data, false);
+                    MidiPlayerGlobal.CurrentMidiSet.MidiFiles.Add(path);
                     Game.MusicFiles.Add(new MusicFile(path, midi));
                 }
             }

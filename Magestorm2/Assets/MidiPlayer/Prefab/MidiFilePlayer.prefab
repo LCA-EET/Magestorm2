@@ -155,8 +155,8 @@ MonoBehaviour:
       m_Calls: []
   showMidiInfo: 0
   showSynthParameter: 0
-  showSpatialization: 0
-  showUnitySynthParameter: 0
+  showSpatialization: 1
+  showUnitySynthParameter: 1
   showUnityPerformanceParameter: 0
   showExperimentalFeature: 0
   showMidiPerformanceParameter: 0
@@ -185,6 +185,11 @@ MonoBehaviour:
   behindLPFCurve: 2.6
   MPTK_OrientationToListener: 0
   MPTK_PauseOnMaxDistance: 0
+  MPTK_EffectUnity: {fileID: 0}
+  MPTK_ModeSpatializer: 0
+  MPTK_MaxSpatialSynth: 0
+  MPTK_SpatialSynthEnabled: 0
+  MPTK_InstrumentNum: 0
   midiNameToPlay: Everybody loves somebody sometime 1
   MPTK_StartPlayAtFirstNote: 0
   MPTK_StopPlayOnLastNote: 0
@@ -230,7 +235,6 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -400,7 +404,6 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -601,6 +604,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   audioListener: {fileID: 0}
+  MPTK_LiveSoundFont: 
 --- !u!1 &1973024470238730
 GameObject:
   m_ObjectHideFlags: 0

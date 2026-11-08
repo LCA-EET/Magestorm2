@@ -38,7 +38,6 @@ namespace Magus
         private bool _onGround = false;
         private bool _csChanging = false;
         private byte _pmdCheck;
-        private RaycastHit _hitInfo;
         private PC _pc;
         private byte _insideWallCount;
         private float _forceElapsed = 0;
@@ -411,7 +410,7 @@ namespace Magus
         private void UpdateGroundedStatus()
         {
             bool priorState = _onGround;
-            _onGround = isOnGround(out _hitInfo);
+            _onGround = isOnGround();
             if (_onGround)
             {
                 if (_pmd.IsJumping && !_isEntangled)
@@ -422,34 +421,22 @@ namespace Magus
                 _verticalSpeed = 0.0f;
                 _distanceTravelled += Vector3.Distance(transform.position, _priorStep);
                 _priorStep = transform.position;
-                //PlayStepSound();
-
             }
-        }
-
-        private void PlayStepSound()
-        {
-            if (_distanceTravelled - _distanceTravelledSinceLastStep > 2.0f)
+            else
             {
-                _distanceTravelledSinceLastStep = _distanceTravelled;
-                if (_hitInfo.collider != null)
-                {
-                    Surface standingOn = _hitInfo.collider.gameObject.GetComponent<Surface>();
-                    if (standingOn != null)
-                    {
-                        if (_pmd.IsRunning)
-                        {
-                            //Game.Clips.PlayClip(standingOn.FootstepClip, Game.PCAvatar.AudioSource);
-                        }
-                    }
-                }
-
+                Debug.Log("not on ground");
             }
         }
 
-        private bool isOnGround(out RaycastHit hitInfo)
+
+        private bool isOnGround()
         {
-            return _pc.DownwardCaster.CastForward(LayerManager.FloorMask, 0.1f, out hitInfo);
+            if(Physics.OverlapBox(_pc.DownwardCaster.transform.position, new Vector3(0.5f, 0.1f, 0.5f), Quaternion.identity, LayerManager.FloorMask).Length > 0)
+            {
+                return true;
+            }
+            return false;
+            //return _pc.IsOnGround(LayerManager.FloorMask, 0.1f);
         }
         private void Accelerate(ref float speed, float maxSpeed, float directionFactor, float acceleration)
         {

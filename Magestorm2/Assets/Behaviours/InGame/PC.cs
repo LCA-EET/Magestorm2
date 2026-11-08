@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,12 +16,10 @@ namespace Magus
 
         private float _staminaRegen;
         private Camera _camera;
-        public MusicPlayer MusicPlayer;
 
         private byte _class;
         private List<PeriodicAction> _actionList;
 
-        private ManaPool _enteredPool;
         private Dictionary<PlayerIndicator, HMLUpdater> _hml;
         private Dictionary<byte, LeyInfluencer> _activeInfluencers;
         private HMLUpdater _hp, _mana, _ley, _stamina;
@@ -74,7 +73,6 @@ namespace Magus
         {
             get; set;
         }
-
         private void ArcLey()
         {
             if (InManaPool)

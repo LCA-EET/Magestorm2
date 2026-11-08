@@ -27,6 +27,10 @@ namespace Magus
             RaycastHit hitInfo;
             return SharedFunctions.CastDown(transform, LayerManager.FloorMask, distance, out hitInfo);
         }
+        public bool BoxCastForward(int mask, float distance, float halfExt, out RaycastHit hitInfo)
+        {
+            return SharedFunctions.BoxCastForward(transform, mask, distance, halfExt, Quaternion.identity, out hitInfo);
+        }
         public bool CastForward(int mask, float distance, out RaycastHit hitInfo)
         {
             return SharedFunctions.CastForward(transform, mask, distance, out hitInfo);

@@ -266,6 +266,10 @@ namespace Magus
         {
             return DirectionalCast(origin, layerMask, distance, Vector3.forward, out hitInfo);
         }
+        public static bool BoxCastForward(Transform origin, int layerMask, float distance, float halfExt, Quaternion rotation, out RaycastHit hitinfo)
+        {
+            return Physics.BoxCast(origin.position, new Vector3(halfExt, halfExt, 0f), Vector3.forward, out hitinfo, rotation, distance, layerMask );
+        }
 
         public static bool WasPCHit(Collider other)
         {

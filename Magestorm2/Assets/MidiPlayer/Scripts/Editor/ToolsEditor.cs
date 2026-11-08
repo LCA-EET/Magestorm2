@@ -172,6 +172,7 @@ namespace MidiPlayerTK
 
         public static void LoadMidiSet()
         {
+            /*
             try
             {
                 MidiPlayerGlobal.CurrentMidiSet = MidiSet.Load(Application.dataPath + "/" + MidiPlayerGlobal.PathToMidiSet);
@@ -182,6 +183,7 @@ namespace MidiPlayerTK
             {
                 MidiPlayerGlobal.ErrorDetail(ex);
             }
+            */
         }
 
         public static string ReadTextFile(string filePath)

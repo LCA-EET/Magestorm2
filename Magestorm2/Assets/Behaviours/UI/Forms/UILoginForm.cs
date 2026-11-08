@@ -45,6 +45,7 @@ namespace Magus
                 }
             }
             InputControls.Init();
+            Game.MusicPlayer.PlayFirstClip();
         }
         private bool IsValidServer(ref byte[] keyBytes)
         {

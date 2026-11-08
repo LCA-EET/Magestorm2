@@ -1,12 +1,8 @@
 using MidiPlayerTK;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using System.IO;
-using UnityEngine.Networking;
 
 namespace Magus
 {
-
     public class MusicPlayer : MonoBehaviour
     {
         private AudioSource _musicSource;
@@ -23,10 +19,16 @@ namespace Magus
         }
         void Start()
         {
-
-            PlayNextClip();
+            //PlayNextClip();
         }
-
+        public void PlayFirstClip()
+        {
+            if(Game.MusicFiles.Count >= 1)
+            {
+                _clipIndex = 0;
+                PlayTrack();
+            }
+        }
 
         // Update is called once per frame
         void Update()
@@ -36,7 +38,7 @@ namespace Magus
                 _playMusic = !_playMusic;
                 if (!_playMusic)
                 {
-                    _musicSource.Stop();
+                    StopTrack();
                 }
                 if (_playMusic)
                 {
@@ -57,8 +59,7 @@ namespace Magus
         }
         private void PlayNextClip()
         {
-            _musicSource.Stop();
-            _midiPlayer.MPTK_Stop();
+            StopTrack();
             if (_clipIndex == Game.MusicFiles.Count)
             {
                 _clipIndex = 0;
@@ -71,7 +72,7 @@ namespace Magus
         }
         private void PlayPreviousClip()
         {
-            _musicSource.Stop();
+            StopTrack();
             if (_clipIndex == 0)
             {
                 _clipIndex = Game.MusicFiles.Count - 1;
@@ -87,14 +88,20 @@ namespace Magus
             MusicFile musicFile = Game.MusicFiles[_clipIndex];
             if (musicFile.IsMidi)
             {
-                _midiPlayer.PlayMidi(musicFile.MidiFile);
+                _midiPlayer.PlayMidi(musicFile.MidiFile.GetBytes(), musicFile.Path);
             }
             else
             {
                 _musicSource.clip = musicFile.AudioClip;
                 _musicSource.Play();
             }
+            Debug.Log("Now playing: " + musicFile.Path);
+        }
 
+        private void StopTrack()
+        {
+            _musicSource.Stop();
+            _midiPlayer.MPTK_Stop();
         }
     }
 
