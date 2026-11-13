@@ -144,6 +144,9 @@ namespace Magus
                         case Pregame_Receive.CharacterClassData:
                             HandleCharacterClassData();
                             break;
+                        case Pregame_Receive.IncorrectMatchPassword:
+                            Game.MessageBoxReference(445);
+                            break;
                     }
                 }
             }

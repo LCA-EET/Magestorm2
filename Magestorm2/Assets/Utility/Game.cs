@@ -41,6 +41,7 @@ namespace Magus
         public static bool LoggedIn = false;
         public static byte[] PregameKey;
         public static byte Cipher;
+        
         //public static PMDByte PlayerPMDByte;
 
         public static bool GameMode
@@ -58,6 +59,7 @@ namespace Magus
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            Application.Quit();
         }
         public static bool GameInputSet(InputControl toCheck)
         {
@@ -99,6 +101,7 @@ namespace Magus
         {
             if (!_init)
             {
+                TextFieldRegister.Init();
                 GameSettings.InitializeSettings();
                 Language.Init();
                 SpellManagerTable = new Dictionary<string, SpellManager>();
@@ -142,7 +145,7 @@ namespace Magus
                     GameServerPort = int.Parse(returnedArray[0]);
                     string key64 = returnedArray[1];
                     byte[] key = Convert.FromBase64String(key64);
-                    AssignGameServerAddress("fosiemods.net");
+                    AssignGameServerAddress("mta.gg");
                     //Cryptography.Init(key);
                     Debug.Log("Game Server Port: " + GameServerPort);
                     return GameServerPort;
@@ -157,10 +160,6 @@ namespace Magus
         private static void AssignGameServerAddress(string hostname)
         {
             GameServerAddress = Dns.GetHostAddresses(hostname)[0];
-            if (GameServerAddress.ToString().StartsWith("192"))
-            {
-                GameServerAddress = Dns.GetHostAddresses("apps.home.lan")[0];
-            }
             Debug.Log("Server IP: " + GameServerAddress.ToString());
         }
     }

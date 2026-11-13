@@ -16,9 +16,11 @@ namespace Magus
         public Image InvalidEntryImage;
         private string _priorText;
         private Regex _regex;
+        private int _id;
         protected virtual void Awake()
         {
             MarkInvalid(false);
+            _id = TextFieldRegister.RegisterField(this);
         }
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         protected virtual void Start()
@@ -26,7 +28,6 @@ namespace Magus
             if (RegexExpression.Length > 0)
             {
                 _regex = new Regex(RegexExpression, RegexOptions.IgnoreCase);
-
             }
         }
 
@@ -38,6 +39,14 @@ namespace Magus
                 MarkInvalid(false);
             }
             _priorText = TextInput.text;
+        }
+        
+        public bool IsFocused
+        {
+            get
+            {
+                return TextInput.isFocused;
+            }
         }
         public override void MarkInvalid(bool invalid)
         {
@@ -68,7 +77,10 @@ namespace Magus
         {
             return TextInput.text;
         }
-
+        protected void OnDestroy()
+        {
+            TextFieldRegister.DeregisterField(_id);
+        }
         public void SetValue(string text, bool readOnly)
         {
             TextInput.text = text;

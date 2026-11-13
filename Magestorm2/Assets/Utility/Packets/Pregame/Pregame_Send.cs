@@ -27,7 +27,10 @@ namespace Magus
                             OTPReply = 22,
                             RequestSpellData = 23,
                             RequestDisciplineData = 24,
-                            RequestCharacterClassData = 25;
+                            RequestCharacterClassData = 25,
+                            CreatePrivateMatch = 26,
+                            JoinPrivateMatch = 27;
+
 
     }
 

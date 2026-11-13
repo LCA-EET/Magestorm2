@@ -77,7 +77,14 @@ namespace Magus
             if (ValidateForm())
             {
                 MatchParams.ExpirationTime = _match.Expiration;
-                Game.SendPregameBytes(Pregame_Packets.JoinMatchPacket(_match.MatchID, (byte)_selectedTeam));
+                if(MatchOption.IsOptionSet(_match.MatchOptions, ControlCodes.MatchOptions_PrivateMatch))
+                {
+                    ComponentRegister.UIPrefabManager.InstantiateEnterMatchPasswordForm(_match.MatchID, (byte)_selectedTeam);
+                }
+                else
+                {
+                    Game.SendPregameBytes(Pregame_Packets.JoinMatchPacket(_match.MatchID, (byte)_selectedTeam));
+                }
             }
             else
             {

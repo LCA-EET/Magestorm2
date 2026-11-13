@@ -94,7 +94,15 @@ public class MatchManager{
         GameServer.PGP.EnqueueForSend(Packets.MatchDataPacket(_activeMatches.values()), subscribedClients);
         UpdatesNeeded = false;
     }
-    public static void RequestMatchCreation(int accountID, byte sceneID, byte duration, byte matchType, byte matchOptions){
+    public static void MakePrivate(Match created, byte[] payload){
+        if(created != null){
+            byte[] hashBytes = new byte[32];
+            System.arraycopy(payload, 9, hashBytes, 0, 32);
+            created.SetMatchPassword(hashBytes);
+        }
+    }
+    public static Match RequestMatchCreation(int accountID, byte sceneID, byte duration,
+                                            byte matchType, byte matchOptions){
         RemoteClient rc = RemoteClientManager.GetClient(accountID);
         if(rc != null){
             if(CheckOtherMatchesCreatedByAccount(accountID)){
@@ -125,9 +133,11 @@ public class MatchManager{
                     }
                     Main.LogMessage("Match " + matchID + " created by account " + accountID );
                     AddMatch(matchID, newlyCreated);
+                    return newlyCreated;
                 }
             }
         }
+        return null;
     }
     public static void DeleteMatch(int accountID, RemoteClient rc){
         Match toDelete = null;

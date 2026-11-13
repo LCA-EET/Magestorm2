@@ -35,7 +35,8 @@
                             AccountBan = 30,
                             SpellData = 31,
                             DisciplineData = 32,
-                            CharacterClassData = 33;
+                            CharacterClassData = 33,
+                            IncorrectMatchPassword = 34;
     }
 
 }

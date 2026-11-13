@@ -27,6 +27,7 @@ namespace Magus
         public static bool JoinedMatch;
         public static byte WinningTeamID;
         public static byte[] MatchKey;
+        public static byte[] HashedMatchPassword;
 
         public static bool IncludeFlags
         {

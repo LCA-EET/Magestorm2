@@ -20,7 +20,10 @@ namespace Magus
             return toReturn;
         }
 
-
+        public bool IsOptionSelected(int index)
+        {
+            return MatchOptions[index].isOn;
+        }
     }
 
 }

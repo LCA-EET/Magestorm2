@@ -21,13 +21,15 @@ namespace Magus
             SettingsTable.Add(SettingKey.AAMode, new GameSetting(SettingKey.AAMode, ControlCodes.AntiAliasing_FXAA, ApplyAntiAliasModeSetting));
             SettingsTable.Add(SettingKey.AAQuality, new GameSetting(SettingKey.AAQuality, ControlCodes.AAQuality_Medium, ApplyAntiAliasQualitySetting));
             SettingsTable.Add(SettingKey.Language, new GameSetting(SettingKey.Language, ControlCodes.Language_English, ApplyLanguageSetting));
+            SettingsTable.Add(SettingKey.WallPlacement, new GameSetting(SettingKey.WallPlacement, ControlCodes.WallPlacement_Show, null));
             if (!PlayerPrefs.HasKey("server"))
             {
-                PlayerPrefs.SetString("server", "www.fosiemods.net:6000");
+                PlayerPrefs.SetString("server", "https://mta.gg:6000");
             }
             ResetLSR();
             PlayerPrefs.Save();
         }
+
         public static void ApplyLanguageSetting()
         {
             Language.SetLanguage(GetSettingValue(SettingKey.Language));

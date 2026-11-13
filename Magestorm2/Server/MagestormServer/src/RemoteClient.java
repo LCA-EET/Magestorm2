@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
@@ -6,6 +7,7 @@ public class RemoteClient extends TimedObject{
     private final int _remotePort;
     private String _username;
     private boolean _subscribedToMatches;
+    private BigInteger _matchPassword;
 
     public RemoteClient(UDPTransmission received){
         _subscribedToMatches = false;
@@ -18,6 +20,12 @@ public class RemoteClient extends TimedObject{
         return _address;
     }
 
+    public void SetMatchPassword(BigInteger matchPasswordHash){
+        _matchPassword = matchPasswordHash;
+    }
+    public BigInteger GetMatchPassword(){
+        return _matchPassword;
+    }
     public void SetNameAndID(String username, int ID){
         _objectID = ID;
         _username = username;

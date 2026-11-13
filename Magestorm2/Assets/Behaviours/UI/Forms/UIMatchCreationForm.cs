@@ -10,13 +10,29 @@ namespace Magus
         public LevelEntry[] LevelEntries;
         public SelectionGroup LevelSelection;
         public BitwiseToggleGroup DurationToggles, MatchTypeToggles;
+        private bool _pmPacketSent;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             AssociateFormToButtons();
             PopulateLevelData();
+            MatchParams.HashedMatchPassword = null;
         }
-
+        protected override void Update()
+        {
+            base.Update();
+            if(MatchParams.HashedMatchPassword != null && !_pmPacketSent)
+            {
+                _pmPacketSent = true;
+                SendPrivateMatchPacket();
+            }
+        }
+        public void SendPrivateMatchPacket()
+        {
+            int selectedIndex = LevelSelection.SelectedIndex;
+            Game.SendPregameBytes(Pregame_Packets.CreatePrivateMatchPacket(LevelEntries[selectedIndex].LevelID, DurationToggles.GetSelectedIndex(), MatchTypeToggles.GetSelectedIndex(), MatchOptionSelection.GenerateValue()));
+            CloseForm();
+        }
         private void PopulateLevelData()
         {
             List<Level> levelList = LevelData.GetLevelList();
@@ -45,8 +61,15 @@ namespace Magus
                 else
                 {
                     LevelEntry selected = LevelEntries[selectedIndex];
-                    Game.SendPregameBytes(Pregame_Packets.CreateMatchPacket(selected.LevelID, DurationToggles.GetSelectedIndex(), MatchTypeToggles.GetSelectedIndex(), MatchOptionSelection.GenerateValue()));
-                    CloseForm();
+                    if (MatchOptionSelection.IsOptionSelected(ControlCodes.MatchOptions_PrivateMatch))
+                    {
+                        ComponentRegister.UIPrefabManager.InstantiateMatchPasswordSetupForm();
+                    }
+                    else
+                    {
+                        Game.SendPregameBytes(Pregame_Packets.CreateMatchPacket(selected.LevelID, DurationToggles.GetSelectedIndex(), MatchTypeToggles.GetSelectedIndex(), MatchOptionSelection.GenerateValue()));
+                        CloseForm();
+                    }
                 }
             }
             else

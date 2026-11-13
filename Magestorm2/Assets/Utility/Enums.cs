@@ -92,7 +92,8 @@ namespace Magus
         LitProjectiles = 4,
         AAMode = 5,
         AAQuality = 6,
-        Language = 7
+        Language = 7,
+        WallPlacement = 8
     }
 
 

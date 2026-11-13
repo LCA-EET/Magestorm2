@@ -1,11 +1,11 @@
-using UnityEngine;
 using UnityEngine.UI;
 namespace Magus
 {
 
     public class PasswordField : TextField
     {
-        private UnityEngine.UI.Button _showTextButton;
+        private Button _showTextButton;
+        public byte CharacterTypes = 2;
         private bool _textShown = false;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         protected override void Awake()
@@ -69,12 +69,12 @@ namespace Magus
                         symbolFound = true;
                         characterTypes++;
                     }
-                    if (characterTypes >= 2)
+                    if (characterTypes >= CharacterTypes)
                     {
                         break;
                     }
                 }
-                return characterTypes >= 2;
+                return characterTypes >= CharacterTypes;
             }
         }
     }

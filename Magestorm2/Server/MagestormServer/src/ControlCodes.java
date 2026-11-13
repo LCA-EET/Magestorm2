@@ -31,6 +31,7 @@ public class ControlCodes {
         public static final byte MatchOptions_NoResurrection = 3;
         public static final byte MatchOptions_NoHealOther = 4;
         public static final byte MatchOptions_NoConsumables = 5;
+        public static final byte MatchOptions_PrivateMatch = 6;
     //endregion
 
     //region MatchType
@@ -79,6 +80,7 @@ public class ControlCodes {
         public static final byte SpellTypes_Sigil = 11;
         public static final byte SpellTypes_HarmfulSigil = 12;
         public static final byte SpellTypes_HitScan = 13;
+        public static final byte SpellTypes_Resurrection = 14;
     //endregion
 
     //region Discipline

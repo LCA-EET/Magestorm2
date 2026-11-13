@@ -4,6 +4,9 @@
     public static class ControlCodes
     {
 
+        public const byte WallPlacement_Show = 1;
+        public const byte WallPlacement_Hide = 2;
+
         public const byte AntiAliasing_Off = 1;
         public const byte AntiAliasing_FXAA = 2;
         public const byte AntiAliasing_SMAA = 3;
@@ -85,6 +88,8 @@
         public const byte MatchTypes_DeathMatch = 0;
         public const byte MatchTypes_FreeForAll = 1;
         public const byte MatchTypes_CaptureTheFlag = 2;
+
+        public const byte MatchOptions_PrivateMatch = 6;
 
         public const byte SkillLevel_None = 0;
         public const byte SkillLevel_Basic = 1;

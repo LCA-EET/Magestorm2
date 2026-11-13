@@ -116,7 +116,7 @@ namespace Magus
         public static byte[] WallCastPacket(byte spellID, byte spellType)
         {
             byte[] generic = GenericCastPacket(24, spellID, spellType);
-            byte[] camera = SharedFunctions.GetCameraPositionBytes(2.0f);
+            byte[] camera = SharedFunctions.GetCameraPositionBytes(3.0f);
             camera.CopyTo(generic, ControlCodes.CastPayloadStartIndex);
             byte[] rotation = ByteUtils.Vector3ToBytes(Camera.main.transform.rotation.eulerAngles);
             rotation.CopyTo(generic, ControlCodes.CastPayloadStartIndex + 12);

@@ -417,7 +417,7 @@ Confirm Password
 Confirm E-mail
 E-mail addresses do not match.
 Passwords do not match.
-Enter the seven digit code sent to \n{0}.
+Enter the seven digit code sent from mtasupport@mta.gg to \n{0}. \nCheck your Junk folder if you did not receive the message.
 Account Activation
 Submit
 Invalid code.
@@ -440,3 +440,8 @@ English
 Español
 Pусский
 No Consumables
+Private Match
+Provide the password to secure this private match.
+Incorrect match password.
+This is a private match. Enter the match password to join.
+Show Wall Placement

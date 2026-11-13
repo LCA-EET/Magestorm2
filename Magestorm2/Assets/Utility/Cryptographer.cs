@@ -122,13 +122,17 @@ namespace Magus
 
         public static string SHA256Hash(string toHash)
         {
+            return Convert.ToBase64String(SHA256HashBytes(toHash));
+        }
+
+        public static byte[] SHA256HashBytes(string toHash)
+        {
             if (_sha256 == null)
             {
                 _sha256 = SHA256.Create();
             }
             byte[] utf8 = Encoding.UTF8.GetBytes(toHash);
-            byte[] hashed = _sha256.ComputeHash(utf8);
-            return Convert.ToBase64String(hashed);
+            return _sha256.ComputeHash(utf8);
         }
 
         public byte[] Encrypt(byte[] toEncrypt)

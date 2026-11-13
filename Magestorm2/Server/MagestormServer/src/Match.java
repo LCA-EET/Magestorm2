@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,13 +36,12 @@ public class Match extends TimedObject{
     protected boolean _scoreUpdated = false;
     private long _expCheckElapsed = 0;
     private long _potionCheckElapsed = 0;
+    private BigInteger _matchEntryHash;
     private final long _expReportInterval = 30000;
-    protected boolean _quickMatch;
+    protected boolean _quickMatch, _potionTaken, _consumablesEnabled;
     protected AntiStack _antiStack;
-    protected boolean _potionTaken;
     protected byte _potionLocation, _potionType;
     protected byte[] _potionBytes;
-    protected boolean _consumablesEnabled;
     protected Match(byte matchID, int creatorID, byte[] creatorName, byte sceneID, byte duration, byte matchType, byte matchOptions){
         _objectID = matchID;
         _potionTaken = true;
@@ -92,6 +92,15 @@ public class Match extends TimedObject{
         _verifiedClients = new ConcurrentHashMap<>();
         InitTeams();
         _objectStatus = new ConcurrentHashMap<>();
+    }
+    public void SetMatchPassword(byte[] hashBytes){
+        _matchEntryHash = new BigInteger(hashBytes);
+    }
+    public boolean CheckMatchPassword(BigInteger matchEntryHash){
+        return _matchEntryHash.equals(matchEntryHash);
+    }
+    public boolean IsPasswordRequired(){
+        return _matchOptions.IsOptionSet(ControlCodes.MatchOptions_PrivateMatch);
     }
     public String ToString(){
         return "Match ID: " + _objectIDAsByte + ", Scene: " + _sceneID +
@@ -429,6 +438,14 @@ public class Match extends TimedObject{
     public short SpellCast(MatchCharacter caster, Spell spellReference, byte[] decrypted){
         short castID = IncrementCastID();
         switch(spellReference.SpellType()){
+            case ControlCodes.SpellTypes_Resurrection:
+                if(_matchOptions.IsOptionSet(ControlCodes.MatchOptions_NoResurrection)){
+                    castID = -1;
+                }
+                else{
+                    _castSpells.put(castID, new HealingSpell(caster, castID, spellReference, this));
+                }
+                break;
             case ControlCodes.SpellTypes_HarmfulSigil:
             case ControlCodes.SpellTypes_Sigil:
                 if(caster.CanCastAdditionalSigil()) {

@@ -24,4 +24,6 @@ public class Pregame_Receive {
     public static final byte RequestSpellData = 23;
     public static final byte RequestDisciplineData = 24;
     public static final byte RequestCharacterClassData = 25;
+    public static final byte CreatePrivateMatch = 26;
+    public static final byte JoinPrivateMatch = 27;
 }

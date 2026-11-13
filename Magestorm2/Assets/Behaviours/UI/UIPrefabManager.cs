@@ -30,6 +30,8 @@ namespace Magus
         public GameObject PrefabUIGraphics;
         public GameObject PrefabDHKEPacketProcessor;
         public GameObject PrefabUIAccountActivation;
+        public GameObject PrefabMatchPasswordSetup;
+        public GameObject PrefabEnterMatchPassword;
 
         private Queue<GameObject> _poppedObjects;
         private void Awake()
@@ -60,6 +62,18 @@ namespace Magus
         public void ClearStack()
         {
             _uiStack.Clear();
+        }
+        public void InstantiateEnterMatchPasswordForm(byte matchID, byte selectedTeam)
+        {
+            GameObject instantiated = Instantiate(PrefabEnterMatchPassword);
+            UIEnterMatchPassword form = instantiated.GetComponent<UIEnterMatchPassword>();
+            form.InitForm(matchID, selectedTeam);
+            AddToStack(instantiated);
+        }
+        public void InstantiateMatchPasswordSetupForm()
+        {
+            GameObject instantiated = Instantiate(PrefabMatchPasswordSetup);
+            AddToStack(instantiated);
         }
         public void InstantiateUIAccountActivationForm(int accountID, string email)
         {

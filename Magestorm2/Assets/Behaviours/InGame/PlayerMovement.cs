@@ -431,7 +431,7 @@ namespace Magus
 
         private bool isOnGround()
         {
-            if(Physics.OverlapBox(_pc.DownwardCaster.transform.position, new Vector3(0.5f, 0.1f, 0.5f), Quaternion.identity, LayerManager.FloorMask).Length > 0)
+            if(Physics.OverlapBox(_pc.DownwardCaster.transform.position, new Vector3(0.35f, 0.1f, 0.35f), Quaternion.identity, LayerManager.FloorMask).Length > 0)
             {
                 return true;
             }

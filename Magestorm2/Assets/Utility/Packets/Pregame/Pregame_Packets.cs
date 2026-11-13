@@ -57,6 +57,16 @@ namespace Magus
             slots.CopyTo(unencrypted, 9);
             return unencrypted;
         }
+        public static byte[] JoinPrivateMatchPacket(byte matchID, byte teamID)
+        {
+            byte[] unencrypted = new byte[7 + 32];
+            unencrypted[0] = Pregame_Send.JoinPrivateMatch;
+            PlayerAccount.AccountIDBytes.CopyTo(unencrypted, 1);
+            unencrypted[5] = matchID;
+            unencrypted[6] = teamID;
+            Array.Copy(MatchParams.HashedMatchPassword, 0, unencrypted, 7, 32);
+            return unencrypted;
+        }
         public static byte[] JoinMatchPacket(byte matchID, byte teamID)
         {
             byte[] unencrypted = new byte[7];
@@ -135,6 +145,15 @@ namespace Magus
         public static byte[] DeleteMatchPacket()
         {
             return OpCodePlusAccountIDBytes(Pregame_Send.DeleteMatch);
+        }
+        public static byte[] CreatePrivateMatchPacket(byte sceneID, byte duration, byte matchType, byte[] matchOptions)
+        {
+            byte[] createMatchBytes = CreateMatchPacket(sceneID, duration, matchType, matchOptions);
+            byte[] toSend = new byte[createMatchBytes.Length + 32];
+            Array.Copy(createMatchBytes, 0, toSend, 0, createMatchBytes.Length);
+            toSend[0] = Pregame_Send.CreatePrivateMatch;
+            Array.Copy(MatchParams.HashedMatchPassword, 0, toSend, createMatchBytes.Length, 32);
+            return toSend;
         }
         public static byte[] CreateMatchPacket(byte sceneID, byte duration, byte matchType, byte[] matchOptions)
         {

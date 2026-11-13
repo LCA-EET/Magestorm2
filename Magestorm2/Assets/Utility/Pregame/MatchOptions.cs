@@ -13,6 +13,7 @@ namespace Magus
         public const byte NoResurrection = 3;
         public const byte NoHealOther = 4;
         public const byte NoConsumables = 5;
+        public const byte PrivateMatch = 6;
 
         private static bool _init = false;
         private static Dictionary<byte, int> _stringRefs;
@@ -28,9 +29,14 @@ namespace Magus
                 _stringRefs.Add(NoResurrection, 201);
                 _stringRefs.Add(NoHealOther, 202);
                 _stringRefs.Add(NoConsumables, 442);
+                _stringRefs.Add(PrivateMatch, 443);
             }
         }
-
+        public static bool IsOptionSet(byte matchOptions, byte optionID)
+        {
+            BitArray ba = new BitArray(new byte[] { matchOptions });
+            return ba[optionID];
+        }
         public static int GetStringReference(byte optionCode)
         {
             return _stringRefs[optionCode];

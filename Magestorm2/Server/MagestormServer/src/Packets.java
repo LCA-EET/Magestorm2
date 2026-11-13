@@ -22,7 +22,11 @@ public class Packets {
     private static final byte[] AcknowledgeSubscription_Bytes = new byte[]{Pregame_Send.AcknowledgeSubscription};
     private static final byte[] AccountBanned = new byte[]{Pregame_Send.AccountBan};
     private static final byte[] PingReply = new byte[]{InGame_Send.PingReply};
+    private static final byte[] IncorrectMatchPassword = new byte[]{Pregame_Send.IncorrectMatchPassword};
 
+    public static byte[] IncorrectMatchPasswordPacket(){
+        return IncorrectMatchPassword;
+    }
     public static byte[] AccountBannedPacket(){
         return AccountBanned;
     }

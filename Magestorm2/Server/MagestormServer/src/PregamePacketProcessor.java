@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -48,8 +49,12 @@ public class PregamePacketProcessor extends UDPProcessor
                 HandleMatchSubscribePacket(true);
             case Pregame_Receive.UnsubscribeFromMatches ->
                 HandleMatchSubscribePacket(false);
+            case Pregame_Receive.CreatePrivateMatch ->
+                MatchManager.MakePrivate(MatchManager.RequestMatchCreation(_accountID, _decrypted[5],
+                    _decrypted[6], _decrypted[7], _decrypted[8]), _decrypted);
             case Pregame_Receive.CreateMatch ->
-                MatchManager.RequestMatchCreation(_accountID, _decrypted[5], _decrypted[6], _decrypted[7], _decrypted[8]);
+                MatchManager.RequestMatchCreation(_accountID, _decrypted[5],
+                        _decrypted[6], _decrypted[7], _decrypted[8]);
             case Pregame_Receive.DeleteMatch ->
                 MatchManager.DeleteMatch(_accountID, _remote);
             case Pregame_Receive.RequestLevelsList ->
@@ -70,6 +75,8 @@ public class PregamePacketProcessor extends UDPProcessor
                 EnqueueForSend(CharacterClassManager.ClientDataPacket(), _remote);
             case Pregame_Receive.OTPReply ->
                 HandleOTPReply();
+            case Pregame_Receive.JoinPrivateMatch->
+                HandleJoinPrivateMatchPacket(_decrypted[5], _decrypted[6]);
         }
         return true;
     }
@@ -85,18 +92,37 @@ public class PregamePacketProcessor extends UDPProcessor
         boolean result = Database.ActivateAccount(accountID, otp);
         EnqueueForSend(Packets.ActivationResultPacket(result?(byte)1:(byte)0), _remote);
     }
+    private void HandleJoinPrivateMatchPacket(byte matchID, byte teamID){
+        byte[] hashBytes = new byte[32];
+        System.arraycopy(_decrypted, 7, hashBytes, 0, 32);
+        _remote.SetMatchPassword(new BigInteger(hashBytes));
+        HandleJoinMatchPacket(matchID, teamID);
+    }
     private void HandleJoinMatchPacket(byte matchID, byte teamID)
     {
         Match toJoin = MatchManager.GetMatch(matchID);
         if(toJoin != null){
-            if(toJoin.HasRoomForAnotherPlayer()){
-                RemoteClient remote = RemoteClientManager.GetClient(_accountID);
-                remote.UnsubscribeFromMatches();
-                toJoin.JoinMatch(remote, teamID);
+            if(toJoin.IsPasswordRequired()){
+                if(toJoin.CheckMatchPassword(_remote.GetMatchPassword())){
+                    AttemptToJoinMatch(toJoin, teamID);
+                }
+                else{
+                    EnqueueForSend(Packets.IncorrectMatchPasswordPacket(), _remote);
+                }
             }
             else{
-                EnqueueForSend(Packets.MatchIsFullPacket(), _remote);
+                AttemptToJoinMatch(toJoin, teamID);
             }
+        }
+    }
+    private void AttemptToJoinMatch(Match toJoin, byte teamID){
+        if(toJoin.HasRoomForAnotherPlayer()){
+            RemoteClient remote = RemoteClientManager.GetClient(_accountID);
+            remote.UnsubscribeFromMatches();
+            toJoin.JoinMatch(remote, teamID);
+        }
+        else{
+            EnqueueForSend(Packets.MatchIsFullPacket(), _remote);
         }
     }
     public void HandleMatchDetailsPacket(){

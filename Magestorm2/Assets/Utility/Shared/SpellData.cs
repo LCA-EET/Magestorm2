@@ -61,6 +61,13 @@ namespace Magus
                 return staminaCost;
             }
         }
+        public bool IsWallType
+        {
+            get
+            {
+                return SpellType == ControlCodes.SpellTypes_NonSolidWall || SpellType == ControlCodes.SpellTypes_SolidWall;
+            }
+        }
         public byte ForceDuration
         {
             get { return _spellData[Index_ForceDuration]; }

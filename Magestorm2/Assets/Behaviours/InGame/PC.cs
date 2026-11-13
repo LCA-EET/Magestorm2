@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +11,7 @@ namespace Magus
         public PlayerMovement PlayerMovement;
         public RayCaster DownwardCaster;
         public RayCaster ForwardCaster;
+        public GameObject WallPlacement;
 
         private float _staminaRegen;
         private Camera _camera;
@@ -62,6 +61,10 @@ namespace Magus
                 new PeriodicAction(1.0f, CountdownVectors, _actionList);
 
             }
+        }
+        public void ShowWallPlacement(bool placement)
+        {
+            WallPlacement.SetActive(placement);
         }
         public void PickedUpPotion(byte potionID)
         {
@@ -289,6 +292,7 @@ namespace Magus
                 {
                     _primarySpell = spellData;
                     ComponentRegister.SpellPanel.UpdatePrimaryReference(spellData.SpellNameReference);
+                    CheckWallPlacement();
                 }
             }
             else
@@ -299,9 +303,25 @@ namespace Magus
                     {
                         _secondarySpell = _primarySpell;
                         ComponentRegister.SpellPanel.UpdateSecondaryReference(_secondarySpell.SpellNameReference);
+                        CheckWallPlacement();
                     }
                 }
             }
+        }
+        private void CheckWallPlacement()
+        {
+            bool secondaryShow = false;
+            bool primaryShow = false;
+            if(_primarySpell != null)
+            {
+                primaryShow = _primarySpell.IsWallType;
+            }
+            if (_secondarySpell != null)
+            {
+                secondaryShow = _secondarySpell.IsWallType;
+            }
+            ComponentRegister.PC.ShowWallPlacement((primaryShow || secondaryShow) 
+                && GameSettings.GetSettingValue(SettingKey.WallPlacement) == ControlCodes.WallPlacement_Show);
         }
         private void Tap()
         {

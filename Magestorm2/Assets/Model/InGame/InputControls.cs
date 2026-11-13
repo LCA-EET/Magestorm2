@@ -318,21 +318,21 @@ namespace Magus
         {
             get
             {
-                return Input.GetKeyDown(_controls[InputControl.ToggleMusic]) && Game.GameMode;
+                return Input.GetKeyDown(_controls[InputControl.ToggleMusic]) && Game.GameMode && !TextFieldRegister.FieldHasFocus();
             }
         }
         public static bool PreviousTrack
         {
             get
             {
-                return Input.GetKeyDown(_controls[InputControl.PreviousTrack]) && Game.GameMode;
+                return Input.GetKeyDown(_controls[InputControl.PreviousTrack]) && Game.GameMode && !TextFieldRegister.FieldHasFocus();
             }
         }
         public static bool NextTrack
         {
             get
             {
-                return Input.GetKeyDown(_controls[InputControl.NextTrack]) && Game.GameMode;
+                return Input.GetKeyDown(_controls[InputControl.NextTrack]) && Game.GameMode && !TextFieldRegister.FieldHasFocus();
             }
         }
         public static bool IsPressed(InputControl key)

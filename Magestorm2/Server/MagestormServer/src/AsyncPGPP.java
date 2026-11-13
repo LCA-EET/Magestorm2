@@ -125,7 +125,7 @@ public class AsyncPGPP extends AsyncRequestProcessor{
     }
     private void SendOTPEmail(String email, int otp){
         String activationMessage = "Hello<br><br>Enter the following OTP into the Magus client to activate your account: " + otp;
-        Main.Mailer.SendMail(email, "Magus Account Activation Code", activationMessage, "Magus Activation");
+        Main.Mailer.SendMail(email, "Magus Account Activation Code", activationMessage, "mtasupport@mta.gg");
     }
     private void HandleSkillUpdate(){
         int characterID = ByteUtils.ExtractInt(_decrypted, 5);
