@@ -14,7 +14,7 @@ namespace Magus
         public static void InitializeSettings()
         {
             SettingsTable = new Dictionary<SettingKey, GameSetting>();
-            SettingsTable.Add(SettingKey.Shadows, new GameSetting(SettingKey.Shadows, ControlCodes.Shadows_Medium, ApplyLightShadowSetting));
+            SettingsTable.Add(SettingKey.Shadows, new GameSetting(SettingKey.Shadows, ControlCodes.Shadows_Low, ApplyLightShadowSetting));
             SettingsTable.Add(SettingKey.MinimapLighting, new GameSetting(SettingKey.MinimapLighting, ControlCodes.MinimapLighting_Off, UpdateMinimapLightCulling));
             SettingsTable.Add(SettingKey.LitProjectiles, new GameSetting(SettingKey.LitProjectiles, ControlCodes.LitProjectiles_On, null));
             SettingsTable.Add(SettingKey.ShadowType, new GameSetting(SettingKey.ShadowType, ControlCodes.ShadowType_Soft, ApplyLightShadowSetting));
@@ -146,7 +146,7 @@ namespace Magus
         private static void UpdateShadowResolution(Light light)
         {
             light.shadows = (SettingsTable[SettingKey.ShadowType].Value == ControlCodes.ShadowType_Soft) ? LightShadows.Soft : LightShadows.Hard;
-            light.shadowResolution = LSR;
+            light.cullingMask = LayerManager.LightCullingMask;
         }
         public static void ResetLSR()
         {
@@ -158,7 +158,7 @@ namespace Magus
                     Debug.Log("Medium Resolution");
                     break;
                 case ControlCodes.Shadows_High:
-                    resolution = LightShadowResolution.High;
+                    resolution = LightShadowResolution.High; 
                     Debug.Log("High Resolution");
                     break;
             }

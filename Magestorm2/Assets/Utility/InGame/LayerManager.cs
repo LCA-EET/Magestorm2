@@ -34,6 +34,7 @@ namespace Magus
         private static int _interactableMask;
         private static int _projectileImpactMask;
         private static int _mindImpactMask;
+        private static int _lightCullingMask;
         private static int _aoeObstructionMask, _resistableObstructionMask;
         private static int _floorMask;
         private static bool _init = false;
@@ -65,7 +66,18 @@ namespace Magus
                 _mindImpactMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_RemotePlayer, Layer_Interactable, Layer_MMHidden });
                 _aoeObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_PlayerWallSolid, Layer_PlayerWallNonSolid, Layer_MMHidden });
                 _resistableObstructionMask = LayerMask.GetMask(new string[] { Layer_Surface, Layer_Default, Layer_MMHidden });
+                _lightCullingMask = LayerMask.GetMask(new string[]
+                {
+                    Layer_Surface, Layer_Default, Layer_PlayerWallSolid, Layer_RemotePlayer, Layer_DeadBody
+                });
                 _init = true;
+            }
+        }
+        public static int LightCullingMask
+        {
+            get
+            {
+                return _lightCullingMask;
             }
         }
         public static int BiasableLayer
