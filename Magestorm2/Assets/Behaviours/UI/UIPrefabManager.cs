@@ -32,6 +32,7 @@ namespace Magus
         public GameObject PrefabUIAccountActivation;
         public GameObject PrefabMatchPasswordSetup;
         public GameObject PrefabEnterMatchPassword;
+        public GameObject PrefabMusicPlayer;
 
         private Queue<GameObject> _poppedObjects;
         private void Awake()
@@ -62,6 +63,10 @@ namespace Magus
         public void ClearStack()
         {
             _uiStack.Clear();
+        }
+        public void InstantiateMusicPlayer()
+        {
+            Instantiate(PrefabMusicPlayer);
         }
         public void InstantiateEnterMatchPasswordForm(byte matchID, byte selectedTeam)
         {

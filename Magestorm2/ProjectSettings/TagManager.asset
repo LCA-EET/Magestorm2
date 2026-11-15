@@ -34,7 +34,7 @@ TagManager:
   - Consumable
   - LightSource
   - WallPlacement
-  - 
+  - Area
   - 
   - 
   m_SortingLayers:

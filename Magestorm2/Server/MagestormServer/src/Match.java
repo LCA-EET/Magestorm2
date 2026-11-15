@@ -696,11 +696,13 @@ public class Match extends TimedObject{
 
     protected void PlayerKilled(MatchCharacter killed, MatchCharacter killer){
         SendToAll(Packets.PlayerKilledPacket(killed.GetIDinMatch(), killer.GetIDinMatch()));
-        GetPlayerScore(killer).IncrementKills();
+        if(killer.GetIDinMatch() != killed.GetIDinMatch()){
+            GetPlayerScore(killer).IncrementKills();
+            killer.GetTeam().GetScore().IncrementKills();
+            killer.AdjustExperience(killed.GetMaxHP() * (int)(1 + Math.floor(killed.GetLevel() / 8.0f)));
+        }
         GetPlayerScore(killed).IncrementDeaths();
         killed.GetTeam().GetScore().IncrementDeaths();
-        killer.GetTeam().GetScore().IncrementKills();
-        killer.AdjustExperience(killed.GetMaxHP() * (int)(1 + Math.floor(killed.GetLevel() / 8.0f)));
         RefreshScoreBytes(10);
         _scoreUpdated = true;
     }

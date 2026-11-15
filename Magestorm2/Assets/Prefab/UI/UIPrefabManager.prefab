@@ -149,6 +149,7 @@ MonoBehaviour:
   PrefabUIAccountActivation: {fileID: 4912288171975822842, guid: 459de4b8f763eaf438658316d6f46795, type: 3}
   PrefabMatchPasswordSetup: {fileID: 3313946158421714763, guid: 749dbfb858ed7864f9ddbe30e0cb28bd, type: 3}
   PrefabEnterMatchPassword: {fileID: 608762441507826745, guid: b5679b887c12f9b488eb5dc0c29cb5b0, type: 3}
+  PrefabMusicPlayer: {fileID: 596283530601681191, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
 --- !u!82 &7185910421088315080
 AudioSource:
   m_ObjectHideFlags: 0

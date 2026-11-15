@@ -41,6 +41,7 @@ namespace Magus
         public static bool LoggedIn = false;
         public static byte[] PregameKey;
         public static byte Cipher;
+        public static bool MusicPlayerCreated;
         
         //public static PMDByte PlayerPMDByte;
 

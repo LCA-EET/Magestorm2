@@ -445,3 +445,7 @@ Provide the password to secure this private match.
 Incorrect match password.
 This is a private match. Enter the match password to join.
 Show Wall Placement
+Conjures a wall of null energy in front of the caster.
+Void Wall
+Raises a searing wall of flame in front of the caster.
+Flame Wall

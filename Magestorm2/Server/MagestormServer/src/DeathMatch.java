@@ -48,6 +48,7 @@ public class DeathMatch extends Match{
                 }
                 else{
                     SendToPlayer(Packets.ShrineFailurePacket(shrineID), verified);
+                    verified.TakeDamage(((100 - diceRoll) / 100.0f) *  verified.GetMaxHP(), verified);
                 }
             }
         }

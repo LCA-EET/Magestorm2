@@ -6,7 +6,7 @@ namespace Magus
     {
         public ParticleSystem EmissionModuleA;
         public ParticleSystem EmissionModuleB;
-        public Light A, B;
+        public Light A;//, B;
         private ParticleSystem.EmissionModule _mmA, _mmB;
         private float _emissionsRate;
         private bool _initialized;
@@ -15,7 +15,7 @@ namespace Magus
         {
             Initialize();
             GameSettings.ApplyLightShadowSetting(A);
-            GameSettings.ApplyLightShadowSetting(B);
+            //GameSettings.ApplyLightShadowSetting(B);
         }
 
         private void Initialize()
@@ -34,7 +34,7 @@ namespace Magus
             _mmA.rateOverTime = _emissionsRate * health;
             _mmB.rateOverTime = _emissionsRate * health;
             A.intensity = 2.0f * health;
-            B.intensity = 2.0f * health;
+            //B.intensity = 2.0f * health;
         }
     }
 

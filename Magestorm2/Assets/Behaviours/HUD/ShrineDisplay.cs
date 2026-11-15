@@ -33,7 +33,7 @@ namespace Magus
         }
         public void Refresh(Shrine shrine)
         {
-            Color toApply = Teams.GetTeamColor(shrine.Team);
+            Color toApply = Teams.GetTeamTextColor(shrine.Team);
             Health.color = toApply;
             Title.color = toApply;
             Health.text = Language.GetBaseString(181) + " " + shrine.BiasAmount.ToString(); //

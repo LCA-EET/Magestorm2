@@ -17,6 +17,11 @@ namespace Magus
         void Start()
         {
             ComponentRegister.UIPrefabManager.InstantiateLoginForm();
+            if (!Game.MusicPlayerCreated)
+            {
+                Game.MusicPlayerCreated = true;
+                ComponentRegister.UIPrefabManager.InstantiateMusicPlayer();
+            }
         }
 
         // Update is called once per frame

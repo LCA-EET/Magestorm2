@@ -353,21 +353,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8883fe2cfd3a2e4a89da6828d2d0d22, type: 3}
---- !u!114 &207606887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc2b118d1a6c1154983be5ee4bf1b510, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MidiPlayer.Run::MidiPlayerTK.MPTKEffectSoundFont
-  applySFReverb: 0
-  applySFChorus: 0
-  applySFFilter: 1
 --- !u!1001 &342353242
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -530,71 +515,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1446960585
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 596283530601681191, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_Name
-      value: MusicPlayer
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825219918511140389, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6496287325786516977, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: playOnStart
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6496287325786516977, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
-      propertyPath: MPTK_EffectSoundFont
-      value: 
-      objectReference: {fileID: 207606887}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6309e46142a2b8d42a895c18785ff20a, type: 3}
 --- !u!1001 &1966488883
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -662,4 +582,3 @@ SceneRoots:
   - {fileID: 175631716}
   - {fileID: 342353242}
   - {fileID: 1424815251}
-  - {fileID: 1446960585}

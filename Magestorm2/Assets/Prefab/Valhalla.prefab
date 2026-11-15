@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1851860422575509216}
   - component: {fileID: 7707213682917761074}
   - component: {fileID: 4077408626760148567}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: Valhalla
   m_TagString: Untagged
   m_Icon: {fileID: 0}

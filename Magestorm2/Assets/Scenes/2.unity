@@ -3904,6 +3904,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 3.724
       objectReference: {fileID: 0}
+    - target: {fileID: 1654297932517864846, guid: 15fae1e26fb858d459cb8f4b74a68b6b, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 95442511370592f4b9d32e1f4e0a1838, type: 2}
     - target: {fileID: 1755911733824684338, guid: 15fae1e26fb858d459cb8f4b74a68b6b, type: 3}
       propertyPath: SceneGO
       value: 
@@ -4115,6 +4119,10 @@ PrefabInstance:
     - target: {fileID: 6961152940651227396, guid: 15fae1e26fb858d459cb8f4b74a68b6b, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7136701873016054573, guid: 15fae1e26fb858d459cb8f4b74a68b6b, type: 3}
+      propertyPath: m_Layer
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 7754252492274080017, guid: 15fae1e26fb858d459cb8f4b74a68b6b, type: 3}
       propertyPath: m_LocalScale.x
