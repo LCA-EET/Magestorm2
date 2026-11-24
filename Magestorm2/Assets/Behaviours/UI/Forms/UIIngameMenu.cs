@@ -7,6 +7,7 @@ namespace Magus
     {
         public TMP_Text MatchID;
         public TMP_Text MatchType;
+        public TMP_Text Version;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -15,6 +16,7 @@ namespace Magus
             Cursor.lockState = CursorLockMode.Confined;
             MatchID.text = Language.BuildString(98, MatchParams.MatchID); //
             MatchType.text = Language.BuildString(112, SharedFunctions.MatchTypeString(MatchParams.MatchType)); //
+            Version.text = Language.BuildString(458, Game.ClientVersion);
         }
 
 

@@ -29,6 +29,7 @@ namespace Magus
         public AudioClip SFXMagicElevator;
         public AudioClip SFXPickUpItem;
         public AudioClip SFXDrinkPotion;
+        public AudioClip SFXBounce;
         public void Awake()
         {
             Game.Clips = this;
@@ -73,6 +74,10 @@ namespace Magus
         public void PlayRandomSplash(AudioSource source)
         {
             source.PlayOneShot(GetRandomSplash());
+        }
+        public void PlayBoing()
+        {
+            Game.UIAudio.PlayClip(SFXBounce);
         }
         public void PlayShrineDestroyed()
         {

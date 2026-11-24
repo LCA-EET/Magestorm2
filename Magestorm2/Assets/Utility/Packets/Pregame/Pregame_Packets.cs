@@ -6,6 +6,11 @@ namespace Magus
 
     public static class Pregame_Packets
     {
+        public static byte[] VersionCheckPacket()
+        {
+            Debug.Log("VERSION CHECK PACKET");
+            return new byte[] { Pregame_Send.VersionCheck };
+        }
         public static byte[] RequestCharacterClassDataPacket()
         {
             byte[] unencrypted = new byte[1];

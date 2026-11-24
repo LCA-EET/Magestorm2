@@ -9,6 +9,8 @@ public class ServerParams {
     public static String DebugFilePath;
     public static String ChatFilePath;
     public static String EmailCredsPath;
+    public static byte[] ExpectedClientVersion;
+    public static byte[] UpdateURL;
     public static long IngameInactivityWarning = 30000;
     public static long IngameInactivityDisconnect = 60000; // default one minute. Overriden by whatever is defind in serverparams.txt
     public static long PregameInactivity = 60000;
@@ -52,6 +54,9 @@ public class ServerParams {
             ExpMultiplier = Float.parseFloat(paramScanner.nextLine());
             QMEnabled = Byte.parseByte(paramScanner.nextLine());
             DiscordBytes = ByteUtils.UTF8toBytes(paramScanner.nextLine());
+            ExpectedClientVersion = ByteUtils.UTF8toBytes(paramScanner.nextLine());
+            UpdateURL = ByteUtils.UTF8toBytes(paramScanner.nextLine());
+            Packets.BuildVersionCheckPacket();
             System.out.println("Log file: " + LogFilePath);
             System.out.println("Error file: " + ErrorFilePath);
             System.out.println("Debug file: " + DebugFilePath);

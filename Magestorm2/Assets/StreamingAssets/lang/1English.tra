@@ -449,3 +449,14 @@ Conjures a wall of null energy in front of the caster.
 Void Wall
 Raises a searing wall of flame in front of the caster.
 Flame Wall
+Cold Wall
+Conjures a wall of freezing cold air in front of the caster.
+Earth Wall
+Raises an earthen wall in front of the caster.
+Creates a wall of water in front of the caster.
+Water Wall
+Version: {0}
+Client version {0} is required to play on this server.\nDownload link: {1}
+Download
+Boulder
+Launches a large, rolling boulder toward a target.

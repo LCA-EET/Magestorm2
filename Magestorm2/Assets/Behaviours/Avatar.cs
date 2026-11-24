@@ -336,7 +336,7 @@ namespace Magus
         {
             if (_playerID == MatchParams.IDinMatch)
             {
-                BitArray effectBits = new BitArray(16, false);
+                BitArray effectBits = new BitArray(24, false);
                 for (byte b = 0; b < effectBits.Length; b++)
                 {
                     effectBits[b] = _appliedEffects.ContainsKey(b);

@@ -383,6 +383,7 @@ namespace Magus
         private void HandleEffect()
         {
             byte appliedToID = _decrypted[1];
+            Debug.Log("HandleEffect(), playerID: " + appliedToID);
             Avatar appliedTo = null;
             if (Match.GetAvatar(appliedToID, ref appliedTo))
             {

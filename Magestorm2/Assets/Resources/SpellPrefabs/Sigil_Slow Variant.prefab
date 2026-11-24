@@ -59,47 +59,51 @@ PrefabInstance:
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[0]'
       value: 
-      objectReference: {fileID: -197052885, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: -855298285791758126, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[1]'
       value: 
-      objectReference: {fileID: -773821984, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: 765079998, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[2]'
       value: 
-      objectReference: {fileID: -905579588, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: 637137356, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[3]'
       value: 
-      objectReference: {fileID: 1801092028, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: 8289925, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[4]'
       value: 
-      objectReference: {fileID: -61674749, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: -36284247, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[5]'
       value: 
-      objectReference: {fileID: -540678197, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: -201348506, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[6]'
       value: 
-      objectReference: {fileID: -1313698521, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: 972621450, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[7]'
       value: 
-      objectReference: {fileID: -1868750290, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: -921670608, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[8]'
       value: 
-      objectReference: {fileID: -423113800, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: 70809158, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 746620486837018711, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: 'Frames.Array.data[9]'
       value: 
-      objectReference: {fileID: 1629577242, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: 543410317, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
     - target: {fileID: 2490572235520026404, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -197052885, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+      objectReference: {fileID: -855298285791758126, guid: 8fd627f2b5cbb3147ae30a881df08213, type: 3}
+    - target: {fileID: 2490572235520026404, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3869145977979107065, guid: d42f68695fdbc6149993779d7a775c91, type: 3}
       propertyPath: m_Name
       value: Sigil_Slow Variant

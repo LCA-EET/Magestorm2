@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Magus
@@ -31,6 +30,7 @@ namespace Magus
         private Vector3 _moveCheck;
         private Vector3 _priorStep, _priorPosition;
         private Vector3 _forceDirection;
+        private Vector3 _groundCast;
         private bool _isSlowed, _isFrozen, _isHasted, _isEntangled;
         private bool _inFlight = false;
         private bool _positionChanged = false;
@@ -44,6 +44,7 @@ namespace Magus
         private float _forceAcceleration = 0;
         private float _accelerationPeriod;
         private PMDByte _pmd;
+        private byte _leapDegree;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
         {
@@ -53,12 +54,17 @@ namespace Magus
             ComponentRegister.PlayerTransform = transform;
             ComponentRegister.PlayerMovement = this;
             ComponentRegister.PlayerController = Controller;
+            _groundCast = new Vector3(0.35f, 0.1f, 0.35f);
             _controllerHeight = Controller.height;
             _controllerCenter = Controller.center;
             _controllerCrouchHeight = Controller.height / 1.66f;
             _controllerCrouchCenter = new Vector3(Controller.center.x, Controller.center.y, Controller.center.z);
             _cameraLocalPosition = Camera.main.transform.localPosition;
             _cameraCrouchedPosition = new Vector3(_cameraLocalPosition.x, _cameraLocalPosition.y / 1.66f, _cameraCrouchedPosition.z);
+        }
+        public void MarkLeapPending(byte degree)
+        {
+            _leapDegree = degree;
         }
         public void ApplyForceVector(float forceMagnitude, float seconds, Vector3 forceDirection)
         {
@@ -210,7 +216,19 @@ namespace Magus
             }
             else if ((Game.GameInputSet(InputControl.Jump)) && !_isEntangled)
             {
-                _verticalSpeed = _verticalSpeed + _jumpSpeed;
+                if (_leapDegree > 0)
+                {
+                    Debug.Log("LeapDegree: " + _leapDegree);
+                    _verticalSpeed = _verticalSpeed + _jumpSpeed * (1.0f + _leapDegree / 2.0f);
+                    _leapDegree = 0;
+                    Game.PCAvatar.RemoveEffect(ControlCodes.EffectCode_Leap, true);
+                    Game.Clips.PlayBoing();
+                }
+                else
+                {
+                    _verticalSpeed = _verticalSpeed + _jumpSpeed;
+                }
+                    
                 Controller.Move(transform.up * _verticalSpeed * Time.deltaTime);
                 _midJump = true;
                 _pmd.SetLocalPosture(Postures.Jump);
@@ -261,7 +279,8 @@ namespace Magus
             }
             float x = MoveAlongAxis(ref _lateralSpeed, maxLateralSpeed, transform.right, InputControl.StrafeLeft, InputControl.StrafeRight, lateralAcceleration, 1f);
             float z = MoveAlongAxis(ref _forwardSpeed, maxForwardSpeed, Camera.main.transform.forward, InputControl.Backward, InputControl.Forward, forwardAcceleration, 1f);
-            bool moving = x != 0 || z != 0;
+            UpdateGroundedStatus();
+            bool moving = (x != 0 || z != 0);
             if (moving)
             {
                 if (fastmove)
@@ -275,7 +294,7 @@ namespace Magus
             }
             else
             {
-                _pc.RegenStamina(Time.deltaTime * 0.5f, false);
+                _pc.RegenStamina(Time.deltaTime * (_onGround? 1.0f: 0.5f), false);
             }
         }
         private void DeadMovement()
@@ -422,21 +441,16 @@ namespace Magus
                 _distanceTravelled += Vector3.Distance(transform.position, _priorStep);
                 _priorStep = transform.position;
             }
-            else
-            {
-                Debug.Log("not on ground");
-            }
         }
 
 
         private bool isOnGround()
         {
-            if(Physics.OverlapBox(_pc.DownwardCaster.transform.position, new Vector3(0.35f, 0.1f, 0.35f), Quaternion.identity, LayerManager.FloorMask).Length > 0)
+            if(Physics.OverlapBox(_pc.DownwardCaster.transform.position, _groundCast, Quaternion.identity, LayerManager.FloorMask).Length > 0)
             {
                 return true;
             }
             return false;
-            //return _pc.IsOnGround(LayerManager.FloorMask, 0.1f);
         }
         private void Accelerate(ref float speed, float maxSpeed, float directionFactor, float acceleration)
         {
@@ -459,8 +473,8 @@ namespace Magus
             {
                 directionFactor = 0; // maintain the previous speed.
             }
-            else if ((!Game.GameInputSet(negative) && !Game.GameInputSet(positive)) ||
-                Game.GameInputSet(negative) && Game.GameInputSet(positive))
+            else if (speed != 0 && ((!Game.GameInputSet(negative) && !Game.GameInputSet(positive)) ||
+                Game.GameInputSet(negative) && Game.GameInputSet(positive)))
             {
                 directionFactor = speed > 0.0f ? -1.0f : 1.0f;
                 clamp = true;

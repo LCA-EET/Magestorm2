@@ -529,6 +529,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8731486055918855099}
     m_Modifications:
+    - target: {fileID: 388297818798466178, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -134.99998
+      objectReference: {fileID: 0}
     - target: {fileID: 480542066749735685, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 83
@@ -540,6 +544,14 @@ PrefabInstance:
     - target: {fileID: 739774822516366062, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
       propertyPath: m_Name
       value: UIModelPreview
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056948075177199146, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -134.99998
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916008905626037489, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -134.99998
       objectReference: {fileID: 0}
     - target: {fileID: 6742986752126826697, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
       propertyPath: m_LocalPosition.x
@@ -580,6 +592,14 @@ PrefabInstance:
     - target: {fileID: 6742986752126826697, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7506208507010347434, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -135
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320473435641655434, guid: def982a2b72830a4bbe4482e8eafb668, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -134.99998
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

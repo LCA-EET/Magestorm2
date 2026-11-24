@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3880612522485773815
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 489761761862397682, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: BlockPrefab
+      value: 
+      objectReference: {fileID: 8353407548619876163, guid: 06a8a89c5f4b6d2438a089bb4a43d752, type: 3}
+    - target: {fileID: 1529777063512002398, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: SpellKey
+      value: 43
+      objectReference: {fileID: 0}
+    - target: {fileID: 1875956291232746866, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_Name
+      value: WallOfIce Variant Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979364802308552522, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9171904688834335256, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}
+      propertyPath: m_Name
+      value: IceWall Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b52e29e2b881da44d8a8f0966a37c297, type: 3}

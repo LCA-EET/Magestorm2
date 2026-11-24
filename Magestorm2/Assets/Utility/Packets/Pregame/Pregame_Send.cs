@@ -29,7 +29,8 @@ namespace Magus
                             RequestDisciplineData = 24,
                             RequestCharacterClassData = 25,
                             CreatePrivateMatch = 26,
-                            JoinPrivateMatch = 27;
+                            JoinPrivateMatch = 27,
+                            VersionCheck = 28;
 
 
     }

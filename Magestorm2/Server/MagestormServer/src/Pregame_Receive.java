@@ -26,4 +26,5 @@ public class Pregame_Receive {
     public static final byte RequestCharacterClassData = 25;
     public static final byte CreatePrivateMatch = 26;
     public static final byte JoinPrivateMatch = 27;
+    public static final byte VersionCheck = 28;
 }

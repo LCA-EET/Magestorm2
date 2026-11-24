@@ -198,8 +198,10 @@ public class InGamePacketProcessor extends UDPProcessor{
                 Spell spellReference = SpellManager.GetSpell(spellID);
                 short castID = _verified.CastSpell(spellReference, _decrypted); // instantiation downstream
                 if(castID != -1){
+                    byte notificationCode = spellReference.GetNotificationCode();
+                    Main.LogDebug("Valid cast. ID: " + castID + ", NC: " + notificationCode );
                     byte[] toSend = Packets.CastPacket(_decrypted, castID);
-                    switch(spellReference.GetNotificationCode()){
+                    switch(notificationCode){
                         case ControlCodes.SpellNotification_All:
                             _owningMatch.SendToAll(toSend);
                             break;

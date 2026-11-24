@@ -28,10 +28,10 @@ namespace Magus
             List<byte[]> spellData = new List<byte[]>();
             for (int i = 0; i < numToProcess; i++)
             {
-                byte[] data = new byte[18];
-                Array.Copy(decrypted, index, data, 0, 18);
+                byte[] data = new byte[20];
+                Array.Copy(decrypted, index, data, 0, 20);
                 spellData.Add(data);
-                index += 18;
+                index += 20;
             }
             if (Cryptographer.VerifyChecksum(decrypted, index))
             {

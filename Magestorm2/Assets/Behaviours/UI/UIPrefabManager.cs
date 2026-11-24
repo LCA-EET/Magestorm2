@@ -33,6 +33,7 @@ namespace Magus
         public GameObject PrefabMatchPasswordSetup;
         public GameObject PrefabEnterMatchPassword;
         public GameObject PrefabMusicPlayer;
+        public GameObject PrefabUIDownload;
 
         private Queue<GameObject> _poppedObjects;
         private void Awake()
@@ -73,6 +74,11 @@ namespace Magus
             GameObject instantiated = Instantiate(PrefabEnterMatchPassword);
             UIEnterMatchPassword form = instantiated.GetComponent<UIEnterMatchPassword>();
             form.InitForm(matchID, selectedTeam);
+            AddToStack(instantiated);
+        }
+        public void InstantiateUIDownloadForm()
+        {
+            GameObject instantiated = Instantiate(PrefabUIDownload);
             AddToStack(instantiated);
         }
         public void InstantiateMatchPasswordSetupForm()

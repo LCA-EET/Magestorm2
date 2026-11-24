@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Numerics;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Magus
@@ -10,6 +11,7 @@ namespace Magus
     {
         public Toggle RememberToggle;
         public Action ToPerform;
+        public TMP_Text Version;
         protected override void Awake()
         {
             base.Awake();
@@ -21,6 +23,7 @@ namespace Magus
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            Version.text = Language.BuildString(458, Game.ClientVersion);
             if (PlayerPrefs.GetInt("remember") == 1)
             {
                 RememberToggle.isOn = true;
@@ -131,7 +134,7 @@ namespace Magus
             PlayerPrefs.SetInt("remember", RememberToggle.isOn ? 1 : 0);
             if (Game.ActiveSpellManager.SpellsLoaded)
             {
-                Game.SendPregameBytes(Pregame_Packets.LogInPacket());
+                Game.SendPregameBytes(Pregame_Packets.VersionCheckPacket());
             }
             else
             {
@@ -163,6 +166,13 @@ namespace Magus
                 case ButtonType.Cancel:
                     Game.Quit();
                     break;
+            }
+        }
+        public override void SetResult(FormResult result)
+        {
+            if(result == FormResult.Yes)
+            {
+
             }
         }
     }

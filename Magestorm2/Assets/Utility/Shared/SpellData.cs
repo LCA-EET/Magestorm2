@@ -22,8 +22,10 @@ namespace Magus
         private static byte Index_AutoAim = 11;
         private static byte Index_Discipline = 12;
         private static byte Index_SpellType = 13;
-        private static byte Index_SpellNameReference = 14;
-        private static byte Index_DescReference = 16;
+        private static byte Index_Gravity = 14;
+        private static byte Index_Rolling = 15;
+        private static byte Index_SpellNameReference = 16;
+        private static byte Index_DescReference = 18;
 
         public SpellData(byte[] spellData)
         {
@@ -66,6 +68,20 @@ namespace Magus
             get
             {
                 return SpellType == ControlCodes.SpellTypes_NonSolidWall || SpellType == ControlCodes.SpellTypes_SolidWall;
+            }
+        }
+        public bool Gravity
+        {
+            get
+            {
+                return _spellData[Index_Gravity] == 1;
+            }
+        }
+        public bool Rolling
+        {
+            get
+            {
+                return _spellData[Index_Rolling] == 1;
             }
         }
         public byte ForceDuration

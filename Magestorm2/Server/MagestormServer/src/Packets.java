@@ -23,7 +23,7 @@ public class Packets {
     private static final byte[] AccountBanned = new byte[]{Pregame_Send.AccountBan};
     private static final byte[] PingReply = new byte[]{InGame_Send.PingReply};
     private static final byte[] IncorrectMatchPassword = new byte[]{Pregame_Send.IncorrectMatchPassword};
-
+    private static byte[] VersionCheckBytes;
     public static byte[] IncorrectMatchPasswordPacket(){
         return IncorrectMatchPassword;
     }
@@ -59,6 +59,21 @@ public class Packets {
 
     public static byte[] AlreadyLoggedInPacket(){
         return AlreadyLoggedInPacket_Bytes;
+    }
+
+    public static byte[] VersionCheckPacket(){
+        return VersionCheckBytes;
+    }
+
+    public static void BuildVersionCheckPacket(){
+        byte clientVersionLength = (byte)ServerParams.ExpectedClientVersion.length;
+        byte updateURLLength = (byte)ServerParams.UpdateURL.length;
+        VersionCheckBytes = new byte[1 + 1 + clientVersionLength + 1 + updateURLLength];
+        VersionCheckBytes[0] = Pregame_Send.VersionCheckResult;
+        VersionCheckBytes[1] = clientVersionLength;
+        System.arraycopy(ServerParams.ExpectedClientVersion, 0, VersionCheckBytes, 2, clientVersionLength);
+        VersionCheckBytes[2 + clientVersionLength] = updateURLLength;
+        System.arraycopy(ServerParams.UpdateURL, 0, VersionCheckBytes, 2 + clientVersionLength + 1, updateURLLength);
     }
 
     public static byte[] ProhibitedLanguagePacket(byte opCode){ return new byte[]{opCode};}

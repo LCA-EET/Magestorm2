@@ -1,16 +1,14 @@
 using UnityEngine;
-using System;
 using System.Net;
-using System.IO;
 using System.Collections.Generic;
-using UnityEngine.Networking;
-using System.Collections;
-using MPTK.NAudio.Midi;
 
 namespace Magus
 {
     public static class Game
     {
+        public const string ClientVersion = "0.1";
+        public static string DownloadURL = "";
+        public static string RequiredVersion;
         public const bool SymmetricEncryption = false;
         public static float TickInterval;
         public static string DiscordURL;
@@ -123,46 +121,10 @@ namespace Magus
                 _init = true;
             }
         }
-
-
-
         public static void SetServerTime(long serverTime)
         {
             _serverTime = serverTime;
             Debug.Log("Server time: " + _serverTime);
         }
-        public static string LoadDatFile(string file)
-        {
-            return File.ReadAllText(Application.streamingAssetsPath + "\\dat\\" + file + ".dat");
-        }
-        public static int FetchServerInfo()
-        {
-            try
-            {
-                string contents;
-                if (SharedFunctions.GetPHPString("serverinfo", out contents))
-                {
-                    string[] returnedArray = contents.Split("<br>");
-                    GameServerPort = int.Parse(returnedArray[0]);
-                    string key64 = returnedArray[1];
-                    byte[] key = Convert.FromBase64String(key64);
-                    AssignGameServerAddress("mta.gg");
-                    //Cryptography.Init(key);
-                    Debug.Log("Game Server Port: " + GameServerPort);
-                    return GameServerPort;
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
-            return -1;
-        }
-        private static void AssignGameServerAddress(string hostname)
-        {
-            GameServerAddress = Dns.GetHostAddresses(hostname)[0];
-            Debug.Log("Server IP: " + GameServerAddress.ToString());
-        }
     }
-
 }

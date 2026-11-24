@@ -147,12 +147,33 @@ namespace Magus
                         case Pregame_Receive.IncorrectMatchPassword:
                             Game.MessageBoxReference(445);
                             break;
+                        case Pregame_Receive.VersionCheckResult:
+                            HandleVersionCheck();
+                            break;
                     }
                 }
             }
             if (Game.LoggedIn)
             {
                 _heartbeat.ProcessAction(Time.deltaTime);
+            }
+        }
+        private void HandleVersionCheck()
+        {
+            Debug.Log("HANDLE VERSION CHECK PACKET");
+            byte clientVersionLength = _decrypted[1];
+            Game.RequiredVersion = ByteUtils.BytesToUTF8(_decrypted, 2, clientVersionLength);
+            Debug.Log("Required Version: " + Game.RequiredVersion);
+            if (!Game.RequiredVersion.Equals(Game.ClientVersion))
+            {
+                byte urlLength = _decrypted[2 + clientVersionLength];
+                Game.DownloadURL = ByteUtils.BytesToUTF8(_decrypted, 2 + clientVersionLength + 1, urlLength);
+                SharedFunctions.PrintStackTrace();
+                ComponentRegister.UIPrefabManager.InstantiateUIDownloadForm();
+            }
+            else
+            {
+                Game.SendPregameBytes(Pregame_Packets.LogInPacket());
             }
         }
         private void HandleCharacterClassData()
@@ -177,8 +198,8 @@ namespace Magus
         {
             if (Game.ActiveSpellManager.ProcessSpellData(_decrypted))
             {
-                Game.SendPregameBytes(Pregame_Packets.LogInPacket());
-
+                Game.SendPregameBytes(Pregame_Packets.VersionCheckPacket());
+                //Game.SendPregameBytes(Pregame_Packets.LogInPacket());
             }
         }
         private void HandleActivationResult()

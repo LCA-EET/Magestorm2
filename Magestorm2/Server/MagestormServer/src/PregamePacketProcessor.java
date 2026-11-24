@@ -77,8 +77,13 @@ public class PregamePacketProcessor extends UDPProcessor
                 HandleOTPReply();
             case Pregame_Receive.JoinPrivateMatch->
                 HandleJoinPrivateMatchPacket(_decrypted[5], _decrypted[6]);
+            case Pregame_Receive.VersionCheck ->
+                HandleVersionCheck();
         }
         return true;
+    }
+    private void HandleVersionCheck(){
+        EnqueueForSend(Packets.VersionCheckPacket(), _remote);
     }
     private void HandleSpellDataRequest(){
         Collection<byte[]> packets = SpellManager.GetSpellDataPackets();

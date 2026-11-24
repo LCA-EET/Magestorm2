@@ -135,3 +135,4 @@ MonoBehaviour:
   SFXMagicElevator: {fileID: 8300000, guid: 2a3aa1bfe2616554a9992cb52c947f9c, type: 3}
   SFXPickUpItem: {fileID: 8300000, guid: a39ec2f6fddfd26499c38dd396ed251e, type: 3}
   SFXDrinkPotion: {fileID: 8300000, guid: 9e8569de60a46c94b96865b6b842d440, type: 3}
+  SFXBounce: {fileID: 8300000, guid: 5d3a377b2d47abf4cacadefcc8b51928, type: 3}

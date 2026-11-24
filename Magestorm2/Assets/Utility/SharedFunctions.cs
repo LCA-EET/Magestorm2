@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Magus
 {
@@ -13,7 +14,14 @@ namespace Magus
         private static Dictionary<byte, int> _spellTypeToStringReference;
         private static System.Random _random = new System.Random();
         private static object[] _params;
+        public static Vector3 Gravity = new Vector3(0, 9.81f, 0);
 
+
+        public static void PrintStackTrace()
+        {
+            StackTrace trace = new StackTrace(true);
+            UnityEngine.Debug.Log(trace.ToString());
+        }
         public static object[] Params
         {
             get { return _params; }
@@ -109,19 +117,19 @@ namespace Magus
             float distance = Vector3.Distance(origin, playerPosition);
             if (distance <= radius)
             {
-                Debug.Log("Player is within the blast radius.");
+                UnityEngine.Debug.Log("Player is within the blast radius.");
                 Vector3 direction = DirectionVector(origin, playerPosition);
                 RaycastHit hitInfo;
                 bool obstructed = Physics.Raycast(origin, direction, out hitInfo, distance, LayerManager.AoEObstructionMask);
                 if (obstructed)
                 {
-                    Debug.Log("Player is obstructed by " + hitInfo.collider.gameObject.name);
+                    UnityEngine.Debug.Log("Player is obstructed by " + hitInfo.collider.gameObject.name);
                 }
                 return !obstructed;
             }
             else
             {
-                Debug.Log("Player is outside of blast radius. Distance = " + distance + ", radius = " + radius);
+                UnityEngine.Debug.Log("Player is outside of blast radius. Distance = " + distance + ", radius = " + radius);
             }
             return false;
         }
@@ -158,7 +166,7 @@ namespace Magus
         {
             GameObjectDistanceComparer comparer = new GameObjectDistanceComparer(Game.PCAvatar.transform.position);
             RaycastHit[] hits = Physics.SphereCastAll(origin, radius, Camera.main.transform.forward, range, LayerManager.RemotePlayerLayerMask);
-            Debug.Log("Number hits in spherecast: " + hits.Length);
+            UnityEngine.Debug.Log("Number hits in spherecast: " + hits.Length);
             if (hits.Length > 0)
             {
                 List<GameObject> toProcess = new List<GameObject>();
@@ -341,10 +349,10 @@ namespace Magus
         }
         public static Vector3 CalculateVector3Lerp(ref float elapsed, float lerpPeriod, Vector3 starting, Vector3 ending)
         {
-            Debug.Log("Elapsed: " + elapsed);
+            UnityEngine.Debug.Log("Elapsed: " + elapsed);
             elapsed += Time.deltaTime;
             float percentComplete = elapsed / lerpPeriod;
-            Debug.Log("Lerp % Complete: " + percentComplete);
+            UnityEngine.Debug.Log("Lerp % Complete: " + percentComplete);
             if (percentComplete >= 1.0f)
             {
                 percentComplete = 1.0f;

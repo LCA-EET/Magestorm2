@@ -1,22 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using static UnityEngine.Audio.GeneratorInstance;
 namespace Magus
 {
 
     public static class IconLibrary
     {
-        private static Dictionary<string, SpriteSet> _atlas;
+        private static Dictionary<byte, SpriteSet> _atlas;
         public static void Init()
         {
-            _atlas = new Dictionary<string, SpriteSet>();
-            LoadSprites("icon/effects");
+            _atlas = new Dictionary<byte, SpriteSet>();
+            LoadSprites("icon/effects/forward", false);
+            LoadSprites("icon/effects/reverse", true);
             foreach (SpriteSet spriteSet in _atlas.Values)
             {
                 spriteSet.Sort();
             }
         }
 
-        private static void LoadSprites(string path)
+        private static void LoadSprites(string path, bool reverse)
         {
             string name;
             Sprite[] loaded = Resources.LoadAll<Sprite>(path);
@@ -26,25 +29,26 @@ namespace Magus
                 if (name.Contains("_"))
                 {
                     string[] splitName = name.ToLower().Split('_');
-                    if (!_atlas.ContainsKey(splitName[0]))
+                    byte setID = byte.Parse(splitName[0]);
+                    if (!_atlas.ContainsKey(setID))
                     {
-                        _atlas.Add(splitName[0], new SpriteSet(sprite));
+                        _atlas.Add(setID, new SpriteSet(sprite, reverse));
                     }
                     else
                     {
-                        _atlas[splitName[0]].AppendSprite(sprite, int.Parse(splitName[1]));
+                        _atlas[setID].AppendSprite(sprite, int.Parse(splitName[1]));
                     }
                 }
                 else
                 {
-                    _atlas.Add(name, new SpriteSet(sprite));
+                    _atlas.Add(byte.Parse(name), new SpriteSet(sprite, reverse));
                 }
             }
         }
 
-        public static SpriteSet GetSpriteSet(string setName)
+        public static SpriteSet GetSpriteSet(byte setID)
         {
-            return _atlas[setName];
+            return _atlas[setID];
         }
     }
 

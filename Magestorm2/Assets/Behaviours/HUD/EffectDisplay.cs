@@ -12,7 +12,7 @@ namespace Magus
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Awake()
         {
-            _advanceSprite = new PeriodicAction(0.167f, AdvanceFrame, null);
+            _advanceSprite = new PeriodicAction(0.0835f, AdvanceFrame, null);
         }
         void Start()
         {

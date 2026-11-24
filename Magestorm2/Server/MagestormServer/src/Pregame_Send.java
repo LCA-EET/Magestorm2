@@ -33,4 +33,5 @@ public class Pregame_Send {
     public static final byte DisciplineData = 32;
     public static final byte CharacterClassData = 33;
     public static final byte IncorrectMatchPassword = 34;
+    public static final byte VersionCheckResult = 35;
 }

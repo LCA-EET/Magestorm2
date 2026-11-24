@@ -64,6 +64,62 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpriteSheetRenderer
       objectReference: {fileID: 0}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7680820834086852892, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1769304412, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[2]'
+      value: 
+      objectReference: {fileID: -343771920, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[3]'
+      value: 
+      objectReference: {fileID: -1060630355, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2093481994, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[5]'
+      value: 
+      objectReference: {fileID: 1767727930, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[6]'
+      value: 
+      objectReference: {fileID: -1023019886, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[7]'
+      value: 
+      objectReference: {fileID: 1105543861, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[8]'
+      value: 
+      objectReference: {fileID: -2133633423, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[9]'
+      value: 
+      objectReference: {fileID: 1411257106, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[10]'
+      value: 
+      objectReference: {fileID: -1751067583, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 5732436406202110799, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: 'Frames.Array.data[11]'
+      value: 
+      objectReference: {fileID: 1996535798, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 7440361830500635708, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 7680820834086852892, guid: d4b5155e5a3566f4796b8390738b3858, type: 3}
+    - target: {fileID: 7440361830500635708, guid: 9daab01b67ddec241b26c6e29de6e779, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

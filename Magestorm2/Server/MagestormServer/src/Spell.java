@@ -4,7 +4,8 @@ public class Spell {
     private final byte _minDamagePerRoll0, _maxDamagePerRoll0, _minHealPerRoll, _maxHealPerRoll, _element0, _spellCost,
             _spellType, _disciplineCode, _skillRequired, _numRolls, _minlevel, _minDamagePerRoll1, _maxDamagePerRoll1, _element1,
             _notificationCode, _radius, _effectCode, _duration, _levelsForRoll, _iceResist, _fireResist, _elecResist, _earthResist,
-            _manaResist, _minForcePerRoll, _maxForcePerRoll, _forceDuration, _range, _speed, _shakePrevention, _autoAim;
+            _manaResist, _minForcePerRoll, _maxForcePerRoll, _forceDuration, _range, _speed, _shakePrevention, _autoAim,
+            _gravity, _rolling;
     private final DisciplineData _associatedDiscipline;
     private final float _splashFactor0, _splashFactor1, _splashFactor2;
     private final float[] _resistances;
@@ -47,6 +48,8 @@ public class Spell {
         _maxForcePerRoll = params[31];
         _forceDuration = params[32];
         _autoAim = params[34];
+        _gravity = params[35];
+        _rolling = params[36];
         _resistances[ControlCodes.Element_Fire] = _fireResist / 100.0f;
         _resistances[ControlCodes.Element_Earth] = _earthResist / 100.0f;
         _resistances[ControlCodes.Element_Ice] = _iceResist / 100.0f;
@@ -58,7 +61,7 @@ public class Spell {
         return _clientSpellData;
     }
     private void FillClientDataArray(short nameRef, short descRef){
-        _clientSpellData = new byte[18];
+        _clientSpellData = new byte[20];
         _clientSpellData[0] = (byte)_spellID;
         _clientSpellData[1] = _spellCost;
         _clientSpellData[2] = _minlevel;
@@ -73,8 +76,10 @@ public class Spell {
         _clientSpellData[11] = _autoAim;
         _clientSpellData[12] = _disciplineCode;
         _clientSpellData[13] = _spellType;
-        ByteUtils.WriteShortAtIndex_LE(_clientSpellData, nameRef, 14);
-        ByteUtils.WriteShortAtIndex_LE(_clientSpellData, descRef, 16);
+        _clientSpellData[14] = _gravity;
+        _clientSpellData[15] = _rolling;
+        ByteUtils.WriteShortAtIndex_LE(_clientSpellData, nameRef, 16);
+        ByteUtils.WriteShortAtIndex_LE(_clientSpellData, descRef, 18);
     }
     public float[] GetResistances(){
         return _resistances;

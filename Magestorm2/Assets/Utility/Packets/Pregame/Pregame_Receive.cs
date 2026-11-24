@@ -36,7 +36,8 @@
                             SpellData = 31,
                             DisciplineData = 32,
                             CharacterClassData = 33,
-                            IncorrectMatchPassword = 34;
+                            IncorrectMatchPassword = 34,
+                            VersionCheckResult = 35;
     }
 
 }
